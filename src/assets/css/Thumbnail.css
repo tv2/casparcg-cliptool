@@ -1,0 +1,63 @@
+.app-body {
+  margin-top: 130px;
+}
+
+.boxes {
+  display:flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  list-style: none;
+  padding-left: 0;
+}
+
+.styleHouseComponentList {
+  list-style-type: none;
+}
+
+.styleHouseComponent {
+  background: #2e2b41;
+  color: white;
+  box-shadow: 6px 6px 6px #555;
+  width: 30vw;
+  min-width: 300px;
+  margin: 10px;
+  font-size: 0.9em;    
+}
+
+.listThumbnail {
+    width: 90%;
+    height: auto;
+    margin: 8px;
+}
+
+.playButton {
+    margin: 8px;
+    font-size: 1.2em;
+    width: 40%;
+    line-height: 150%;
+    background: green;
+    color: white;
+    font-family: 'Roboto Condensed', sans-serif;
+    border-radius: 16px;
+    border-width: 0;
+    outline: 0;
+}
+
+.loopButton {
+  margin: 8px;
+  font-size: 1.2em;
+  width: 40%;
+  line-height: 150%;
+  background: rgb(0, 92, 128);
+  color: white;
+  font-family: 'Roboto Condensed', sans-serif;
+  border-radius: 16px;
+  border-width: 0;
+  outline: 0;
+}
+
+.text {
+    margin-top: 8px;
+    font-size: 1.4em;
+}

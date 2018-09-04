@@ -1,0 +1,58 @@
+/* Main CSS file */
+body {
+    background: #222;
+    margin: 0;
+    padding: 0;
+    font-family: sans-serif;
+  }
+
+.App {
+    position: relative;
+    text-align: center;
+    background: #aaa;
+  }
+  
+  .App-logo {
+    animation: App-logo-spin infinite 10s linear alternate;
+    height: 70px;
+  }
+  
+  .App-header {
+    position: fixed;
+    top: 0px;
+    width: 100vw;
+    background-color: #222;
+    height: 130px;
+    color: rgb(28, 115, 165);
+  }
+  
+  .App-title {
+    font-size: 2em;
+  }
+  
+  .App-intro {
+    font-size: large;
+  }
+  
+  @keyframes App-logo-spin {
+    from { transform: rotate(-15deg); }
+    to { transform: rotate(15deg); }
+    from { transform: rotate(15deg); }
+    to { transform: rotate(-15deg); }
+  }
+  
+  .stopButton {
+    position: fixed;
+    top: 25px;
+    right: 5px;
+    margin: 8px;
+    font-size: 12px;
+    width: 10%;
+    line-height: 300%;
+    background: red;
+    color: white;
+    font-family: 'Roboto Condensed', sans-serif;
+    border-radius: 16px;
+    border-width: 0;
+    outline: 0;
+  }
