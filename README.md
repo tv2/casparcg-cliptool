@@ -1,6 +1,7 @@
 
 ## Caspar CG Clip Tool
 A little Clip player, that looks into a mediafolder and show all the clips with a play and loop.
+Tested on MacOS
 
 ### Based on:
 Using SuperflyTV CasparCG-Connection:
@@ -24,8 +25,12 @@ yarn
 
 ### settings.json:
 ```
-mv settings.example.json settings.example
+cp settings.example.json settings.json
 ````
+In the file you can set:
+server: (ip-address)
+port: (port number)
+subFolder: (subfolder containing media)
 
 ### Run the app
 ```
