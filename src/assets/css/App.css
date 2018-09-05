@@ -24,6 +24,7 @@ body {
     background-color: #222;
     height: 130px;
     color: rgb(28, 115, 165);
+    box-shadow: 2px 2px 2px #555;
   }
   
   .App-title {
@@ -47,7 +48,7 @@ body {
     right: 5px;
     margin: 8px;
     font-size: 12px;
-    width: 10%;
+    width: 60px;
     line-height: 300%;
     background: red;
     color: white;

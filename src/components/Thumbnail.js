@@ -7,24 +7,36 @@ class Thumbnail extends Component {
         super(props);
         this.state = {  
             fileList: [],
-            thumbList: [],
+            thumbListRendered: [],
+            thumbList: []
         };
         this.renderThumbnails = this.renderThumbnails.bind(this);
+        this.updateThumbnail = this.updateThumbnail.bind(this);
     }
     componentDidMount() {
         this.props.ccgConnectionProps.thumbnailList()
         .then((results) => {
-            var itemList = [];
             results.response.data.map((item, index) => {
-                this.props.ccgConnectionProps.thumbnailRetrieve(item.name)
+                if (item.name.includes(this.props.subFolderProps)) {
+                    this.setState((prevState) => ({
+                        thumbList: [...prevState.thumbList, item] 
+                    }));
+                    this.updateThumbnail(item, this.state.thumbList.length);
+                }
+            });
+        });
+    }
+
+    updateThumbnail(item, index) {
+        var itemList = this.state.thumbListRendered;
+        this.props.ccgConnectionProps.thumbnailRetrieve(item.name)
                 .then((response) => {
                     if (item.name.includes(this.props.subFolderProps)) {
                         itemList[index] = this.renderThumbnails(item, response.response.data, index);
-                        this.setState({thumbList: itemList});
+                        this.setState({thumbListRendered: itemList});
                     }
                 });
-            });
-        });
+        return;
     }
 
     renderThumbnails(item, pic, index) {
@@ -52,7 +64,7 @@ class Thumbnail extends Component {
     return (
         <div className="app-body">
             <ul className="boxes" >
-                {this.state.thumbList}           
+                {this.state.thumbListRendered}           
             </ul>
         </div>
         )
