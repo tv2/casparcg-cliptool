@@ -24,7 +24,10 @@
   font-size: 0.9em;    
 }
 
-.listThumbnail {
+.thumbnailImage {
+    border-width: 2px;
+    border-style:  solid;
+    border-color:  #ff000000;
     width: 90%;
     height: auto;
     margin: 8px;
