@@ -2,7 +2,9 @@
   margin-top: 130px;
 }
 
-.boxes {
+.flexBoxes {
+  position: absolute;
+  z-index: -1;
   display:flex;
   flex-wrap: wrap;
   align-items: center;
@@ -11,11 +13,8 @@
   padding-left: 0;
 }
 
-.styleHouseComponentList {
-  list-style-type: none;
-}
-
-.styleHouseComponent {
+.boxComponent {
+  position: relative;
   background: #2e2b41;
   color: white;
   box-shadow: 6px 6px 6px #555;
@@ -60,4 +59,15 @@
 .text {
     margin-top: 8px;
     font-size: 1.4em;
+}
+
+.playing {
+  position: absolute;
+  width: 250px;
+  left: 25px;
+  top: 50px;
+  font-size: 3em;
+  color: red;
+  background: #ffffff8c;
+  border-radius: 16px;
 }
