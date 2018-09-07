@@ -5,7 +5,10 @@ import Thumbnail from './Thumbnail';
 
 //Load settings.json file: server, port, subfolder
 const fs = require('fs');
-var globalSettings = JSON.parse(fs.readFileSync("settings.json"));
+const electron = require('electron');
+
+var folder = electron.remote.app.getPath('userData');
+var globalSettings = JSON.parse(fs.readFileSync(folder + "/settings.json"));
 
 class App extends Component {
   constructor(props) {

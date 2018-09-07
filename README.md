@@ -25,7 +25,7 @@ yarn
 
 ### settings.json:
 ```
-cp settings.example.json settings.json
+cp settings.example.json /Users/{your_user_name}/Library/Application Support/CasparCGClient/settings.json
 ````
 In the file you can set:
 server: (ip-address)
