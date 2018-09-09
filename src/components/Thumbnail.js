@@ -2,26 +2,26 @@ import React, { Component } from 'react';
 import '../assets/css/Thumbnail.css';
 import './App';
 
+var fps = 25;
+
+
 class Thumbnail extends Component {
     constructor(props) {
         super(props);
         this.state = {  
             thumbList: [],
             thumbListRendered: [],
-            thumbActiveClip: {
-                foreground: {
-                    producer: {
-                        filename: "",
-                        loop: false
-                    }
-                }
+            thumbActiveForegroundProducer: {
+                filename: "",
+                loop: false
             },
             thumbActiveIndex: 0,
-            thumbFrameNumber: 0,
+            frameTimerVal: 0,
         };
         this.renderThumbnails = this.renderThumbnails.bind(this);
         this.updateThumbnail = this.updateThumbnail.bind(this);
         this.updatePlayingStatus = this.updatePlayingStatus.bind(this);
+        this.frameTimer = this.frameTimer.bind(this);
     }
     componentDidMount() {
         this.props.ccgConnectionProps.thumbnailList()
@@ -35,11 +35,20 @@ class Thumbnail extends Component {
                 }
             });
         });
-
-        // Initialize timer connection status:
+        // Frame timer:
+        setInterval(this.frameTimer, 40);        
+        // Timer connection status:
         this.updatePlayingStatus;
-        setInterval(this.updatePlayingStatus, 150);
+        setInterval(this.updatePlayingStatus, 250);
 
+    }
+
+    frameTimer() {
+        if (this.state.frameTimerVal <= fps) {
+            this.setState({frameTimerVal: this.state.frameTimerVal + 1});
+        } else {
+            this.setState({frameTimerVal: 1});
+        }
     }
 
     // Timer controlled connection status
@@ -48,11 +57,13 @@ class Thumbnail extends Component {
         .then ((infoStatus)=>{
             this.state.thumbList.map((item, index)=>{
                 if(this.cleanUpFilename(infoStatus.response.data.foreground.producer.filename) === item.name) {
+                    // Update Old Thumb when new one is selected:
                     if(this.state.thumbActiveIndex != index) {
                         this.updateThumbnail(this.state.thumbList[this.state.thumbActiveIndex], this.state.thumbActiveIndex, false);
                     }
-                    if (infoStatus.response.data.foreground.producer["file-frame-number"] != this.state.thumbActiveClip.foreground.producer["file-frame-number"]) {
-                        this.setState({thumbActiveClip: infoStatus.response.data});
+                    // Check if file is playing:
+                    if (infoStatus.response.data.foreground.producer["file-frame-number"] != this.state.thumbActiveForegroundProducer["file-frame-number"]) {
+                        this.setState({thumbActiveForegroundProducer: infoStatus.response.data.foreground.producer});
                         this.setState({thumbActiveIndex: index});
                         this.updateThumbnail(item, this.state.thumbActiveIndex, true, true);
                     }
@@ -73,6 +84,16 @@ class Thumbnail extends Component {
             .replace('media//', '')
             .toUpperCase()
             .replace(/\..+$/, '')
+        );
+    }
+
+    framesToTimeCode(frame) {
+        var hour = ('0' + (frame/(fps*60*60)).toFixed()).slice(-2);
+        var minute = ('0' + (frame/(fps*60)).toFixed()).slice(-2);
+        var sec = ('0' + (frame/(fps)).toFixed()).slice(-2);
+        var frm = ('0' + (frame-parseInt(frame/fps)*fps).toFixed()).slice(-2);
+        return (
+            hour + "." + minute + "." + sec
         );
     }
         
@@ -97,7 +118,7 @@ class Thumbnail extends Component {
         return(
             <li key={index} className="boxComponent">
                 <img src={pic} className="thumbnailImage" style = {tally ? {borderColor: 'red'} : {borderColor: ''}}/>
-                <a className="playing">{isActive ? " PLAYING " : "" }</a>
+                <a className="playing">{isActive ? this.framesToTimeCode(this.state.thumbActiveForegroundProducer["file-nb-frames"] - this.state.thumbActiveForegroundProducer["file-frame-number"]) : "" }</a>
                 <a className="text">{item.name.slice(-20)}</a>
                 <br/>
                 <button className="playButton" onClick={() =>
