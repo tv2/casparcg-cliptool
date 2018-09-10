@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import '../assets/css/Thumbnail.css';
 import './App';
 
+//Global vars:
 var fps = 25;
 
 
@@ -16,12 +17,12 @@ class Thumbnail extends Component {
                 loop: false
             },
             thumbActiveIndex: 0,
-            frameTimerVal: 0,
         };
-        this.renderThumbnails = this.renderThumbnails.bind(this);
-        this.updateThumbnail = this.updateThumbnail.bind(this);
         this.updatePlayingStatus = this.updatePlayingStatus.bind(this);
-        this.frameTimer = this.frameTimer.bind(this);
+        this.updateThumbnail = this.updateThumbnail.bind(this);
+        this.renderThumbnails = this.renderThumbnails.bind(this);
+
+        this.playMedia = this.playMedia.bind(this);
     }
     componentDidMount() {
         this.props.ccgConnectionProps.thumbnailList()
@@ -34,26 +35,16 @@ class Thumbnail extends Component {
                     this.updateThumbnail(item, this.state.thumbList.length - 1, false, false);
                 }
             });
-        });
-        // Frame timer:
-        setInterval(this.frameTimer, 40);        
+        });     
         // Timer connection status:
         this.updatePlayingStatus;
         setInterval(this.updatePlayingStatus, 250);
 
     }
 
-    frameTimer() {
-        if (this.state.frameTimerVal <= fps) {
-            this.setState({frameTimerVal: this.state.frameTimerVal + 1});
-        } else {
-            this.setState({frameTimerVal: 1});
-        }
-    }
-
     // Timer controlled connection status
     updatePlayingStatus() {
-        this.props.ccgConnectionProps.info(1,10)
+        this.props.ccgConnectionProps.info(this.props.ccgOutputProps, 10)
         .then ((infoStatus)=>{
             this.state.thumbList.map((item, index)=>{
                 if(this.cleanUpFilename(infoStatus.response.data.foreground.producer.filename) === item.name) {
@@ -98,8 +89,8 @@ class Thumbnail extends Component {
     }
         
         
-    playMedia(channel, layer, mediaSource, loop) {
-        this.props.ccgConnectionProps.play(channel, layer, mediaSource, loop);
+    playMedia(layer, mediaSource, loop) {
+        this.props.ccgConnectionProps.play(this.props.ccgOutputProps, layer, mediaSource, loop);
     }
         
     updateThumbnail(item, index, isActive, tally) {
@@ -122,10 +113,10 @@ class Thumbnail extends Component {
                 <a className="text">{item.name.slice(-20)}</a>
                 <br/>
                 <button className="playButton" onClick={() =>
-                    this.playMedia(1, 10, item.name, false)
+                    this.playMedia(10, item.name, false)
                 }>PLAY</button>
                 <button className="loopButton" onClick={() =>
-                    this.playMedia(1, 10, item.name, true)
+                    this.playMedia(10, item.name, true)
                 }>LOOP</button>
             </li>
         )

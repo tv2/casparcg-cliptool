@@ -1,18 +1,11 @@
 {
   "name": "CasparCGClient",
   "version": "0.1.0",
-  "description": "Electron/React based CasparCG Client",
+  "description": "CasparCG ClipTool",
   "license": "MIT",
   "private": false,
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/olzzon/CasparCG-React-Electron-boilerplate.git"
-  },
-  "author": {
-    "name": "Kasper Olsson Hans",
-    "email": "xxx",
-    "url": "https://github.com/olzzon"
-  },
+  "repository": "https://github.com/olzzon/CasparCG-ClipTool.git",
+  "author": "Kasper Olsson Hans <xxx> (https://github.com/olzzon)",
   "keywords": [
     "app",
     "boilerplate",
@@ -42,7 +35,8 @@
     "casparcg-connection": "^4.5.0",
     "electron": "^2.0.8",
     "react": "^16.4.2",
-    "react-dom": "^16.4.2"
+    "react-dom": "^16.4.2",
+    "rmc-tabs": "^1.2.27"
   },
   "devDependencies": {
     "@babel/core": "^7.0.0",

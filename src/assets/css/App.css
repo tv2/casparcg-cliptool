@@ -19,6 +19,7 @@ body {
   
   .App-header {
     position: fixed;
+    z-index: 10;
     top: 0px;
     width: 100vw;
     background-color: #222;
@@ -27,6 +28,15 @@ body {
     box-shadow: 2px 2px 2px #555;
   }
   
+  .App-body {
+    position: relative;
+    z-index: 1;
+    top: 130px;
+    left: 0px;
+    Right: 0px;
+    bottom: 0px;
+  
+  }
   .App-title {
     font-size: 2em;
   }

@@ -1,10 +1,8 @@
 .app-body {
-  margin-top: 130px;
+  margin-top: 5px;
 }
 
 .flexBoxes {
-  position: absolute;
-  z-index: -1;
   display:flex;
   flex-wrap: wrap;
   align-items: center;
@@ -18,8 +16,7 @@
   background: #2e2b41;
   color: white;
   box-shadow: 6px 6px 6px #555;
-  width: 30vw;
-  min-width: 300px;
+  width: 300px;
   margin: 10px;
   font-size: 0.9em;    
 }
