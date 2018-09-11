@@ -110,7 +110,7 @@ class Thumbnail extends Component {
             <li key={index} className="boxComponent">
                 <img src={pic} className="thumbnailImage" style = {tally ? {borderColor: 'red'} : {borderColor: ''}}/>
                 <a className="playing">{isActive ? this.framesToTimeCode(this.state.thumbActiveForegroundProducer["file-nb-frames"] - this.state.thumbActiveForegroundProducer["file-frame-number"]) : "" }</a>
-                <a className="text">{item.name.slice(-20)}</a>
+                <a className="text">{item.name.substring(item.name.lastIndexOf('/')+1).slice(-25)}</a>
                 <br/>
                 <button className="playButton" onClick={() =>
                     this.playMedia(10, item.name, false)
