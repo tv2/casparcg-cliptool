@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import '../assets/css/Thumbnail.css';
 import './App';
 
-//Global vars:
-var fps = 25;
+//Global const:
+const fps = 25;
 
 
 class Thumbnail extends Component {

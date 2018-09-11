@@ -1,6 +1,5 @@
 /* Main CSS file */
 body {
-    background: #777;
     margin: 0;
     padding: 0;
     font-family: sans-serif;
@@ -9,7 +8,6 @@ body {
 .App {
     position: relative;
     text-align: center;
-    background: #aaa;
   }
   
   .App-logo {
@@ -27,6 +25,15 @@ body {
     color: rgb(28, 115, 165);
     box-shadow: 2px 2px 2px #555;
   }
+
+  App-connection-status {
+    position: fixed;
+    z-index: 10;
+    top: 10px;
+    right: 10px;
+    width: 50px;
+    font-size: 4em;
+  }
   
   .App-body {
     position: relative;
@@ -35,6 +42,7 @@ body {
     left: 0px;
     Right: 0px;
     bottom: 0px;
+    background-color: #aaa;
   
   }
   .App-title {

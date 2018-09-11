@@ -12,8 +12,8 @@ import '../assets/css/App.css';
 //Load settings.json file: server, port, subfolder
 const fs = require('fs');
 const electron = require('electron');
-var folder = electron.remote.app.getPath('userData');
-var globalSettings = JSON.parse(fs.readFileSync(folder + "/settings.json"));
+const folder = electron.remote.app.getPath('userData');
+const globalSettings = JSON.parse(fs.readFileSync(folder + "/settings.json"));
 
 //Define Output Tabs:
 const tabData = [
@@ -39,6 +39,7 @@ class App extends Component {
     };
 
     this.setConnectionStatus = this.setConnectionStatus.bind(this);
+    this.renderConnectionStatus = this.renderConnectionStatus.bind(this);
 }
 
   componentDidMount() {
@@ -50,23 +51,40 @@ class App extends Component {
   }
 
   setConnectionStatus() {
-    this.ccgConnection.info(1,10)
-    .then ((response) => {
-      this.setState({ccgConnectionStatus: true});
+    this.timeout(1000, this.ccgConnection.info(1,10))
+    .then (() => {
+      this.setState({ccgConnectionStatus: true}); 
+    })
+    .catch((error) =>{
+      this.setState({ccgConnectionStatus: false});
+      console.log(error);
     });
-}
-
-  stopMedia(channel, layer) {
-    this.ccgConnection.stop(channel, layer);
   }
 
+  timeout(ms, promise) {
+  return new Promise(function(resolve, reject) {
+    setTimeout(function() {
+      reject(new Error("Offline: Server was to long to respond"));
+    }, ms);
+    promise.then(resolve, reject);
+  });
+}
+
+  renderConnectionStatus(status) {
+    return (
+      <a className="App-connection-status" style={status ? {color: "green"} : {color: "red"}}>
+        {status ? "CONNECTED" : "CONNECTING..."}
+      </a>
+    )
+  }
   render() {  
     return (
       <div className="App">
         <header className="App-header">
           <h1 className="App-title">CasparCG Clip Tool</h1> 
-          <a>Connection status: </a> 
-          <a style={{color: "red"}}>{this.state.ccgConnectionStatus ? "Connected" : "not Connected"}</a>
+          <div>
+            {this.renderConnectionStatus(this.state.ccgConnectionStatus)}
+          </div>
         </header>
         <div className="App-body">
           <Tabs tabs={tabData}>
