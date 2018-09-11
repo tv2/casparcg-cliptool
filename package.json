@@ -33,12 +33,12 @@
   },
   "dependencies": {
     "casparcg-connection": "^4.5.0",
-    "electron": "^2.0.8",
     "react": "^16.4.2",
     "react-dom": "^16.4.2",
     "rmc-tabs": "^1.2.27"
   },
   "devDependencies": {
+    "electron": "^2.0.8",
     "@babel/core": "^7.0.0",
     "@babel/preset-react": "^7.0.0",
     "babel-loader": "^8.0.0",
