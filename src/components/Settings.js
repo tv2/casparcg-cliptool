@@ -14,12 +14,12 @@ class SettingsPage extends Component {
                 port: '5250',
                 subFolder: '',
                 tabData: [
-                    { key: '1', title: 'SCREEN 1'},
-                    { key: '2', title: 'SCREEN 2'},
-                    { key: '3', title: 'SCREEN 3'},
-                    { key: '4', title: 'SCREEN 4'},
-                    { key: '5', title: 'SCREEN 5'},
-                    { key: '6', title: 'SCREEN 6'},
+                    { key: 1, title: 'SCREEN 1'},
+                    { key: 2, title: 'SCREEN 2'},
+                    { key: 3, title: 'SCREEN 3'},
+                    { key: 4, title: 'SCREEN 4'},
+                    { key: 5, title: 'SCREEN 5'},
+                    { key: 6, title: 'SCREEN 6'},
                 ],
             }
         };

@@ -17,11 +17,10 @@ const folder = electron.remote.app.getPath('userData');
 const globalSettings = JSON.parse(fs.readFileSync(folder + "/settings.json"));
 
 //Define Output Tabs:
-const tabData = [
-  { key: 'out1', title: 'SCREEN 1', output: 1},
-  { key: 'out2', title: 'SCREEN 2', output: 2},
-  { key: 'out3', title: 'SCREEN 3', output: 3},
-];
+//const tabData = globalSettings.tabData;
+const tabData = globalSettings.tabData.filter((item) => {
+  return item.title != "";
+});
 
 class App extends Component {
   constructor(props) {
@@ -42,6 +41,7 @@ class App extends Component {
     this.setConnectionStatus = this.setConnectionStatus.bind(this);
     this.renderConnectionStatus = this.renderConnectionStatus.bind(this);
     this.handleSettingsPage = this.handleSettingsPage.bind(this);
+    this.renderTabData = this.renderTabData.bind(this);
 }
 
   componentDidMount() {
@@ -80,6 +80,19 @@ class App extends Component {
     )
   }
 
+  renderTabData() { 
+      var tabDataList = tabData.map((item) => {
+        return (
+        <div key={(item.key)}>
+          <p className="App-intro"></p>
+          <Thumbnail ccgOutputProps={item.key} ccgConnectionProps={this.ccgConnection} subFolderProps={globalSettings.subFolder}/>
+        </div>
+        )
+      })
+      
+      return (tabDataList)      
+  }
+
   handleSettingsPage() {
     this.setState({showSettingsMenu: !this.state.showSettingsMenu});
   }
@@ -98,18 +111,7 @@ class App extends Component {
         {this.state.showSettingsMenu ? <SettingsPage /> : null }
         <div className="App-body">
           <Tabs tabs={tabData}>
-            <div key={tabData[0].key}>
-              <p className="App-intro"></p>
-              <Thumbnail ccgOutputProps={tabData[0].output} ccgConnectionProps={this.ccgConnection} subFolderProps={globalSettings.subFolder}/>
-            </div>
-            <div key={tabData[1].key}>
-              <p className="App-intro"></p>
-              <Thumbnail ccgOutputProps={tabData[1].output} ccgConnectionProps={this.ccgConnection} subFolderProps={globalSettings.subFolder}/>
-            </div>
-            <div key={tabData[2].key}>
-              <p className="App-intro"></p>
-              <Thumbnail ccgOutputProps={tabData[2].output} ccgConnectionProps={this.ccgConnection} subFolderProps={globalSettings.subFolder}/>
-            </div>
+            {this.renderTabData(tabData)}
           </Tabs>
         </div>
       </div>

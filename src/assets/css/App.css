@@ -48,11 +48,12 @@ body {
     font-size: 1em;
     width: 18%;
     line-height: 35px;
-    background: rgb(24, 58, 20);
+    background: rgb(11, 12, 11);
     color: white;
     font-family: 'Roboto Condensed', sans-serif;
     border-radius: 5px;
-    border-width: 0;
+    border-width: 1px;
+    border-color: #aaa;
     outline: 0;
   }
   
