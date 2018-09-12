@@ -4,6 +4,7 @@ import { Tabs } from 'rmc-tabs';
 
 // Components:
 import Thumbnail from './Thumbnail';
+import SettingsPage from './Settings';
 
 //CSS files:
 import '../assets/css/Rmc-tabs.css';
@@ -35,11 +36,12 @@ class App extends Component {
 
     this.state = {
       ccgConnectionStatus: false,
-      ccgThumbnails: []
+      showSettingsMenu: false,      
     };
 
     this.setConnectionStatus = this.setConnectionStatus.bind(this);
     this.renderConnectionStatus = this.renderConnectionStatus.bind(this);
+    this.handleSettingsPage = this.handleSettingsPage.bind(this);
 }
 
   componentDidMount() {
@@ -77,6 +79,11 @@ class App extends Component {
       </a>
     )
   }
+
+  handleSettingsPage() {
+    this.setState({showSettingsMenu: !this.state.showSettingsMenu});
+  }
+
   render() {  
     return (
       <div className="App">
@@ -85,7 +92,10 @@ class App extends Component {
           <div>
             {this.renderConnectionStatus(this.state.ccgConnectionStatus)}
           </div>
+          <button className="Settings-button" 
+          onClick={this.handleSettingsPage}>SETTINGS</button>
         </header>
+        {this.state.showSettingsMenu ? <SettingsPage /> : null }
         <div className="App-body">
           <Tabs tabs={tabData}>
             <div key={tabData[0].key}>

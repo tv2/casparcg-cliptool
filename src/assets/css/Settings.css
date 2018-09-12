@@ -1,0 +1,9 @@
+.Settings-body {
+    position: absolute;
+    z-index: 20;
+    top: 140px;
+    left: 5%;
+    width: 90%;
+    height: 600px;
+    background-color: brown;
+}
