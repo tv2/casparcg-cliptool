@@ -17,9 +17,9 @@ class SettingsPage extends Component {
                     { key: 1, title: 'SCREEN 1'},
                     { key: 2, title: 'SCREEN 2'},
                     { key: 3, title: 'SCREEN 3'},
-                    { key: 4, title: 'SCREEN 4'},
-                    { key: 5, title: 'SCREEN 5'},
-                    { key: 6, title: 'SCREEN 6'},
+                    { key: 4, title: ''},
+                    { key: 5, title: ''},
+                    { key: 6, title: ''},
                 ],
             }
         };
@@ -29,8 +29,12 @@ class SettingsPage extends Component {
     }
 
     componentDidMount() {
-        const settingsFromFile = JSON.parse(fs.readFileSync(folder + "/settings.json"));
-        this.setState({settings: settingsFromFile});
+        try {
+            const settingsFromFile = JSON.parse(fs.readFileSync(folder + "/settings.json"));
+            this.setState({settings: settingsFromFile});
+            } catch (error) {
+            console.log(error);
+            }
     }
 
     handleChange(event) {

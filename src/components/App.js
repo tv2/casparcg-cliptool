@@ -14,7 +14,25 @@ import '../assets/css/App.css';
 const fs = require('fs');
 const electron = require('electron');
 const folder = electron.remote.app.getPath('userData');
-const globalSettings = JSON.parse(fs.readFileSync(folder + "/settings.json"));
+
+var globalSettings = { 
+      ipAddress: 'localhost',
+      port: '5250',
+      subFolder: '',
+      tabData: [
+          { key: 1, title: 'SCREEN 1'},
+          { key: 2, title: 'SCREEN 2'},
+          { key: 3, title: 'SCREEN 3'},
+          { key: 4, title: ''},
+          { key: 5, title: ''},
+          { key: 6, title: ''},
+      ],
+};
+try {
+globalSettings = JSON.parse(fs.readFileSync(folder + "/settings.json"));
+} catch (error) {
+  console.log(error);
+}
 
 //Define Output Tabs:
 //const tabData = globalSettings.tabData;
