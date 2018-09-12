@@ -1,12 +1,42 @@
 .Settings-body {
-    position: absolute;
-    z-index: 20;
+    position: fixed;
+    z-index: 10;
     top: 100px;
     left: 5%;
     width: 90%;
     height: 600px;
-    background-color: brown;
+    background-color: rgb(54, 54, 54);
+    border-width: 4px;
+    border-style: solid;
+    border-color: rgb(59, 59, 59);
+    box-shadow: 8px 8px 8px #555;
 }
+
+.Settings-form {
+    position: relative;
+    margin-top: 30px;
+    left: 30%;
+    width: 400px;
+    text-align: right;
+}
+
+.Settings-input-field {
+    color: rgb(255, 255, 255);
+    background-color: rgb(63, 63, 63);
+    font-size: 1.2em;
+}
+
+input[type=text] {
+    text-align: right;
+    margin-top: 10px;
+    margin-left: 5px;
+    font-size: 1.2em;
+    border: 1px solid rgb(124, 124, 124);
+    background-color: rgb(151, 151, 151);
+    border-radius: 0;
+    -webkit-appearance: none;
+}
+
 
 .Save-button {
     position: fixed;
@@ -15,7 +45,7 @@
     font-size: 12px;
     width: 160px;
     line-height: 300%;
-    background: rgb(20, 11, 145);
+    background: rgb(78, 7, 7);
     color: white;
     font-family: 'Roboto Condensed', sans-serif;
     border-radius: 16px;

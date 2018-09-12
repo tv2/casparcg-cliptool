@@ -30,8 +30,8 @@ body {
     position: fixed;
     top: 20px;
     right: 10px;
-    font-size: 15px;
-    width: 160px;
+    font-size: 1em;
+    width: 18%;
     line-height: 40px;
     color: white;
     font-family: 'Roboto Condensed', sans-serif;
@@ -45,8 +45,8 @@ body {
     position: fixed;
     top: 65px;
     right: 10px;
-    font-size: 15px;
-    width: 160px;
+    font-size: 1em;
+    width: 18%;
     line-height: 35px;
     background: rgb(24, 58, 20);
     color: white;

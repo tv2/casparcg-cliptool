@@ -29,7 +29,7 @@ class App extends Component {
 
     this.ccgConnection = new CasparCG(
       {
-        host: globalSettings.server,
+        host: globalSettings.ipAddress,
         port: globalSettings.port,  
         autoConnect: false,
     });
@@ -100,15 +100,15 @@ class App extends Component {
           <Tabs tabs={tabData}>
             <div key={tabData[0].key}>
               <p className="App-intro"></p>
-              <Thumbnail ccgOutputProps={tabData[0].output} ccgConnectionProps={this.ccgConnection} subFolderProps={globalSettings.subfolder}/>
+              <Thumbnail ccgOutputProps={tabData[0].output} ccgConnectionProps={this.ccgConnection} subFolderProps={globalSettings.subFolder}/>
             </div>
             <div key={tabData[1].key}>
               <p className="App-intro"></p>
-              <Thumbnail ccgOutputProps={tabData[1].output} ccgConnectionProps={this.ccgConnection} subFolderProps={globalSettings.subfolder}/>
+              <Thumbnail ccgOutputProps={tabData[1].output} ccgConnectionProps={this.ccgConnection} subFolderProps={globalSettings.subFolder}/>
             </div>
             <div key={tabData[2].key}>
               <p className="App-intro"></p>
-              <Thumbnail ccgOutputProps={tabData[2].output} ccgConnectionProps={this.ccgConnection} subFolderProps={globalSettings.subfolder}/>
+              <Thumbnail ccgOutputProps={tabData[2].output} ccgConnectionProps={this.ccgConnection} subFolderProps={globalSettings.subFolder}/>
             </div>
           </Tabs>
         </div>
