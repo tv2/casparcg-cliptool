@@ -74,7 +74,7 @@ class App extends Component {
 
   renderConnectionStatus(status) {
     return (
-      <a className="App-connection-status" style={status ? {color: "green"} : {color: "red"}}>
+      <a className="App-connection-status" style={status ? {backgroundColor: "green"} : {backgroundColor: "red"}}>
         {status ? "CONNECTED" : "CONNECTING..."}
       </a>
     )
@@ -92,7 +92,7 @@ class App extends Component {
           <div>
             {this.renderConnectionStatus(this.state.ccgConnectionStatus)}
           </div>
-          <button className="Settings-button" 
+          <button className="App-settings" 
           onClick={this.handleSettingsPage}>SETTINGS</button>
         </header>
         {this.state.showSettingsMenu ? <SettingsPage /> : null }

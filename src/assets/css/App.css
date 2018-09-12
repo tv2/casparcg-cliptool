@@ -26,13 +26,34 @@ body {
     box-shadow: 2px 2px 2px #555;
   }
 
-  App-connection-status {
+  .App-connection-status {
     position: fixed;
-    z-index: 10;
-    top: 10px;
+    top: 20px;
     right: 10px;
-    width: 50px;
-    font-size: 4em;
+    font-size: 15px;
+    width: 160px;
+    line-height: 40px;
+    color: white;
+    font-family: 'Roboto Condensed', sans-serif;
+    border-radius: 5px;
+    border-width: 0;
+    outline: 0;
+  }
+  
+
+  .App-settings {
+    position: fixed;
+    top: 65px;
+    right: 10px;
+    font-size: 15px;
+    width: 160px;
+    line-height: 35px;
+    background: rgb(24, 58, 20);
+    color: white;
+    font-family: 'Roboto Condensed', sans-serif;
+    border-radius: 5px;
+    border-width: 0;
+    outline: 0;
   }
   
   .App-body {
@@ -58,20 +79,4 @@ body {
     to { transform: rotate(15deg); }
     from { transform: rotate(15deg); }
     to { transform: rotate(-15deg); }
-  }
-  
-  .stopButton {
-    position: fixed;
-    top: 25px;
-    right: 5px;
-    margin: 8px;
-    font-size: 12px;
-    width: 60px;
-    line-height: 300%;
-    background: red;
-    color: white;
-    font-family: 'Roboto Condensed', sans-serif;
-    border-radius: 16px;
-    border-width: 0;
-    outline: 0;
   }

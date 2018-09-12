@@ -1,9 +1,24 @@
 .Settings-body {
     position: absolute;
     z-index: 20;
-    top: 140px;
+    top: 100px;
     left: 5%;
     width: 90%;
     height: 600px;
     background-color: brown;
+}
+
+.Save-button {
+    position: fixed;
+    top: 650px;
+    left: calc(50% - 80px);
+    font-size: 12px;
+    width: 160px;
+    line-height: 300%;
+    background: rgb(20, 11, 145);
+    color: white;
+    font-family: 'Roboto Condensed', sans-serif;
+    border-radius: 16px;
+    border-width: 0;
+    outline: 0;
 }

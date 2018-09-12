@@ -17,18 +17,15 @@ class SettingsPage extends Component {
 
 
     handleChange(event) {
-        console.log(event.target.name + " : " +event.target.value);
         var settingsCopy= Object.assign({}, this.state.settings);
         settingsCopy[event.target.name] = event.target.value;
-
         this.setState(
             {settings: settingsCopy}
         );
     }
     
     handleSubmit(event) {
-        alert('A name was submitted: ' + this.state.ipAddress);
-        event.preventDefault();
+        //event.preventDefault();
     }
     
     render() {
@@ -49,7 +46,7 @@ class SettingsPage extends Component {
                     <input name="subFolder" type="text" value={this.state.settings.subFolder} onChange={this.handleChange} />
                 </label>
                 <br/>
-                <input type="submit" value="Submit" />
+                <input className="Save-button" type="submit" value="SAVE SETTINGS" />
             </form>
         );
       }
