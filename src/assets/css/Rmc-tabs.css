@@ -24,7 +24,10 @@
     transition: transform 0.3s cubic-bezier(0.35, 0, 0.25, 1), left 0.3s cubic-bezier(0.35, 0, 0.25, 1), top 0.3s cubic-bezier(0.35, 0, 0.25, 1);
     will-change: transform, left, top;
   }
+  /*Added Margin top 20px */
   .rmc-tabs-pane-wrap {
+    margin-top: 20px;
+
     width: 100%;
     -ms-flex-negative: 0;
         flex-shrink: 0;
@@ -67,8 +70,9 @@
     -ms-flex-direction: row;
         flex-direction: row;
   }
-  .rmc-tabs-tab-bar {
-    position: relative;
+  /* changed position to fixed and heigth to 40px  */
+  .rmc-tabs-tab-bar { 
+    position: fixed;
     display: -ms-flexbox;
     display: flex;
     -ms-flex-negative: 0;
@@ -76,7 +80,7 @@
     -ms-flex-direction: row;
         flex-direction: row;
     width: 100%;
-    height: 100%;
+    height: 40px;
     overflow: visible;
     z-index: 1;
   }

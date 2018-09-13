@@ -59,7 +59,6 @@ body {
   
   .App-body {
     position: relative;
-    z-index: 1;
     top: 130px;
     left: 0px;
     Right: 0px;
