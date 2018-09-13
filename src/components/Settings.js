@@ -29,12 +29,7 @@ class SettingsPage extends Component {
     }
 
     componentDidMount() {
-        try {
-            const settingsFromFile = JSON.parse(fs.readFileSync(folder + "/settings.json"));
-            this.setState({settings: settingsFromFile});
-            } catch (error) {
-            console.log(error);
-            }
+        this.setState({settings: this.props.loadSettingsProps()});
     }
 
     handleChange(event) {
@@ -54,15 +49,13 @@ class SettingsPage extends Component {
     }
 
     handleSubmit(event) {
-        var json = JSON.stringify(this.state.settings);
-        fs.writeFile(folder + "/settings.json", json, 'utf8', (error)=>{
-            console.log(error);
-        });
+        this.props.saveSettingsProps(this.state.settings);
     }
     
     render() {
         return (
             <div className="Settings-body">
+            <p className="Settings-header">SETTINGS :</p>
             <form className="Settings-form" onSubmit={this.handleSubmit}>
                 <label className="Settings-input-field">
                     IP ADDRESS :  

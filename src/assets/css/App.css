@@ -30,8 +30,8 @@ body {
     position: fixed;
     top: 20px;
     right: 10px;
-    font-size: 1em;
-    width: 18%;
+    font-size: 0.8em;
+    width: 12%;
     line-height: 40px;
     color: white;
     font-family: 'Roboto Condensed', sans-serif;
@@ -41,12 +41,12 @@ body {
   }
   
 
-  .App-settings {
+  .App-settings-button {
     position: fixed;
     top: 65px;
     right: 10px;
-    font-size: 1em;
-    width: 18%;
+    font-size: 0.8em;
+    width: 12%;
     line-height: 35px;
     background: rgb(11, 12, 11);
     color: white;

@@ -10,64 +10,82 @@ import SettingsPage from './Settings';
 import '../assets/css/Rmc-tabs.css';
 import '../assets/css/App.css';
 
-//Load settings.json file: server, port, subfolder
+//Load settings.json file:
 const fs = require('fs');
 const electron = require('electron');
 const folder = electron.remote.app.getPath('userData');
 
-var globalSettings = { 
-      ipAddress: 'localhost',
-      port: '5250',
-      subFolder: '',
-      tabData: [
-          { key: 1, title: 'SCREEN 1'},
-          { key: 2, title: 'SCREEN 2'},
-          { key: 3, title: 'SCREEN 3'},
-          { key: 4, title: ''},
-          { key: 5, title: ''},
-          { key: 6, title: ''},
-      ],
+//Settings interface:
+var settingsInterface = { 
+  ipAddress: 'localhost',
+  port: '5250',
+  subFolder: '',
+  tabData: [
+      { key: 1, title: 'SCREEN 1'},
+      { key: 2, title: 'SCREEN 2'},
+      { key: 3, title: 'SCREEN 3'},
+      { key: 4, title: ''},
+      { key: 5, title: ''},
+      { key: 6, title: ''},
+  ],
 };
-try {
-globalSettings = JSON.parse(fs.readFileSync(folder + "/settings.json"));
-} catch (error) {
-  console.log(error);
-}
-
-//Define Output Tabs:
-//const tabData = globalSettings.tabData;
-const tabData = globalSettings.tabData.filter((item) => {
-  return item.title != "";
-});
 
 class App extends Component {
   constructor(props) {
     super(props);
 
-    this.ccgConnection = new CasparCG(
-      {
-        host: globalSettings.ipAddress,
-        port: globalSettings.port,  
-        autoConnect: false,
-    });
-
     this.state = {
       ccgConnectionStatus: false,
-      showSettingsMenu: false,      
+      showSettingsMenu: false, 
+      tabData: [], 
+      globalSettings: {},    
     };
 
     this.setConnectionStatus = this.setConnectionStatus.bind(this);
     this.renderConnectionStatus = this.renderConnectionStatus.bind(this);
     this.handleSettingsPage = this.handleSettingsPage.bind(this);
     this.renderTabData = this.renderTabData.bind(this);
-}
+
+  }
 
   componentDidMount() {
+    var mountSettings = this.loadSettings();
+    this.setState({globalSettings: mountSettings});
+
+    //Define Output Tabs:
+    this.setState({tabData: mountSettings.tabData.filter((item) => {
+      return item.title != "";
+      })
+    });
+    this.ccgConnection = new CasparCG(
+      {
+        host: mountSettings.ipAddress,
+        port: mountSettings.port,  
+        autoConnect: false,
+    });
     this.ccgConnection.connect();
 
     // Initialize timer connection status:
     var temp = setInterval(this.setConnectionStatus, 2000);
     console.log("Timer initiated: " + temp);
+  }
+
+  loadSettings() {
+      try {
+        const settingsFromFile = JSON.parse(fs.readFileSync(folder + "/settings.json"));
+        return (settingsFromFile);
+      } catch (error) {
+        console.log(error);
+        return (settingsInterface);
+      }
+  }
+
+  saveSettings(settings) {
+    var json = JSON.stringify(settings);
+    fs.writeFile(folder + "/settings.json", json, 'utf8', (error)=>{
+        console.log(error);
+    });
+
   }
 
   setConnectionStatus() {
@@ -93,21 +111,20 @@ class App extends Component {
   renderConnectionStatus(status) {
     return (
       <a className="App-connection-status" style={status ? {backgroundColor: "green"} : {backgroundColor: "red"}}>
-        {status ? "CONNECTED" : "CONNECTING..."}
+        {status ? "CONNECTED" : "CONNECTING"}
       </a>
     )
   }
 
   renderTabData() { 
-      var tabDataList = tabData.map((item) => {
+      var tabDataList = this.state.tabData.map((item) => {
         return (
         <div key={(item.key)}>
           <p className="App-intro"></p>
-          <Thumbnail ccgOutputProps={item.key} ccgConnectionProps={this.ccgConnection} subFolderProps={globalSettings.subFolder}/>
+          <Thumbnail ccgOutputProps={item.key} ccgConnectionProps={this.ccgConnection} subFolderProps={this.state.globalSettings.subFolder}/>
         </div>
         )
       })
-      
       return (tabDataList)      
   }
 
@@ -123,13 +140,15 @@ class App extends Component {
           <div>
             {this.renderConnectionStatus(this.state.ccgConnectionStatus)}
           </div>
-          <button className="App-settings" 
+          <button className="App-settings-button" 
           onClick={this.handleSettingsPage}>SETTINGS</button>
         </header>
-        {this.state.showSettingsMenu ? <SettingsPage /> : null }
+        {this.state.showSettingsMenu ? 
+          <SettingsPage loadSettingsProps={this.loadSettings.bind(this)} saveSettingsProps={this.saveSettings.bind(this)}/> 
+          : null }
         <div className="App-body">
-          <Tabs tabs={tabData}>
-            {this.renderTabData(tabData)}
+          <Tabs tabs={this.state.tabData}>
+            {this.renderTabData()}
           </Tabs>
         </div>
       </div>
