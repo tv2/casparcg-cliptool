@@ -4,7 +4,7 @@ A little Clip player, that looks into a mediafolder and show all the clips with 
 Tested on MacOS
 
 ### Based on:
-Using SuperflyTV CasparCG-Connection:
+Using SuperflyTV CasparCG-Connection ACMP protocol:
 ```
 https://github.com/SuperFlyTV/casparcg-connection
 ```
@@ -22,15 +22,6 @@ git clone https://github.com/olzzon/CasparCG-ClipTool.git nameofyourproject
 cd nameofyourproject
 yarn
 ```
-
-### settings.json:
-```
-cp settings.example.json /Users/{your_user_name}/Library/Application Support/CasparCGClient/settings.json
-````
-In the file you can set:
-server: (ip-address)
-port: (port number)
-subFolder: (subfolder containing media)
 
 ### Run the app
 ```

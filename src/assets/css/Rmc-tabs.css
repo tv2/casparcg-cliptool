@@ -100,11 +100,11 @@
     color: white;
   }
   .rmc-tabs-tab-bar-tab-active {
-    color: #108ee9;
+    color: #ff0000;
   }
   .rmc-tabs-tab-bar-underline {
     position: absolute;
-    border: 1px #108ee9 solid;
+    border: 1px #e91010 solid;
   }
   .rmc-tabs-tab-bar-animated .rmc-tabs-tab-bar-content {
     transition: transform 0.3s cubic-bezier(0.35, 0, 0.25, 1);

@@ -8,7 +8,7 @@
     background-color: rgb(44, 44, 44);
     border-width: 1px;
     border-style: solid;
-    border-color: rgb(156, 156, 156);
+    border-color: rgba(156, 156, 156, 0.63);
     box-shadow: 8px 8px 8px rgb(66, 66, 66);
 }
 

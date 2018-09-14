@@ -1121,9 +1121,9 @@ caseless@~0.12.0:
   version "0.12.0"
   resolved "https://registry.yarnpkg.com/caseless/-/caseless-0.12.0.tgz#1b681c21ff84033c826543090689420d187151dc"
 
-casparcg-connection@^4.5.0:
-  version "4.5.0"
-  resolved "https://registry.yarnpkg.com/casparcg-connection/-/casparcg-connection-4.5.0.tgz#c85cba1b17682337e20fe7608b83e960c77ac405"
+casparcg-connection@^4.5.1:
+  version "4.5.1"
+  resolved "https://registry.yarnpkg.com/casparcg-connection/-/casparcg-connection-4.5.1.tgz#9c953221fef651dc702247e86986355a382e7095"
   dependencies:
     highland "^3.0.0-beta.6"
     xml2js "^0.4.19"

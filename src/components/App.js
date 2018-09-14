@@ -144,7 +144,7 @@ class App extends Component {
           onClick={this.handleSettingsPage}>SETTINGS</button>
         </header>
         {this.state.showSettingsMenu ? 
-          <SettingsPage loadSettingsProps={this.loadSettings.bind(this)} saveSettingsProps={this.saveSettings.bind(this)}/> 
+          <SettingsPage globalSettingsProps={this.state.globalSettings} loadSettingsProps={this.loadSettings.bind(this)} saveSettingsProps={this.saveSettings.bind(this)}/> 
           : null }
         <div className="App-body">
           <Tabs tabs={this.state.tabData}>

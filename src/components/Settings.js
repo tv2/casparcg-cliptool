@@ -9,19 +9,7 @@ class SettingsPage extends Component {
     constructor(props) {
         super(props);
         this.state = { 
-            settings: {
-                ipAddress: 'localhost',
-                port: '5250',
-                subFolder: '',
-                tabData: [
-                    { key: 1, title: 'SCREEN 1'},
-                    { key: 2, title: 'SCREEN 2'},
-                    { key: 3, title: 'SCREEN 3'},
-                    { key: 4, title: ''},
-                    { key: 5, title: ''},
-                    { key: 6, title: ''},
-                ],
-            }
+            settings: this.props.globalSettingsProps,
         };
         this.handleChange = this.handleChange.bind(this);
         this.handleTabDataChange = this.handleTabDataChange.bind(this);

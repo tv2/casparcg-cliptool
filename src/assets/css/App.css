@@ -29,9 +29,9 @@ body {
   .App-connection-status {
     position: fixed;
     top: 20px;
-    right: 10px;
+    right: 5px;
     font-size: 0.8em;
-    width: 12%;
+    width: 90px;
     line-height: 40px;
     color: white;
     font-family: 'Roboto Condensed', sans-serif;
@@ -44,9 +44,9 @@ body {
   .App-settings-button {
     position: fixed;
     top: 65px;
-    right: 10px;
+    right: 5px;
     font-size: 0.8em;
-    width: 12%;
+    width: 90px;
     line-height: 35px;
     background: rgb(11, 12, 11);
     color: white;
