@@ -15,7 +15,7 @@ const fs = require('fs');
 const electron = require('electron');
 const folder = electron.remote.app.getPath('userData');
 
-//Settings interface:
+//Settings interface defaults:
 var settingsInterface = { 
   ipAddress: 'localhost',
   port: '5250',
@@ -49,6 +49,8 @@ class App extends Component {
   }
 
   componentDidMount() {
+    // Load Settings,
+    // mountSettings in ComponentDidMount (as SetState is async)
     var mountSettings = this.loadSettings();
     this.setState({globalSettings: mountSettings});
 
@@ -57,12 +59,14 @@ class App extends Component {
       return item.title != "";
       })
     });
+
+    // in current version of casparcg-connection the port has to be assigned as a seperate parameter.
     this.ccgConnection = new CasparCG(
       {
         host: mountSettings.ipAddress,
         port: mountSettings.port,  
         autoConnect: false,
-    });
+    }, mountSettings.port);
     this.ccgConnection.connect();
 
     // Initialize timer connection status:
