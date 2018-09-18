@@ -45,7 +45,7 @@ class Thumbnail extends Component {
     }
 
     startTimerPlayUpdate() {
-        setInterval(this.updatePlayingStatus, 2500);
+        setInterval(this.updatePlayingStatus, 250);
     }
 
     stopTimerPlayUpdate() {
