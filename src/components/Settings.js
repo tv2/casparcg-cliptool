@@ -12,7 +12,8 @@ class SettingsPage extends Component {
             settings: this.props.globalSettingsProps,
         };
         this.handleChange = this.handleChange.bind(this);
-        this.handleTabDataChange = this.handleTabDataChange.bind(this);
+        this.handleTabDataTitle = this.handleTabDataTitle.bind(this);
+        this.handleTabDataFolder = this.handleTabDataFolder.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
@@ -28,14 +29,21 @@ class SettingsPage extends Component {
         );
     }
     
-    handleTabDataChange(event) {
+    handleTabDataTitle(event) {
         var settingsCopy= Object.assign({}, this.state.settings);
         settingsCopy.tabData[event.target.name].title = event.target.value;
         this.setState(
             {settings: settingsCopy}
         );
     }
-
+    
+    handleTabDataFolder(event) {
+        var settingsCopy= Object.assign({}, this.state.settings);
+        settingsCopy.tabData[event.target.name].subFolder = event.target.value;
+        this.setState(
+            {settings: settingsCopy}
+        );
+    }
     handleSubmit(event) {
         this.props.saveSettingsProps(this.state.settings);
     }
@@ -55,36 +63,43 @@ class SettingsPage extends Component {
                     <input name="port" type="text" value={this.state.settings.port} onChange={this.handleChange} />
                 </label>
                 <br/>
-                <label className="Settings-input-field">
-                    SUBFOLDER :
-                    <input name="subFolder" type="text" value={this.state.settings.subFolder} onChange={this.handleChange} />
-                </label>
-                <br/>
                 <br/>
                 <label className="Settings-input-field">
                     OUTPUT 1 :
-                    <input name="0" type="text" value={this.state.settings.tabData[0].title} onChange={this.handleTabDataChange} />
+                    <input name="0" type="text" value={this.state.settings.tabData[0].title} onChange={this.handleTabDataTitle} />
                 </label>
+                <label className="Settings-subfolder-field">
+                SUBFOLDER :
+                <input name="0" type="text" value={this.state.settings.tabData[0].subFolder} onChange={this.handleTabDataFolder} />
+                </label>
+                <br/>
                 <label className="Settings-input-field">
                     OUTPUT 2 :
-                    <input name="1" type="text" value={this.state.settings.tabData[1].title} onChange={this.handleTabDataChange} />
+                    <input name="1" type="text" value={this.state.settings.tabData[1].title} onChange={this.handleTabDataTitle} />
                 </label>
+                <label className="Settings-subfolder-field">
+                SUBFOLDER :
+                <input name="1" type="text" value={this.state.settings.tabData[1].subFolder} onChange={this.handleTabDataFolder} />
+                </label>
+                <br/>
                 <label className="Settings-input-field">
                     OUTPUT 3 :
-                    <input name="2" type="text" value={this.state.settings.tabData[2].title} onChange={this.handleTabDataChange} />
+                    <input name="2" type="text" value={this.state.settings.tabData[2].title} onChange={this.handleTabDataTitle} />
                 </label>
+                <label className="Settings-subfolder-field">
+                SUBFOLDER :
+                <input name="2" type="text" value={this.state.settings.tabData[2].subFolder} onChange={this.handleTabDataFolder} />
+                </label>
+                <br/>
                 <label className="Settings-input-field">
                     OUTPUT 4 :
-                    <input name="3" type="text" value={this.state.settings.tabData[3].title} onChange={this.handleTabDataChange} />
+                    <input name="3" type="text" value={this.state.settings.tabData[3].title} onChange={this.handleTabDataTitle} />
                 </label>
-                <label className="Settings-input-field">
-                    OUTPUT 5 :
-                    <input name="4" type="text" value={this.state.settings.tabData[4].title} onChange={this.handleTabDataChange} />
+                <label className="Settings-subfolder-field">
+                SUBFOLDER :
+                <input name="3" type="text" value={this.state.settings.tabData[3].subFolder} onChange={this.handleTabDataFolder} />
                 </label>
-                <label className="Settings-input-field">
-                    OUTPUT 6 :
-                    <input name="5" type="text" value={this.state.settings.tabData[5].title} onChange={this.handleTabDataChange} />
-                </label>
+                <br/>
                 <input className="Save-button" type="submit" value="SAVE SETTINGS" />
             </form>
             </div>

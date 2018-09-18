@@ -19,14 +19,14 @@ const folder = electron.remote.app.getPath('userData');
 var settingsInterface = { 
   ipAddress: 'localhost',
   port: '5250',
-  subFolder: '',
+  mainFolder: '',
   tabData: [
-      { key: 1, title: 'SCREEN 1'},
-      { key: 2, title: 'SCREEN 2'},
-      { key: 3, title: 'SCREEN 3'},
-      { key: 4, title: ''},
-      { key: 5, title: ''},
-      { key: 6, title: ''},
+      { key: 1, title: 'SCREEN 1', subFolder: ''},
+      { key: 2, title: 'SCREEN 2', subFolder: ''},
+      { key: 3, title: 'SCREEN 3', subFolder: ''},
+      { key: 4, title: '', subFolder: ''},
+      { key: 5, title: '', subFolder: ''},
+      { key: 6, title: '', subFolder: ''},
   ],
 };
 
@@ -77,11 +77,21 @@ class App extends Component {
   loadSettings() {
       try {
         const settingsFromFile = JSON.parse(fs.readFileSync(folder + "/settings.json"));
-        return (settingsFromFile);
+        if (this.compareKeys(settingsFromFile, settingsInterface)) {
+          return (settingsFromFile);
+        } else {
+          return settingsInterface;
+        }
       } catch (error) {
         console.log(error);
         return (settingsInterface);
       }
+  }
+
+  compareKeys(a, b) {
+    var aKeys = Object.keys(a).sort();
+    var bKeys = Object.keys(b).sort();
+    return JSON.stringify(aKeys) === JSON.stringify(bKeys);
   }
 
   saveSettings(settings) {
@@ -125,7 +135,7 @@ class App extends Component {
         return (
         <div key={(item.key)}>
           <p className="App-intro"></p>
-          <Thumbnail ccgOutputProps={item.key} ccgConnectionProps={this.ccgConnection} subFolderProps={this.state.globalSettings.subFolder}/>
+          <Thumbnail ccgOutputProps={item.key} ccgConnectionProps={this.ccgConnection} subFolderProps={item.subFolder}/>
         </div>
         )
       })
