@@ -89,22 +89,10 @@ class Thumbnail extends Component {
             .replace(/\..+$/, '')
         );
     }
-
-    framesToTimeCode(frame) {
-        var hour = ('0' + (frame/(fps*60*60)).toFixed()).slice(-2);
-        var minute = ('0' + (frame/(fps*60)).toFixed()).slice(-2);
-        var sec = ('0' + (frame/(fps)).toFixed()).slice(-2);
-        var frm = ('0' + (frame-parseInt(frame/fps)*fps).toFixed()).slice(-2);
-        return (
-            hour + "." + minute + "." + sec
-        );
-    }
-        
-        
     playMedia(layer, mediaSource, loop) {
         this.props.ccgConnectionProps.play(this.props.ccgOutputProps, layer, mediaSource, loop);
     }
-
+    
     loadMedia(layer, mediaSource, loop) {
         this.stopTimerPlayUpdate();
         this.props.ccgConnectionProps.load(this.props.ccgOutputProps, layer, mediaSource, loop)
@@ -112,6 +100,20 @@ class Thumbnail extends Component {
             this.updatePlayingStatus(true);
             this.startTimerPlayUpdate();
         })
+    }
+
+    framesToTimeCode(frame) {
+        if (frame) {
+        var hour = ('0' + (frame/(fps*60*60)).toFixed()).slice(-2);
+        var minute = ('0' + (frame/(fps*60)).toFixed()).slice(-2);
+        var sec = ('0' + (frame/(fps)).toFixed()).slice(-2);
+        var frm = ('0' + (frame-parseInt(frame/fps)*fps).toFixed()).slice(-2);
+        return (
+            hour + "." + minute + "." + sec
+        );
+        } else {
+            return "";
+        }
     }
         
     updateThumbnail(item, index, isActive, tally) {
