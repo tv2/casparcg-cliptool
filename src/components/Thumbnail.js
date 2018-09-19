@@ -30,14 +30,18 @@ class Thumbnail extends Component {
         this.props.ccgConnectionProps.thumbnailList(this.props.subFolderProps)
         .then((results) => {
             results.response.data.map((item) => {
-                if (item.name.includes(this.props.subFolderProps)) {
-                    this.setState((prevState) => ({
-                        thumbList: [...prevState.thumbList, item] 
-                    }));
-                    this.updateThumbnail(item, this.state.thumbList.length - 1, false, false);
-                }
+                this.setState((prevState) => ({
+                    thumbList: [...prevState.thumbList, item] 
+                }));
+                this.updateThumbnail(item, this.state.thumbList.length - 1, false, false);
             });
-        });     
+        })
+        .catch ((error) => {
+            if (error.response.code === 404 ) {
+                window.alert("Folder: " + this.props.subFolderProps + " does not exist");
+            }
+        });
+    
         // Timer connection status:
         this.updatePlayingStatus();
         this.startTimerPlayUpdate();
