@@ -16,11 +16,24 @@ Minimal Electron, React and Webpack boilerplate
  https://github.com/alexdevero/electron-react-webpack-boilerplate.git
 ```
 
-### Install:
+### Prebuild versions:
+````
+https://github.com/olzzon/CasparCG-ClipTool/releases
+````
+
+
+### Build:
 ```
 git clone https://github.com/olzzon/CasparCG-ClipTool.git nameofyourproject
 cd nameofyourproject
 yarn
+/* the next steps are neede to build develop version of casparcg-connection
+cd node_modules/casparcg-connection
+yarn
+yarn build
+cd ..
+cd ..
+
 ```
 
 ### Run the app
