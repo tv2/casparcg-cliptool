@@ -27,7 +27,7 @@ class Thumbnail extends Component {
         this.startTimerPlayUpdate = this.startTimerPlayUpdate.bind(this);
     }
     componentDidMount() {
-        this.props.ccgConnectionProps.thumbnailList()
+        this.props.ccgConnectionProps.thumbnailList(this.props.subFolderProps)
         .then((results) => {
             results.response.data.map((item) => {
                 if (item.name.includes(this.props.subFolderProps)) {

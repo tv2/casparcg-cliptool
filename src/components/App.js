@@ -50,7 +50,7 @@ class App extends Component {
 
   componentDidMount() {
     // Load Settings,
-    // mountSettings in ComponentDidMount (as SetState is async)
+    // use mountSettings in ComponentDidMount (as SetState is async)
     var mountSettings = this.loadSettings();
     this.setState({globalSettings: mountSettings});
 
@@ -66,7 +66,7 @@ class App extends Component {
         host: mountSettings.ipAddress,
         port: mountSettings.port,  
         autoConnect: false,
-    }, mountSettings.port);
+    });
     this.ccgConnection.connect();
 
     // Initialize timer connection status:

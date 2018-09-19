@@ -24,7 +24,25 @@
 .Settings-form {
     position: relative;
     margin-top: 10px;
-    left: 20%;
+    left: 25%;
+    width: 400px;
+    text-align: right;
+}
+
+.Settings-channel-form {
+    position: absolute;
+    top: 200px;
+    margin-top: 20px;
+    left: 5%;
+    width: 400px;
+    text-align: right;
+}
+
+.Settings-folder-form {
+    position: absolute;
+    top: 200px;
+    margin-top: 20px;
+    left: 50%;
     width: 400px;
     text-align: right;
 }
