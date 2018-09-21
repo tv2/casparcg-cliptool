@@ -15,6 +15,9 @@ const fs = require('fs');
 const electron = require('electron');
 const folder = electron.remote.app.getPath('userData');
 
+//TimerReference:
+var connectionTimer;
+
 //Settings interface defaults:
 var settingsInterface = { 
   ipAddress: 'localhost',
@@ -70,14 +73,18 @@ class App extends Component {
     this.ccgConnection.connect();
 
     // Initialize timer connection status:
-    var temp = setInterval(this.setConnectionStatus, 2000);
-    console.log("Timer initiated: " + temp);
+    connectionTimer = setInterval(this.setConnectionStatus, 2000);
+    console.log("Timer initiated: " + connectionTimer);
+  }
+
+  reloadPage() {
+    location.reload();
   }
 
   loadSettings() {
       try {
         const settingsFromFile = JSON.parse(fs.readFileSync(folder + "/settings.json"));
-        if (this.compareKeys(settingsFromFile, settingsInterface)) {
+        if (this.compareOldNewSettings(settingsFromFile, settingsInterface)) {
           return (settingsFromFile);
         } else {
           return settingsInterface;
@@ -88,7 +95,7 @@ class App extends Component {
       }
   }
 
-  compareKeys(a, b) {
+  compareOldNewSettings(a, b) {
     var aKeys = Object.keys(a).sort();
     var bKeys = Object.keys(b).sort();
     return JSON.stringify(aKeys) === JSON.stringify(bKeys);
@@ -99,7 +106,6 @@ class App extends Component {
     fs.writeFile(folder + "/settings.json", json, 'utf8', (error)=>{
         console.log(error);
     });
-
   }
 
   setConnectionStatus() {
@@ -114,8 +120,8 @@ class App extends Component {
   }
 
   timeout(ms, promise) {
-  return new Promise(function(resolve, reject) {
-    setTimeout(function() {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
       reject(new Error("Offline: Server was to long to respond"));
     }, ms);
     promise.then(resolve, reject);
@@ -155,7 +161,11 @@ class App extends Component {
             {this.renderConnectionStatus(this.state.ccgConnectionStatus)}
           </div>
           <button className="App-settings-button" 
-          onClick={this.handleSettingsPage}>SETTINGS</button>
+            onClick={this.handleSettingsPage}>SETTINGS
+          </button>
+          <button className="Reload-button" 
+            onClick={this.reloadPage}>RESCAN
+          </button>
         </header>
         {this.state.showSettingsMenu ? 
           <SettingsPage globalSettingsProps={this.state.globalSettings} loadSettingsProps={this.loadSettings.bind(this)} saveSettingsProps={this.saveSettings.bind(this)}/> 

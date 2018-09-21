@@ -30,6 +30,32 @@
     margin: 8px;
 }
 
+.thumbnailImageClickPvw {
+  left: 5%;
+ /* visibility: hidden;
+ */
+}
+
+.thumbnailImageClickPgm {
+  right: 5%;
+ /* visibility: hidden;
+ */
+}
+
+.mixButton {
+  position: relative;
+  margin: 8px;
+  font-size: 1.2em;
+  width: 40%;
+  line-height: 150%;
+  background: rgb(0, 0, 0);
+  color: white;
+  font-family: 'Roboto Condensed', sans-serif;
+  border-radius: 16px;
+  border-width: 0;
+  outline: 0;
+}
+
 .playButton {
     margin: 8px;
     font-size: 1.2em;
@@ -58,7 +84,7 @@
 
 .text {
     margin-top: 8px;
-    font-size: 1.2em;
+    font-size: 0.7em;
 }
 
 .playing {

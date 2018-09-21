@@ -28,11 +28,11 @@ body {
 
   .App-connection-status {
     position: fixed;
-    top: 20px;
+    top: 5px;
     right: 5px;
     font-size: 0.8em;
     width: 90px;
-    line-height: 40px;
+    line-height: 30px;
     color: white;
     font-family: 'Roboto Condensed', sans-serif;
     border-radius: 5px;
@@ -43,11 +43,11 @@ body {
 
   .App-settings-button {
     position: fixed;
-    top: 65px;
+    top: 47px;
     right: 5px;
     font-size: 0.8em;
     width: 90px;
-    line-height: 35px;
+    line-height: 25px;
     background: rgb(11, 12, 11);
     color: white;
     font-family: 'Roboto Condensed', sans-serif;
@@ -57,6 +57,22 @@ body {
     outline: 0;
   }
   
+  .Reload-button {
+    position: fixed;
+    top: 90px;
+    right: 5px;
+    font-size: 0.8em;
+    width: 90px;
+    line-height: 25px;
+    background: rgb(19, 46, 19);
+    color: white;
+    font-family: 'Roboto Condensed', sans-serif;
+    border-radius: 5px;
+    border-width: 1px;
+    border-color: #aaa;
+    outline: 0;
+  }
+
   .App-body {
     position: relative;
     top: 130px;

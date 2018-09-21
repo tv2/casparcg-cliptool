@@ -44,6 +44,7 @@ class SettingsPage extends Component {
             {settings: settingsCopy}
         );
     }
+    
     handleSubmit(event) {
         this.props.saveSettingsProps(this.state.settings);
     }
