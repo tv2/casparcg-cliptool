@@ -139,9 +139,12 @@ class App extends Component {
   renderTabData() { 
       var tabDataList = this.state.tabData.map((item) => {
         return (
-        <div key={(item.key)}>
-          <p className="App-intro"></p>
-          <Thumbnail ccgOutputProps={item.key} ccgConnectionProps={this.ccgConnection} subFolderProps={item.subFolder}/>
+        <div className="App-intro" key={(item.key)}>
+          <Thumbnail 
+            ccgOutputProps={item.key} 
+            ccgConnectionProps={this.ccgConnection} 
+            subFolderProps={item.subFolder}
+          />
         </div>
         )
       })

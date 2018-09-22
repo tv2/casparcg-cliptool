@@ -26,9 +26,9 @@ class Thumbnail extends Component {
         this.updateThumbnail = this.updateThumbnail.bind(this);
         this.renderThumbnails = this.renderThumbnails.bind(this);
 
-        this.playMedia = this.playMedia.bind(this);
         this.loadMedia = this.loadMedia.bind(this);
         this.loadBgMedia = this.loadBgMedia.bind(this);
+        this.handleLoop =  this.handleLoop.bind(this);
         this.setStateElement = this.setStateElement.bind(this);
     }
 
@@ -39,6 +39,7 @@ class Thumbnail extends Component {
                 item.tally = false;
                 item.tallyBg = false;
                 item.isActive = false;
+                item.loop = false;
                 this.setState((prevState) => ({
                     thumbList: [...prevState.thumbList, item] 
                 }));
@@ -128,7 +129,7 @@ class Thumbnail extends Component {
     }
     
     playMedia(layer, mediaSource, loop) {
-        this.props.ccgConnectionProps.play(this.props.ccgOutputProps, layer, mediaSource, loop);
+        this.props.ccgConnectionProps.play(this.props.ccgOutputProps, layer, mediaSource, loop, 'WIPE');
     }
 
     mixPlay(layer) {
@@ -136,11 +137,16 @@ class Thumbnail extends Component {
     }
 
     loadMedia(layer, mediaSource, loop) {
-        this.props.ccgConnectionProps.load(this.props.ccgOutputProps, layer, mediaSource, loop);
+        this.props.ccgConnectionProps.load(this.props.ccgOutputProps, layer, mediaSource, loop, 'WIPE');
     }
 
     loadBgMedia(layer, mediaSource, loop) {
-        this.props.ccgConnectionProps.loadbg(this.props.ccgOutputProps, layer, mediaSource, loop);
+        this.props.ccgConnectionProps.loadbg(this.props.ccgOutputProps, layer, mediaSource, loop, 'WIPE');
+    }
+
+    handleLoop(index) {
+        this.setStateElement(this.state.thumbList, index, 'loop', !this.state.thumbList[index].loop);
+        this.updateThumbnail(this.state.thumbList[index], index);
     }
 
 
@@ -180,18 +186,18 @@ class Thumbnail extends Component {
                         item.tallyBg ? {boxShadow: '0px 0px 1px 3px green'} : {boxShadow: ''} 
                     )}
                 />
-                <button className="thumbnailImageClickPvw" onClick={() => this.loadBgMedia(10, item.name, false)}/>
-                <button className="thumbnailImageClickPgm" onClick={() => this.loadMedia(10, item.name, false)}/>
+                <button className="thumbnailImageClickPvw" onClick={() => this.loadBgMedia(10, item.name, item.loop)}/>
+                <button className="thumbnailImageClickPgm" onClick={() => this.loadMedia(10, item.name, item.loop)}/>
 
 
                 <a className="playing">{item.isActive ? this.framesToTimeCode(this.state.thumbActiveForegroundProducer["file-nb-frames"] - this.state.thumbActiveForegroundProducer["file-frame-number"]) : "" }</a>
-                <a className="text" style = {item.tallyBg ? {backgroundColor: 'green'} : {backgroundColor: ''}}>{item.name.substring(item.name.lastIndexOf('/')+1).slice(-45)}</a>
+                <a className="text">{item.name.substring(item.name.lastIndexOf('/')+1).slice(-45)}</a>
                 <br/>
                 <button className="playButton" onClick={() =>
-                    this.playMedia(10, item.name, false)
+                    this.playMedia(10, item.name, this.state.thumbList[this.state.thumbActiveIndex].loop)
                 }>PLAY</button>
-                <button className="loopButton" onClick={() =>
-                    this.playMedia(10, item.name, true)
+                <button className="loopButton" style={this.state.thumbList[index].loop ? {backgroundColor: 'rgb(28, 115, 165)'} : {backgroundColor: 'grey'}} onClick={() =>
+                    this.handleLoop(index)
                 }>LOOP</button>
             </li>
         )
@@ -199,9 +205,12 @@ class Thumbnail extends Component {
     
     render() {
         return (
-        <div className="app-body">
+        <div className="Thumb-body">
             <button className="mixButton" onClick={() => this.mixPlay(10)}>
-                MIX
+                PVW-MIX
+            </button>
+            <button className="startButton" onClick={() => this.playMedia(10, this.state.thumbList[this.state.thumbActiveIndex].name, this.state.thumbList[this.state.thumbActiveIndex].loop)}>
+                PGM
             </button>
             <ul className="flexBoxes" >
                 {this.state.thumbListRendered}           

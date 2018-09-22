@@ -1,6 +1,46 @@
-.app-body {
+.Thumb-body {
+  position: relative;
   margin-top: 5px;
 }
+
+
+/* Buttons for all thumbs, places at the bottom of the page */
+.mixButton {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 170px;
+  left: 0px;
+  z-index: 20;
+  margin: 8px;
+  font-size: 1.2em;
+  width: 40%;
+  line-height: 50px;
+  background: rgb(0, 73, 4);
+  color: white;
+  font-family: 'Roboto Condensed', sans-serif;
+  border-radius: 16px;
+  border-width: 1px;
+  outline: 1px;
+}
+
+.startButton {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 170px;
+  left: 0px;
+  z-index: 20;
+  margin: 8px;
+  font-size: 1.2em;
+  width: 40%;
+  line-height: 50px;
+  background: rgb(68, 0, 0);
+  color: white;
+  font-family: 'Roboto Condensed', sans-serif;
+  border-radius: 16px;
+  border-width: 1px;
+  outline: 1px;
+}
+
 
 .flexBoxes {
   display:flex;
@@ -28,27 +68,43 @@
     width: 90%;
     height: auto;
     margin: 8px;
-}
-
+  }
+  
+  /* Buttons on thumbnail invisible and visible */
 .thumbnailImageClickPvw {
+  position: absolute;
+  height: 150px; 
+  top: 10px;
+  z-index: 2;
+  background-color: transparent;
   left: 5%;
- /* visibility: hidden;
- */
+  width: 55%;
+  border-radius: 0px;
+  border-width: 0;
+  outline: 0;
 }
 
 .thumbnailImageClickPgm {
+  position: absolute;
+  height: 150px; 
+  top: 10px;
+  z-index: 2;
+  background-color: transparent;
   right: 5%;
- /* visibility: hidden;
- */
+  width: 35%;
+  border-style: dotted;
+  border-width: 0px;
+  border-left-width: 1px;
+  border-color: rgba(133, 133, 133, 0.371);
+  outline: 0;
 }
 
-.mixButton {
-  position: relative;
+.loopButton {
   margin: 8px;
   font-size: 1.2em;
   width: 40%;
   line-height: 150%;
-  background: rgb(0, 0, 0);
+  background: rgb(110, 2, 2);
   color: white;
   font-family: 'Roboto Condensed', sans-serif;
   border-radius: 16px;
@@ -57,24 +113,11 @@
 }
 
 .playButton {
-    margin: 8px;
-    font-size: 1.2em;
-    width: 40%;
-    line-height: 150%;
-    background: green;
-    color: white;
-    font-family: 'Roboto Condensed', sans-serif;
-    border-radius: 16px;
-    border-width: 0;
-    outline: 0;
-}
-
-.loopButton {
   margin: 8px;
   font-size: 1.2em;
   width: 40%;
   line-height: 150%;
-  background: rgb(0, 92, 128);
+  background: green;
   color: white;
   font-family: 'Roboto Condensed', sans-serif;
   border-radius: 16px;
@@ -82,11 +125,13 @@
   outline: 0;
 }
 
+/* thumbname text */
 .text {
     margin-top: 8px;
     font-size: 0.7em;
 }
 
+/* on-screen timecode */
 .playing {
   position: absolute;
   width: 250px;

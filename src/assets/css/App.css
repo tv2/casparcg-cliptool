@@ -78,7 +78,7 @@ body {
     top: 130px;
     left: 0px;
     Right: 0px;
-    bottom: 0px;
+    bottom: 40px;
     background-color: #aaa;
   
   }
@@ -87,12 +87,6 @@ body {
   }
   
   .App-intro {
+    position:relative;
     font-size: large;
-  }
-  
-  @keyframes App-logo-spin {
-    from { transform: rotate(-15deg); }
-    to { transform: rotate(15deg); }
-    from { transform: rotate(15deg); }
-    to { transform: rotate(-15deg); }
   }
