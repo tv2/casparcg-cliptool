@@ -129,7 +129,7 @@ class Thumbnail extends Component {
     }
     
     playMedia(layer, mediaSource, loop) {
-        this.props.ccgConnectionProps.play(this.props.ccgOutputProps, layer, mediaSource, loop, 'WIPE');
+        this.props.ccgConnectionProps.play(this.props.ccgOutputProps, layer, mediaSource, loop, 'MIX', 5);
     }
 
     mixPlay(layer) {
@@ -137,11 +137,11 @@ class Thumbnail extends Component {
     }
 
     loadMedia(layer, mediaSource, loop) {
-        this.props.ccgConnectionProps.load(this.props.ccgOutputProps, layer, mediaSource, loop, 'WIPE');
+        this.props.ccgConnectionProps.load(this.props.ccgOutputProps, layer, mediaSource, loop, 'MIX', 5);
     }
 
     loadBgMedia(layer, mediaSource, loop) {
-        this.props.ccgConnectionProps.loadbg(this.props.ccgOutputProps, layer, mediaSource, loop, 'WIPE');
+        this.props.ccgConnectionProps.loadbg(this.props.ccgOutputProps, layer, mediaSource, loop, 'MIX', 5);
     }
 
     handleLoop(index) {
