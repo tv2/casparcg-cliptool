@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import '../assets/css/Thumbnail.css';
 import './App';
+import { AMCP } from 'casparcg-connection';
 
 //Global const:
 const fps = 25;
@@ -127,27 +128,59 @@ class Thumbnail extends Component {
             {object: objectCopy}
         );
     }
-    
-    playMedia(layer, mediaSource, loop) {
-        this.props.ccgConnectionProps.play(this.props.ccgOutputProps, layer, mediaSource, loop, 'MIX', 5);
+
+    playMedia(layer, index) {
+        this.props.ccgConnectionProps.play(
+            this.props.ccgOutputProps, 
+            layer, 
+            this.state.thumbList[index].name, 
+            this.state.thumbList[index].loop, 
+            'MIX', 
+            5);
     }
 
     mixPlay(layer) {
-        this.props.ccgConnectionProps.play(this.props.ccgOutputProps, layer);
+        this.props.ccgConnectionProps.play(
+            this.props.ccgOutputProps, 
+            layer
+        );
     }
 
-    loadMedia(layer, mediaSource, loop) {
-        this.props.ccgConnectionProps.load(this.props.ccgOutputProps, layer, mediaSource, loop, 'MIX', 5);
+    loadMedia(layer, index) {
+        this.props.ccgConnectionProps.load(
+            this.props.ccgOutputProps, 
+            layer, 
+            this.state.thumbList[index].name, 
+            this.state.thumbList[index].loop, 
+            'MIX', 
+            5
+        );
     }
 
-    loadBgMedia(layer, mediaSource, loop) {
-        this.props.ccgConnectionProps.loadbg(this.props.ccgOutputProps, layer, mediaSource, loop, 'MIX', 5);
+    loadBgMedia(layer, index) {
+        this.props.ccgConnectionProps.loadbg(
+            this.props.ccgOutputProps, 
+            layer, 
+            this.state.thumbList[index].name, 
+            this.state.thumbList[index].loop, 
+            'MIX', 
+            5
+        );
     }
 
     handleLoop(index) {
         this.setStateElement(this.state.thumbList, index, 'loop', !this.state.thumbList[index].loop);
         this.updateThumbnail(this.state.thumbList[index], index);
+        if(this.state.thumbActiveIndex === index) {
+            const call = new AMCP.CustomCommand('CALL 1-10 LOOP');
+            this.props.ccgConnectionProps.do(call)
+            .catch((error) => {
+                console.log(error);
+            });
+        }
+
     }
+
 
 
     framesToTimeCode(frame) {
@@ -166,39 +199,60 @@ class Thumbnail extends Component {
         
     updateThumbnail(item, index) {
         var itemList = this.state.thumbListRendered;
-        this.props.ccgConnectionProps.thumbnailRetrieve(item.name)
-        .then((response) => {
-            if (item.name.includes(this.props.subFolderProps)) {
-                itemList[index] = this.renderThumbnails(item, response.response.data, index);
+        this.props.ccgConnectionProps.thumbnailRetrieve(this.state.thumbList[index].name)
+        .then((pixResponse) => {
+            if (this.state.thumbList[index].name.includes(this.props.subFolderProps)) {
+                itemList[index] = this.renderThumbnails(index, pixResponse.response.data);
                 this.setState({thumbListRendered: itemList});
             }
         });
         return;
     }
     
-    renderThumbnails(item, pic, index) {
+    renderThumbnails(index, pix) {
+        var item = this.state.thumbList[index];
         return(
             <li key={index} className="boxComponent">
-                <img src={pic} 
+                <img src={pix} 
                     className="thumbnailImage" 
                     style = {Object.assign({},
-                        item.tally ? {borderColor: 'red'} : {borderColor: ''},
-                        item.tallyBg ? {boxShadow: '0px 0px 1px 3px green'} : {boxShadow: ''} 
+                        item.tally ? 
+                            {borderColor: 'red'} : {borderColor: ''},
+                        item.tallyBg ? 
+                            {boxShadow: '0px 0px 1px 3px green'} : {boxShadow: ''} 
                     )}
                 />
-                <button className="thumbnailImageClickPvw" onClick={() => this.loadBgMedia(10, item.name, item.loop)}/>
-                <button className="thumbnailImageClickPgm" onClick={() => this.loadMedia(10, item.name, item.loop)}/>
-
-
-                <a className="playing">{item.isActive ? this.framesToTimeCode(this.state.thumbActiveForegroundProducer["file-nb-frames"] - this.state.thumbActiveForegroundProducer["file-frame-number"]) : "" }</a>
-                <a className="text">{item.name.substring(item.name.lastIndexOf('/')+1).slice(-45)}</a>
+                <button className="thumbnailImageClickPvw" 
+                    onClick={() => this.loadBgMedia(10, index)}
+                />
+                <button className="thumbnailImageClickPgm" 
+                    onClick={() => this.loadMedia(10, index)}
+                />
+                <a className="playing">
+                    {item.isActive ? 
+                        this.framesToTimeCode(this.state.thumbActiveForegroundProducer["file-nb-frames"] - this.state.thumbActiveForegroundProducer["file-frame-number"]) 
+                        : "" 
+                    }
+                </a>
+                <a className="text">
+                    {item.name.substring(item.name.lastIndexOf('/')+1).slice(-45)}
+                </a>
                 <br/>
-                <button className="playButton" onClick={() =>
-                    this.playMedia(10, item.name, this.state.thumbList[this.state.thumbActiveIndex].loop)
-                }>PLAY</button>
-                <button className="loopButton" style={this.state.thumbList[index].loop ? {backgroundColor: 'rgb(28, 115, 165)'} : {backgroundColor: 'grey'}} onClick={() =>
-                    this.handleLoop(index)
-                }>LOOP</button>
+                <button className="playButton" 
+                    onClick={() =>
+                        this.playMedia(10, index)
+                    }>
+                    PLAY
+                </button>
+                <button className="loopButton" 
+                    style={this.state.thumbList[index].loop ? 
+                        {backgroundColor: 'rgb(28, 115, 165)'} : {backgroundColor: 'grey'}
+                    } 
+                    onClick={() =>
+                        this.handleLoop(index)
+                    }>
+                    LOOP
+                </button>
             </li>
         )
     }
@@ -206,12 +260,20 @@ class Thumbnail extends Component {
     render() {
         return (
         <div className="Thumb-body">
-            <button className="mixButton" onClick={() => this.mixPlay(10)}>
+            <div className="mixButtonBackground">
+            <button className="mixButton" 
+                onClick={
+                    () => this.mixPlay(10)
+                }>
                 PVW-MIX
             </button>
-            <button className="startButton" onClick={() => this.playMedia(10, this.state.thumbList[this.state.thumbActiveIndex].name, this.state.thumbList[this.state.thumbActiveIndex].loop)}>
+            <button className="startButton" 
+                onClick={
+                    () => this.playMedia(10, this.state.thumbActiveIndex)
+                }>
                 PGM
             </button>
+            </div>
             <ul className="flexBoxes" >
                 {this.state.thumbListRendered}           
             </ul>
