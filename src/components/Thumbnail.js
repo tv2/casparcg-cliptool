@@ -78,7 +78,7 @@ class Thumbnail extends Component {
                     }
 
                     // Update only first time or if time if file is playing:
-                    if (infoStatus.response.data.foreground.producer["file-frame-number"] != this.state.thumbActiveForegroundProducer["file-frame-number"] || forceUpdate) {
+                    if (forceUpdate || infoStatus.response.data.foreground.producer["file-frame-number"] != this.state.thumbActiveForegroundProducer["file-frame-number"]) {
                         this.setThumbListElement(index, "tally", true);
                         this.setState({thumbActiveForegroundProducer: infoStatus.response.data.foreground.producer});
                         this.setState({thumbActiveIndex: index});
@@ -121,7 +121,6 @@ class Thumbnail extends Component {
         );
     }
 
-    //Generic function for updating setStae of Elements in object:
     setThumbListElement(index, element, value) {
         var prevStateThumblist = this.state.thumbList;
         prevStateThumblist[index][element] = value;
@@ -130,7 +129,7 @@ class Thumbnail extends Component {
         );
     }
 
-    playMedia(layer, index) {
+    playMedia(layer, index, indexBg) {
         this.props.ccgConnectionProps.play(
             this.props.ccgOutputProps, 
             layer, 
@@ -139,13 +138,7 @@ class Thumbnail extends Component {
             'MIX', 
             5
         );
-    }
-
-    mixPlay(layer) {
-        this.props.ccgConnectionProps.play(
-            this.props.ccgOutputProps, 
-            layer
-        );
+        this.loadBgMedia(10, indexBg);
     }
 
     loadMedia(layer, index) {
@@ -262,13 +255,21 @@ class Thumbnail extends Component {
             <div className="mixButtonBackground">
             <button className="mixButton" 
                 onClick={
-                    () => this.mixPlay(10)
+                    () => this.playMedia(
+                        10, 
+                        this.state.thumbActiveBgIndex, 
+                        this.state.thumbActiveIndex
+                    )
                 }>
                 PVW-MIX
             </button>
             <button className="startButton" 
                 onClick={
-                    () => this.playMedia(10, this.state.thumbActiveIndex)
+                    () => this.playMedia(
+                        10, 
+                        this.state.thumbActiveIndex, 
+                        this.state.thumbActiveBgIndex
+                    )
                 }>
                 PGM
             </button>
