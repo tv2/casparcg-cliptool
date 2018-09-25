@@ -6,6 +6,11 @@ const electron = require('electron');
 const folder = electron.remote.app.getPath('userData');
         
 class SettingsPage extends Component {
+    //Props:
+    //globalSettingsProps={this.state.globalSettings}  Pass settings object
+    //loadSettingsProps={this.loadSettings.bind(this)} load function
+    //saveSettingsProps={this.saveSettings.bind(this)} save function
+
     constructor(props) {
         super(props);
         this.state = { 
@@ -44,7 +49,7 @@ class SettingsPage extends Component {
             {settings: settingsCopy}
         );
     }
-    
+
     handleSubmit(event) {
         this.props.saveSettingsProps(this.state.settings);
     }

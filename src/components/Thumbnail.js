@@ -10,7 +10,13 @@ const fps = 25;
 var thumbTimer;
 
 
+
 class Thumbnail extends Component {
+    //Props: 
+    //ccgOutputProps={tabData.key} what output on CCG to play at 
+    //ccgConnectionProps={this.ccgConnection} Current CCG connection
+    // subFolderProps={item.subFolder} What folder to work on
+
     constructor(props) {
         super(props);
         this.state = {  
@@ -32,6 +38,27 @@ class Thumbnail extends Component {
         this.handleLoop =  this.handleLoop.bind(this);
         this.setStateElement = this.setThumbListElement.bind(this);
     }
+
+    componentWillMount() {
+        document.addEventListener("keydown", this._handleKeyDown.bind(this));
+    }
+
+    //Shortcut for mix and take
+    _handleKeyDown(event) {
+        const keyOutput = JSON.stringify(this.props.ccgOutputProps).charCodeAt(0);
+        switch( event.keyCode ) {
+            case keyOutput:
+                this.playMedia(
+                    10, 
+                    this.state.thumbActiveBgIndex, 
+                    this.state.thumbActiveIndex
+                );
+                break;
+            default: 
+                break;
+        }
+    }
+    
 
     componentDidMount() {
         this.props.ccgConnectionProps.thumbnailList(this.props.subFolderProps)

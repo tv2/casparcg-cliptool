@@ -65,7 +65,7 @@
     -ms-flex-direction: row;
         flex-direction: row;
   }
-  /* changed position to fixed and heigth to 40px  */
+  /* changed position to fixed and heigth to 45px  */
   .rmc-tabs-tab-bar { 
     position: fixed;
     display: -ms-flexbox;
@@ -75,9 +75,10 @@
     -ms-flex-direction: row;
         flex-direction: row;
     width: 100%;
-    height: 40px;
+    height: 45px;
     z-index: 1;
   }
+  /* Changed Font Size and line height */
   .rmc-tabs-tab-bar-tab {
     background: #444;
     position: relative;
@@ -89,16 +90,17 @@
     justify-content: center;
     -ms-flex-align: center;
     align-items: center;
-    font-size: 1.1em;
-    line-height: 1.1em;
+    font-size: 1.15em;
+    line-height: 1.15em;
     color: white;
   }
   .rmc-tabs-tab-bar-tab-active {
     color: #4175e6;
   }
+  /* Changed border to 2px */
   .rmc-tabs-tab-bar-underline {
     position: absolute;
-    border: 1px #4175e6 solid;
+    border: 2px #4175e6 solid;
   }
   .rmc-tabs-tab-bar-animated .rmc-tabs-tab-bar-content {
     transition: transform 0.3s cubic-bezier(0.35, 0, 0.25, 1);

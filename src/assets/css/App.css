@@ -21,7 +21,7 @@ body {
     top: 0px;
     width: 100vw;
     background-color: #222;
-    height: 130px;
+    height: 120px;
     color: rgb(28, 115, 165);
     box-shadow: 2px 2px 2px #555;
   }
@@ -43,7 +43,7 @@ body {
 
   .App-settings-button {
     position: fixed;
-    top: 47px;
+    top: 42px;
     right: 5px;
     font-size: 0.8em;
     width: 90px;
@@ -59,7 +59,7 @@ body {
   
   .Reload-button {
     position: fixed;
-    top: 90px;
+    top: 80px;
     right: 5px;
     font-size: 0.8em;
     width: 90px;
@@ -75,7 +75,7 @@ body {
 
   .App-body {
     position: relative;
-    top: 130px;
+    top: 120px;
     left: 0px;
     Right: 0px;
     bottom: 40px;

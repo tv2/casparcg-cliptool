@@ -7,15 +7,18 @@
 /* Buttons for all thumbs, places at the bottom of the page */
 .mixButtonBackground {
   position: sticky;
-  top: 170px;
+  top: 160px;
   z-index: 20;
   width: 100%;
-  height: 70px;
+  height: 80px;
   background-color: #222;
+  border-bottom-width: 2px;
+  border-bottom-style: solid;
+  border-bottom-color: white;
 }
 .mixButton {
   position: sticky;
-  top: 170px;
+  top: 175px;
   left: 0px;
   z-index: 20;
   margin: 8px;
@@ -32,7 +35,7 @@
 
 .startButton {
   position: sticky;
-  top: 170px;
+  top: 175px;
   left: 0px;
   z-index: 20;
   margin: 8px;
