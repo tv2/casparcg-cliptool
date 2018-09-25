@@ -44,7 +44,7 @@ class Thumbnail extends Component {
                 this.setState((prevState) => ({
                     thumbList: [...prevState.thumbList, item] 
                 }));
-                this.updateThumbnail(item, this.state.thumbList.length - 1);
+                this.updateThumbnail(this.state.thumbList.length - 1);
             });
         })
         .catch ((error) => {
@@ -73,7 +73,7 @@ class Thumbnail extends Component {
                     if(this.state.thumbActiveIndex != index) {
                         this.setStateElement(this.state.thumbList, this.state.thumbActiveIndex, "tally", false);
                         this.setStateElement(this.state.thumbList, this.state.thumbActiveIndex, "isActive", false);
-                        this.updateThumbnail(this.state.thumbList[this.state.thumbActiveIndex], this.state.thumbActiveIndex);
+                        this.updateThumbnail(this.state.thumbActiveIndex);
                         forceUpdate = true;
                     }
 
@@ -83,7 +83,7 @@ class Thumbnail extends Component {
                         this.setState({thumbActiveForegroundProducer: infoStatus.response.data.foreground.producer});
                         this.setState({thumbActiveIndex: index});
                         this.setStateElement(this.state.thumbList, index, "isActive", true);
-                        this.updateThumbnail(this.state.thumbList[index], index);
+                        this.updateThumbnail(index);
                     }
                 }
             });
@@ -96,11 +96,11 @@ class Thumbnail extends Component {
                     if(this.state.thumbActiveBgIndex != index) {
                         // Remove Old Green Tally
                         this.setStateElement(this.state.thumbList, this.state.thumbActiveBgIndex, "tallyBg", false);
-                        this.updateThumbnail(this.state.thumbList[this.state.thumbActiveBgIndex], this.state.thumbActiveBgIndex);
+                        this.updateThumbnail(this.state.thumbActiveBgIndex);
                         // Add Active Green Tally
                         this.setStateElement(this.state.thumbList, index, "tallyBg", true);
                         this.setState({thumbActiveBgIndex: index});
-                        this.updateThumbnail(this.state.thumbList[index], index);
+                        this.updateThumbnail(index);
                     }
                 }
             });
@@ -120,8 +120,8 @@ class Thumbnail extends Component {
         );
     }
 
+    //Generic function for updating setStae of Elements in object:
     setStateElement(object, index, element, value) {
-        //return new Promise()
         var objectCopy= Object.assign({}, object);
         objectCopy[index][element] = value;
         this.setState(
@@ -136,7 +136,8 @@ class Thumbnail extends Component {
             this.state.thumbList[index].name, 
             this.state.thumbList[index].loop, 
             'MIX', 
-            5);
+            5
+        );
     }
 
     mixPlay(layer) {
@@ -170,7 +171,7 @@ class Thumbnail extends Component {
 
     handleLoop(index) {
         this.setStateElement(this.state.thumbList, index, 'loop', !this.state.thumbList[index].loop);
-        this.updateThumbnail(this.state.thumbList[index], index);
+        this.updateThumbnail(index);
         if(this.state.thumbActiveIndex === index) {
             const call = new AMCP.CustomCommand('CALL 1-10 LOOP');
             this.props.ccgConnectionProps.do(call)
@@ -178,10 +179,7 @@ class Thumbnail extends Component {
                 console.log(error);
             });
         }
-
     }
-
-
 
     framesToTimeCode(frame) {
         if (frame) {
@@ -197,13 +195,13 @@ class Thumbnail extends Component {
         }
     }
         
-    updateThumbnail(item, index) {
-        var itemList = this.state.thumbListRendered;
+    updateThumbnail(index) {
+        var prevStateList = this.state.thumbListRendered;
         this.props.ccgConnectionProps.thumbnailRetrieve(this.state.thumbList[index].name)
         .then((pixResponse) => {
             if (this.state.thumbList[index].name.includes(this.props.subFolderProps)) {
-                itemList[index] = this.renderThumbnails(index, pixResponse.response.data);
-                this.setState({thumbListRendered: itemList});
+                prevStateList[index] = this.renderThumbnails(index, pixResponse.response.data);
+                this.setState({thumbListRendered: prevStateList});
             }
         });
         return;
