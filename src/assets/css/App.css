@@ -16,39 +16,41 @@ body {
   top: 0px;
   width: 100vw;
   background-color: rgb(53, 53, 53);
-  height: 120px;
+  height: 130px;
   color: rgb(28, 115, 165);
   box-shadow: 2px 2px 2px #555;
 }
 
 .Connection-setup-Background {
   position: absolute;
-  top: 10px;
+  top: 5px;
   left: 5px;
   width: 170px;
-  height: 100px;
+  height: 115px;
   background-color: rgb(22, 22, 22);
   border-width: 0px;
   border-style: solid;
   border-color: rgb(63, 63, 63);
   box-shadow: 6px 6px 6px rgb(34, 34, 34);
 }
+
 .App-connection-status {
-  font-size: 0.9em;
+  font-size: 0.8em;
   width: 100px;
-  line-height: 30px;
+  line-height: 25px;
+  margin-top: 5px;
   color: white;
   font-family: 'Roboto Condensed', sans-serif;
-  border-radius: 3px;
+  border-radius: 5px;
   border-width: 0;
   outline: 0;
 }
-
 
 .App-settings-button {
   font-size: 0.8em;
   width: 100px;
   line-height: 25px;
+  margin-top: 3px;
   background: rgb(11, 12, 11);
   color: white;
   font-family: 'Roboto Condensed', sans-serif;
@@ -62,6 +64,7 @@ body {
   font-size: 0.8em;
   width: 100px;
   line-height: 25px;
+  margin-top: 5px;
   background: rgb(19, 46, 19);
   color: white;
   font-family: 'Roboto Condensed', sans-serif;
@@ -73,7 +76,7 @@ body {
 
 .App-body {
   position: relative;
-  top: 120px;
+  top: 130px;
   left: 0px;
   Right: 0px;
   bottom: 40px;
@@ -93,10 +96,10 @@ body {
 /* Buttons for all thumbs, places at the bottom of the page */
 .mixButtonBackground {
   position: absolute;
-  top: 10px;
+  top: 5px;
   right: 3%;
   width: 300px;
-  height: 100px;
+  height: 115px;
   background-color: rgb(22, 22, 22);
   border-width: 0px;
   border-style: solid;
@@ -113,10 +116,10 @@ body {
 }
 
 .mixButton {
-  margin: 8px;
+  margin: 12px;
   font-size: 1.2em;
   width: 40%;
-  line-height: 50px;
+  line-height: 55px;
   background: rgb(0, 73, 4);
   color: white;
   font-family: 'Roboto Condensed', sans-serif;
@@ -127,10 +130,10 @@ body {
 }
 
 .startButton {
-  margin: 8px;
+  margin: 12px;
   font-size: 1.2em;
   width: 40%;
-  line-height: 50px;
+  line-height: 55px;
   background: rgb(68, 0, 0);
   color: white;
   font-family: 'Roboto Condensed', sans-serif;

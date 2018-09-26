@@ -46,7 +46,6 @@ class App extends Component {
     };
 
     this.setConnectionStatus = this.setConnectionStatus.bind(this);
-    this.renderConnectionStatus = this.renderConnectionStatus.bind(this);
     this.handleSettingsPage = this.handleSettingsPage.bind(this);
     this.renderTabData = this.renderTabData.bind(this);
 
@@ -129,14 +128,6 @@ class App extends Component {
   });
 }
 
-  renderConnectionStatus(status) {
-    return (
-      <a className="App-connection-status" style={status ? {backgroundColor: "green"} : {backgroundColor: "red"}}>
-        {status ? "CONNECTED" : "CONNECTING"}
-      </a>
-    )
-  }
-
   renderTabData() { 
       var tabDataList = this.state.tabData.map((item) => {
         return (
@@ -163,8 +154,12 @@ class App extends Component {
       <div className="App">
         <header className="App-header">
           <h1 className="App-title">CasparCG Clip Tool</h1> 
+
           <div className="Connection-setup-Background">
-            {this.renderConnectionStatus(this.state.ccgConnectionStatus)}
+            <button className="App-connection-status" 
+              style={this.state.ccgConnectionStatus ? {backgroundColor: "green"} : {backgroundColor: "red"}}>
+              {this.state.ccgConnectionStatus ? "CONNECTED" : "CONNECTING"}
+            </button>
             <button className="App-settings-button" 
               onClick={this.handleSettingsPage}>SETTINGS
             </button>
