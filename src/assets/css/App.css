@@ -10,17 +10,12 @@ body {
     text-align: center;
   }
   
-  .App-logo {
-    animation: App-logo-spin infinite 10s linear alternate;
-    height: 70px;
-  }
-  
   .App-header {
     position: fixed;
     z-index: 10;
     top: 0px;
     width: 100vw;
-    background-color: #222;
+    background-color: rgb(53, 53, 53);
     height: 120px;
     color: rgb(28, 115, 165);
     box-shadow: 2px 2px 2px #555;
@@ -90,3 +85,56 @@ body {
     position:relative;
     font-size: large;
   }
+
+
+/* Buttons for all thumbs, places at the bottom of the page */
+.mixButtonBackground {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  width: 300px;
+  height: 100px;
+  background-color: rgb(22, 22, 22);
+  border-width: 0px;
+  border-style: solid;
+  border-color: rgb(63, 63, 63);
+  box-shadow: 6px 6px 6px rgb(34, 34, 34);
+}
+
+.mixButtonText {
+  position: relative;
+  top: 5px;
+  color: rgb(255, 255, 255);
+  font-size: 1.2em;
+  margin: 10px;
+}
+
+.mixButton {
+  margin: 8px;
+  font-size: 1.2em;
+  width: 40%;
+  line-height: 50px;
+  background: rgb(0, 73, 4);
+  color: white;
+  font-family: 'Roboto Condensed', sans-serif;
+  border-radius: 16px;
+  border-width: 1px;
+  border-color: rgba(85, 85, 85, 0.507);
+  outline: 1px;
+}
+
+.startButton {
+  margin: 8px;
+  font-size: 1.2em;
+  width: 40%;
+  line-height: 50px;
+  background: rgb(68, 0, 0);
+  color: white;
+  font-family: 'Roboto Condensed', sans-serif;
+  border-radius: 16px;
+  border-width: 1px;
+  border-color: rgba(85, 85, 85, 0.507);
+  outline: 1px;
+}
+
+

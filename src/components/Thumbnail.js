@@ -13,9 +13,9 @@ var thumbTimer;
 
 class Thumbnail extends Component {
     //Props: 
-    //ccgOutputProps={tabData.key} what output on CCG to play at 
-    //ccgConnectionProps={this.ccgConnection} Current CCG connection
-    // subFolderProps={item.subFolder} What folder to work on
+    //ccgOutputProps what output on CCG to play at 
+    //ccgConnectionProps Current CCG connection
+    //subFolderProps What folder to work on
 
     constructor(props) {
         super(props);
@@ -279,28 +279,7 @@ class Thumbnail extends Component {
     render() {
         return (
         <div className="Thumb-body">
-            <div className="mixButtonBackground">
-            <button className="mixButton" 
-                onClick={
-                    () => this.playMedia(
-                        10, 
-                        this.state.thumbActiveBgIndex, 
-                        this.state.thumbActiveIndex
-                    )
-                }>
-                PVW-MIX
-            </button>
-            <button className="startButton" 
-                onClick={
-                    () => this.playMedia(
-                        10, 
-                        this.state.thumbActiveIndex, 
-                        this.state.thumbActiveBgIndex
-                    )
-                }>
-                PGM
-            </button>
-            </div>
+
             <ul className="flexBoxes" >
                 {this.state.thumbListRendered}           
             </ul>

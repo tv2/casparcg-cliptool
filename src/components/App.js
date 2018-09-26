@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {CasparCG} from 'casparcg-connection';
-import { Tabs } from 'rmc-tabs';
+import { Tabs, TabBarPropsType } from 'rmc-tabs';
 
 // Components:
 import Thumbnail from './Thumbnail';
@@ -41,7 +41,8 @@ class App extends Component {
       ccgConnectionStatus: false,
       showSettingsMenu: false, 
       tabData: [], 
-      globalSettings: {},    
+      globalSettings: {},   
+      activeTab: 0
     };
 
     this.setConnectionStatus = this.setConnectionStatus.bind(this);
@@ -141,6 +142,7 @@ class App extends Component {
         return (
         <div className="App-intro" key={(item.key)}>
           <Thumbnail 
+            ref={"thumbnailRef" + item.key}
             ccgOutputProps={item.key} 
             ccgConnectionProps={this.ccgConnection} 
             subFolderProps={item.subFolder}
@@ -152,6 +154,7 @@ class App extends Component {
   }
 
   handleSettingsPage() {
+    console.log(this.refs[("thumbnailRef" + 1)].state.thumbList);
     this.setState({showSettingsMenu: !this.state.showSettingsMenu});
   }
 
@@ -169,12 +172,36 @@ class App extends Component {
           <button className="Reload-button" 
             onClick={this.reloadPage}>RESCAN
           </button>
+          <div className="mixButtonBackground">
+            <a className="mixButtonText">TAKE:</a>
+            <br/>
+            <button className="mixButton" 
+                onClick={
+                    () => this.refs[("thumbnailRef" + ( this.state.activeTab + 1))].playMedia(
+                        10, 
+                        this.refs[("thumbnailRef" + ( this.state.activeTab + 1))].state.thumbActiveBgIndex, 
+                        this.refs[("thumbnailRef" + ( this.state.activeTab + 1))].state.thumbActiveIndex
+                    )
+                }>
+                PVW
+            </button>
+            <button className="startButton" 
+                onClick={
+                    () => this.refs[("thumbnailRef" + ( this.state.activeTab + 1))].playMedia(
+                        10, 
+                        this.refs[("thumbnailRef" + ( this.state.activeTab + 1))].state.thumbActiveIndex, 
+                        this.refs[("thumbnailRef" + ( this.state.activeTab + 1))].state.thumbActiveBgIndex
+                    )
+                }>
+                PGM
+            </button>
+          </div>
         </header>
         {this.state.showSettingsMenu ? 
           <SettingsPage globalSettingsProps={this.state.globalSettings} loadSettingsProps={this.loadSettings.bind(this)} saveSettingsProps={this.saveSettings.bind(this)}/> 
           : null }
         <div className="App-body">
-          <Tabs tabs={this.state.tabData}>
+          <Tabs tabs={this.state.tabData} onChange={(tab, index) => this.setState({ activeTab: index })}>
             {this.renderTabData()}
           </Tabs>
         </div>
