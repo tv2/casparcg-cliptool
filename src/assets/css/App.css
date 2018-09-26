@@ -8,90 +8,93 @@ body {
 .App {
     position: relative;
     text-align: center;
-  }
-  
-  .App-header {
-    position: fixed;
-    z-index: 10;
-    top: 0px;
-    width: 100vw;
-    background-color: rgb(53, 53, 53);
-    height: 120px;
-    color: rgb(28, 115, 165);
-    box-shadow: 2px 2px 2px #555;
-  }
+}
 
-  .App-connection-status {
-    position: fixed;
-    top: 5px;
-    right: 5px;
-    font-size: 0.8em;
-    width: 90px;
-    line-height: 30px;
-    color: white;
-    font-family: 'Roboto Condensed', sans-serif;
-    border-radius: 5px;
-    border-width: 0;
-    outline: 0;
-  }
-  
+.App-header {
+  position: fixed;
+  z-index: 10;
+  top: 0px;
+  width: 100vw;
+  background-color: rgb(53, 53, 53);
+  height: 120px;
+  color: rgb(28, 115, 165);
+  box-shadow: 2px 2px 2px #555;
+}
 
-  .App-settings-button {
-    position: fixed;
-    top: 42px;
-    right: 5px;
-    font-size: 0.8em;
-    width: 90px;
-    line-height: 25px;
-    background: rgb(11, 12, 11);
-    color: white;
-    font-family: 'Roboto Condensed', sans-serif;
-    border-radius: 5px;
-    border-width: 1px;
-    border-color: #aaa;
-    outline: 0;
-  }
-  
-  .Reload-button {
-    position: fixed;
-    top: 80px;
-    right: 5px;
-    font-size: 0.8em;
-    width: 90px;
-    line-height: 25px;
-    background: rgb(19, 46, 19);
-    color: white;
-    font-family: 'Roboto Condensed', sans-serif;
-    border-radius: 5px;
-    border-width: 1px;
-    border-color: #aaa;
-    outline: 0;
-  }
+.Connection-setup-Background {
+  position: absolute;
+  top: 10px;
+  left: 5px;
+  width: 170px;
+  height: 100px;
+  background-color: rgb(22, 22, 22);
+  border-width: 0px;
+  border-style: solid;
+  border-color: rgb(63, 63, 63);
+  box-shadow: 6px 6px 6px rgb(34, 34, 34);
+}
+.App-connection-status {
+  font-size: 0.9em;
+  width: 100px;
+  line-height: 30px;
+  color: white;
+  font-family: 'Roboto Condensed', sans-serif;
+  border-radius: 3px;
+  border-width: 0;
+  outline: 0;
+}
 
-  .App-body {
-    position: relative;
-    top: 120px;
-    left: 0px;
-    Right: 0px;
-    bottom: 40px;
-    background-color: #aaa;
-  
-  }
-  .App-title {
-    font-size: 2em;
-  }
-  
-  .App-intro {
-    position:relative;
-    font-size: large;
-  }
+
+.App-settings-button {
+  font-size: 0.8em;
+  width: 100px;
+  line-height: 25px;
+  background: rgb(11, 12, 11);
+  color: white;
+  font-family: 'Roboto Condensed', sans-serif;
+  border-radius: 5px;
+  border-width: 1px;
+  border-color: #aaa;
+  outline: 0;
+}
+
+.Reload-button {
+  font-size: 0.8em;
+  width: 100px;
+  line-height: 25px;
+  background: rgb(19, 46, 19);
+  color: white;
+  font-family: 'Roboto Condensed', sans-serif;
+  border-radius: 5px;
+  border-width: 1px;
+  border-color: #aaa;
+  outline: 0;
+}
+
+.App-body {
+  position: relative;
+  top: 120px;
+  left: 0px;
+  Right: 0px;
+  bottom: 40px;
+  background-color: #aaa;
+
+}
+.App-title {
+  font-size: 2em;
+}
+
+.App-intro {
+  position:relative;
+  font-size: large;
+}
 
 
 /* Buttons for all thumbs, places at the bottom of the page */
 .mixButtonBackground {
   position: absolute;
   top: 10px;
-  left: 10px;
+  right: 3%;
   width: 300px;
   height: 100px;
   background-color: rgb(22, 22, 22);

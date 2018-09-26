@@ -163,15 +163,15 @@ class App extends Component {
       <div className="App">
         <header className="App-header">
           <h1 className="App-title">CasparCG Clip Tool</h1> 
-          <div>
+          <div className="Connection-setup-Background">
             {this.renderConnectionStatus(this.state.ccgConnectionStatus)}
+            <button className="App-settings-button" 
+              onClick={this.handleSettingsPage}>SETTINGS
+            </button>
+            <button className="Reload-button" 
+              onClick={this.reloadPage}>RESCAN
+            </button>
           </div>
-          <button className="App-settings-button" 
-            onClick={this.handleSettingsPage}>SETTINGS
-          </button>
-          <button className="Reload-button" 
-            onClick={this.reloadPage}>RESCAN
-          </button>
           <div className="mixButtonBackground">
             <a className="mixButtonText">TAKE:</a>
             <br/>
