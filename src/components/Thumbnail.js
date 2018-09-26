@@ -156,6 +156,14 @@ class Thumbnail extends Component {
         );
     }
 
+    pvwPlay() {
+        this.playMedia(10, this.state.thumbActiveBgIndex, this.state.thumbActiveIndex);
+    }
+
+    pgmPlay() {
+        this.playMedia(10, this.state.thumbActiveIndex, this.state.thumbActiveBgIndex);
+    }
+
     playMedia(layer, index, indexBg) {
         this.props.ccgConnectionProps.play(
             this.props.ccgOutputProps, 
@@ -259,7 +267,7 @@ class Thumbnail extends Component {
                 <br/>
                 <button className="playButton" 
                     onClick={() =>
-                        this.playMedia(10, index)
+                        this.playMedia(10, index, this.state.thumbActiveBgIndex)
                     }>
                     PLAY
                 </button>

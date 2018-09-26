@@ -120,13 +120,13 @@ class App extends Component {
   }
 
   timeout(ms, promise) {
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      reject(new Error("Offline: Server was to long to respond"));
-    }, ms);
-    promise.then(resolve, reject);
-  });
-}
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        reject(new Error("Offline: Server was to long to respond"));
+      }, ms);
+      promise.then(resolve, reject);
+    });
+  }
 
   renderTabData() { 
       var tabDataList = this.state.tabData.map((item) => {
@@ -172,21 +172,13 @@ class App extends Component {
             <br/>
             <button className="mixButton" 
                 onClick={
-                    () => this.refs[("thumbnailRef" + ( this.state.activeTab + 1))].playMedia(
-                        10, 
-                        this.refs[("thumbnailRef" + ( this.state.activeTab + 1))].state.thumbActiveBgIndex, 
-                        this.refs[("thumbnailRef" + ( this.state.activeTab + 1))].state.thumbActiveIndex
-                    )
+                    () => this.refs[("thumbnailRef" + ( this.state.activeTab + 1))].pvwPlay()
                 }>
                 PVW
             </button>
             <button className="startButton" 
                 onClick={
-                    () => this.refs[("thumbnailRef" + ( this.state.activeTab + 1))].playMedia(
-                        10, 
-                        this.refs[("thumbnailRef" + ( this.state.activeTab + 1))].state.thumbActiveIndex, 
-                        this.refs[("thumbnailRef" + ( this.state.activeTab + 1))].state.thumbActiveBgIndex
-                    )
+                    () => this.refs[("thumbnailRef" + ( this.state.activeTab + 1))].pgmPlay()
                 }>
                 PGM
             </button>
