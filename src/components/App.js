@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {CasparCG} from 'casparcg-connection';
-import { Tabs, TabBarPropsType } from 'rmc-tabs';
+import { Tabs } from 'rmc-tabs';
 
 // Components:
 import Thumbnail from './Thumbnail';
@@ -42,7 +42,8 @@ class App extends Component {
       showSettingsMenu: false, 
       tabData: [], 
       globalSettings: {},   
-      activeTab: 0
+      activeTab: 0,
+      activeTabTitle: ''
     };
 
     this.setConnectionStatus = this.setConnectionStatus.bind(this);
@@ -128,6 +129,45 @@ class App extends Component {
     });
   }
 
+  renderHeader() {
+    return (
+      <header className="App-header">
+        <div className="App-title-background">
+          <a className="App-title">CasparCG Clip Tool</a> 
+          <br/>
+          <button className="App-connection-status" 
+            style={this.state.ccgConnectionStatus ? {backgroundColor: "rgb(0, 73, 4)"} : {backgroundColor: "red"}}>
+            {this.state.ccgConnectionStatus ? "CONNECTED" : "CONNECTING"}
+          </button>
+        </div>
+        <div className="Connection-setup-Background">
+          
+          <button className="App-settings-button" 
+            onClick={this.handleSettingsPage}>SETTINGS
+          </button>
+          <button className="Reload-button" 
+            onClick={this.reloadPage}>RESCAN
+          </button>
+        </div>
+        <div className="mixButtonBackground">
+          <a className="mixButtonText">TAKE:</a>
+          <br/>
+          <button className="mixButton" 
+              onClick={
+                  () => this.refs[("thumbnailRef" + ( this.state.activeTab + 1))].pvwPlay()
+              }>
+              PVW
+          </button>
+          <button className="startButton" 
+              onClick={
+                  () => this.refs[("thumbnailRef" + ( this.state.activeTab + 1))].pgmPlay()
+              }>
+              PGM
+          </button>
+        </div>
+      </header>
+    )
+  }
   renderTabData() { 
       var tabDataList = this.state.tabData.map((item) => {
         return (
@@ -152,43 +192,15 @@ class App extends Component {
   render() {  
     return (
       <div className="App">
-        <header className="App-header">
-          <h1 className="App-title">CasparCG Clip Tool</h1> 
-
-          <div className="Connection-setup-Background">
-            <button className="App-connection-status" 
-              style={this.state.ccgConnectionStatus ? {backgroundColor: "green"} : {backgroundColor: "red"}}>
-              {this.state.ccgConnectionStatus ? "CONNECTED" : "CONNECTING"}
-            </button>
-            <button className="App-settings-button" 
-              onClick={this.handleSettingsPage}>SETTINGS
-            </button>
-            <button className="Reload-button" 
-              onClick={this.reloadPage}>RESCAN
-            </button>
-          </div>
-          <div className="mixButtonBackground">
-            <a className="mixButtonText">TAKE:</a>
-            <br/>
-            <button className="mixButton" 
-                onClick={
-                    () => this.refs[("thumbnailRef" + ( this.state.activeTab + 1))].pvwPlay()
-                }>
-                PVW
-            </button>
-            <button className="startButton" 
-                onClick={
-                    () => this.refs[("thumbnailRef" + ( this.state.activeTab + 1))].pgmPlay()
-                }>
-                PGM
-            </button>
-          </div>
-        </header>
+        {this.renderHeader()}
         {this.state.showSettingsMenu ? 
           <SettingsPage globalSettingsProps={this.state.globalSettings} loadSettingsProps={this.loadSettings.bind(this)} saveSettingsProps={this.saveSettings.bind(this)}/> 
           : null }
         <div className="App-body">
-          <Tabs tabs={this.state.tabData} onChange={(tab, index) => this.setState({ activeTab: index })}>
+          <Tabs tabs={this.state.tabData} 
+            onChange={(tab, index) => 
+              this.setState({ activeTab: index }
+            )}>
             {this.renderTabData()}
           </Tabs>
         </div>

@@ -34,43 +34,31 @@ body {
   box-shadow: 6px 6px 6px rgb(34, 34, 34);
 }
 
-.App-connection-status {
-  font-size: 0.8em;
-  width: 100px;
-  line-height: 25px;
-  margin-top: 5px;
-  color: white;
-  font-family: 'Roboto Condensed', sans-serif;
-  border-radius: 5px;
-  border-width: 0;
-  outline: 0;
-}
-
 .App-settings-button {
-  font-size: 0.8em;
+  font-size: 0.9em;
   width: 100px;
   line-height: 25px;
-  margin-top: 3px;
+  margin-top: 20px;
   background: rgb(11, 12, 11);
   color: white;
   font-family: 'Roboto Condensed', sans-serif;
   border-radius: 5px;
   border-width: 1px;
-  border-color: #aaa;
+  border-color: rgba(170, 170, 170, 0.315);
   outline: 0;
 }
 
 .Reload-button {
-  font-size: 0.8em;
+  font-size: 0.9em;
   width: 100px;
   line-height: 25px;
-  margin-top: 5px;
-  background: rgb(19, 46, 19);
+  margin-top: 10px;
+  background: rgb(46, 19, 19);
   color: white;
   font-family: 'Roboto Condensed', sans-serif;
   border-radius: 5px;
   border-width: 1px;
-  border-color: #aaa;
+  border-color: rgba(170, 170, 170, 0.315);
   outline: 0;
 }
 
@@ -83,9 +71,37 @@ body {
   background-color: #aaa;
 
 }
-.App-title {
-  font-size: 2em;
+
+.App-title-background {
+  position: absolute;
+  top: 5px;
+  left: 190px;
+  width: 350px;
+  height: 115px;
+  background-color: rgb(22, 22, 22);
+  border-width: 0px;
+  border-style: solid;
+  border-color: rgb(63, 63, 63);
+  box-shadow: 6px 6px 6px rgb(34, 34, 34);
 }
+.App-title {
+  line-height: 60px;
+  color: rgb(240, 248, 255);
+  font-size: 1.6em;
+}
+
+.App-connection-status {
+  font-size: 0.9em;
+  width: 110px;
+  line-height: 25px;
+  margin-top: 5px;
+  color: white;
+  font-family: 'Roboto Condensed', sans-serif;
+  border-radius: 5px;
+  border-width: 0;
+  outline: 0;
+}
+
 
 .App-intro {
   position:relative;
