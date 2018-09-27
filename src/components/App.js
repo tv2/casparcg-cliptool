@@ -48,7 +48,6 @@ class App extends Component {
 
     this.setConnectionStatus = this.setConnectionStatus.bind(this);
     this.handleSettingsPage = this.handleSettingsPage.bind(this);
-    this.renderTabData = this.renderTabData.bind(this);
 
   }
 
@@ -75,8 +74,9 @@ class App extends Component {
 
     // Initialize timer connection status:
     connectionTimer = setInterval(this.setConnectionStatus, 2000);
-    console.log("Timer initiated: " + connectionTimer);
   }
+
+  //Logical funtions: 
 
   reloadPage() {
     location.reload();
@@ -91,7 +91,6 @@ class App extends Component {
           return settingsInterface;
         }
       } catch (error) {
-        console.log(error);
         return (settingsInterface);
       }
   }
@@ -110,7 +109,7 @@ class App extends Component {
   }
 
   setConnectionStatus() {
-    this.timeout(1000, this.ccgConnection.info(1,10))
+    this.timeoutPromise(1000, this.ccgConnection.info(1,10))
     .then (() => {
       this.setState({ccgConnectionStatus: true}); 
     })
@@ -120,7 +119,7 @@ class App extends Component {
     });
   }
 
-  timeout(ms, promise) {
+  timeoutPromise(ms, promise) {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
         reject(new Error("Offline: Server was to long to respond"));
@@ -128,6 +127,8 @@ class App extends Component {
       promise.then(resolve, reject);
     });
   }
+
+  //Rendering functions:
 
   renderHeader() {
     return (
@@ -140,8 +141,7 @@ class App extends Component {
             {this.state.ccgConnectionStatus ? "CONNECTED" : "CONNECTING"}
           </button>
         </div>
-        <div className="Connection-setup-Background">
-          
+        <div className="Reload-setup-background">
           <button className="App-settings-button" 
             onClick={this.handleSettingsPage}>SETTINGS
           </button>
@@ -168,6 +168,7 @@ class App extends Component {
       </header>
     )
   }
+
   renderTabData() { 
       var tabDataList = this.state.tabData.map((item) => {
         return (
@@ -185,7 +186,6 @@ class App extends Component {
   }
 
   handleSettingsPage() {
-    console.log(this.refs[("thumbnailRef" + 1)].state.thumbList);
     this.setState({showSettingsMenu: !this.state.showSettingsMenu});
   }
 

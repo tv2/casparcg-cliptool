@@ -10,6 +10,20 @@ body {
     text-align: center;
 }
 
+.App-body {
+  position: relative;
+  top: 130px;
+  left: 0px;
+  Right: 0px;
+  bottom: 40px;
+  background-color: #aaa;
+}
+
+.App-intro {
+  position:relative;
+  font-size: large;
+}
+
 .App-header {
   position: fixed;
   z-index: 10;
@@ -21,7 +35,7 @@ body {
   box-shadow: 2px 2px 2px #555;
 }
 
-.Connection-setup-Background {
+.Reload-setup-background {
   position: absolute;
   top: 5px;
   left: 5px;
@@ -62,21 +76,11 @@ body {
   outline: 0;
 }
 
-.App-body {
-  position: relative;
-  top: 130px;
-  left: 0px;
-  Right: 0px;
-  bottom: 40px;
-  background-color: #aaa;
-
-}
-
 .App-title-background {
   position: absolute;
   top: 5px;
-  left: 190px;
-  width: 350px;
+  left: 25%;
+  width: 35%;
   height: 115px;
   background-color: rgb(22, 22, 22);
   border-width: 0px;
@@ -102,18 +106,11 @@ body {
   outline: 0;
 }
 
-
-.App-intro {
-  position:relative;
-  font-size: large;
-}
-
-
 /* Buttons for all thumbs, places at the bottom of the page */
 .mixButtonBackground {
   position: absolute;
   top: 5px;
-  right: 3%;
+  right: 25px;
   width: 300px;
   height: 115px;
   background-color: rgb(22, 22, 22);
