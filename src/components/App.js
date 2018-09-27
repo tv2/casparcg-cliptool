@@ -143,10 +143,12 @@ class App extends Component {
         </div>
         <div className="Reload-setup-background">
           <button className="App-settings-button" 
-            onClick={this.handleSettingsPage}>SETTINGS
+            onClick={this.handleSettingsPage}>
+              SETTINGS
           </button>
           <button className="Reload-button" 
-            onClick={this.reloadPage}>RESCAN
+            onClick={this.reloadPage}>
+              RELOAD
           </button>
         </div>
         <div className="mixButtonBackground">
@@ -178,6 +180,7 @@ class App extends Component {
             ccgOutputProps={item.key} 
             ccgConnectionProps={this.ccgConnection} 
             subFolderProps={item.subFolder}
+            activeTabProps={this.state.activeTab}
           />
         </div>
         )
