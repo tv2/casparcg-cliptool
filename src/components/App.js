@@ -46,7 +46,7 @@ class App extends Component {
       activeTabTitle: ''
     };
 
-    this.setConnectionStatus = this.setConnectionStatus.bind(this);
+    this.checkConnectionStatus = this.checkConnectionStatus.bind(this);
     this.handleSettingsPage = this.handleSettingsPage.bind(this);
 
   }
@@ -73,7 +73,7 @@ class App extends Component {
     this.ccgConnection.connect();
 
     // Initialize timer connection status:
-    connectionTimer = setInterval(this.setConnectionStatus, 2000);
+    connectionTimer = setInterval(this.checkConnectionStatus, 2000);
   }
 
   //Logical funtions: 
@@ -108,8 +108,8 @@ class App extends Component {
     });
   }
 
-  setConnectionStatus() {
-    this.timeoutPromise(1000, this.ccgConnection.info(1,10))
+  checkConnectionStatus() {
+    this.timeoutPromise(1000, this.ccgConnection.version())
     .then (() => {
       this.setState({ccgConnectionStatus: true}); 
     })

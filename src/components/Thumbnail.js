@@ -5,6 +5,7 @@ import { AMCP } from 'casparcg-connection';
 
 //Global const:
 const fps = 25;
+const mixDuration = 6;
 
 //thumb counterDown reference:
 var thumbTimer;
@@ -32,12 +33,11 @@ class Thumbnail extends Component {
         };
         this.updatePlayingStatus = this.updatePlayingStatus.bind(this);
         this.updateThumbnail = this.updateThumbnail.bind(this);
-        this.renderThumbnails = this.renderThumbnails.bind(this);
+        this.renderThumbnail = this.renderThumbnail.bind(this);
 
         this.loadMedia = this.loadMedia.bind(this);
         this.loadBgMedia = this.loadBgMedia.bind(this);
         this.handleLoop =  this.handleLoop.bind(this);
-        this.setStateElement = this.setThumbListElement.bind(this);
     }
 
     componentWillMount() {
@@ -88,7 +88,6 @@ class Thumbnail extends Component {
         // Timer playing & tally status:
         this.updatePlayingStatus();
         thumbTimer = setInterval(this.updatePlayingStatus, 333);
-
     }
 
     // Timer controlled playing & tally status
@@ -109,19 +108,19 @@ class Thumbnail extends Component {
                         
                         // Check and remove Red Tally
                         if(this.state.thumbActiveIndex != index) {
-                            this.setThumbListElement(this.state.thumbActiveIndex, "tally", false);
-                            this.setThumbListElement(this.state.thumbActiveIndex, "isActive", false);
+                            this.setStateThumbListElement(this.state.thumbActiveIndex, "tally", false);
+                            this.setStateThumbListElement(this.state.thumbActiveIndex, "isActive", false);
                             this.updateThumbnail(this.state.thumbActiveIndex);
                             forceUpdate = true;
                         }
 
                         // Update only first time or if time if file is playing:
                         if (forceUpdate || infoStatus.response.data.foreground.producer["file-frame-number"] != this.state.thumbActiveForegroundProducer["file-frame-number"]) {
-                            this.setThumbListElement(index, "tally", true);
+                            this.setStateThumbListElement(index, "tally", true);
                             this.setState({thumbActiveForegroundProducer: infoStatus.response.data.foreground.producer});
                             this.setState({thumbActiveIndex: index});
-                            this.setThumbListElement(index, "isActive", true);
-                            this.setThumbListElement(index, "loop", infoStatus.response.data.foreground.producer.loop);
+                            this.setStateThumbListElement(index, "isActive", true);
+                            this.setStateThumbListElement(index, "loop", infoStatus.response.data.foreground.producer.loop);
                             this.updateThumbnail(index);
                         }
                     }
@@ -130,10 +129,10 @@ class Thumbnail extends Component {
                         
                         if(this.state.thumbActiveBgIndex != index) {
                             // Remove Old Green Tally
-                            this.setThumbListElement(this.state.thumbActiveBgIndex, "tallyBg", false);
+                            this.setStateThumbListElement(this.state.thumbActiveBgIndex, "tallyBg", false);
                             this.updateThumbnail(this.state.thumbActiveBgIndex);
                             // Add Active Green Tally
-                            this.setThumbListElement(index, "tallyBg", true);
+                            this.setStateThumbListElement(index, "tallyBg", true);
                             this.setState({thumbActiveBgIndex: index});
                             this.updateThumbnail(index);
                         }
@@ -156,7 +155,7 @@ class Thumbnail extends Component {
         );
     }
 
-    setThumbListElement(index, element, value) {
+    setStateThumbListElement(index, element, value) {
         var prevStateThumblist = this.state.thumbList;
         prevStateThumblist[index][element] = value;
         this.setState(
@@ -179,7 +178,7 @@ class Thumbnail extends Component {
             this.state.thumbList[index].name, 
             this.state.thumbList[index].loop, 
             'MIX', 
-            6
+            mixDuration
         );
         this.loadBgMedia(10, indexBg);
     }
@@ -191,7 +190,7 @@ class Thumbnail extends Component {
             this.state.thumbList[index].name, 
             this.state.thumbList[index].loop, 
             'MIX', 
-            6
+            mixDuration
         );
     }
 
@@ -202,12 +201,12 @@ class Thumbnail extends Component {
             this.state.thumbList[index].name, 
             this.state.thumbList[index].loop, 
             'MIX', 
-            6
+            mixDuration
         );
     }
 
     handleLoop(index) {
-        this.setThumbListElement(index, 'loop', !this.state.thumbList[index].loop);
+        this.setStateThumbListElement(index, 'loop', !this.state.thumbList[index].loop);
         this.updateThumbnail(index);
         if(this.state.thumbActiveIndex === index) {
             const call = new AMCP.CustomCommand('CALL 1-10 LOOP');
@@ -234,12 +233,12 @@ class Thumbnail extends Component {
         
     updateThumbnail(index) {
         var prevStateList = this.state.thumbListRendered;
-        prevStateList[index] = this.renderThumbnails(index);
+        prevStateList[index] = this.renderThumbnail(index);
         this.setState({thumbListRendered: prevStateList});
         return;
     }
     
-    renderThumbnails(index) {
+    renderThumbnail(index) {
         return(
             <li key={index} className="boxComponent">
                 <img src={this.state.thumbList[index].thumbPix} 
@@ -289,7 +288,6 @@ class Thumbnail extends Component {
     render() {
         return (
         <div className="Thumb-body">
-
             <ul className="flexBoxes" >
                 {this.state.thumbListRendered}           
             </ul>
