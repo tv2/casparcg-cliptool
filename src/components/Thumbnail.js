@@ -85,21 +85,26 @@ class Thumbnail extends Component {
             }
         });
     
-        // Timer connection status:
+        // Timer playing & tally status:
         this.updatePlayingStatus();
-        thumbTimer = setInterval(this.updatePlayingStatus, 500);
+        thumbTimer = setInterval(this.updatePlayingStatus, 333);
 
     }
 
-    // Timer controlled connection status
+    // Timer controlled playing & tally status
     updatePlayingStatus() {
         var forceUpdate = false;
+        //only update when tab is selected:
         if (this.props.activeTabProps === this.props.ccgOutputProps - 1 ) {
             this.props.ccgConnectionProps.info(this.props.ccgOutputProps, 10)
             .then ((infoStatus)=>{
                 // casparcg-connection library bug: returns filename in either .filename or .location
                 var fileNameFg = this.cleanUpFilename(infoStatus.response.data.foreground.producer.filename || infoStatus.response.data.foreground.producer.location);
+                var fileNameBg = this.cleanUpFilename(infoStatus.response.data.background.producer.filename || infoStatus.response.data.background.producer.location || '');
+
+                //Get tally & playing status from server:
                 this.state.thumbList.map((item, index)=>{
+                    //Handle Foreground:
                     if(fileNameFg === item.name) {
                         
                         // Check and remove Red Tally
@@ -120,11 +125,7 @@ class Thumbnail extends Component {
                             this.updateThumbnail(index);
                         }
                     }
-                });
-                
-                // casparcg-connection library bug: returns filename in either .filename or .location
-                var fileNameBg = this.cleanUpFilename(infoStatus.response.data.background.producer.filename || infoStatus.response.data.background.producer.location || '');
-                this.state.thumbList.map((item, index)=>{
+                    //Handle Background:
                     if(fileNameBg === item.name) {
                         
                         if(this.state.thumbActiveBgIndex != index) {

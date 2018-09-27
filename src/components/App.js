@@ -137,7 +137,7 @@ class App extends Component {
           <a className="App-title">CasparCG Clip Tool</a> 
           <br/>
           <button className="App-connection-status" 
-            style={this.state.ccgConnectionStatus ? {backgroundColor: "rgb(0, 73, 4)"} : {backgroundColor: "red"}}>
+            style={this.state.ccgConnectionStatus ? {backgroundColor: "rgb(0, 128, 4)"} : {backgroundColor: "red"}}>
             {this.state.ccgConnectionStatus ? "CONNECTED" : "CONNECTING"}
           </button>
         </div>
