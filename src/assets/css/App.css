@@ -35,6 +35,55 @@ body {
   box-shadow: 2px 2px 2px #555;
 }
 
+
+.App-title-background {
+  position: absolute;
+  top: 5px;
+  left: 25%;
+  width: 380px;
+  height: 115px;
+  background-color: rgb(22, 22, 22);
+  border-width: 0px;
+  border-style: solid;
+  border-color: rgb(63, 63, 63);
+  box-shadow: 6px 6px 6px rgb(34, 34, 34);
+}
+
+
+.App-title {
+  position: relative;
+  top: 5px;
+  color: rgb(255, 255, 255);
+  font-size: 1.2em;
+  margin: 10px;
+  margin-left: 40px;
+  margin-right: 40px;
+}
+
+.headerPvwThumbnailImage {
+  position: abolute;
+  top: 40px;
+  left: 16px;
+  border-width: 2px;
+  border-style:  solid;
+  border-color:  #aa0101;
+  width: 130px;
+  height: auto;
+  margin: 8px;  
+}
+
+.headerPgmThumbnailImage {
+  position: abolute;
+  top: 40px;
+  left: 160px;
+  border-width: 2px;
+  border-style:  solid;
+  border-color:  #0a7500;
+  width: 130px;
+  height: auto;
+  margin: 8px;  
+}
+
 .Reload-setup-background {
   position: absolute;
   top: 5px;
@@ -48,11 +97,24 @@ body {
   box-shadow: 6px 6px 6px rgb(34, 34, 34);
 }
 
+.App-connection-status {
+  font-size: 0.9em;
+  width: 108px;
+  line-height: 25px;
+  margin-top: 5px;
+  color: white;
+  font-family: 'Roboto Condensed', sans-serif;
+  border-radius: 5px;
+  border-width: 0;
+  outline: 0;
+}
+
+
 .App-settings-button {
   font-size: 0.9em;
-  width: 100px;
+  width: 110px;
   line-height: 25px;
-  margin-top: 20px;
+  margin-top: 5px;
   background: rgb(11, 12, 11);
   color: white;
   font-family: 'Roboto Condensed', sans-serif;
@@ -64,45 +126,15 @@ body {
 
 .Reload-button {
   font-size: 0.9em;
-  width: 100px;
+  width: 110px;
   line-height: 25px;
-  margin-top: 10px;
+  margin-top: 5px;
   background: rgb(46, 19, 19);
   color: white;
   font-family: 'Roboto Condensed', sans-serif;
   border-radius: 5px;
   border-width: 1px;
   border-color: rgba(170, 170, 170, 0.315);
-  outline: 0;
-}
-
-.App-title-background {
-  position: absolute;
-  top: 5px;
-  left: 25%;
-  width: 35%;
-  height: 115px;
-  background-color: rgb(22, 22, 22);
-  border-width: 0px;
-  border-style: solid;
-  border-color: rgb(63, 63, 63);
-  box-shadow: 6px 6px 6px rgb(34, 34, 34);
-}
-.App-title {
-  line-height: 60px;
-  color: rgb(240, 248, 255);
-  font-size: 1.6em;
-}
-
-.App-connection-status {
-  font-size: 0.9em;
-  width: 110px;
-  line-height: 25px;
-  margin-top: 5px;
-  color: white;
-  font-family: 'Roboto Condensed', sans-serif;
-  border-radius: 5px;
-  border-width: 0;
   outline: 0;
 }
 

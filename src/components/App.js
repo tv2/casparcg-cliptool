@@ -43,11 +43,16 @@ class App extends Component {
       tabData: [], 
       globalSettings: {},   
       activeTab: 0,
-      activeTabTitle: ''
+      activeTabTitle: '',
+      activePvwPix: '',
+      activePgmPix: '',
     };
 
     this.checkConnectionStatus = this.checkConnectionStatus.bind(this);
     this.handleSettingsPage = this.handleSettingsPage.bind(this);
+    this.setActivePgmPix = this.setActivePgmPix.bind(this);
+    this.setActivePvwPix = this.setActivePvwPix.bind(this);
+    this.renderHeader = this.renderHeader.bind(this);
 
   }
 
@@ -128,6 +133,22 @@ class App extends Component {
     });
   }
 
+  setActivePgmPix(pix) {
+    this.setState({activePgmPix: pix});
+  }
+
+  setActivePvwPix(pix) {
+    this.setState({activePvwPix: pix});
+  }
+
+  setActiveTab(tab) {
+    this.setState({activeTab: tab});
+  }
+
+  getTabState(channel) {
+    return (this.state.activeTab === channel -1);
+  }
+
   //Rendering functions:
 
   renderHeader() {
@@ -135,13 +156,15 @@ class App extends Component {
       <header className="App-header">
         <div className="App-title-background">
           <a className="App-title">CasparCG Clip Tool</a> 
-          <br/>
-          <button className="App-connection-status" 
-            style={this.state.ccgConnectionStatus ? {backgroundColor: "rgb(0, 128, 4)"} : {backgroundColor: "red"}}>
-            {this.state.ccgConnectionStatus ? "CONNECTED" : "CONNECTING"}
-          </button>
+          <img src={this.state.activePvwPix} className="headerPvwThumbnailImage" />
+          <img src={this.state.activePgmPix} className="headerPgmThumbnailImage" />
+
         </div>
         <div className="Reload-setup-background">
+          <button className="App-connection-status" 
+            style={this.state.ccgConnectionStatus ? {backgroundColor: "rgb(0, 128, 4)"} : {backgroundColor: "red"}}>
+              {this.state.ccgConnectionStatus ? "CONNECTED" : "CONNECTING"}
+          </button>
           <button className="App-settings-button" 
             onClick={this.handleSettingsPage}>
               SETTINGS
@@ -181,6 +204,9 @@ class App extends Component {
             ccgConnectionProps={this.ccgConnection} 
             subFolderProps={item.subFolder}
             activeTabProps={this.state.activeTab}
+            setActivePvwPixProps={this.setActivePvwPix.bind(this)}
+            setActivePgmPixProps={this.setActivePgmPix.bind(this)}
+            getTabStateProps={this.getTabState.bind(this)}
           />
         </div>
         )
@@ -200,10 +226,7 @@ class App extends Component {
           <SettingsPage globalSettingsProps={this.state.globalSettings} loadSettingsProps={this.loadSettings.bind(this)} saveSettingsProps={this.saveSettings.bind(this)}/> 
           : null }
         <div className="App-body">
-          <Tabs tabs={this.state.tabData} 
-            onChange={(tab, index) => 
-              this.setState({ activeTab: index }
-            )}>
+          <Tabs tabs={this.state.tabData} onChange={(tab, index) => this.setActiveTab(index)}>
             {this.renderTabData()}
           </Tabs>
         </div>

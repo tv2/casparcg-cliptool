@@ -17,6 +17,9 @@ class Thumbnail extends Component {
     //ccgOutputProps what output on CCG to play at 
     //ccgConnectionProps Current CCG connection
     //subFolderProps What folder to work on
+    //setActivePgmPixProps Reference to Set Header PGMpix
+    //setActivePvmPixProps Reference to Set Header Pvmpix
+    //getTabStateProps returns TRUE/FALSE Is this tab loaded
 
     constructor(props) {
         super(props);
@@ -93,8 +96,9 @@ class Thumbnail extends Component {
     // Timer controlled playing & tally status
     updatePlayingStatus() {
         var forceUpdate = false;
+
         //only update when tab is selected:
-        if (this.props.activeTabProps === this.props.ccgOutputProps - 1 ) {
+        if (this.props.getTabStateProps(this.props.ccgOutputProps)) {
             this.props.ccgConnectionProps.info(this.props.ccgOutputProps, 10)
             .then ((infoStatus)=>{
                 // casparcg-connection library bug: returns filename in either .filename or .location
@@ -122,6 +126,7 @@ class Thumbnail extends Component {
                             this.setStateThumbListElement(index, "isActive", true);
                             this.setStateThumbListElement(index, "loop", infoStatus.response.data.foreground.producer.loop);
                             this.updateThumbnail(index);
+                            this.props.setActivePgmPixProps(item.thumbPix);
                         }
                     }
                     //Handle Background:
@@ -135,6 +140,7 @@ class Thumbnail extends Component {
                             this.setStateThumbListElement(index, "tallyBg", true);
                             this.setState({thumbActiveBgIndex: index});
                             this.updateThumbnail(index);
+                            this.props.setActivePvwPixProps(item.thumbPix);
                         }
                     }
                 });
