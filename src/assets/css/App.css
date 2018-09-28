@@ -28,7 +28,7 @@ body {
   position: sticky;
   z-index: 10;
   top: 0px;
-  width: 100vw;
+  width: 100%;
   background-color: rgb(53, 53, 53);
   height: 130px;
   color: rgb(28, 115, 165);
@@ -74,6 +74,7 @@ body {
   margin-top: 6px;
   margin-bottom: 4px;
   margin-right: 8px;  
+  background-image: repeating-linear-gradient(-45deg, #2f2c43, #2e2b41 3%, #2a1938 4%); 
 }
 
 .headerPgmThumbnailImage {
@@ -87,7 +88,8 @@ body {
   height: auto;
   margin-top: 6px;
   margin-bottom: 4px;
-  margin-left: 8px;  
+  margin-left: 8px; 
+  background-image: repeating-linear-gradient(-45deg, #2f2c43, #2e2b41 3%, #2a1938 4%); 
 }
 
 .Reload-setup-background {
@@ -148,7 +150,7 @@ body {
 .mixButtonBackground {
   position: absolute;
   top: 5px;
-  right: 25px;
+  right: 15px;
   width: 300px;
   height: 115px;
   background-color: rgb(22, 22, 22);
