@@ -161,9 +161,9 @@ class App extends Component {
       <header className="App-header">
         <div className="App-title-background">
           <img src={this.state.activePvwPix} className="headerPvwThumbnailImage" />
-          <buttom className="headerPgmCounter">
+          <button className="headerPgmCounter">
             {this.state.pgmCounter}
-          </buttom>
+          </button>
           <img src={this.state.activePgmPix} className="headerPgmThumbnailImage" />
         </div>
         <div className="Reload-setup-background">

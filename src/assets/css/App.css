@@ -12,7 +12,7 @@ body {
 
 .App-body {
   position: relative;
-  top: 130px;
+  top: 0px;
   left: 0px;
   Right: 0px;
   bottom: 40px;
@@ -25,7 +25,7 @@ body {
 }
 
 .App-header {
-  position: fixed;
+  position: sticky;
   z-index: 10;
   top: 0px;
   width: 100vw;
@@ -40,7 +40,7 @@ body {
   position: relative;
   top: 5px;
   left: 25%;
-  width: 500px;
+  width: 520px;
   height: 115px;
   background-color: rgb(22, 22, 22);
   border-width: 0px;
@@ -50,14 +50,22 @@ body {
 }
 
 .headerPgmCounter {
+  position: absolute;
+  top: 40px;
+  left: 200px;
   background-color: #aa0101;
+  width: 115px;
+  border-width: 0px;
   color: rgb(255, 255, 255);
-  font-size: 1.6em;
+  font-size: 1.4em;
   margin-left: 5px;
   margin-right: 5px;
 }
 
 .headerPvwThumbnailImage {
+  position: absolute;
+  top: 2px;
+  right: 5px;
   border-width: 2px;
   border-style:  solid;
   border-color:  #0a7500;
@@ -69,6 +77,9 @@ body {
 }
 
 .headerPgmThumbnailImage {
+  position: absolute;
+  top: 2px;
+  left: 5px;
   border-width: 2px;
   border-style:  solid;
   border-color:  #aa0101;
