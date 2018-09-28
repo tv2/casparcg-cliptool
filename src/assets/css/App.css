@@ -65,7 +65,7 @@ body {
 .headerPvwThumbnailImage {
   position: absolute;
   top: 2px;
-  right: 5px;
+  left: 5px;
   border-width: 2px;
   border-style:  solid;
   border-color:  #0a7500;
@@ -79,7 +79,7 @@ body {
 .headerPgmThumbnailImage {
   position: absolute;
   top: 2px;
-  left: 5px;
+  right: 5px;
   border-width: 2px;
   border-style:  solid;
   border-color:  #aa0101;
