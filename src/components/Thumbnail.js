@@ -19,6 +19,7 @@ class Thumbnail extends Component {
     //subFolderProps What folder to work on
     //setActivePgmPixProps Reference to Set Header PGMpix
     //setActivePvmPixProps Reference to Set Header Pvmpix
+    //setActivePgmCountProps Sets the timer in header
     //getTabStateProps returns TRUE/FALSE Is this tab loaded
 
     constructor(props) {
@@ -33,6 +34,7 @@ class Thumbnail extends Component {
             },
             thumbActiveIndex: 0,
             thumbActiveBgIndex: 0,
+            isTabActive: false,
         };
         this.updatePlayingStatus = this.updatePlayingStatus.bind(this);
         this.updateThumbnail = this.updateThumbnail.bind(this);
@@ -96,9 +98,16 @@ class Thumbnail extends Component {
     // Timer controlled playing & tally status
     updatePlayingStatus() {
         var forceUpdate = false;
-
+        var thisActive = this.props.getTabStateProps(this.props.ccgOutputProps);
+        if (!this.state.isTabActive && thisActive) {
+            this.setState({isTabActive: thisActive});
+            forceUpdate = true;
+        } else if (!thisActive)
+        {
+            this.setState({isTabActive: thisActive});
+        }
         //only update when tab is selected:
-        if (this.props.getTabStateProps(this.props.ccgOutputProps)) {
+        if (thisActive) {
             this.props.ccgConnectionProps.info(this.props.ccgOutputProps, 10)
             .then ((infoStatus)=>{
                 // casparcg-connection library bug: returns filename in either .filename or .location
@@ -127,12 +136,13 @@ class Thumbnail extends Component {
                             this.setStateThumbListElement(index, "loop", infoStatus.response.data.foreground.producer.loop);
                             this.updateThumbnail(index);
                             this.props.setActivePgmPixProps(item.thumbPix);
+                            this.props.setPgmCounterProps(this.framesToTimeCode(this.state.thumbActiveForegroundProducer["file-nb-frames"] - this.state.thumbActiveForegroundProducer["file-frame-number"]));
                         }
                     }
                     //Handle Background:
                     if(fileNameBg === item.name) {
                         
-                        if(this.state.thumbActiveBgIndex != index) {
+                        if(forceUpdate || this.state.thumbActiveBgIndex != index) {
                             // Remove Old Green Tally
                             this.setStateThumbListElement(this.state.thumbActiveBgIndex, "tallyBg", false);
                             this.updateThumbnail(this.state.thumbActiveBgIndex);
@@ -233,7 +243,7 @@ class Thumbnail extends Component {
             hour + "." + minute + "." + sec
         );
         } else {
-            return "";
+            return "00.00.00";
         }
     }
         
@@ -251,9 +261,9 @@ class Thumbnail extends Component {
                     className="thumbnailImage" 
                     style = {Object.assign({},
                         this.state.thumbList[index].tally ? 
-                            {borderColor: 'red'} : {borderColor: ''},
+                            {borderWidth: '4px'} : {borderWidth: '0px'},
                             this.state.thumbList[index].tallyBg ? 
-                            {boxShadow: '0px 0px 1px 3px green'} : {boxShadow: ''} 
+                            {boxShadow: '0px 0px 1px 5px green'} : {boxShadow: ''} 
                     )}
                 />
                 <button className="thumbnailImageClickPvw" 

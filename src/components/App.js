@@ -46,12 +46,14 @@ class App extends Component {
       activeTabTitle: '',
       activePvwPix: '',
       activePgmPix: '',
+      pgmCounter: ''
     };
 
     this.checkConnectionStatus = this.checkConnectionStatus.bind(this);
     this.handleSettingsPage = this.handleSettingsPage.bind(this);
     this.setActivePgmPix = this.setActivePgmPix.bind(this);
     this.setActivePvwPix = this.setActivePvwPix.bind(this);
+    this.setPgmCounter = this.setPgmCounter.bind(this);
     this.renderHeader = this.renderHeader.bind(this);
 
   }
@@ -141,6 +143,9 @@ class App extends Component {
     this.setState({activePvwPix: pix});
   }
 
+  setPgmCounter(val) {
+    this.setState({pgmCounter: val});
+  }
   setActiveTab(tab) {
     this.setState({activeTab: tab});
   }
@@ -155,10 +160,11 @@ class App extends Component {
     return (
       <header className="App-header">
         <div className="App-title-background">
-          <a className="App-title">CasparCG Clip Tool</a> 
           <img src={this.state.activePvwPix} className="headerPvwThumbnailImage" />
+          <buttom className="headerPgmCounter">
+            {this.state.pgmCounter}
+          </buttom>
           <img src={this.state.activePgmPix} className="headerPgmThumbnailImage" />
-
         </div>
         <div className="Reload-setup-background">
           <button className="App-connection-status" 
@@ -207,6 +213,7 @@ class App extends Component {
             setActivePvwPixProps={this.setActivePvwPix.bind(this)}
             setActivePgmPixProps={this.setActivePgmPix.bind(this)}
             getTabStateProps={this.getTabState.bind(this)}
+            setPgmCounterProps={this.setPgmCounter.bind(this)}
           />
         </div>
         )

@@ -37,10 +37,10 @@ body {
 
 
 .App-title-background {
-  position: absolute;
+  position: relative;
   top: 5px;
   left: 25%;
-  width: 380px;
+  width: 500px;
   height: 115px;
   background-color: rgb(22, 22, 22);
   border-width: 0px;
@@ -49,39 +49,34 @@ body {
   box-shadow: 6px 6px 6px rgb(34, 34, 34);
 }
 
-
-.App-title {
-  position: relative;
-  top: 5px;
+.headerPgmCounter {
+  background-color: #aa0101;
   color: rgb(255, 255, 255);
-  font-size: 1.2em;
-  margin: 10px;
-  margin-left: 40px;
-  margin-right: 40px;
+  font-size: 1.6em;
+  margin-left: 5px;
+  margin-right: 5px;
 }
 
 .headerPvwThumbnailImage {
-  position: abolute;
-  top: 40px;
-  left: 16px;
-  border-width: 2px;
-  border-style:  solid;
-  border-color:  #aa0101;
-  width: 130px;
-  height: auto;
-  margin: 8px;  
-}
-
-.headerPgmThumbnailImage {
-  position: abolute;
-  top: 40px;
-  left: 160px;
   border-width: 2px;
   border-style:  solid;
   border-color:  #0a7500;
-  width: 130px;
+  width: 170px;
   height: auto;
-  margin: 8px;  
+  margin-top: 6px;
+  margin-bottom: 4px;
+  margin-right: 8px;  
+}
+
+.headerPgmThumbnailImage {
+  border-width: 2px;
+  border-style:  solid;
+  border-color:  #aa0101;
+  width: 170px;
+  height: auto;
+  margin-top: 6px;
+  margin-bottom: 4px;
+  margin-left: 8px;  
 }
 
 .Reload-setup-background {
