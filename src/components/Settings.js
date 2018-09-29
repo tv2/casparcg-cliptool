@@ -111,7 +111,7 @@ class SettingsPage extends Component {
                     <input name="3" type="text" value={this.state.settings.tabData[3].subFolder} onChange={this.handleTabDataFolder} />
                 </label>
                 <br/>
-            
+                
                 <input className="Save-button" type="submit" value="SAVE SETTINGS" />
             </form>
             </div>

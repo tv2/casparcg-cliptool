@@ -181,7 +181,7 @@ class App extends Component {
           </button>
         </div>
         <div className="mixButtonBackground">
-          <a className="mixButtonText">TAKE:</a>
+          <a className="mixButtonText">START:</a>
           <br/>
           <button className="mixButton" 
               onClick={

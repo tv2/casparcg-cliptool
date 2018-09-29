@@ -55,6 +55,7 @@ body {
   left: 200px;
   background-color: #aa0101;
   width: 115px;
+  height: 30px;
   border-width: 0px;
   color: rgb(255, 255, 255);
   font-size: 1.4em;
@@ -70,7 +71,7 @@ body {
   border-style:  solid;
   border-color:  #0a7500;
   width: 170px;
-  height: auto;
+  height: 96px;
   margin-top: 6px;
   margin-bottom: 4px;
   margin-right: 8px;  
@@ -85,7 +86,7 @@ body {
   border-style:  solid;
   border-color:  #aa0101;
   width: 170px;
-  height: auto;
+  height: 96px;
   margin-top: 6px;
   margin-bottom: 4px;
   margin-left: 8px; 
