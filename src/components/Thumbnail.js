@@ -50,13 +50,24 @@ class Thumbnail extends Component {
 
     //Shortcut for mix and take
     _handleKeyDown(event) {
-        const keyOutput = JSON.stringify(this.props.ccgOutputProps).charCodeAt(0);
+        //Play PVW 1-4 key 1-4:
+        const pvwPlay = JSON.stringify(this.props.ccgOutputProps).charCodeAt(0);
+        //Play PGM 1-4 key: QWER:
+        const pgmPlay = ["Q", "W", "E", "R"][this.props.ccgOutputProps-1].charCodeAt(0);
+
         switch( event.keyCode ) {
-            case keyOutput:
+            case pvwPlay:
                 this.playMedia(
                     10, 
                     this.state.thumbActiveBgIndex, 
                     this.state.thumbActiveIndex
+                );
+                break;
+            case pgmPlay:
+                this.playMedia(
+                    10, 
+                    this.state.thumbActiveIndex,
+                    this.state.thumbActiveBgIndex 
                 );
                 break;
             default: 
