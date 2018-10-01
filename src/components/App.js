@@ -18,21 +18,6 @@ const folder = electron.remote.app.getPath('userData');
 //TimerReference:
 var connectionTimer;
 
-//Settings interface defaults:
-var settingsInterface = { 
-  ipAddress: 'localhost',
-  port: '5250',
-  mainFolder: '',
-  tabData: [
-      { key: 1, title: 'SCREEN 1', subFolder: ''},
-      { key: 2, title: 'SCREEN 2', subFolder: ''},
-      { key: 3, title: 'SCREEN 3', subFolder: ''},
-      { key: 4, title: '', subFolder: ''},
-      { key: 5, title: '', subFolder: ''},
-      { key: 6, title: '', subFolder: ''},
-  ],
-};
-
 class App extends Component {
   constructor(props) {
     super(props);
@@ -40,13 +25,25 @@ class App extends Component {
     this.state = {
       ccgConnectionStatus: false,
       showSettingsMenu: false, 
-      tabData: [], 
-      globalSettings: {},   
       activeTab: 0,
       activeTabTitle: '',
       activePvwPix: '',
       activePgmPix: '',
-      pgmCounter: ''
+      pgmCounter: '',
+      tabData: [],
+      globalSettings: { 
+        ipAddress: 'localhost',
+        port: '5250',
+        mainFolder: '',
+        tabData: [
+            { key: 1, title: 'SCREEN 1', subFolder: '', loop: false, autoPlay: false},
+            { key: 2, title: 'SCREEN 2', subFolder: '', loop: false, autoPlay: false},
+            { key: 3, title: 'SCREEN 3', subFolder: '', loop: false, autoPlay: false},
+            { key: 4, title: '', subFolder: '', loop: false, autoPlay: false},
+            { key: 5, title: '', subFolder: '', loop: false, autoPlay: false},
+            { key: 6, title: '', subFolder: '', loop: false, autoPlay: false},
+        ],
+      },   
     };
 
     this.checkConnectionStatus = this.checkConnectionStatus.bind(this);
@@ -55,6 +52,8 @@ class App extends Component {
     this.setActivePvwPix = this.setActivePvwPix.bind(this);
     this.setPgmCounter = this.setPgmCounter.bind(this);
     this.renderHeader = this.renderHeader.bind(this);
+    this.handleAutoPlayStatus = this.handleAutoPlayStatus.bind(this);
+    this.handleLoopStatus = this.handleLoopStatus.bind(this);
 
   }
 
@@ -90,17 +89,22 @@ class App extends Component {
   }
 
   loadSettings() {
-      try {
-        const settingsFromFile = JSON.parse(fs.readFileSync(folder + "/settings.json"));
-        if (this.compareOldNewSettings(settingsFromFile, settingsInterface)) {
-          return (settingsFromFile);
-        } else {
-          return settingsInterface;
-        }
-      } catch (error) {
-        return (settingsInterface);
+    var settingsInterface = this.state.globalSettings;
+    try {
+      const settingsFromFile = JSON.parse(fs.readFileSync(folder + "/settings.json"));
+      if (this.compareOldNewSettings(settingsFromFile, settingsInterface)) {
+        settingsFromFile.tabData.map((item, index) => {
+          item.loop = item.loop || false;
+          item.autoPlay = item.autoPlay || false;
+        });
+        return (settingsFromFile);
+      } else {
+        return settingsInterface;
       }
-  }
+    } catch (error) {
+      return (settingsInterface);
+    }
+}
 
   compareOldNewSettings(a, b) {
     var aKeys = Object.keys(a).sort();
@@ -113,6 +117,10 @@ class App extends Component {
     fs.writeFile(folder + "/settings.json", json, 'utf8', (error)=>{
         console.log(error);
     });
+  }
+
+  getTabSettings(ccgOutput, argument) {
+    return this.state.globalSettings.tabData[ccgOutput-1][argument];
   }
 
   checkConnectionStatus() {
@@ -133,6 +141,31 @@ class App extends Component {
       }, ms);
       promise.then(resolve, reject);
     });
+  }
+
+  //Handler functions:
+  handleAutoPlayStatus() {
+    var settingsCopy= Object.assign({}, this.state.globalSettings);
+    settingsCopy.tabData[this.state.activeTab].autoPlay = !settingsCopy.tabData[this.state.activeTab].autoPlay;
+    this.setState(
+        {globalSettings: settingsCopy}
+    );
+  }
+
+  handleLoopStatus() {
+    var settingsCopy= Object.assign({}, this.state.globalSettings);
+    settingsCopy.tabData[this.state.activeTab].loop = !settingsCopy.tabData[this.state.activeTab].loop;
+    this.setState(
+        {globalSettings: settingsCopy}
+    );
+    this.saveSettings(this.state.globalSettings);
+  /* ToDo: When pressing LOOP while playing, change state of playing media:
+            const call = new AMCP.CustomCommand('CALL 1-10 LOOP');
+            this.props.ccgConnectionProps.do(call)
+            .catch((error) => {
+                console.log(error);
+            });
+  */
   }
 
   setActivePgmPix(pix) {
@@ -166,6 +199,7 @@ class App extends Component {
           </button>
           <img src={this.state.activePgmPix} className="headerPgmThumbnailImage" />
         </div>
+
         <div className="Reload-setup-background">
           <button className="App-connection-status" 
             style={this.state.ccgConnectionStatus ? {backgroundColor: "rgb(0, 128, 4)"} : {backgroundColor: "red"}}>
@@ -180,6 +214,22 @@ class App extends Component {
               RELOAD
           </button>
         </div>
+
+        <div className="loop-autoPlay-background">
+          <button className="loop-button" 
+            onClick={this.handleLoopStatus}
+            style={this.state.globalSettings.tabData[this.state.activeTab].loop ? {backgroundColor: 'rgb(28, 115, 165)'} : {backgroundColor: 'grey'}}
+          >
+              LOOP
+          </button>
+          <button className="autoPlay-button" 
+            onClick={this.handleAutoPlayStatus}
+            style={this.state.globalSettings.tabData[this.state.activeTab].autoPlay ? {backgroundColor: 'red'} : {backgroundColor: 'grey'}}
+          >
+              AUTO PLAY
+          </button>
+        </div>
+
         <div className="mixButtonBackground">
           <a className="mixButtonText">START:</a>
           <br/>
@@ -214,6 +264,7 @@ class App extends Component {
             setActivePgmPixProps={this.setActivePgmPix.bind(this)}
             getTabStateProps={this.getTabState.bind(this)}
             setPgmCounterProps={this.setPgmCounter.bind(this)}
+            getTabSettingsProps={this.getTabSettings.bind(this)}
           />
         </div>
         )

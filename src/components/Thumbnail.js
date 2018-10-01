@@ -16,11 +16,11 @@ class Thumbnail extends Component {
     //Props: 
     //ccgOutputProps what output on CCG to play at 
     //ccgConnectionProps Current CCG connection
-    //subFolderProps What folder to work on
     //setActivePgmPixProps Reference to Set Header PGMpix
     //setActivePvmPixProps Reference to Set Header Pvmpix
-    //setActivePgmCountProps Sets the timer in header
+    //setPgmCounterProps Sets the timer in header
     //getTabStateProps returns TRUE/FALSE Is this tab loaded
+    //getTabSettingsProps return the setting parameter from argument
 
     constructor(props) {
         super(props);
@@ -42,7 +42,6 @@ class Thumbnail extends Component {
 
         this.loadMedia = this.loadMedia.bind(this);
         this.loadBgMedia = this.loadBgMedia.bind(this);
-        this.handleLoop =  this.handleLoop.bind(this);
     }
 
     componentWillMount() {
@@ -67,7 +66,7 @@ class Thumbnail extends Component {
     
 
     componentDidMount() {
-        this.props.ccgConnectionProps.thumbnailList(this.props.subFolderProps)
+        this.props.ccgConnectionProps.thumbnailList(this.props.getTabSettingsProps(this.props.ccgOutputProps,'subFolder'))
         .then((results) => {
             results.response.data.map((item) => {
                 this.props.ccgConnectionProps.thumbnailRetrieve(item.name)
@@ -76,7 +75,6 @@ class Thumbnail extends Component {
                     item.tally = false;
                     item.tallyBg = false;
                     item.isActive = false;
-                    item.loop = false;
                     this.setState((prevState) => ({
                         thumbList: [...prevState.thumbList, item] 
                     }));
@@ -86,7 +84,7 @@ class Thumbnail extends Component {
         })
         .catch ((error) => {
             if (error.response.code === 404 ) {
-                window.alert("Folder: " + this.props.subFolderProps + " does not exist");
+                window.alert("Folder: " + this.props.getTabSettingsProps(this.props.ccgOutputProps, 'subFolder') + " does not exist");
             }
         });
     
@@ -192,7 +190,7 @@ class Thumbnail extends Component {
             this.props.ccgOutputProps, 
             layer, 
             this.state.thumbList[index].name, 
-            this.state.thumbList[index].loop, 
+            this.props.getTabSettingsProps(this.props.ccgOutputProps, "loop"), 
             'MIX', 
             mixDuration
         );
@@ -204,7 +202,7 @@ class Thumbnail extends Component {
             this.props.ccgOutputProps, 
             layer, 
             this.state.thumbList[index].name, 
-            this.state.thumbList[index].loop, 
+            this.props.getTabSettingsProps(this.props.ccgOutputProps, "loop"), 
             'MIX', 
             mixDuration
         );
@@ -215,22 +213,10 @@ class Thumbnail extends Component {
             this.props.ccgOutputProps, 
             layer, 
             this.state.thumbList[index].name, 
-            this.state.thumbList[index].loop, 
+            this.props.getTabSettingsProps(this.props.ccgOutputProps, "loop"), 
             'MIX', 
             mixDuration
         );
-    }
-
-    handleLoop(index) {
-        this.setStateThumbListElement(index, 'loop', !this.state.thumbList[index].loop);
-        this.updateThumbnail(index);
-        if(this.state.thumbActiveIndex === index) {
-            const call = new AMCP.CustomCommand('CALL 1-10 LOOP');
-            this.props.ccgConnectionProps.do(call)
-            .catch((error) => {
-                console.log(error);
-            });
-        }
     }
 
     framesToTimeCode(frame) {
@@ -278,25 +264,9 @@ class Thumbnail extends Component {
                         : "" 
                     }
                 </a>
-                <a className="text">
+                <p className="text">
                     {this.state.thumbList[index].name.substring(this.state.thumbList[index].name.lastIndexOf('/')+1).slice(-45)}
-                </a>
-                <br/>
-                <button className="playButton" 
-                    onClick={() =>
-                        this.playMedia(10, index, this.state.thumbActiveBgIndex)
-                    }>
-                    PLAY
-                </button>
-                <button className="loopButton" 
-                    style={this.state.thumbList[index].loop ? 
-                        {backgroundColor: 'rgb(28, 115, 165)'} : {backgroundColor: 'grey'}
-                    } 
-                    onClick={() =>
-                        this.handleLoop(index)
-                    }>
-                    LOOP
-                </button>
+                </p>
             </li>
         )
     }

@@ -39,7 +39,7 @@ body {
 .App-title-background {
   position: relative;
   top: 5px;
-  left: 25%;
+  left: 17%;
   width: 520px;
   height: 115px;
   background-color: rgb(22, 22, 22);
@@ -152,7 +152,7 @@ body {
   position: absolute;
   top: 5px;
   right: 15px;
-  width: 300px;
+  width: 280px;
   height: 115px;
   background-color: rgb(22, 22, 22);
   border-width: 0px;
@@ -197,4 +197,41 @@ body {
   outline: 1px;
 }
 
+
+.loop-autoPlay-background {
+  position: absolute;
+  top: 5px;
+  right: 320px;
+  width: 170px;
+  height: 115px;
+  background-color: rgb(22, 22, 22);
+  border-width: 0px;
+  border-style: solid;
+  border-color: rgb(63, 63, 63);
+  box-shadow: 6px 6px 6px rgb(34, 34, 34);
+}
+
+.loop-button {
+  font-size: 0.9em;
+  width: 108px;
+  line-height: 25px;
+  margin-top: 5px;
+  color: white;
+  font-family: 'Roboto Condensed', sans-serif;
+  border-radius: 5px;
+  border-width: 0;
+  outline: 0;
+}
+
+.autoPlay-button {
+  font-size: 0.9em;
+  width: 108px;
+  line-height: 25px;
+  margin-top: 5px;
+  color: white;
+  font-family: 'Roboto Condensed', sans-serif;
+  border-radius: 5px;
+  border-width: 0;
+  outline: 0;
+}
 

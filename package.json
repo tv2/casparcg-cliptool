@@ -33,6 +33,7 @@
   },
   "dependencies": {
     "casparcg-connection": "^4.5.2",
+    "deepmerge": "^2.1.1",
     "react": "^16.4.2",
     "react-dom": "^16.4.2",
     "rmc-tabs": "^1.2.27"
