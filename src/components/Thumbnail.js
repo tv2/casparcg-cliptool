@@ -199,14 +199,7 @@ class Thumbnail extends Component {
 
     loadMedia(layer, index) {
         if (this.props.getTabSettingsProps(this.props.ccgOutputProps, "autoPlay")) {
-            this.props.ccgConnectionProps.play(
-                this.props.ccgOutputProps, 
-                layer, 
-                this.state.thumbList[index].name, 
-                this.props.getTabSettingsProps(this.props.ccgOutputProps, "loop"), 
-                'MIX', 
-                mixDuration
-            );
+            this.playMedia(10, index, this.state.thumbActiveBgIndex);
         } else {
             this.props.ccgConnectionProps.load(
                 this.props.ccgOutputProps, 
