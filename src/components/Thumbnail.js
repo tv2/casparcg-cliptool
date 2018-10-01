@@ -198,25 +198,47 @@ class Thumbnail extends Component {
     }
 
     loadMedia(layer, index) {
-        this.props.ccgConnectionProps.load(
-            this.props.ccgOutputProps, 
-            layer, 
-            this.state.thumbList[index].name, 
-            this.props.getTabSettingsProps(this.props.ccgOutputProps, "loop"), 
-            'MIX', 
-            mixDuration
-        );
+        if (this.props.getTabSettingsProps(this.props.ccgOutputProps, "autoPlay")) {
+            this.props.ccgConnectionProps.play(
+                this.props.ccgOutputProps, 
+                layer, 
+                this.state.thumbList[index].name, 
+                this.props.getTabSettingsProps(this.props.ccgOutputProps, "loop"), 
+                'MIX', 
+                mixDuration
+            );
+        } else {
+            this.props.ccgConnectionProps.load(
+                this.props.ccgOutputProps, 
+                layer, 
+                this.state.thumbList[index].name, 
+                this.props.getTabSettingsProps(this.props.ccgOutputProps, "loop"), 
+                'MIX', 
+                mixDuration
+            );
+        }
     }
 
     loadBgMedia(layer, index) {
-        this.props.ccgConnectionProps.loadbg(
-            this.props.ccgOutputProps, 
-            layer, 
-            this.state.thumbList[index].name, 
-            this.props.getTabSettingsProps(this.props.ccgOutputProps, "loop"), 
-            'MIX', 
-            mixDuration
-        );
+        if (this.props.getTabSettingsProps(this.props.ccgOutputProps, "autoPlay")) {
+            this.props.ccgConnectionProps.loadbgAuto(
+                this.props.ccgOutputProps, 
+                layer, 
+                this.state.thumbList[index].name, 
+                this.props.getTabSettingsProps(this.props.ccgOutputProps, "loop"), 
+                'MIX', 
+                mixDuration
+            );
+        } else {
+            this.props.ccgConnectionProps.loadbg(
+                this.props.ccgOutputProps, 
+                layer, 
+                this.state.thumbList[index].name, 
+                this.props.getTabSettingsProps(this.props.ccgOutputProps, "loop"), 
+                'MIX', 
+                mixDuration
+            );
+        }
     }
 
     framesToTimeCode(frame) {

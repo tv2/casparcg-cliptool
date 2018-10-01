@@ -226,7 +226,7 @@ class App extends Component {
             onClick={this.handleAutoPlayStatus}
             style={this.state.globalSettings.tabData[this.state.activeTab].autoPlay ? {backgroundColor: 'red'} : {backgroundColor: 'grey'}}
           >
-              AUTO PLAY
+              AUTO START
           </button>
         </div>
 

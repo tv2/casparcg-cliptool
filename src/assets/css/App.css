@@ -197,7 +197,7 @@ body {
   outline: 1px;
 }
 
-
+/* LOOP and AUTO STARt buttons: */
 .loop-autoPlay-background {
   position: absolute;
   top: 5px;
@@ -214,8 +214,8 @@ body {
 .loop-button {
   font-size: 0.9em;
   width: 108px;
-  line-height: 25px;
-  margin-top: 5px;
+  line-height: 30px;
+  margin-top: 15px;
   color: white;
   font-family: 'Roboto Condensed', sans-serif;
   border-radius: 5px;
@@ -226,8 +226,8 @@ body {
 .autoPlay-button {
   font-size: 0.9em;
   width: 108px;
-  line-height: 25px;
-  margin-top: 5px;
+  line-height: 30px;
+  margin-top: 10px;
   color: white;
   font-family: 'Roboto Condensed', sans-serif;
   border-radius: 5px;
