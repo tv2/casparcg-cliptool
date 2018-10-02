@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import '../assets/css/Thumbnail.css';
 import './App';
-import { AMCP } from 'casparcg-connection';
 
 //Global const:
 const fps = 25;
@@ -48,34 +47,6 @@ class Thumbnail extends Component {
         document.addEventListener("keydown", this._handleKeyDown.bind(this));
     }
 
-    //Shortcut for mix and take
-    _handleKeyDown(event) {
-        //Play PVW 1-4 key 1-4:
-        const pvwPlay = JSON.stringify(this.props.ccgOutputProps).charCodeAt(0);
-        //Play PGM 1-4 key: QWER:
-        const pgmPlay = ["Q", "W", "E", "R"][this.props.ccgOutputProps-1].charCodeAt(0);
-
-        switch( event.keyCode ) {
-            case pvwPlay:
-                this.playMedia(
-                    10, 
-                    this.state.thumbActiveBgIndex, 
-                    this.state.thumbActiveIndex
-                );
-                break;
-            case pgmPlay:
-                this.playMedia(
-                    10, 
-                    this.state.thumbActiveIndex,
-                    this.state.thumbActiveBgIndex 
-                );
-                break;
-            default: 
-                break;
-        }
-    }
-    
-
     componentDidMount() {
         this.props.ccgConnectionProps.thumbnailList(this.props.getTabSettingsProps(this.props.ccgOutputProps,'subFolder'))
         .then((results) => {
@@ -103,6 +74,34 @@ class Thumbnail extends Component {
         this.updatePlayingStatus();
         thumbTimer = setInterval(this.updatePlayingStatus, 333);
     }
+
+    //Shortcut for mix and take
+    _handleKeyDown(event) {
+        //Play PVW 1-4 key 1-4:
+        const pvwPlay = JSON.stringify(this.props.ccgOutputProps).charCodeAt(0);
+        //Play PGM 1-4 key: QWER:
+        const pgmPlay = ["Q", "W", "E", "R"][this.props.ccgOutputProps-1].charCodeAt(0);
+
+        switch( event.keyCode ) {
+            case pvwPlay:
+                this.playMedia(
+                    10, 
+                    this.state.thumbActiveBgIndex, 
+                    this.state.thumbActiveIndex
+                );
+                break;
+            case pgmPlay:
+                this.playMedia(
+                    10, 
+                    this.state.thumbActiveIndex,
+                    this.state.thumbActiveBgIndex 
+                );
+                break;
+            default: 
+                break;
+        }
+    }
+    
 
     // Timer controlled playing & tally status
     updatePlayingStatus() {

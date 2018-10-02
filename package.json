@@ -1,5 +1,6 @@
 {
   "name": "CasparCGClient",
+  "productName": "CasparCG ClipTool",
   "version": "0.1.2",
   "description": "CasparCG ClipTool",
   "license": "MIT",
@@ -29,11 +30,13 @@
     "start": "webpack-dev-server --hot --host 0.0.0.0 --config=./webpack.dev.config.js --mode development",
     "build": "webpack --config webpack.build.config.js --mode production",
     "package": "npm run build",
-    "postpackage": "electron-packager ./ --out=./builds"
+    "postpackage": "electron-packager ./ --out=./builds",
+    "package-mac": "electron-packager . --overwrite --platform=darwin --arch=x64 --icon=assets/icons/mac/icon.icns --prune=true --out=release-builds",
+    "package-linux": "electron-packager . casparcg-cliptool --overwrite --asar=true --platform=linux --arch=x64 --icon=assets/icons/png/1024x1024.png --prune=true --out=release-builds",
+    "package-rpi": "electron-packager . casparcg-cliptool --overwrite --asar=true --platform=linux --arch=armv7l --icon=assets/icons/png/1024x1024.png --prune=true --out=release-builds"
   },
   "dependencies": {
     "casparcg-connection": "^4.5.2",
-    "deepmerge": "^2.1.1",
     "react": "^16.4.2",
     "react-dom": "^16.4.2",
     "rmc-tabs": "^1.2.27"

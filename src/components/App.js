@@ -257,9 +257,7 @@ class App extends Component {
           <Thumbnail 
             ref={"thumbnailRef" + item.key}
             ccgOutputProps={item.key} 
-            ccgConnectionProps={this.ccgConnection} 
-            subFolderProps={item.subFolder}
-            activeTabProps={this.state.activeTab}
+            ccgConnectionProps={this.ccgConnection}
             setActivePvwPixProps={this.setActivePvwPix.bind(this)}
             setActivePgmPixProps={this.setActivePgmPix.bind(this)}
             getTabStateProps={this.getTabState.bind(this)}
