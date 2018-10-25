@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import {CasparCG} from 'casparcg-connection';
 import { Tabs } from 'rmc-tabs';
+import { GraphQLClient, request } from 'graphql-request';
 
 // Components:
 import Thumbnail from './Thumbnail';
@@ -24,14 +25,14 @@ class App extends Component {
 
     this.state = {
       ccgConnectionStatus: false,
-      showSettingsMenu: false, 
+      showSettingsMenu: false,
       activeTab: 0,
       activeTabTitle: '',
       activePvwPix: '',
       activePgmPix: '',
       pgmCounter: '',
       tabData: [],
-      globalSettings: { 
+      globalSettings: {
         ipAddress: 'localhost',
         port: '5250',
         mainFolder: '',
@@ -43,7 +44,7 @@ class App extends Component {
             { key: 5, title: '', subFolder: '', loop: false, autoPlay: false},
             { key: 6, title: '', subFolder: '', loop: false, autoPlay: false},
         ],
-      },   
+      },
     };
 
     this.checkConnectionStatus = this.checkConnectionStatus.bind(this);
@@ -73,16 +74,19 @@ class App extends Component {
     this.ccgConnection = new CasparCG(
       {
         host: mountSettings.ipAddress,
-        port: mountSettings.port,  
+        port: mountSettings.port,
         autoConnect: false,
     });
     this.ccgConnection.connect();
+
+    // Initialize CasparCG-State-Scanner acess:
+    this.ccgStateConnection = new GraphQLClient("http://" + mountSettings.ipAddress + ":5254/api");
 
     // Initialize timer connection status:
     connectionTimer = setInterval(this.checkConnectionStatus, 2000);
   }
 
-  //Logical funtions: 
+  //Logical funtions:
 
   reloadPage() {
     location.reload();
@@ -124,14 +128,30 @@ class App extends Component {
   }
 
   checkConnectionStatus() {
+    const query = /* GraphQL */ `
+      {
+        timeLeft(ch: 1,l: 10)
+      }
+    `;
+      this.ccgStateConnection.request(query)
+      .then((response) => {
+        console.log(response);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+      /*
     this.timeoutPromise(1000, this.ccgConnection.version())
     .then (() => {
-      this.setState({ccgConnectionStatus: true}); 
+
+
+      this.setState({ccgConnectionStatus: true});
     })
     .catch((error) =>{
       this.setState({ccgConnectionStatus: false});
       console.log(error);
     });
+    */
   }
 
   timeoutPromise(ms, promise) {
@@ -201,28 +221,28 @@ class App extends Component {
         </div>
 
         <div className="Reload-setup-background">
-          <button className="App-connection-status" 
+          <button className="App-connection-status"
             style={this.state.ccgConnectionStatus ? {backgroundColor: "rgb(0, 128, 4)"} : {backgroundColor: "red"}}>
               {this.state.ccgConnectionStatus ? "CONNECTED" : "CONNECTING"}
           </button>
-          <button className="App-settings-button" 
+          <button className="App-settings-button"
             onClick={this.handleSettingsPage}>
               SETTINGS
           </button>
-          <button className="Reload-button" 
+          <button className="Reload-button"
             onClick={this.reloadPage}>
               RELOAD
           </button>
         </div>
 
         <div className="loop-autoPlay-background">
-          <button className="loop-button" 
+          <button className="loop-button"
             onClick={this.handleLoopStatus}
             style={this.state.globalSettings.tabData[this.state.activeTab].loop ? {backgroundColor: 'rgb(28, 115, 165)'} : {backgroundColor: 'grey'}}
           >
               LOOP
           </button>
-          <button className="autoPlay-button" 
+          <button className="autoPlay-button"
             onClick={this.handleAutoPlayStatus}
             style={this.state.globalSettings.tabData[this.state.activeTab].autoPlay ? {backgroundColor: 'red'} : {backgroundColor: 'grey'}}
           >
@@ -233,13 +253,13 @@ class App extends Component {
         <div className="mixButtonBackground">
           <a className="mixButtonText">START:</a>
           <br/>
-          <button className="mixButton" 
+          <button className="mixButton"
               onClick={
                   () => this.refs[("thumbnailRef" + ( this.state.activeTab + 1))].pvwPlay()
               }>
               PVW
           </button>
-          <button className="startButton" 
+          <button className="startButton"
               onClick={
                   () => this.refs[("thumbnailRef" + ( this.state.activeTab + 1))].pgmPlay()
               }>
@@ -250,14 +270,15 @@ class App extends Component {
     )
   }
 
-  renderTabData() { 
+  renderTabData() {
       var tabDataList = this.state.tabData.map((item) => {
         return (
         <div className="App-intro" key={(item.key)}>
-          <Thumbnail 
+          <Thumbnail
             ref={"thumbnailRef" + item.key}
-            ccgOutputProps={item.key} 
+            ccgOutputProps={item.key}
             ccgConnectionProps={this.ccgConnection}
+            ccgStateConnectionProps={this.ccgStateConnection}
             setActivePvwPixProps={this.setActivePvwPix.bind(this)}
             setActivePgmPixProps={this.setActivePgmPix.bind(this)}
             getTabStateProps={this.getTabState.bind(this)}
@@ -267,19 +288,19 @@ class App extends Component {
         </div>
         )
       })
-      return (tabDataList)      
+      return (tabDataList)
   }
 
   handleSettingsPage() {
     this.setState({showSettingsMenu: !this.state.showSettingsMenu});
   }
 
-  render() {  
+  render() {
     return (
       <div className="App">
         {this.renderHeader()}
-        {this.state.showSettingsMenu ? 
-          <SettingsPage globalSettingsProps={this.state.globalSettings} loadSettingsProps={this.loadSettings.bind(this)} saveSettingsProps={this.saveSettings.bind(this)}/> 
+        {this.state.showSettingsMenu ?
+          <SettingsPage globalSettingsProps={this.state.globalSettings} loadSettingsProps={this.loadSettings.bind(this)} saveSettingsProps={this.saveSettings.bind(this)}/>
           : null }
         <div className="App-body">
           <Tabs tabs={this.state.tabData} onChange={(tab, index) => this.setActiveTab(index)}>
