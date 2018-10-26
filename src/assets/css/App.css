@@ -54,7 +54,7 @@ body {
   top: 40px;
   left: 200px;
   background-color: #aa0101;
-  width: 115px;
+  width: 125px;
   height: 30px;
   border-width: 0px;
   color: rgb(255, 255, 255);
@@ -74,8 +74,8 @@ body {
   height: 96px;
   margin-top: 6px;
   margin-bottom: 4px;
-  margin-right: 8px;  
-  background-image: repeating-linear-gradient(-45deg, #2f2c43, #2e2b41 3%, #2a1938 4%); 
+  margin-right: 8px;
+  background-image: repeating-linear-gradient(-45deg, #2f2c43, #2e2b41 3%, #2a1938 4%);
 }
 
 .headerPgmThumbnailImage {
@@ -89,8 +89,8 @@ body {
   height: 96px;
   margin-top: 6px;
   margin-bottom: 4px;
-  margin-left: 8px; 
-  background-image: repeating-linear-gradient(-45deg, #2f2c43, #2e2b41 3%, #2a1938 4%); 
+  margin-left: 8px;
+  background-image: repeating-linear-gradient(-45deg, #2f2c43, #2e2b41 3%, #2a1938 4%);
 }
 
 .Reload-setup-background {

@@ -118,8 +118,8 @@ class Thumbnail extends Component {
             .then ((response)=>{
                 var infoStatus = JSON.parse(response.layer);
                 this.setState({ thumbActiveState: infoStatus} );
-                var fileNameFg = this.cleanUpFilename(infoStatus.foreground.name);
-                var fileNameBg = this.cleanUpFilename(infoStatus.background.name);
+                var fileNameFg = this.cleanUpFilename(infoStatus.foreground.name || '');
+                var fileNameBg = this.cleanUpFilename(infoStatus.background.name || '');
 
                 this.state.thumbList.map((item, index)=>{
                     //Handle Foreground:
