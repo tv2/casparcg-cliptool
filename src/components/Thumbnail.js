@@ -12,9 +12,10 @@ var thumbTimer;
 
 
 class Thumbnail extends Component {
-    //Props: 
-    //ccgOutputProps what output on CCG to play at 
+    //Props:
+    //ccgOutputProps what output on CCG to play at
     //ccgConnectionProps Current CCG connection
+    //ccgStateConnectionProps Current CCG connection
     //setActivePgmPixProps Reference to Set Header PGMpix
     //setActivePvmPixProps Reference to Set Header Pvmpix
     //setPgmCounterProps Sets the timer in header
@@ -23,14 +24,11 @@ class Thumbnail extends Component {
 
     constructor(props) {
         super(props);
-        this.state = {  
+        this.state = {
             thumbList: [],
             thumbPix: [],
             thumbListRendered: [],
-            thumbActiveForegroundProducer: {
-                filename: "",
-                loop: false,
-            },
+            thumbActiveState: {},
             thumbActiveIndex: 0,
             thumbActiveBgIndex: 0,
             isTabActive: false,
@@ -58,7 +56,7 @@ class Thumbnail extends Component {
                     item.tallyBg = false;
                     item.isActive = false;
                     this.setState((prevState) => ({
-                        thumbList: [...prevState.thumbList, item] 
+                        thumbList: [...prevState.thumbList, item]
                     }));
                     this.updateThumbnail(this.state.thumbList.length - 1);
                 });
@@ -69,10 +67,10 @@ class Thumbnail extends Component {
                 window.alert("Folder: " + this.props.getTabSettingsProps(this.props.ccgOutputProps, 'subFolder') + " does not exist");
             }
         });
-    
+
         // Timer playing & tally status:
         this.updatePlayingStatus();
-        thumbTimer = setInterval(this.updatePlayingStatus, 333);
+        thumbTimer = setInterval(this.updatePlayingStatus, 50);
     }
 
     //Shortcut for mix and take
@@ -85,23 +83,23 @@ class Thumbnail extends Component {
         switch( event.keyCode ) {
             case pvwPlay:
                 this.playMedia(
-                    10, 
-                    this.state.thumbActiveBgIndex, 
+                    10,
+                    this.state.thumbActiveBgIndex,
                     this.state.thumbActiveIndex
                 );
                 break;
             case pgmPlay:
                 this.playMedia(
-                    10, 
+                    10,
                     this.state.thumbActiveIndex,
-                    this.state.thumbActiveBgIndex 
+                    this.state.thumbActiveBgIndex
                 );
                 break;
-            default: 
+            default:
                 break;
         }
     }
-    
+
 
     // Timer controlled playing & tally status
     updatePlayingStatus() {
@@ -116,17 +114,16 @@ class Thumbnail extends Component {
         }
         //only update when tab is selected:
         if (thisActive) {
-            this.props.ccgConnectionProps.info(this.props.ccgOutputProps, 10)
-            .then ((infoStatus)=>{
-                // casparcg-connection library bug: returns filename in either .filename or .location
-                var fileNameFg = this.cleanUpFilename(infoStatus.response.data.foreground.producer.filename || infoStatus.response.data.foreground.producer.location);
-                var fileNameBg = this.cleanUpFilename(infoStatus.response.data.background.producer.filename || infoStatus.response.data.background.producer.location || '');
+            this.props.ccgStateConnectionProps.request("{  layer(ch: " + this.props.ccgOutputProps + ",l: 10) }")
+            .then ((response)=>{
+                var infoStatus = JSON.parse(response.layer);
+                this.setState({ thumbActiveState: infoStatus} );
+                var fileNameFg = this.cleanUpFilename(infoStatus.foreground.name || '');
+                var fileNameBg = this.cleanUpFilename(infoStatus.background.name || '');
 
-                //Get tally & playing status from server:
                 this.state.thumbList.map((item, index)=>{
                     //Handle Foreground:
                     if(fileNameFg === item.name) {
-                        
                         // Check and remove Red Tally
                         if(this.state.thumbActiveIndex != index) {
                             this.setStateThumbListElement(this.state.thumbActiveIndex, "tally", false);
@@ -136,20 +133,19 @@ class Thumbnail extends Component {
                         }
 
                         // Update only first time or if time if file is playing:
-                        if (forceUpdate || infoStatus.response.data.foreground.producer["file-frame-number"] != this.state.thumbActiveForegroundProducer["file-frame-number"]) {
+                        if (forceUpdate || !infoStatus.foreground.paused) {
                             this.setStateThumbListElement(index, "tally", true);
-                            this.setState({thumbActiveForegroundProducer: infoStatus.response.data.foreground.producer});
                             this.setState({thumbActiveIndex: index});
                             this.setStateThumbListElement(index, "isActive", true);
-                            this.setStateThumbListElement(index, "loop", infoStatus.response.data.foreground.producer.loop);
+                            this.setStateThumbListElement(index, "loop", infoStatus.foreground.loop);
                             this.updateThumbnail(index);
                             this.props.setActivePgmPixProps(item.thumbPix);
-                            this.props.setPgmCounterProps(this.framesToTimeCode(this.state.thumbActiveForegroundProducer["file-nb-frames"] - this.state.thumbActiveForegroundProducer["file-frame-number"]));
+                            this.props.setPgmCounterProps(this.secondsToTimeCode( infoStatus.foreground.length - infoStatus.foreground.time));
                         }
                     }
                     //Handle Background:
                     if(fileNameBg === item.name) {
-                        
+
                         if(forceUpdate || this.state.thumbActiveBgIndex != index) {
                             // Remove Old Green Tally
                             this.setStateThumbListElement(this.state.thumbActiveBgIndex, "tallyBg", false);
@@ -197,11 +193,11 @@ class Thumbnail extends Component {
 
     playMedia(layer, index, indexBg) {
         this.props.ccgConnectionProps.play(
-            this.props.ccgOutputProps, 
-            layer, 
-            this.state.thumbList[index].name, 
-            this.props.getTabSettingsProps(this.props.ccgOutputProps, "loop"), 
-            'MIX', 
+            this.props.ccgOutputProps,
+            layer,
+            this.state.thumbList[index].name,
+            this.props.getTabSettingsProps(this.props.ccgOutputProps, "loop"),
+            'MIX',
             mixDuration
         );
         this.loadBgMedia(10, indexBg);
@@ -212,11 +208,11 @@ class Thumbnail extends Component {
             this.playMedia(10, index, this.state.thumbActiveBgIndex);
         } else {
             this.props.ccgConnectionProps.load(
-                this.props.ccgOutputProps, 
-                layer, 
-                this.state.thumbList[index].name, 
-                this.props.getTabSettingsProps(this.props.ccgOutputProps, "loop"), 
-                'MIX', 
+                this.props.ccgOutputProps,
+                layer,
+                this.state.thumbList[index].name,
+                this.props.getTabSettingsProps(this.props.ccgOutputProps, "loop"),
+                'MIX',
                 mixDuration
             );
         }
@@ -225,68 +221,68 @@ class Thumbnail extends Component {
     loadBgMedia(layer, index) {
         if (this.props.getTabSettingsProps(this.props.ccgOutputProps, "autoPlay")) {
             this.props.ccgConnectionProps.loadbgAuto(
-                this.props.ccgOutputProps, 
-                layer, 
-                this.state.thumbList[index].name, 
-                this.props.getTabSettingsProps(this.props.ccgOutputProps, "loop"), 
-                'MIX', 
+                this.props.ccgOutputProps,
+                layer,
+                this.state.thumbList[index].name,
+                this.props.getTabSettingsProps(this.props.ccgOutputProps, "loop"),
+                'MIX',
                 mixDuration
             );
         } else {
             this.props.ccgConnectionProps.loadbg(
-                this.props.ccgOutputProps, 
-                layer, 
-                this.state.thumbList[index].name, 
-                this.props.getTabSettingsProps(this.props.ccgOutputProps, "loop"), 
-                'MIX', 
+                this.props.ccgOutputProps,
+                layer,
+                this.state.thumbList[index].name,
+                this.props.getTabSettingsProps(this.props.ccgOutputProps, "loop"),
+                'MIX',
                 mixDuration
             );
         }
     }
 
-    framesToTimeCode(frame) {
-        if (frame) {
-            var hour = ('0' + (frame/(fps*60*60)).toFixed()).slice(-2);
-            var minute = ('0' + (frame/(fps*60)).toFixed()).slice(-2);
-            var sec = ('0' + (frame/(fps)).toFixed()).slice(-2);
-            var frm = ('0' + (frame-parseInt(frame/fps)*fps).toFixed()).slice(-2);
+    secondsToTimeCode(time) {
+        if (time) {
+            var hour = ('0' + (time/(60*60)).toFixed()).slice(-2);
+            var minute = ('0' + (time/(60)).toFixed()).slice(-2);
+            var sec = ('0' + time.toFixed()).slice(-2);
+            var frm = ('0' + (100*(time - parseInt(time))*(fps/100)).toFixed()).slice(-2);
         return (
-            hour + "." + minute + "." + sec
+            hour + "." + minute + "." + sec + "." + frm
         );
         } else {
-            return "00.00.00";
+            return "00.00.00.00";
         }
     }
-        
+
     updateThumbnail(index) {
         var prevStateList = this.state.thumbListRendered;
         prevStateList[index] = this.renderThumbnail(index);
         this.setState({thumbListRendered: prevStateList});
         return;
     }
-    
+
     renderThumbnail(index) {
         return(
             <li key={index} className="boxComponent">
-                <img src={this.state.thumbList[index].thumbPix} 
-                    className="thumbnailImage" 
+                <img src={this.state.thumbList[index].thumbPix}
+                    className="thumbnailImage"
                     style = {Object.assign({},
-                        this.state.thumbList[index].tally ? 
+                        this.state.thumbList[index].tally ?
                             {borderWidth: '4px'} : {borderWidth: '0px'},
-                            this.state.thumbList[index].tallyBg ? 
-                            {boxShadow: '0px 0px 1px 5px green'} : {boxShadow: ''} 
+                            this.state.thumbList[index].tallyBg ?
+                            {boxShadow: '0px 0px 1px 5px green'} : {boxShadow: ''}
                     )}
                 />
-                <button className="thumbnailImageClickPvw" 
+                <button className="thumbnailImageClickPvw"
                     onClick={() => this.loadBgMedia(10, index)}
                 />
-                <button className="thumbnailImageClickPgm" 
+                <button className="thumbnailImageClickPgm"
                     onClick={() => this.loadMedia(10, index)}
                 />
                 <a className="playing">
-                    {this.state.thumbList[index].isActive ? 
-                        this.framesToTimeCode(this.state.thumbActiveForegroundProducer["file-nb-frames"] - this.state.thumbActiveForegroundProducer["file-frame-number"]) 
-                        : "" 
+                    {this.state.thumbList[index].isActive ?
+                        this.secondsToTimeCode(this.state.thumbActiveState.foreground.length - this.state.thumbActiveState.foreground.time)
+                        : ""
                     }
                 </a>
                 <p className="text">
@@ -295,12 +291,12 @@ class Thumbnail extends Component {
             </li>
         )
     }
-    
+
     render() {
         return (
         <div className="Thumb-body">
             <ul className="flexBoxes" >
-                {this.state.thumbListRendered}           
+                {this.state.thumbListRendered}
             </ul>
         </div>
     )}

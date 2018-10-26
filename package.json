@@ -37,6 +37,7 @@
   },
   "dependencies": {
     "casparcg-connection": "^4.5.3",
+    "graphql-request": "^1.8.2",
     "react": "^16.5.2",
     "react-dom": "^16.5.2",
     "rmc-tabs": "^1.2.27"

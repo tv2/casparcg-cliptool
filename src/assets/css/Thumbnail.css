@@ -19,7 +19,7 @@
   box-shadow: 6px 6px 6px #555;
   width: 300px;
   margin: 10px;
-  font-size: 0.9em;    
+  font-size: 0.9em;
 }
 
 .thumbnailImage {
@@ -29,14 +29,14 @@
     width: 90%;
     height: auto;
     margin: 8px;
-    background-image: repeating-linear-gradient(-45deg, #94939411, #94939411 3%, #2a1938 4%); 
+    background-image: repeating-linear-gradient(-45deg, #94939411, #94939411 3%, #2a1938 4%);
 
   }
-  
+
   /* Buttons on thumbnail invisible and visible */
 .thumbnailImageClickPvw {
   position: absolute;
-  height: 150px; 
+  height: 150px;
   top: 10px;
   z-index: 2;
   background-color: transparent;
@@ -49,7 +49,7 @@
 
 .thumbnailImageClickPgm {
   position: absolute;
-  height: 150px; 
+  height: 150px;
   top: 10px;
   z-index: 2;
   background-color: transparent;
@@ -100,7 +100,8 @@
   width: 250px;
   left: 25px;
   top: 50px;
-  font-size: 3em;
+  text-align: left;
+  font-size: 2.8em;
   color: red;
   background: #ffffff8c;
   border-radius: 16px;
