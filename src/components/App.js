@@ -128,38 +128,13 @@ class App extends Component {
     }
 
     checkConnectionStatus() {
-        const query = /* GraphQL */ `
-        {
-            timeLeft(ch: 1,l: 10)
-        }
-        `;
-        this.ccgStateConnection.request(query)
+        this.ccgStateConnection.request("{ serverOnline }")
         .then((response) => {
+            this.setState({ ccgConnectionStatus: response.serverOnline });
             console.log(response);
         })
         .catch((error) => {
             console.log(error);
-        });
-        /*
-        this.timeoutPromise(1000, this.ccgConnection.version())
-        .then (() => {
-
-
-        this.setState({ccgConnectionStatus: true});
-        })
-        .catch((error) =>{
-        this.setState({ccgConnectionStatus: false});
-        console.log(error);
-        });
-        */
-    }
-
-    timeoutPromise(ms, promise) {
-        return new Promise((resolve, reject) => {
-        setTimeout(() => {
-            reject(new Error("Offline: Server was to long to respond"));
-        }, ms);
-        promise.then(resolve, reject);
         });
     }
 
