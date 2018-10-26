@@ -52,9 +52,10 @@ body {
 .headerPgmCounter {
   position: absolute;
   top: 40px;
-  left: 200px;
+  left: 180px;
+  text-align: left;
   background-color: #aa0101;
-  width: 125px;
+  width: 145px;
   height: 30px;
   border-width: 0px;
   color: rgb(255, 255, 255);

@@ -78,7 +78,6 @@ class App extends Component {
             autoConnect: false,
         });
         this.ccgConnection.connect();
-
         // Initialize CasparCG-State-Scanner acess:
         this.ccgStateConnection = new GraphQLClient("http://" + mountSettings.ipAddress + ":5254/api");
 
