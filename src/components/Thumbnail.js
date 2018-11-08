@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react';
+import React, { Component, PureComponent } from 'react';
 import '../assets/css/Thumbnail.css';
 import './App';
 
@@ -62,8 +62,13 @@ class Thumbnail extends PureComponent {
                         thumbList: [...prevState.thumbList, item]
                     }));
                     this.updateThumbnail(this.state.thumbList.length - 1);
+                    console.log("Data loaded");
                 });
             });
+            // Timer playing & tally status:
+            this.updatePlayingStatus();
+            thumbTimer = setInterval(this.updatePlayingStatus, 400);
+            thumbCountTimer = setInterval(this.updateTimerStatus, 40);
         })
         .catch ((error) => {
             if (error.response.code === 404 ) {
@@ -71,10 +76,7 @@ class Thumbnail extends PureComponent {
             }
         });
 
-        // Timer playing & tally status:
-        this.updatePlayingStatus();
-        thumbTimer = setInterval(this.updatePlayingStatus, 400);
-        thumbCountTimer = setInterval(this.updateTimerStatus, 50);
+
     }
 
     //Shortcut for mix and take
@@ -145,7 +147,6 @@ class Thumbnail extends PureComponent {
                             this.setStateThumbListElement(index, "loop", infoStatus.foreground.loop);
                             this.updateThumbnail(index);
                             this.props.setActivePgmPixProps(item.thumbPix);
-                            this.props.setPgmCounterProps(this.secondsToTimeCode( infoStatus.foreground.length - infoStatus.foreground.time));
                         }
                     }
                     //Handle Background:
@@ -171,19 +172,10 @@ class Thumbnail extends PureComponent {
     }
 
 
-    // Timer controlled playing & tally status
+    // Timer controlled countdown status status
     updateTimerStatus() {
-        var forceUpdate = false;
-        var thisActive = this.props.getTabStateProps(this.props.ccgOutputProps);
-        if (!this.state.isTabActive && thisActive) {
-            this.setState({isTabActive: thisActive});
-            forceUpdate = true;
-        } else if (!thisActive)
-        {
-            this.setState({isTabActive: thisActive});
-        }
         //only update timer when tab is selected:
-        if (thisActive) {
+        if (this.state.isTabActive) {
             this.props.ccgStateConnectionProps.request("{  timeLeft(ch: " + this.props.ccgOutputProps + ",l: 10) }")
             .then ((response)=>{
                 var timeLeft = parseFloat(response.timeLeft);
