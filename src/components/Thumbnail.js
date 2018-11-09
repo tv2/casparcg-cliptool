@@ -16,7 +16,7 @@ class Thumbnail extends PureComponent {
     //Props:
     //ccgOutputProps what output on CCG to play at
     //ccgConnectionProps Current CCG connection
-    //ccgStateConnectionProps Current CCG connection
+    //ccgStateConnectionProps Current CCG-state connection
     //setActivePgmPixProps Reference to Set Header PGMpix
     //setActivePvmPixProps Reference to Set Header Pvmpix
     //setPgmCounterProps Sets the timer in header
@@ -107,13 +107,11 @@ class Thumbnail extends PureComponent {
     }
 
 
-    // Timer controlled playing & tally status
+    // Timer controlled check of playing & tally status
     updatePlayingStatus() {
-        var forceUpdate = false;
         var thisActive = this.props.getTabStateProps(this.props.ccgOutputProps);
         if (!this.state.isTabActive && thisActive) {
             this.setState({isTabActive: thisActive});
-            forceUpdate = true;
         } else if (!thisActive)
         {
             this.setState({isTabActive: thisActive});
@@ -135,33 +133,28 @@ class Thumbnail extends PureComponent {
                             this.setStateThumbListElement(this.state.thumbActiveIndex, "tally", false);
                             this.setStateThumbListElement(this.state.thumbActiveIndex, "isActive", false);
                             this.updateThumbnail(this.state.thumbActiveIndex);
-                            forceUpdate = true;
                         }
 
-                        // Update only first time or if time if file is playing:
-                        //if (forceUpdate || !infoStatus.foreground.paused) {
-                        if (forceUpdate) {
                             this.setStateThumbListElement(index, "tally", true);
                             this.setState({thumbActiveIndex: index});
                             this.setStateThumbListElement(index, "isActive", true);
                             this.setStateThumbListElement(index, "loop", infoStatus.foreground.loop);
                             this.updateThumbnail(index);
                             this.props.setActivePgmPixProps(item.thumbPix);
-                        }
                     }
                     //Handle Background:
                     if(fileNameBg === item.name) {
-
-                        if(forceUpdate || this.state.thumbActiveBgIndex != index) {
+                        if(this.state.thumbActiveBgIndex != index) {
                             // Remove Old Green Tally
                             this.setStateThumbListElement(this.state.thumbActiveBgIndex, "tallyBg", false);
                             this.updateThumbnail(this.state.thumbActiveBgIndex);
-                            // Add Active Green Tally
-                            this.setStateThumbListElement(index, "tallyBg", true);
-                            this.setState({thumbActiveBgIndex: index});
-                            this.updateThumbnail(index);
-                            this.props.setActivePvwPixProps(item.thumbPix);
                         }
+                        // Add Active Green Tally
+                        this.setStateThumbListElement(index, "tallyBg", true);
+                        this.setState({thumbActiveBgIndex: index});
+                        this.updateThumbnail(index);
+                        this.props.setActivePvwPixProps(item.thumbPix);
+
                     }
                 });
             })
