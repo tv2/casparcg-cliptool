@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, PureComponent } from 'react';
 import '../assets/css/Thumbnail.css';
 import './App';
 
@@ -8,14 +8,15 @@ const mixDuration = 6;
 
 //thumb counterDown reference:
 var thumbTimer;
+var thumbCountTimer;
 
 
 
-class Thumbnail extends Component {
+class Thumbnail extends PureComponent {
     //Props:
     //ccgOutputProps what output on CCG to play at
     //ccgConnectionProps Current CCG connection
-    //ccgStateConnectionProps Current CCG connection
+    //ccgStateConnectionProps Current CCG-state connection
     //setActivePgmPixProps Reference to Set Header PGMpix
     //setActivePvmPixProps Reference to Set Header Pvmpix
     //setPgmCounterProps Sets the timer in header
@@ -34,6 +35,7 @@ class Thumbnail extends Component {
             isTabActive: false,
         };
         this.updatePlayingStatus = this.updatePlayingStatus.bind(this);
+        this.updateTimerStatus = this.updateTimerStatus.bind(this);
         this.updateThumbnail = this.updateThumbnail.bind(this);
         this.renderThumbnail = this.renderThumbnail.bind(this);
 
@@ -55,12 +57,18 @@ class Thumbnail extends Component {
                     item.tally = false;
                     item.tallyBg = false;
                     item.isActive = false;
+                    item.timeLeft = 0;
                     this.setState((prevState) => ({
                         thumbList: [...prevState.thumbList, item]
                     }));
                     this.updateThumbnail(this.state.thumbList.length - 1);
+                    console.log("Data loaded");
                 });
             });
+            // Timer playing & tally status:
+            this.updatePlayingStatus();
+            thumbTimer = setInterval(this.updatePlayingStatus, 400);
+            thumbCountTimer = setInterval(this.updateTimerStatus, 40);
         })
         .catch ((error) => {
             if (error.response.code === 404 ) {
@@ -68,9 +76,7 @@ class Thumbnail extends Component {
             }
         });
 
-        // Timer playing & tally status:
-        this.updatePlayingStatus();
-        thumbTimer = setInterval(this.updatePlayingStatus, 50);
+
     }
 
     //Shortcut for mix and take
@@ -101,13 +107,11 @@ class Thumbnail extends Component {
     }
 
 
-    // Timer controlled playing & tally status
+    // Timer controlled check of playing & tally status
     updatePlayingStatus() {
-        var forceUpdate = false;
         var thisActive = this.props.getTabStateProps(this.props.ccgOutputProps);
         if (!this.state.isTabActive && thisActive) {
             this.setState({isTabActive: thisActive});
-            forceUpdate = true;
         } else if (!thisActive)
         {
             this.setState({isTabActive: thisActive});
@@ -129,35 +133,48 @@ class Thumbnail extends Component {
                             this.setStateThumbListElement(this.state.thumbActiveIndex, "tally", false);
                             this.setStateThumbListElement(this.state.thumbActiveIndex, "isActive", false);
                             this.updateThumbnail(this.state.thumbActiveIndex);
-                            forceUpdate = true;
                         }
 
-                        // Update only first time or if time if file is playing:
-                        if (forceUpdate || !infoStatus.foreground.paused) {
                             this.setStateThumbListElement(index, "tally", true);
                             this.setState({thumbActiveIndex: index});
                             this.setStateThumbListElement(index, "isActive", true);
                             this.setStateThumbListElement(index, "loop", infoStatus.foreground.loop);
                             this.updateThumbnail(index);
                             this.props.setActivePgmPixProps(item.thumbPix);
-                            this.props.setPgmCounterProps(this.secondsToTimeCode( infoStatus.foreground.length - infoStatus.foreground.time));
-                        }
                     }
                     //Handle Background:
                     if(fileNameBg === item.name) {
-
-                        if(forceUpdate || this.state.thumbActiveBgIndex != index) {
+                        if(this.state.thumbActiveBgIndex != index) {
                             // Remove Old Green Tally
                             this.setStateThumbListElement(this.state.thumbActiveBgIndex, "tallyBg", false);
                             this.updateThumbnail(this.state.thumbActiveBgIndex);
-                            // Add Active Green Tally
-                            this.setStateThumbListElement(index, "tallyBg", true);
-                            this.setState({thumbActiveBgIndex: index});
-                            this.updateThumbnail(index);
-                            this.props.setActivePvwPixProps(item.thumbPix);
                         }
+                        // Add Active Green Tally
+                        this.setStateThumbListElement(index, "tallyBg", true);
+                        this.setState({thumbActiveBgIndex: index});
+                        this.updateThumbnail(index);
+                        this.props.setActivePvwPixProps(item.thumbPix);
+
                     }
                 });
+            })
+            .catch ((error)=> {
+                console.log(error);
+            });
+        }
+    }
+
+
+    // Timer controlled countdown status status
+    updateTimerStatus() {
+        //only update timer when tab is selected:
+        if (this.state.isTabActive) {
+            this.props.ccgStateConnectionProps.request("{  timeLeft(ch: " + this.props.ccgOutputProps + ",l: 10) }")
+            .then ((response)=>{
+                var timeLeft = parseFloat(response.timeLeft);
+                this.setStateThumbListElement(this.state.thumbActiveIndex, "timeLeft", timeLeft);
+                this.updateThumbnail(this.state.thumbActiveIndex);
+                this.props.setPgmCounterProps(this.secondsToTimeCode( timeLeft));
             })
             .catch ((error)=> {
                 console.log(error);
@@ -281,7 +298,7 @@ class Thumbnail extends Component {
                 />
                 <a className="playing">
                     {this.state.thumbList[index].isActive ?
-                        this.secondsToTimeCode(this.state.thumbActiveState.foreground.length - this.state.thumbActiveState.foreground.time)
+                        this.secondsToTimeCode(this.state.thumbList[index].timeLeft)
                         : ""
                     }
                 </a>

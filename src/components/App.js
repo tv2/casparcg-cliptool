@@ -1,7 +1,8 @@
-import React, { Component } from 'react';
+import React, { Component, PureComponent } from 'react';
 import {CasparCG} from 'casparcg-connection';
 import { Tabs } from 'rmc-tabs';
 import { GraphQLClient, request } from 'graphql-request';
+
 
 // Components:
 import Thumbnail from './Thumbnail';
@@ -24,27 +25,27 @@ class App extends Component {
         super(props);
 
         this.state = {
-        ccgConnectionStatus: false,
-        showSettingsMenu: false,
-        activeTab: 0,
-        activeTabTitle: '',
-        activePvwPix: '',
-        activePgmPix: '',
-        pgmCounter: '',
-        tabData: [],
-        globalSettings: {
-            ipAddress: 'localhost',
-            port: '5250',
-            mainFolder: '',
-            tabData: [
-                { key: 1, title: 'SCREEN 1', subFolder: '', loop: false, autoPlay: false},
-                { key: 2, title: 'SCREEN 2', subFolder: '', loop: false, autoPlay: false},
-                { key: 3, title: 'SCREEN 3', subFolder: '', loop: false, autoPlay: false},
-                { key: 4, title: '', subFolder: '', loop: false, autoPlay: false},
-                { key: 5, title: '', subFolder: '', loop: false, autoPlay: false},
-                { key: 6, title: '', subFolder: '', loop: false, autoPlay: false},
-            ],
-        },
+            ccgConnectionStatus: false,
+            showSettingsMenu: false,
+            activeTab: 0,
+            activeTabTitle: '',
+            activePvwPix: '',
+            activePgmPix: '',
+            pgmCounter: '',
+            tabData: [],
+            globalSettings: {
+                ipAddress: 'localhost',
+                port: '5250',
+                mainFolder: '',
+                tabData: [
+                    { key: 1, title: 'SCREEN 1', subFolder: '', loop: false, autoPlay: false},
+                    { key: 2, title: 'SCREEN 2', subFolder: '', loop: false, autoPlay: false},
+                    { key: 3, title: 'SCREEN 3', subFolder: '', loop: false, autoPlay: false},
+                    { key: 4, title: '', subFolder: '', loop: false, autoPlay: false},
+                    { key: 5, title: '', subFolder: '', loop: false, autoPlay: false},
+                    { key: 6, title: '', subFolder: '', loop: false, autoPlay: false},
+                ],
+            },
         };
 
         this.checkConnectionStatus = this.checkConnectionStatus.bind(this);
@@ -66,11 +67,10 @@ class App extends Component {
 
         //Define Output Tabs:
         this.setState({tabData: mountSettings.tabData.filter((item) => {
-        return item.title != "";
-        })
+                return item.title != "";
+            })
         });
 
-        // in current version of casparcg-connection the port has to be assigned as a seperate parameter.
         this.ccgConnection = new CasparCG(
         {
             host: mountSettings.ipAddress,
@@ -134,6 +134,7 @@ class App extends Component {
         })
         .catch((error) => {
             console.log(error);
+            this.setState({ ccgConnectionStatus: false });
         });
     }
 

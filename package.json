@@ -40,7 +40,8 @@
     "graphql-request": "^1.8.2",
     "react": "^16.5.2",
     "react-dom": "^16.5.2",
-    "rmc-tabs": "^1.2.27"
+    "rmc-tabs": "^1.2.27",
+    "subscriptions-transport-ws": "^0.9.15"
   },
   "devDependencies": {
     "@babel/core": "^7.1.2",
