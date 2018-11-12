@@ -1,6 +1,7 @@
 import React, { Component, PureComponent } from 'react';
 import '../assets/css/Thumbnail.css';
 import './App';
+import gql from "graphql-tag";
 
 //Global const:
 const fps = 25;
@@ -118,9 +119,20 @@ class Thumbnail extends PureComponent {
         }
         //only update when tab is selected:
         if (thisActive) {
-            this.props.ccgStateConnectionProps.request("{  layer(ch: " + this.props.ccgOutputProps + ",l: 10) }")
+            const queryLayer = {
+                query: gql`
+                query layer($ch: Int = 1, $l: Int = 10) {
+                    layer(ch: $ch, l: $l)
+                }
+            `};
+            const queryOptions = {
+                options: (props) => ({
+                    variables: { ch: this.props.ccgOutputProps, l: 10 }
+                })
+            };
+            this.props.ccgStateConnectionProps.query(queryLayer, queryOptions)
             .then ((response)=>{
-                var infoStatus = JSON.parse(response.layer);
+                var infoStatus = JSON.parse(response.data.layer);
                 this.setState({ thumbActiveState: infoStatus} );
                 var fileNameFg = this.cleanUpFilename(infoStatus.foreground.name || '');
                 var fileNameBg = this.cleanUpFilename(infoStatus.background.name || '');
@@ -169,9 +181,20 @@ class Thumbnail extends PureComponent {
     updateTimerStatus() {
         //only update timer when tab is selected:
         if (this.state.isTabActive) {
-            this.props.ccgStateConnectionProps.request("{  timeLeft(ch: " + this.props.ccgOutputProps + ",l: 10) }")
+            const queryTimeLeft = {
+                query: gql`
+                query timeLeft($ch: Int = 1, $l: Int = 10) {
+                    timeLeft(ch: $ch, l: $l)
+                }
+            `};
+            const queryOptions = {
+                options: (props) => ({
+                    variables: { ch: this.props.ccgOutputProps, l: 10 }
+                })
+            };
+            this.props.ccgStateConnectionProps.query(queryTimeLeft, queryOptions)
             .then ((response)=>{
-                var timeLeft = parseFloat(response.timeLeft);
+                var timeLeft = parseFloat(response.data.timeLeft);
                 this.setStateThumbListElement(this.state.thumbActiveIndex, "timeLeft", timeLeft);
                 this.updateThumbnail(this.state.thumbActiveIndex);
                 this.props.setPgmCounterProps(this.secondsToTimeCode( timeLeft));

@@ -36,12 +36,15 @@
     "package-rpi": "electron-packager . casparcg-cliptool --overwrite --asar=true --platform=linux --arch=armv7l --icon=assets/icons/png/1024x1024.png --prune=true --out=release-builds"
   },
   "dependencies": {
+    "apollo-boost": "^0.1.20",
     "casparcg-connection": "^4.5.3",
+    "graphql": "^14.0.2",
     "graphql-request": "^1.8.2",
+    "graphql-tag": "^2.10.0",
     "react": "^16.5.2",
+    "react-apollo": "^2.2.4",
     "react-dom": "^16.5.2",
-    "rmc-tabs": "^1.2.27",
-    "subscriptions-transport-ws": "^0.9.15"
+    "rmc-tabs": "^1.2.27"
   },
   "devDependencies": {
     "@babel/core": "^7.1.2",

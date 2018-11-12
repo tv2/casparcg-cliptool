@@ -1,6 +1,12 @@
 import React, { Component, PureComponent } from 'react';
 import {CasparCG} from 'casparcg-connection';
 import { Tabs } from 'rmc-tabs';
+
+//New Graphql implementation:
+import ApolloClient from "apollo-boost";
+import gql from "graphql-tag";
+
+//Old Graphql implementation:
 import { GraphQLClient, request } from 'graphql-request';
 
 
@@ -79,7 +85,10 @@ class App extends Component {
         });
         this.ccgConnection.connect();
         // Initialize CasparCG-State-Scanner acess:
-        this.ccgStateConnection = new GraphQLClient("http://" + mountSettings.ipAddress + ":5254/api");
+        this.ccgStateConnection = new ApolloClient({
+            uri: "http://" + mountSettings.ipAddress + ":5254/api"
+        });
+        //OLD: this.ccgStateConnection = new GraphQLClient("http://" + mountSettings.ipAddress + ":5254/api");
 
         // Initialize timer connection status:
         connectionTimer = setInterval(this.checkConnectionStatus, 2000);
@@ -127,10 +136,15 @@ class App extends Component {
     }
 
     checkConnectionStatus() {
-        this.ccgStateConnection.request("{ serverOnline }")
+        this.ccgStateConnection.query({
+            query: gql`
+                {
+                    serverOnline
+                }`
+            })
         .then((response) => {
-            this.setState({ ccgConnectionStatus: response.serverOnline });
-            console.log(response);
+            this.setState({ ccgConnectionStatus: response.data.serverOnline });
+            console.log(response.data);
         })
         .catch((error) => {
             console.log(error);
