@@ -3,7 +3,9 @@ import {CasparCG} from 'casparcg-connection';
 import { Tabs } from 'rmc-tabs';
 
 //New Graphql implementation:
-import ApolloClient from "apollo-boost";
+import ApolloClient from "apollo-client";
+import { HttpLink } from 'apollo-link-http';
+import { InMemoryCache } from 'apollo-cache-inmemory';
 import gql from "graphql-tag";
 
 //Old Graphql implementation:
@@ -85,8 +87,13 @@ class App extends Component {
         });
         this.ccgConnection.connect();
         // Initialize CasparCG-State-Scanner acess:
+        const cache = new InMemoryCache();
         this.ccgStateConnection = new ApolloClient({
-            uri: "http://" + mountSettings.ipAddress + ":5254/api"
+
+            link: new HttpLink({
+                uri: "http://" + mountSettings.ipAddress + ":5254/api"
+            }),
+            cache
         });
         //OLD: this.ccgStateConnection = new GraphQLClient("http://" + mountSettings.ipAddress + ":5254/api");
 

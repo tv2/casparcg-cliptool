@@ -127,7 +127,8 @@ class Thumbnail extends PureComponent {
             `};
             const queryOptions = {
                 options: (props) => ({
-                    variables: { ch: this.props.ccgOutputProps, l: 10 }
+                    variables: { ch: this.props.ccgOutputProps, l: 10 },
+                    fetchPolicy: 'network-only'
                 })
             };
             this.props.ccgStateConnectionProps.query(queryLayer, queryOptions)
@@ -189,7 +190,8 @@ class Thumbnail extends PureComponent {
             `};
             const queryOptions = {
                 options: (props) => ({
-                    variables: { ch: this.props.ccgOutputProps, l: 10 }
+                    variables: { ch: this.props.ccgOutputProps, l: 10 },
+                    fetchPolicy: 'network-only'
                 })
             };
             this.props.ccgStateConnectionProps.query(queryTimeLeft, queryOptions)
