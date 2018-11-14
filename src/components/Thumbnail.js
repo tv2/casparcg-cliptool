@@ -111,27 +111,21 @@ class Thumbnail extends PureComponent {
     // Timer controlled check of playing & tally status
     updatePlayingStatus() {
         var thisActive = this.props.getTabStateProps(this.props.ccgOutputProps);
-        if (!this.state.isTabActive && thisActive) {
-            this.setState({isTabActive: thisActive});
-        } else if (!thisActive)
-        {
-            this.setState({isTabActive: thisActive});
-        }
+        this.setState({isTabActive: thisActive});
         //only update when tab is selected:
         if (thisActive) {
-            const queryLayer = {
-                query: gql`
-                query layer($ch: Int = 1, $l: Int = 10) {
+            const queryLayer = gql`
+                query layer($ch: Int!, $l: Int!) {
                     layer(ch: $ch, l: $l)
                 }
-            `};
-            const queryOptions = {
-                options: (props) => ({
-                    variables: { ch: this.props.ccgOutputProps, l: 10 },
-                    fetchPolicy: 'network-only'
-                })
-            };
-            this.props.ccgStateConnectionProps.query(queryLayer, queryOptions)
+            `;
+            this.props.ccgStateConnectionProps.query({
+                query: queryLayer,
+                variables: {
+                    ch: this.props.ccgOutputProps,
+                    l: 10
+                }
+            })
             .then ((response)=>{
                 var infoStatus = JSON.parse(response.data.layer);
                 this.setState({ thumbActiveState: infoStatus} );
@@ -182,19 +176,18 @@ class Thumbnail extends PureComponent {
     updateTimerStatus() {
         //only update timer when tab is selected:
         if (this.state.isTabActive) {
-            const queryTimeLeft = {
-                query: gql`
-                query timeLeft($ch: Int = 1, $l: Int = 10) {
+            const queryTimeLeft = gql`
+                query timeLeft($ch: Int!, $l: Int!) {
                     timeLeft(ch: $ch, l: $l)
                 }
-            `};
-            const queryOptions = {
-                options: (props) => ({
-                    variables: { ch: this.props.ccgOutputProps, l: 10 },
-                    fetchPolicy: 'network-only'
-                })
-            };
-            this.props.ccgStateConnectionProps.query(queryTimeLeft, queryOptions)
+            `;
+            this.props.ccgStateConnectionProps.query({
+                query: queryTimeLeft,
+                variables: {
+                    ch: this.props.ccgOutputProps,
+                    l: 10
+                }
+            })
             .then ((response)=>{
                 var timeLeft = parseFloat(response.data.timeLeft);
                 this.setStateThumbListElement(this.state.thumbActiveIndex, "timeLeft", timeLeft);

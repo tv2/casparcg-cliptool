@@ -8,10 +8,6 @@ import { HttpLink } from 'apollo-link-http';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 import gql from "graphql-tag";
 
-//Old Graphql implementation:
-import { GraphQLClient, request } from 'graphql-request';
-
-
 // Components:
 import Thumbnail from './Thumbnail';
 import SettingsPage from './Settings';
@@ -87,13 +83,24 @@ class App extends Component {
         });
         this.ccgConnection.connect();
         // Initialize CasparCG-State-Scanner acess:
-        const cache = new InMemoryCache();
         this.ccgStateConnection = new ApolloClient({
-
             link: new HttpLink({
                 uri: "http://" + mountSettings.ipAddress + ":5254/api"
             }),
-            cache
+            cache: new InMemoryCache(),
+            defaultOptions: {
+                watchQuery: {
+                    fetchPolicy: 'cache-and-network',
+                    errorPolicy: 'ignore',
+                },
+                query: {
+                    fetchPolicy: 'network-only',
+                    errorPolicy: 'all',
+                },
+                mutate: {
+                    errorPolicy: 'all'
+                }
+            }
         });
         //OLD: this.ccgStateConnection = new GraphQLClient("http://" + mountSettings.ipAddress + ":5254/api");
 
