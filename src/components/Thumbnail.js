@@ -18,6 +18,8 @@ class Thumbnail extends PureComponent {
     //ccgOutputProps what output on CCG to play at
     //ccgConnectionProps Current CCG connection
     //ccgStateConnectionProps Current CCG-state connection
+    //getCcgIsUpdatedProps: returns info is a channel is updated
+    //resetCcgIsUpdatedProps: resets ccgIsUpdated state to 0 (no update)
     //setActivePgmPixProps Reference to Set Header PGMpix
     //setActivePvmPixProps Reference to Set Header Pvmpix
     //setPgmCounterProps Sets the timer in header
@@ -49,7 +51,7 @@ class Thumbnail extends PureComponent {
     }
 
     componentDidMount() {
-        this.props.ccgConnectionProps.thumbnailList(this.props.getTabSettingsProps(this.props.ccgOutputProps,'subFolder'))
+        this.props.ccgConnectionProps.cls(this.props.getTabSettingsProps(this.props.ccgOutputProps,'subFolder'))
         .then((results) => {
             results.response.data.map((item) => {
                 this.props.ccgConnectionProps.thumbnailRetrieve(item.name)
@@ -68,7 +70,7 @@ class Thumbnail extends PureComponent {
             });
             // Timer playing & tally status:
             this.updatePlayingStatus();
-            thumbTimer = setInterval(this.updatePlayingStatus, 400);
+            thumbTimer = setInterval(this.updatePlayingStatus, 100);
             thumbCountTimer = setInterval(this.updateTimerStatus, 40);
         })
         .catch ((error) => {
@@ -111,9 +113,16 @@ class Thumbnail extends PureComponent {
     // Timer controlled check of playing & tally status
     updatePlayingStatus() {
         var thisActive = this.props.getTabStateProps(this.props.ccgOutputProps);
+        var thisUpdated = this.props.getCcgIsUpdatedProps();
         this.setState({isTabActive: thisActive});
         //only update when tab is selected:
         if (thisActive) {
+            if (thisUpdated === this.props.ccgOutputProps) {
+                console.log(this.props.getCcgIsUpdatedProps());
+                this.props.resetCcgIsUpdatedProps();
+            } else {
+                return;
+            }
             const queryLayer = gql`
                 query layer($ch: Int!, $l: Int!) {
                     layer(ch: $ch, l: $l)

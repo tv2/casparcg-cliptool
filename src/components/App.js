@@ -2,9 +2,12 @@ import React, { Component, PureComponent } from 'react';
 import {CasparCG} from 'casparcg-connection';
 import { Tabs } from 'rmc-tabs';
 
-//New Graphql implementation:
+//Apollo-Client Graphql implementation:
 import ApolloClient from "apollo-client";
 import { HttpLink } from 'apollo-link-http';
+import { split } from 'apollo-link';
+import { WebSocketLink } from 'apollo-link-ws';
+import { getMainDefinition } from 'apollo-utilities';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 import gql from "graphql-tag";
 
@@ -30,6 +33,7 @@ class App extends Component {
 
         this.state = {
             ccgConnectionStatus: false,
+            ccgIsUpdated: 0,
             showSettingsMenu: false,
             activeTab: 0,
             activeTabTitle: '',
@@ -53,6 +57,7 @@ class App extends Component {
         };
 
         this.checkConnectionStatus = this.checkConnectionStatus.bind(this);
+        this.ccgSubscribeIsUpdated = this.ccgSubscribeIsUpdated.bind(this);
         this.handleSettingsPage = this.handleSettingsPage.bind(this);
         this.setActivePgmPix = this.setActivePgmPix.bind(this);
         this.setActivePvwPix = this.setActivePvwPix.bind(this);
@@ -82,11 +87,18 @@ class App extends Component {
             autoConnect: false,
         });
         this.ccgConnection.connect();
-        // Initialize CasparCG-State-Scanner acess:
+
+        // Initialize CasparCG-State-Scanner GraphQL:
+
+        const wsLink = new WebSocketLink({
+            uri: "ws://" + mountSettings.ipAddress + ":5254/graphql",
+            options: {
+                reconnect: true
+            }
+        });
+
         this.ccgStateConnection = new ApolloClient({
-            link: new HttpLink({
-                uri: "http://" + mountSettings.ipAddress + ":5254/api"
-            }),
+            link: wsLink,
             cache: new InMemoryCache(),
             defaultOptions: {
                 watchQuery: {
@@ -102,7 +114,8 @@ class App extends Component {
                 }
             }
         });
-        //OLD: this.ccgStateConnection = new GraphQLClient("http://" + mountSettings.ipAddress + ":5254/api");
+        // Initialize CasparCG subscriptions:
+        this.ccgSubscribeIsUpdated();
 
         // Initialize timer connection status:
         connectionTimer = setInterval(this.checkConnectionStatus, 2000);
@@ -210,6 +223,33 @@ class App extends Component {
         return (this.state.activeTab === channel -1);
     }
 
+    ccgSubscribeIsUpdated() {
+        var _this2 = this;
+        //Subscribe to CasparCG-State changes:
+        this.ccgStateConnection.subscribe({
+            query: gql`
+                subscription {
+                    infoChannelUpdated
+                }`
+            })
+            .subscribe({
+                next(response) {
+                    console.log("infoChannelChanged subscription Data: ", response.data.infoChannelUpdated
+                    );
+                    _this2.setState({ccgIsUpdated: response.data.infoChannelUpdated});
+                },
+                error(err) { console.error('Subscription error: ', err); },
+            });
+    }
+
+    resetCcgIsUpdated() {
+        this.setState({ccgIsUpdated: 0});
+    }
+
+    getCcgIsUpdated() {
+        return parseInt(this.state.ccgIsUpdated);
+    }
+
     //Rendering functions:
 
     renderHeader() {
@@ -282,6 +322,8 @@ class App extends Component {
                 ccgOutputProps={item.key}
                 ccgConnectionProps={this.ccgConnection}
                 ccgStateConnectionProps={this.ccgStateConnection}
+                getCcgIsUpdatedProps={this.getCcgIsUpdated.bind(this)}
+                resetCcgIsUpdatedProps={this.resetCcgIsUpdated.bind(this)}
                 setActivePvwPixProps={this.setActivePvwPix.bind(this)}
                 setActivePgmPixProps={this.setActivePgmPix.bind(this)}
                 getTabStateProps={this.getTabState.bind(this)}
