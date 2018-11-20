@@ -66,11 +66,19 @@ class Thumbnail extends PureComponent {
                     }));
                     this.updateThumbnail(this.state.thumbList.length - 1);
                     console.log("Data loaded");
+                    this.updatePlayingStatus();
                 });
             });
             // Timer playing & tally status:
-            this.updatePlayingStatus();
-            thumbTimer = setInterval(this.updatePlayingStatus, 100);
+            thumbTimer = setInterval(() => {
+                if (this.props.getCcgIsUpdatedProps() === this.props.ccgOutputProps) {
+                    console.log(this.props.getCcgIsUpdatedProps());
+                    this.updatePlayingStatus();
+                    this.props.resetCcgIsUpdatedProps();
+                }
+            },
+                100
+            );
             thumbCountTimer = setInterval(this.updateTimerStatus, 40);
         })
         .catch ((error) => {
@@ -113,16 +121,9 @@ class Thumbnail extends PureComponent {
     // Timer controlled check of playing & tally status
     updatePlayingStatus() {
         var thisActive = this.props.getTabStateProps(this.props.ccgOutputProps);
-        var thisUpdated = this.props.getCcgIsUpdatedProps();
         this.setState({isTabActive: thisActive});
         //only update when tab is selected:
         if (thisActive) {
-            if (thisUpdated === this.props.ccgOutputProps) {
-                console.log(this.props.getCcgIsUpdatedProps());
-                this.props.resetCcgIsUpdatedProps();
-            } else {
-                return;
-            }
             const queryLayer = gql`
                 query layer($ch: Int!, $l: Int!) {
                     layer(ch: $ch, l: $l)
