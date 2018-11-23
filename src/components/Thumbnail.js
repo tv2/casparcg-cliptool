@@ -4,8 +4,8 @@ import './App';
 import gql from "graphql-tag";
 
 //Global const:
-const fps = 25;
-const mixDuration = 6;
+const FPS = 25;
+const MIX_DURATION = 6;
 
 //thumb counterDown reference:
 var thumbTimer;
@@ -31,14 +31,13 @@ class Thumbnail extends PureComponent {
     constructor(props) {
         super(props);
         this.state = {
-            thumbList: [],
-            thumbPix: [],
             thumbListRendered: [],
-            thumbActiveState: {},
             thumbActiveIndex: 0,
             thumbActiveBgIndex: 0,
             isTabActive: false,
         };
+        this.thumbList = [];
+
         this.updatePlayingStatus = this.updatePlayingStatus.bind(this);
         this.updateTimerStatus = this.updateTimerStatus.bind(this);
         this.updateThumbnail = this.updateThumbnail.bind(this);
@@ -55,45 +54,40 @@ class Thumbnail extends PureComponent {
     componentDidMount() {
         this.props.ccgConnectionProps.cls(this.props.getTabSettingsProps(this.props.ccgOutputProps,'subFolder'))
         .then((results) => {
-            results.response.data.map((item) => {
+            results.response.data.map((item, index) => {
+                item.tally = false;
+                item.tallyBg = false;
+                item.timeLeft = 0;
+                this.thumbList.push(item);
+
                 this.props.ccgConnectionProps.thumbnailRetrieve(item.name)
                 .then((pixResponse) => {
-                    item.thumbPix = pixResponse.response.data;
-                    item.tally = false;
-                    item.tallyBg = false;
-                    item.isActive = false;
-                    item.timeLeft = 0;
-                    this.setState((prevState) => ({
-                        thumbList: [...prevState.thumbList, item]
-                    }));
-                    this.updateThumbnail(this.state.thumbList.length - 1);
-                    console.log("Data loaded");
+                    this.thumbList[index].thumbPix = pixResponse.response.data;
+                    this.updateThumbnail(index);
                 });
             });
-            // Timer check tally status:
-            thumbTimer = setInterval(() => {
-                if (this.props.getCcgIsUpdatedProps() === this.props.ccgOutputProps) {
-                    console.log(this.props.getCcgIsUpdatedProps());
-                    var temp = setTimeout(() => {
-                        this.updatePlayingStatus();
-                    }, 5000);
-
-                    this.updatePlayingStatus();
-                    this.props.resetCcgIsUpdatedProps();
-                }
-            },
-                100
-            );
-
-            thumbCountTimer = setInterval(this.updateTimerStatus, 40);
+            this.startTimers();
         })
         .catch ((error) => {
             if (error.response.code === 404 ) {
                 window.alert("Folder: " + this.props.getTabSettingsProps(this.props.ccgOutputProps, 'subFolder') + " does not exist");
             }
         });
+    }
 
+    startTimers() {
+        // Check tally status:
+        thumbTimer = setInterval(() => {
+            if (this.props.getCcgIsUpdatedProps() === this.props.ccgOutputProps) {
+                this.updatePlayingStatus();
+                this.props.resetCcgIsUpdatedProps();
+            }
+        }, 100);
 
+        // Update TimeCodes:
+        thumbCountTimer = setInterval(() => {
+            this.updateTimerStatus();
+        }, 40);
     }
 
     //Shortcut for mix and take
@@ -123,48 +117,43 @@ class Thumbnail extends PureComponent {
         }
     }
 
-    // Playing & tally status
     updatePlayingStatus() {
             var infoStatus = this.props.getCcgInfoDataProps()[this.props.ccgOutputProps-1].layers[10-1];
-            this.setState({ thumbActiveState: infoStatus} );
             var fileNameFg = this.cleanUpFilename(infoStatus.foreground.name || '');
             var fileNameBg = this.cleanUpFilename(infoStatus.background.name || '');
 
-            this.state.thumbList.map((item, index)=>{
+            this.thumbList.map((item, index)=>{
+                this.thumbList[index].tally = false;
+                if (fileNameBg != "") {
+                    this.thumbList[index].tallyBg = false;
+                }
                 //Handle Foreground:
                 if(fileNameFg === item.name) {
-                    // Check and remove Red Tally
-                    if(this.state.thumbActiveIndex != index) {
-                        this.setStateThumbListElement(this.state.thumbActiveIndex, "tally", false);
-                        this.setStateThumbListElement(this.state.thumbActiveIndex, "isActive", false);
-                        this.updateThumbnail(this.state.thumbActiveIndex);
-                    }
-                    this.setStateThumbListElement(index, "tally", true);
+                    this.thumbList[index].tally = true;
                     this.setState({thumbActiveIndex: index});
-                    this.setStateThumbListElement(index, "isActive", true);
-                    this.setStateThumbListElement(index, "loop", infoStatus.foreground.loop);
-                    this.updateThumbnail(index);
-                    this.props.setActivePgmPixProps(item.thumbPix);
+                    this.thumbList[index].loop = infoStatus.foreground.loop;
                 }
                 //Handle Background:
                 if(fileNameBg === item.name) {
-                    if(this.state.thumbActiveBgIndex != index) {
-                        // Remove Old Green Tally
-                        this.setStateThumbListElement(this.state.thumbActiveBgIndex, "tallyBg", false);
-                        this.updateThumbnail(this.state.thumbActiveBgIndex);
-                    }
-                    // Add Active Green Tally
-                    this.setStateThumbListElement(index, "tallyBg", true);
+                    this.thumbList[index].tallyBg = true;
                     this.setState({thumbActiveBgIndex: index});
-                    this.updateThumbnail(index);
-                    this.props.setActivePvwPixProps(item.thumbPix);
-
                 }
+                this.updateThumbnail(index);
             });
     }
 
+    updateThumbnail(index) {
+        if (this.thumbList[index].tally) {
+            this.props.setActivePgmPixProps(this.thumbList[index].thumbPix);
+        }
+        if (this.thumbList[index].tallyBg) {
+            this.props.setActivePvwPixProps(this.thumbList[index].thumbPix);
+        }
+        var prevStateList = this.state.thumbListRendered;
+        prevStateList[index] = this.renderThumbnail(index);
+        this.setState({thumbListRendered: prevStateList});
+    }
 
-    // Timer controlled countdown status status
     updateTimerStatus() {
         //Check for active state, and update state if it becomes active or in-active
         if (this.state.isTabActive != this.props.getTabStateProps(this.props.ccgOutputProps)) {
@@ -174,10 +163,9 @@ class Thumbnail extends PureComponent {
 
         //only update timer when tab is selected:
         if (this.state.isTabActive) {
-                var timeLeft = this.props.getTimeLeftProps(this.props.ccgOutputProps);
-                this.setStateThumbListElement(this.state.thumbActiveIndex, "timeLeft", timeLeft);
+                this.thumbList[this.state.thumbActiveIndex].timeLeft = this.props.getTimeLeftProps(this.props.ccgOutputProps);
                 this.updateThumbnail(this.state.thumbActiveIndex);
-                this.props.setPgmCounterProps(this.secondsToTimeCode( timeLeft));
+                this.props.setPgmCounterProps(this.secondsToTimeCode( this.thumbList[this.state.thumbActiveIndex].timeLeft));
         }
     }
 
@@ -188,14 +176,6 @@ class Thumbnail extends PureComponent {
             .replace('media/', '')
             .toUpperCase()
             .replace(/\..+$/, '')
-        );
-    }
-
-    setStateThumbListElement(index, element, value) {
-        var prevStateThumblist = this.state.thumbList;
-        prevStateThumblist[index][element] = value;
-        this.setState(
-            {object: prevStateThumblist}
         );
     }
 
@@ -211,10 +191,10 @@ class Thumbnail extends PureComponent {
         this.props.ccgConnectionProps.play(
             this.props.ccgOutputProps,
             layer,
-            this.state.thumbList[index].name,
+            this.thumbList[index].name,
             this.props.getTabSettingsProps(this.props.ccgOutputProps, "loop"),
             'MIX',
-            mixDuration
+            MIX_DURATION
         );
         this.loadBgMedia(10, indexBg);
     }
@@ -226,10 +206,10 @@ class Thumbnail extends PureComponent {
             this.props.ccgConnectionProps.load(
                 this.props.ccgOutputProps,
                 layer,
-                this.state.thumbList[index].name,
+                this.thumbList[index].name,
                 this.props.getTabSettingsProps(this.props.ccgOutputProps, "loop"),
                 'MIX',
-                mixDuration
+                MIX_DURATION
             );
         }
     }
@@ -239,19 +219,19 @@ class Thumbnail extends PureComponent {
             this.props.ccgConnectionProps.loadbgAuto(
                 this.props.ccgOutputProps,
                 layer,
-                this.state.thumbList[index].name,
+                this.thumbList[index].name,
                 this.props.getTabSettingsProps(this.props.ccgOutputProps, "loop"),
                 'MIX',
-                mixDuration
+                MIX_DURATION
             );
         } else {
             this.props.ccgConnectionProps.loadbg(
                 this.props.ccgOutputProps,
                 layer,
-                this.state.thumbList[index].name,
+                this.thumbList[index].name,
                 this.props.getTabSettingsProps(this.props.ccgOutputProps, "loop"),
                 'MIX',
-                mixDuration
+                MIX_DURATION
             );
         }
     }
@@ -261,7 +241,7 @@ class Thumbnail extends PureComponent {
             var hour = ('0' + (time/(60*60)).toFixed()).slice(-2);
             var minute = ('0' + (time/(60)).toFixed()).slice(-2);
             var sec = ('0' + time.toFixed()).slice(-2);
-            var frm = ('0' + (100*(time - parseInt(time))*(fps/100)).toFixed()).slice(-2);
+            var frm = ('0' + (100*(time - parseInt(time))*(FPS/100)).toFixed()).slice(-2);
         return (
             hour + "." + minute + "." + sec + "." + frm
         );
@@ -270,22 +250,15 @@ class Thumbnail extends PureComponent {
         }
     }
 
-    updateThumbnail(index) {
-        var prevStateList = this.state.thumbListRendered;
-        prevStateList[index] = this.renderThumbnail(index);
-        this.setState({thumbListRendered: prevStateList});
-        return;
-    }
-
     renderThumbnail(index) {
         return(
             <li key={index} className="boxComponent">
-                <img src={this.state.thumbList[index].thumbPix}
+                <img src={this.thumbList[index].thumbPix}
                     className="thumbnailImage"
                     style = {Object.assign({},
-                        this.state.thumbList[index].tally ?
+                        this.thumbList[index].tally ?
                             {borderWidth: '4px'} : {borderWidth: '0px'},
-                            this.state.thumbList[index].tallyBg ?
+                            this.thumbList[index].tallyBg ?
                             {boxShadow: '0px 0px 1px 5px green'} : {boxShadow: ''}
                     )}
                 />
@@ -296,13 +269,13 @@ class Thumbnail extends PureComponent {
                     onClick={() => this.loadMedia(10, index)}
                 />
                 <a className="playing">
-                    {this.state.thumbList[index].isActive ?
-                        this.secondsToTimeCode(this.state.thumbList[index].timeLeft)
+                    {this.thumbList[index].tally ?
+                        this.secondsToTimeCode(this.thumbList[index].timeLeft)
                         : ""
                     }
                 </a>
                 <p className="text">
-                    {this.state.thumbList[index].name.substring(this.state.thumbList[index].name.lastIndexOf('/')+1).slice(-45)}
+                    {this.thumbList[index].name.substring(this.thumbList[index].name.lastIndexOf('/')+1).slice(-45)}
                 </p>
             </li>
         )
