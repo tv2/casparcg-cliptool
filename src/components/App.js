@@ -4,10 +4,7 @@ import { Tabs } from 'rmc-tabs';
 
 //Apollo-Client Graphql implementation:
 import ApolloClient from "apollo-client";
-import { HttpLink } from 'apollo-link-http';
-import { split } from 'apollo-link';
 import { WebSocketLink } from 'apollo-link-ws';
-import { getMainDefinition } from 'apollo-utilities';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 import gql from "graphql-tag";
 
@@ -34,6 +31,8 @@ class App extends Component {
         this.state = {
             ccgConnectionStatus: false,
             ccgIsUpdated: 0,
+            ccgInfoData: {},
+            ccgTimeLeft: [],
             showSettingsMenu: false,
             activeTab: 0,
             activeTabTitle: '',
@@ -57,7 +56,6 @@ class App extends Component {
         };
 
         this.checkConnectionStatus = this.checkConnectionStatus.bind(this);
-        this.ccgSubscribeIsUpdated = this.ccgSubscribeIsUpdated.bind(this);
         this.handleSettingsPage = this.handleSettingsPage.bind(this);
         this.setActivePgmPix = this.setActivePgmPix.bind(this);
         this.setActivePvwPix = this.setActivePvwPix.bind(this);
@@ -65,7 +63,8 @@ class App extends Component {
         this.renderHeader = this.renderHeader.bind(this);
         this.handleAutoPlayStatus = this.handleAutoPlayStatus.bind(this);
         this.handleLoopStatus = this.handleLoopStatus.bind(this);
-
+        this.ccgSubscribeTimeLeft = this.ccgSubscribeTimeLeft.bind(this);
+        this.ccgSubscribeInfoData= this.ccgSubscribeInfoData.bind(this);
     }
 
     componentDidMount() {
@@ -115,7 +114,8 @@ class App extends Component {
             }
         });
         // Initialize CasparCG subscriptions:
-        this.ccgSubscribeIsUpdated();
+        this.ccgSubscribeInfoData();
+        this.ccgSubscribeTimeLeft();
 
         // Initialize timer connection status:
         connectionTimer = setInterval(this.checkConnectionStatus, 2000);
@@ -171,7 +171,6 @@ class App extends Component {
             })
         .then((response) => {
             this.setState({ ccgConnectionStatus: response.data.serverOnline });
-            console.log(response.data);
         })
         .catch((error) => {
             console.log(error);
@@ -223,23 +222,72 @@ class App extends Component {
         return (this.state.activeTab === channel -1);
     }
 
-    ccgSubscribeIsUpdated() {
+    ccgSubscribeInfoData() {
         var _this2 = this;
-        //Subscribe to CasparCG-State changes:
-        this.ccgStateConnection.subscribe({
-            query: gql`
-                subscription {
-                    infoChannelUpdated
-                }`
+        //Initial query channels to object:
+        this.ccgStateConnection.query({
+        query: gql`
+            {
+                channels {
+                    layers {
+                        foreground {
+                            name
+                            path
+                            length
+                            loop
+                            paused
+                        }
+                        background {
+                            name
+                            path
+                            length
+                            loop
+                        }
+                    }
+                }
+            }`
+        })
+        .then((response) => {
+            console.log("InfoData request Data: ", response.data.channels);
+            _this2.setState({ccgInfoData: response.data.channels});
+
+            //Subscribe to CasparCG-State changes:
+            this.ccgStateConnection.subscribe({
+                query: gql`
+                    subscription {
+                        channels {
+                            layers {
+                                foreground {
+                                    name
+                                    path
+                                    length
+                                    loop
+                                    paused
+                                }
+                                background {
+                                    name
+                                    path
+                                    length
+                                    loop
+                                }
+                            }
+                        }
+                    }`
             })
             .subscribe({
                 next(response) {
-                    console.log("infoChannelChanged subscription Data: ", response.data.infoChannelUpdated
+                    console.log("infoChannelChanged subscription Data: ", response.data.channels
                     );
-                    _this2.setState({ccgIsUpdated: response.data.infoChannelUpdated});
+                    _this2.setState({ccgInfoData: response.data.channels});
+                    _this2.setState({ccgIsUpdated: 1});
                 },
                 error(err) { console.error('Subscription error: ', err); },
             });
+        });
+    }
+
+    getCcgInfoData() {
+        return this.state.ccgInfoData;
     }
 
     resetCcgIsUpdated() {
@@ -248,6 +296,29 @@ class App extends Component {
 
     getCcgIsUpdated() {
         return parseInt(this.state.ccgIsUpdated);
+    }
+
+    ccgSubscribeTimeLeft() {
+        var _this2 = this;
+        //Subscribe to CasparCG-State changes:
+        this.ccgStateConnection.subscribe({
+            query: gql`
+                subscription {
+                    timeLeft {
+                        timeLeft
+                    }
+                }`
+        })
+        .subscribe({
+            next(response) {
+                _this2.setState({ccgTimeLeft: response.data.timeLeft});
+            },
+            error(err) { console.error('Subscription error: ', err); },
+        });
+    }
+
+    getTimeLeft(channel) {
+        return this.state.ccgTimeLeft[channel-1].timeLeft;
     }
 
     //Rendering functions:
@@ -322,7 +393,9 @@ class App extends Component {
                 ccgOutputProps={item.key}
                 ccgConnectionProps={this.ccgConnection}
                 ccgStateConnectionProps={this.ccgStateConnection}
+                getCcgInfoDataProps={this.getCcgInfoData.bind(this)}
                 getCcgIsUpdatedProps={this.getCcgIsUpdated.bind(this)}
+                getTimeLeftProps={this.getTimeLeft.bind(this)}
                 resetCcgIsUpdatedProps={this.resetCcgIsUpdated.bind(this)}
                 setActivePvwPixProps={this.setActivePvwPix.bind(this)}
                 setActivePgmPixProps={this.setActivePgmPix.bind(this)}

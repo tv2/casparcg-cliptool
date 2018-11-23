@@ -18,7 +18,9 @@ class Thumbnail extends PureComponent {
     //ccgOutputProps what output on CCG to play at
     //ccgConnectionProps Current CCG connection
     //ccgStateConnectionProps Current CCG-state connection
-    //getCcgIsUpdatedProps: returns info is a channel is updated
+    //getCcgIsUpdatedProps: returns info if a channel is updated
+    //getCcgInfoDataProps: returns object with all channels and all layers
+    //getTimeLeftProps: returns timeleft for channel
     //resetCcgIsUpdatedProps: resets ccgIsUpdated state to 0 (no update)
     //setActivePgmPixProps Reference to Set Header PGMpix
     //setActivePvmPixProps Reference to Set Header Pvmpix
@@ -66,19 +68,23 @@ class Thumbnail extends PureComponent {
                     }));
                     this.updateThumbnail(this.state.thumbList.length - 1);
                     console.log("Data loaded");
-                    this.updatePlayingStatus();
                 });
             });
-            // Timer playing & tally status:
+            // Timer check tally status:
             thumbTimer = setInterval(() => {
                 if (this.props.getCcgIsUpdatedProps() === this.props.ccgOutputProps) {
                     console.log(this.props.getCcgIsUpdatedProps());
+                    var temp = setTimeout(() => {
+                        this.updatePlayingStatus();
+                    }, 5000);
+
                     this.updatePlayingStatus();
                     this.props.resetCcgIsUpdatedProps();
                 }
             },
                 100
             );
+
             thumbCountTimer = setInterval(this.updateTimerStatus, 40);
         })
         .catch ((error) => {
@@ -117,96 +123,61 @@ class Thumbnail extends PureComponent {
         }
     }
 
-
-    // Timer controlled check of playing & tally status
+    // Playing & tally status
     updatePlayingStatus() {
-        var thisActive = this.props.getTabStateProps(this.props.ccgOutputProps);
-        this.setState({isTabActive: thisActive});
-        //only update when tab is selected:
-        if (thisActive) {
-            const queryLayer = gql`
-                query layer($ch: Int!, $l: Int!) {
-                    layer(ch: $ch, l: $l)
-                }
-            `;
-            this.props.ccgStateConnectionProps.query({
-                query: queryLayer,
-                variables: {
-                    ch: this.props.ccgOutputProps,
-                    l: 10
-                }
-            })
-            .then ((response)=>{
-                var infoStatus = JSON.parse(response.data.layer);
-                this.setState({ thumbActiveState: infoStatus} );
-                var fileNameFg = this.cleanUpFilename(infoStatus.foreground.name || '');
-                var fileNameBg = this.cleanUpFilename(infoStatus.background.name || '');
+            var infoStatus = this.props.getCcgInfoDataProps()[this.props.ccgOutputProps-1].layers[10-1];
+            this.setState({ thumbActiveState: infoStatus} );
+            var fileNameFg = this.cleanUpFilename(infoStatus.foreground.name || '');
+            var fileNameBg = this.cleanUpFilename(infoStatus.background.name || '');
 
-                this.state.thumbList.map((item, index)=>{
-                    //Handle Foreground:
-                    if(fileNameFg === item.name) {
-                        // Check and remove Red Tally
-                        if(this.state.thumbActiveIndex != index) {
-                            this.setStateThumbListElement(this.state.thumbActiveIndex, "tally", false);
-                            this.setStateThumbListElement(this.state.thumbActiveIndex, "isActive", false);
-                            this.updateThumbnail(this.state.thumbActiveIndex);
-                        }
-
-                            this.setStateThumbListElement(index, "tally", true);
-                            this.setState({thumbActiveIndex: index});
-                            this.setStateThumbListElement(index, "isActive", true);
-                            this.setStateThumbListElement(index, "loop", infoStatus.foreground.loop);
-                            this.updateThumbnail(index);
-                            this.props.setActivePgmPixProps(item.thumbPix);
+            this.state.thumbList.map((item, index)=>{
+                //Handle Foreground:
+                if(fileNameFg === item.name) {
+                    // Check and remove Red Tally
+                    if(this.state.thumbActiveIndex != index) {
+                        this.setStateThumbListElement(this.state.thumbActiveIndex, "tally", false);
+                        this.setStateThumbListElement(this.state.thumbActiveIndex, "isActive", false);
+                        this.updateThumbnail(this.state.thumbActiveIndex);
                     }
-                    //Handle Background:
-                    if(fileNameBg === item.name) {
-                        if(this.state.thumbActiveBgIndex != index) {
-                            // Remove Old Green Tally
-                            this.setStateThumbListElement(this.state.thumbActiveBgIndex, "tallyBg", false);
-                            this.updateThumbnail(this.state.thumbActiveBgIndex);
-                        }
-                        // Add Active Green Tally
-                        this.setStateThumbListElement(index, "tallyBg", true);
-                        this.setState({thumbActiveBgIndex: index});
-                        this.updateThumbnail(index);
-                        this.props.setActivePvwPixProps(item.thumbPix);
-
+                    this.setStateThumbListElement(index, "tally", true);
+                    this.setState({thumbActiveIndex: index});
+                    this.setStateThumbListElement(index, "isActive", true);
+                    this.setStateThumbListElement(index, "loop", infoStatus.foreground.loop);
+                    this.updateThumbnail(index);
+                    this.props.setActivePgmPixProps(item.thumbPix);
+                }
+                //Handle Background:
+                if(fileNameBg === item.name) {
+                    if(this.state.thumbActiveBgIndex != index) {
+                        // Remove Old Green Tally
+                        this.setStateThumbListElement(this.state.thumbActiveBgIndex, "tallyBg", false);
+                        this.updateThumbnail(this.state.thumbActiveBgIndex);
                     }
-                });
-            })
-            .catch ((error)=> {
-                console.log(error);
+                    // Add Active Green Tally
+                    this.setStateThumbListElement(index, "tallyBg", true);
+                    this.setState({thumbActiveBgIndex: index});
+                    this.updateThumbnail(index);
+                    this.props.setActivePvwPixProps(item.thumbPix);
+
+                }
             });
-        }
     }
 
 
     // Timer controlled countdown status status
     updateTimerStatus() {
+        //Check for active state, and update state if it becomes active or in-active
+        if (this.state.isTabActive != this.props.getTabStateProps(this.props.ccgOutputProps)) {
+            if (!this.state.isTabActive ) this.updatePlayingStatus();
+            this.setState({isTabActive: this.props.getTabStateProps(this.props.ccgOutputProps)});
+        }
+
         //only update timer when tab is selected:
         if (this.state.isTabActive) {
-            const queryTimeLeft = gql`
-                query timeLeft($ch: Int!, $l: Int!) {
-                    timeLeft(ch: $ch, l: $l)
-                }
-            `;
-            this.props.ccgStateConnectionProps.query({
-                query: queryTimeLeft,
-                variables: {
-                    ch: this.props.ccgOutputProps,
-                    l: 10
-                }
-            })
-            .then ((response)=>{
-                var timeLeft = parseFloat(response.data.timeLeft);
+                var timeLeft = this.props.getTimeLeftProps(this.props.ccgOutputProps);
                 this.setStateThumbListElement(this.state.thumbActiveIndex, "timeLeft", timeLeft);
                 this.updateThumbnail(this.state.thumbActiveIndex);
                 this.props.setPgmCounterProps(this.secondsToTimeCode( timeLeft));
-            })
-            .catch ((error)=> {
-                console.log(error);
-            });
         }
     }
 
