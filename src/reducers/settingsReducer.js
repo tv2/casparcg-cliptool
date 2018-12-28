@@ -18,8 +18,14 @@ export const settingsReducer = ((state = defaultSettingsReducerState, action) =>
     let { ...nextState } = state;
 
     switch(action.type) {
-        case 'SET_SETTINGS':
+        case 'UPDATE_SETTINGS':
             nextState[0].settings = action.data;
+            return nextState;
+        case 'LOOP_STATUS':
+            nextState[0].settings.tabData[action.data].loop = !nextState[0].settings.tabData[action.data].loop;
+            return nextState;
+        case 'AUTOPLAY_STATUS':
+        nextState[0].settings.tabData[action.data].autoPlay = !nextState[0].settings.tabData[action.data].autoPlay;
             return nextState;
         default:
             return nextState;

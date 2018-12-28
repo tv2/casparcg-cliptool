@@ -11,6 +11,8 @@ const MIX_DURATION = 6;
 var thumbTimer;
 var thumbCountTimer;
 
+//Redux:
+import { connect } from "react-redux";
 
 
 class Thumbnail extends PureComponent {
@@ -19,13 +21,7 @@ class Thumbnail extends PureComponent {
     //ccgConnectionProps Current CCG connection
     //ccgStateConnectionProps Current CCG-state connection
     //getCcgIsUpdatedProps: returns info if a channel is updated
-    //getCcgInfoDataProps: returns object with all channels and all layers
-    //getTimeLeftProps: returns timeleft for channel
     //resetCcgIsUpdatedProps: resets ccgIsUpdated state to 0 (no update)
-    //setActivePgmPixProps Reference to Set Header PGMpix
-    //setActivePvmPixProps Reference to Set Header Pvmpix
-    //setPgmCounterProps Sets the timer in header
-    //getTabStateProps returns TRUE/FALSE Is this tab loaded
     //getTabSettingsProps return the setting parameter from argument
 
     constructor(props) {
@@ -57,7 +53,6 @@ class Thumbnail extends PureComponent {
             results.response.data.map((item, index) => {
                 item.tally = false;
                 item.tallyBg = false;
-                item.timeLeft = 0;
                 this.thumbList.push(item);
 
                 this.props.ccgConnectionProps.thumbnailRetrieve(item.name)
@@ -118,7 +113,7 @@ class Thumbnail extends PureComponent {
     }
 
     updatePlayingStatus() {
-            var infoStatus = this.props.getCcgInfoDataProps()[this.props.ccgOutputProps-1].layers[10-1];
+            var infoStatus = this.props.store.dataReducer[0].data.ccgInfo[this.props.ccgOutputProps-1].layers[10-1];
             var fileNameFg = this.cleanUpFilename(infoStatus.foreground.name || '');
             var fileNameBg = this.cleanUpFilename(infoStatus.background.name || '');
 
@@ -144,10 +139,22 @@ class Thumbnail extends PureComponent {
 
     updateThumbnail(index) {
         if (this.thumbList[index].tally) {
-            this.props.setActivePgmPixProps(this.thumbList[index].thumbPix);
+            this.props.dispatch({
+                type: 'SET_PGM_PIX',
+                data: {
+                    tab: (this.props.ccgOutputProps - 1),
+                    pix: this.thumbList[index].thumbPix
+                }
+            });
         }
         if (this.thumbList[index].tallyBg) {
-            this.props.setActivePvwPixProps(this.thumbList[index].thumbPix);
+            this.props.dispatch({
+                type: 'SET_PVW_PIX',
+                data: {
+                    tab: (this.props.ccgOutputProps - 1),
+                    pix: this.thumbList[index].thumbPix
+                }
+            });
         }
         var prevStateList = this.state.thumbListRendered;
         prevStateList[index] = this.renderThumbnail(index);
@@ -156,16 +163,15 @@ class Thumbnail extends PureComponent {
 
     updateTimerStatus() {
         //Check for active state, and update state if it becomes active or in-active
-        if (this.state.isTabActive != this.props.getTabStateProps(this.props.ccgOutputProps)) {
+        if (this.props.store.appNavReducer[0].appNav.activeTab === (this.props.ccgOutputProps-1) ) {
             if (!this.state.isTabActive ) this.updatePlayingStatus();
-            this.setState({isTabActive: this.props.getTabStateProps(this.props.ccgOutputProps)});
+            this.setState({isTabActive: true});
+        } else {
+            this.setState({isTabActive: false });
         }
-
         //only update timer when tab is selected:
         if (this.state.isTabActive) {
-                this.thumbList[this.state.thumbActiveIndex].timeLeft = this.props.getTimeLeftProps(this.props.ccgOutputProps);
                 this.updateThumbnail(this.state.thumbActiveIndex);
-                this.props.setPgmCounterProps(this.secondsToTimeCode( this.thumbList[this.state.thumbActiveIndex].timeLeft));
         }
     }
 
@@ -270,7 +276,7 @@ class Thumbnail extends PureComponent {
                 />
                 <a className="playing">
                     {this.thumbList[index].tally ?
-                        this.secondsToTimeCode(this.thumbList[index].timeLeft)
+                        this.secondsToTimeCode(this.props.store.dataReducer[0].data.ccgTimeLeft[this.props.ccgOutputProps-1].timeLeft)
                         : ""
                     }
                 </a>
@@ -291,4 +297,12 @@ class Thumbnail extends PureComponent {
     )}
 
 }
-export default Thumbnail
+
+
+const mapStateToProps = (state) => {
+    return {
+        store: state
+    }
+}
+
+export default connect(mapStateToProps, null, null, {forwardRef : true})(Thumbnail);

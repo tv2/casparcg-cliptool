@@ -1,6 +1,7 @@
 const defaultAppNavReducerState = [{
     appNav: {
-        settings_window: false
+        connectionStatus: false,
+        activeTab: 0,
     }
 }];
 
@@ -9,8 +10,11 @@ export const appNavReducer = ((state = defaultAppNavReducerState, action) => {
     let { ...nextState } = state;
 
     switch(action.type) {
-        case 'SET_SETTINGS_WINDOW':
-            nextState[0].appNav.settings_window = action.data;
+        case 'SET_ACTIVE_TAB':
+            nextState[0].appNav.activeTab = action.data;
+            return nextState;
+        case 'SET_CONNECTION_STATUS':
+            nextState[0].appNav.connectionStatus = action.data;
             return nextState;
         default:
             return nextState;

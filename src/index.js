@@ -8,9 +8,11 @@ import { Provider } from 'react-redux';
 
 import indexReducer from './reducers/indexReducer';
 
-const storeRedux = createStore(indexReducer);
+const storeRedux = createStore(
+    indexReducer
+);
 
-console.log(storeRedux.getState());
+
 // Since we are using HtmlWebpackPlugin WITHOUT a template, we should create our own root node in the body element before rendering into it
 let root = document.createElement("div");
 

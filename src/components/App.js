@@ -8,6 +8,9 @@ import { WebSocketLink } from 'apollo-link-ws';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 import gql from "graphql-tag";
 
+//Redux:
+import { connect } from "react-redux";
+
 // Components:
 import Thumbnail from './Thumbnail';
 import SettingsPage from './Settings';
@@ -24,54 +27,37 @@ const folder = electron.remote.app.getPath('userData');
 //TimerReference:
 var connectionTimer;
 
+//Global const:
+const FPS = 25;
+
+
 class App extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            ccgConnectionStatus: false,
             ccgIsUpdated: 0,
-            ccgInfoData: {},
-            ccgTimeLeft: [],
             showSettingsMenu: false,
-            activeTab: 0,
-            activeTabTitle: '',
-            activePvwPix: '',
-            activePgmPix: '',
-            pgmCounter: '',
-            tabData: [],
-            globalSettings: {
-                ipAddress: 'localhost',
-                port: '5250',
-                mainFolder: '',
-                tabData: [
-                    { key: 1, title: 'SCREEN 1', subFolder: '', loop: false, autoPlay: false},
-                    { key: 2, title: 'SCREEN 2', subFolder: '', loop: false, autoPlay: false},
-                    { key: 3, title: 'SCREEN 3', subFolder: '', loop: false, autoPlay: false},
-                    { key: 4, title: '', subFolder: '', loop: false, autoPlay: false},
-                    { key: 5, title: '', subFolder: '', loop: false, autoPlay: false},
-                    { key: 6, title: '', subFolder: '', loop: false, autoPlay: false},
-                ],
-            },
+            tabData: []
         };
 
         this.checkConnectionStatus = this.checkConnectionStatus.bind(this);
         this.handleSettingsPage = this.handleSettingsPage.bind(this);
-        this.setActivePgmPix = this.setActivePgmPix.bind(this);
-        this.setActivePvwPix = this.setActivePvwPix.bind(this);
-        this.setPgmCounter = this.setPgmCounter.bind(this);
-        this.renderHeader = this.renderHeader.bind(this);
         this.handleAutoPlayStatus = this.handleAutoPlayStatus.bind(this);
         this.handleLoopStatus = this.handleLoopStatus.bind(this);
         this.ccgSubscribeTimeLeft = this.ccgSubscribeTimeLeft.bind(this);
-        this.ccgSubscribeInfoData= this.ccgSubscribeInfoData.bind(this);
+        this.ccgSubscribeInfoData = this.ccgSubscribeInfoData.bind(this);
     }
 
     componentDidMount() {
         // Load Settings,
         // use mountSettings in ComponentDidMount (as SetState is async)
         var mountSettings = this.loadSettings();
-        this.setState({globalSettings: mountSettings});
+
+        this.props.dispatch({
+            type:'UPDATE_SETTINGS',
+            data: mountSettings
+        });
 
         //Define Output Tabs:
         this.setState({tabData: mountSettings.tabData.filter((item) => {
@@ -128,20 +114,21 @@ class App extends Component {
     }
 
     loadSettings() {
-        var settingsInterface = this.state.globalSettings;
+        var settingsInterface = this.props.store.settingsReducer[0].settings;
         try {
-        const settingsFromFile = JSON.parse(fs.readFileSync(folder + "/settings.json"));
-        if (this.compareOldNewSettings(settingsFromFile, settingsInterface)) {
-            settingsFromFile.tabData.map((item, index) => {
-            item.loop = item.loop || false;
-            item.autoPlay = item.autoPlay || false;
-            });
-            return (settingsFromFile);
-        } else {
-            return settingsInterface;
+            const settingsFromFile = JSON.parse(fs.readFileSync(folder + "/settings.json"));
+            if (this.compareOldNewSettings(settingsFromFile, settingsInterface)) {
+                settingsFromFile.tabData.map((item, index) => {
+                item.loop = item.loop || false;
+                item.autoPlay = item.autoPlay || false;
+                });
+                return (settingsFromFile);
+            } else {
+                return settingsInterface;
+            }
         }
-        } catch (error) {
-        return (settingsInterface);
+        catch (error) {
+            return (settingsInterface);
         }
     }
 
@@ -159,7 +146,7 @@ class App extends Component {
     }
 
     getTabSettings(ccgOutput, argument) {
-        return this.state.globalSettings.tabData[ccgOutput-1][argument];
+        return this.props.store.settingsReducer[0].settings.tabData[ccgOutput-1][argument];
     }
 
     checkConnectionStatus() {
@@ -170,30 +157,51 @@ class App extends Component {
                 }`
             })
         .then((response) => {
-            this.setState({ ccgConnectionStatus: response.data.serverOnline });
+            this.props.dispatch({
+                type: 'SET_CONNECTION_STATUS',
+                data: response.data.serverOnline
+            });
         })
         .catch((error) => {
             console.log(error);
-            this.setState({ ccgConnectionStatus: false });
+            this.props.dispatch({
+                type: 'SET_CONNECTION_STATUS',
+                data: false
+            });
         });
     }
 
+
+    secondsToTimeCode(time) {
+        if (time) {
+            var hour = ('0' + (time/(60*60)).toFixed()).slice(-2);
+            var minute = ('0' + (time/(60)).toFixed()).slice(-2);
+            var sec = ('0' + time.toFixed()).slice(-2);
+            var frm = ('0' + (100*(time - parseInt(time))*(FPS/100)).toFixed()).slice(-2);
+        return (
+            hour + "." + minute + "." + sec + "." + frm
+        );
+        } else {
+            return "00.00.00.00";
+        }
+    }
+
+
     //Handler functions:
     handleAutoPlayStatus() {
-        var settingsCopy= Object.assign({}, this.state.globalSettings);
-        settingsCopy.tabData[this.state.activeTab].autoPlay = !settingsCopy.tabData[this.state.activeTab].autoPlay;
-        this.setState(
-            {globalSettings: settingsCopy}
-        );
+        this.props.dispatch({
+            type:'AUTOPLAY_STATUS',
+            data: this.props.store.appNavReducer[0].appNav.activeTab
+        });
+        this.saveSettings(this.props.store.settingsReducer[0].settings);
     }
 
     handleLoopStatus() {
-        var settingsCopy= Object.assign({}, this.state.globalSettings);
-        settingsCopy.tabData[this.state.activeTab].loop = !settingsCopy.tabData[this.state.activeTab].loop;
-        this.setState(
-            {globalSettings: settingsCopy}
-        );
-        this.saveSettings(this.state.globalSettings);
+        this.props.dispatch({
+            type:'LOOP_STATUS',
+            data: this.props.store.appNavReducer[0].appNav.activeTab
+        });
+        this.saveSettings(this.props.store.settingsReducer[0].settings);
     /* ToDo: When pressing LOOP while playing, change state of playing media:
                 const call = new AMCP.CustomCommand('CALL 1-10 LOOP');
                 this.props.ccgConnectionProps.do(call)
@@ -203,23 +211,11 @@ class App extends Component {
     */
     }
 
-    setActivePgmPix(pix) {
-        this.setState({activePgmPix: pix});
-    }
-
-    setActivePvwPix(pix) {
-        this.setState({activePvwPix: pix});
-    }
-
-    setPgmCounter(val) {
-        this.setState({pgmCounter: val});
-    }
     setActiveTab(tab) {
-        this.setState({activeTab: tab});
-    }
-
-    getTabState(channel) {
-        return (this.state.activeTab === channel -1);
+        this.props.dispatch({
+            type: 'SET_ACTIVE_TAB',
+            data: tab
+        });
     }
 
     ccgSubscribeInfoData() {
@@ -249,7 +245,10 @@ class App extends Component {
         })
         .then((response) => {
             console.log("InfoData request Data: ", response.data.channels);
-            _this2.setState({ccgInfoData: response.data.channels});
+            _this2.props.dispatch({
+                type:'SET_INFO_CHANNEL',
+                data: response.data.channels
+            });
 
             //Subscribe to CasparCG-State changes:
             this.ccgStateConnection.subscribe({
@@ -278,16 +277,15 @@ class App extends Component {
                 next(response) {
                     console.log("infoChannelChanged subscription Data: ", response.data.channels
                     );
-                    _this2.setState({ccgInfoData: response.data.channels});
                     _this2.setState({ccgIsUpdated: 1});
+                    _this2.props.dispatch({
+                        type:'SET_INFO_CHANNEL',
+                        data: response.data.channels
+                    });
                 },
                 error(err) { console.error('Subscription error: ', err); },
             });
         });
-    }
-
-    getCcgInfoData() {
-        return this.state.ccgInfoData;
     }
 
     resetCcgIsUpdated() {
@@ -311,14 +309,14 @@ class App extends Component {
         })
         .subscribe({
             next(response) {
-                _this2.setState({ccgTimeLeft: response.data.timeLeft});
+                _this2.props.dispatch({
+                    type:'SET_TIMELEFT',
+                    data: response.data.timeLeft
+                });
+
             },
             error(err) { console.error('Subscription error: ', err); },
         });
-    }
-
-    getTimeLeft(channel) {
-        return this.state.ccgTimeLeft[channel-1].timeLeft;
     }
 
     //Rendering functions:
@@ -327,17 +325,17 @@ class App extends Component {
         return (
         <header className="App-header">
             <div className="App-title-background">
-            <img src={this.state.activePvwPix} className="headerPvwThumbnailImage" />
+            <img src={this.props.store.dataReducer[0].data.activePvwPix[this.props.store.appNavReducer[0].appNav.activeTab]} className="headerPvwThumbnailImage" />
             <button className="headerPgmCounter">
-                {this.state.pgmCounter}
+                {this.secondsToTimeCode(this.props.store.dataReducer[0].data.ccgTimeLeft[this.props.store.appNavReducer[0].appNav.activeTab].timeLeft)}
             </button>
-            <img src={this.state.activePgmPix} className="headerPgmThumbnailImage" />
+            <img src={this.props.store.dataReducer[0].data.activePgmPix[this.props.store.appNavReducer[0].appNav.activeTab]} className="headerPgmThumbnailImage" />
             </div>
 
             <div className="Reload-setup-background">
             <button className="App-connection-status"
-                style={this.state.ccgConnectionStatus ? {backgroundColor: "rgb(0, 128, 4)"} : {backgroundColor: "red"}}>
-                {this.state.ccgConnectionStatus ? "CONNECTED" : "CONNECTING"}
+                style={this.props.store.appNavReducer[0].appNav.connectionStatus ? {backgroundColor: "rgb(0, 128, 4)"} : {backgroundColor: "red"}}>
+                {this.props.store.appNavReducer[0].appNav.connectionStatus ? "CONNECTED" : "CONNECTING"}
             </button>
             <button className="App-settings-button"
                 onClick={this.handleSettingsPage}>
@@ -352,13 +350,13 @@ class App extends Component {
             <div className="loop-autoPlay-background">
             <button className="loop-button"
                 onClick={this.handleLoopStatus}
-                style={this.state.globalSettings.tabData[this.state.activeTab].loop ? {backgroundColor: 'rgb(28, 115, 165)'} : {backgroundColor: 'grey'}}
+                style={this.props.store.settingsReducer[0].settings.tabData[this.props.store.appNavReducer[0].appNav.activeTab].loop ? {backgroundColor: 'rgb(28, 115, 165)'} : {backgroundColor: 'grey'}}
             >
                 LOOP
             </button>
             <button className="autoPlay-button"
                 onClick={this.handleAutoPlayStatus}
-                style={this.state.globalSettings.tabData[this.state.activeTab].autoPlay ? {backgroundColor: 'red'} : {backgroundColor: 'grey'}}
+                style={this.props.store.settingsReducer[0].settings.tabData[this.props.store.appNavReducer[0].appNav.activeTab].autoPlay ? {backgroundColor: 'red'} : {backgroundColor: 'grey'}}
             >
                 AUTO START
             </button>
@@ -369,13 +367,13 @@ class App extends Component {
             <br/>
             <button className="mixButton"
                 onClick={
-                    () => this.refs[("thumbnailRef" + ( this.state.activeTab + 1))].pvwPlay()
+                    () => this.refs[("thumbnailRef" + ( this.props.store.appNavReducer[0].appNav.activeTab + 1))].pvwPlay()
                 }>
                 PVW
             </button>
             <button className="startButton"
                 onClick={
-                    () => this.refs[("thumbnailRef" + ( this.state.activeTab + 1))].pgmPlay()
+                    () => this.refs[("thumbnailRef" + ( this.props.store.appNavReducer[0].appNav.activeTab + 1))].pgmPlay()
                 }>
                 PGM
             </button>
@@ -393,14 +391,8 @@ class App extends Component {
                 ccgOutputProps={item.key}
                 ccgConnectionProps={this.ccgConnection}
                 ccgStateConnectionProps={this.ccgStateConnection}
-                getCcgInfoDataProps={this.getCcgInfoData.bind(this)}
                 getCcgIsUpdatedProps={this.getCcgIsUpdated.bind(this)}
-                getTimeLeftProps={this.getTimeLeft.bind(this)}
                 resetCcgIsUpdatedProps={this.resetCcgIsUpdated.bind(this)}
-                setActivePvwPixProps={this.setActivePvwPix.bind(this)}
-                setActivePgmPixProps={this.setActivePgmPix.bind(this)}
-                getTabStateProps={this.getTabState.bind(this)}
-                setPgmCounterProps={this.setPgmCounter.bind(this)}
                 getTabSettingsProps={this.getTabSettings.bind(this)}
             />
             </div>
@@ -418,10 +410,13 @@ class App extends Component {
         <div className="App">
             {this.renderHeader()}
             {this.state.showSettingsMenu ?
-            <SettingsPage globalSettingsProps={this.state.globalSettings} loadSettingsProps={this.loadSettings.bind(this)} saveSettingsProps={this.saveSettings.bind(this)}/>
+            <SettingsPage globalSettingsProps={this.props.store.settingsReducer[0].settings} loadSettingsProps={this.loadSettings.bind(this)} saveSettingsProps={this.saveSettings.bind(this)}/>
             : null }
             <div className="App-body">
-            <Tabs tabs={this.state.tabData} onChange={(tab, index) => this.setActiveTab(index)}>
+            <Tabs
+                tabs={this.state.tabData}
+                onChange={(tab, index) => this.setActiveTab(index)}
+            >
                 {this.renderTabData()}
             </Tabs>
             </div>
@@ -430,4 +425,11 @@ class App extends Component {
     }
 }
 
-export default App
+
+const mapStateToProps = (state) => {
+    return {
+        store: state
+    }
+}
+
+export default connect(mapStateToProps)(App);
