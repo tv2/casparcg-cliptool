@@ -33,7 +33,6 @@ class Thumbnail extends PureComponent {
             isTabActive: false,
         };
 
-        this.updatePlayingStatus = this.updatePlayingStatus.bind(this);
         this.renderThumbnail = this.renderThumbnail.bind(this);
     }
 
@@ -73,65 +72,12 @@ class Thumbnail extends PureComponent {
                     });
                 });
             });
-            this.startTimers();
-            this.updatePlayingStatus();
         })
         .catch ((error) => {
             if (error.response.code === 404 ) {
                 window.alert("Folder: " + this.props.store.settingsReducer[0].settings.tabData[this.props.ccgOutputProps-1].subFolder + " does not exist");
             }
         });
-    }
-
-    startTimers() {
-        // Check tally status:
-        thumbTimer = setInterval(() => {
-            if (this.props.getCcgIsUpdatedProps() === this.props.ccgOutputProps) {
-                this.updatePlayingStatus();
-                this.props.resetCcgIsUpdatedProps();
-            }
-        }, 100);
-    }
-
-    updatePlayingStatus() {
-            var infoStatus = this.props.store.dataReducer[0].data.ccgInfo[this.props.ccgOutputProps-1].layers[10-1];
-            var fileNameFg = this.cleanUpFilename(infoStatus.foreground.name || '');
-            var fileNameBg = this.cleanUpFilename(infoStatus.background.name || '');
-
-            this.props.store.dataReducer[0].data.channel[this.props.ccgOutputProps-1].thumbList
-            .map((item, index)=>{
-
-                //Handle Foreground:
-                if(fileNameFg === item.name) {
-                    this.props.dispatch({
-                        type: 'SET_THUMB_ACTIVE_INDEX',
-                        data: {
-                            tab: (this.props.ccgOutputProps - 1),
-                            thumbActiveIndex: index
-                        }
-                    });
-                }
-                //Handle Background:
-                if(fileNameBg === item.name) {
-                    this.props.dispatch({
-                        type: 'SET_THUMB_ACTIVE_BG_INDEX',
-                        data: {
-                            tab: (this.props.ccgOutputProps - 1),
-                            thumbActiveBgIndex: index
-                        }
-                    });
-                }
-            });
-    }
-
-    cleanUpFilename(filename) {
-        // casparcg-connection library bug: returns filename with media// or media/
-        return (filename.replace(/\\/g, '/')
-            .replace('media//', '')
-            .replace('media/', '')
-            .toUpperCase()
-            .replace(/\..+$/, '')
-        );
     }
 
     secondsToTimeCode(time) {

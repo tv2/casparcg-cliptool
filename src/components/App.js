@@ -46,6 +46,7 @@ class App extends Component {
         this.ccgSubscribeTimeLeft = this.ccgSubscribeTimeLeft.bind(this);
         this.ccgSubscribeInfoData = this.ccgSubscribeInfoData.bind(this);
         this.renderHeader = this.renderHeader.bind(this);
+        this.updatePlayingStatus = this.updatePlayingStatus.bind(this);
     }
 
 
@@ -216,6 +217,9 @@ class App extends Component {
                 type:'SET_INFO_CHANNEL',
                 data: response.data.channels
             });
+            response.data.channels.map((item,index) => {
+                _this2.updatePlayingStatus(index);
+            });
 
             //Subscribe to CasparCG-State changes:
             this.ccgStateConnection.subscribe({
@@ -225,16 +229,65 @@ class App extends Component {
                 next(response) {
                     console.log("infoChannelChanged subscription Data: ", response.data.channels
                     );
-                    _this2.setState({ccgIsUpdated: 1});
+//                    _this2.setState({ccgIsUpdated: 1});
                     _this2.props.dispatch({
                         type:'SET_INFO_CHANNEL',
                         data: response.data.channels
                     });
+                    response.data.channels.map((item,index) => {
+                        _this2.updatePlayingStatus(index);
+                    });
+
                 },
                 error(err) { console.error('Subscription error: ', err); },
             });
         });
     }
+
+
+    updatePlayingStatus(tab) {
+        var infoStatus = this.props.store.dataReducer[0].data.ccgInfo[tab].layers[10-1];
+        var fileNameFg = this.cleanUpFilename(infoStatus.foreground.name || '');
+        var fileNameBg = this.cleanUpFilename(infoStatus.background.name || '');
+
+        this.props.store.dataReducer[0].data.channel[tab].thumbList
+        .map((item, index)=>{
+
+            //Handle Foreground:
+            if(fileNameFg === item.name) {
+                this.props.dispatch({
+                    type: 'SET_THUMB_ACTIVE_INDEX',
+                    data: {
+                        tab: tab,
+                        thumbActiveIndex: index
+                    }
+                });
+            }
+            //Handle Background:
+            if(fileNameBg === item.name) {
+                this.props.dispatch({
+                    type: 'SET_THUMB_ACTIVE_BG_INDEX',
+                    data: {
+                        tab: tab,
+                        thumbActiveBgIndex: index
+                    }
+                });
+            }
+        });
+    }
+
+
+    cleanUpFilename(filename) {
+        // casparcg-connection library bug: returns filename with media// or media/
+        return (filename.replace(/\\/g, '/')
+            .replace('media//', '')
+            .replace('media/', '')
+            .toUpperCase()
+            .replace(/\..+$/, '')
+        );
+    }
+
+
 
 
     //Shortcut for mix and take
