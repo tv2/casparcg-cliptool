@@ -5,7 +5,6 @@ import gql from "graphql-tag";
 
 //Global const:
 const FPS = 25;
-const MIX_DURATION = 6;
 
 //thumb counterDown reference:
 var thumbTimer;
@@ -22,6 +21,8 @@ class Thumbnail extends PureComponent {
     //ccgStateConnectionProps Current CCG-state connection
     //getCcgIsUpdatedProps: returns info if a channel is updated
     //resetCcgIsUpdatedProps: resets ccgIsUpdated state to 0 (no update)
+    //loadMediaProps: Loads media
+    //loadBgMediaProps: Loads media in Background
 
 
     constructor(props) {
@@ -34,8 +35,6 @@ class Thumbnail extends PureComponent {
 
         this.updatePlayingStatus = this.updatePlayingStatus.bind(this);
         this.renderThumbnail = this.renderThumbnail.bind(this);
-        this.loadMedia = this.loadMedia.bind(this);
-        this.loadBgMedia = this.loadBgMedia.bind(this);
     }
 
     componentDidMount() {
@@ -124,63 +123,6 @@ class Thumbnail extends PureComponent {
         );
     }
 
-    pvwPlay() {
-        this.playMedia(10, this.state.thumbActiveBgIndex, this.state.thumbActiveIndex);
-    }
-
-    pgmPlay() {
-        this.playMedia(10, this.state.thumbActiveIndex, this.state.thumbActiveBgIndex);
-    }
-
-    playMedia(layer, index, indexBg) {
-        this.props.ccgConnectionProps.play(
-            this.props.ccgOutputProps,
-            layer,
-            this.props.store.dataReducer[0].data.channel[this.props.ccgOutputProps-1].thumbList[index].name,
-            this.props.store.settingsReducer[0].settings.tabData[this.props.ccgOutputProps-1].loop,
-            'MIX',
-            MIX_DURATION
-        );
-        this.loadBgMedia(10, indexBg);
-    }
-
-    loadMedia(layer, index) {
-        if (this.props.store.settingsReducer[0].settings.tabData[this.props.ccgOutputProps-1].autoPlay) {
-            this.playMedia(10, index, this.state.thumbActiveBgIndex);
-        } else {
-            this.props.ccgConnectionProps.load(
-                this.props.ccgOutputProps,
-                layer,
-                this.props.store.dataReducer[0].data.channel[this.props.ccgOutputProps-1].thumbList[index].name,
-                this.props.store.settingsReducer[0].settings.tabData[this.props.ccgOutputProps-1].loop,
-                'MIX',
-                MIX_DURATION
-            );
-        }
-    }
-
-    loadBgMedia(layer, index) {
-        if (this.props.store.settingsReducer[0].settings.tabData[this.props.ccgOutputProps-1].autoPlay) {
-            this.props.ccgConnectionProps.loadbgAuto(
-                this.props.ccgOutputProps,
-                layer,
-                this.props.store.dataReducer[0].data.channel[this.props.ccgOutputProps-1].thumbList[index].name,
-                this.props.store.settingsReducer[0].settings.tabData[this.props.ccgOutputProps-1].loop,
-                'MIX',
-                MIX_DURATION
-            );
-        } else {
-            this.props.ccgConnectionProps.loadbg(
-                this.props.ccgOutputProps,
-                layer,
-                this.props.store.dataReducer[0].data.channel[this.props.ccgOutputProps-1].thumbList[index].name,
-                this.props.store.settingsReducer[0].settings.tabData[this.props.ccgOutputProps-1].loop,
-                'MIX',
-                MIX_DURATION
-            );
-        }
-    }
-
     secondsToTimeCode(time) {
         if (time) {
             var hour = ('0' + (time/(60*60)).toFixed()).slice(-2);
@@ -210,10 +152,10 @@ class Thumbnail extends PureComponent {
                             )}
                         />
                         <button className="thumbnailImageClickPvw"
-                            onClick={() => this.loadBgMedia(10, index)}
+                            onClick={() => this.props.loadBgMediaProps(this.props.ccgOutputProps, 10, index)}
                         />
                         <button className="thumbnailImageClickPgm"
-                            onClick={() => this.loadMedia(10, index)}
+                            onClick={() => this.props.loadMediaProps(this.props.ccgOutputProps, 10, index)}
                         />
                         <a className="playing">
                             {this.props.store.dataReducer[0].data.channel[this.props.ccgOutputProps-1].thumbList[index].tally ?

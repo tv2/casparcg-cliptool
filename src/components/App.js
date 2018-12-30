@@ -15,7 +15,6 @@ import { connect } from "react-redux";
 // Components:
 import Thumbnail from './Thumbnail';
 import SettingsPage from './Settings';
-import Header from './Header';
 
 //CSS files:
 import '../assets/css/Rmc-tabs.css';
@@ -25,6 +24,10 @@ import '../assets/css/App.css';
 const fs = require('fs');
 const electron = require('electron');
 const folder = electron.remote.app.getPath('userData');
+
+//Global const:
+const FPS = 25;
+const MIX_DURATION = 6;
 
 class App extends Component {
     constructor(props) {
@@ -42,6 +45,7 @@ class App extends Component {
         this.handleLoopStatus = this.handleLoopStatus.bind(this);
         this.ccgSubscribeTimeLeft = this.ccgSubscribeTimeLeft.bind(this);
         this.ccgSubscribeInfoData = this.ccgSubscribeInfoData.bind(this);
+        this.renderHeader = this.renderHeader.bind(this);
     }
 
 
@@ -261,7 +265,77 @@ class App extends Component {
     }
 
 
+    pvwPlay(output) {
+        this.playMedia(output, 10, this.props.store.dataReducer[0].data.channel[output-1].thumbActiveBgIndex, this.props.store.dataReducer[0].data.channel[output-1].thumbActiveIndex);
+    }
 
+    pgmPlay(output) {
+        this.playMedia(output, 10, this.props.store.dataReducer[0].data.channel[output-1].thumbActiveIndex, this.props.store.dataReducer[0].data.channel[output-1].thumbActiveBgIndex);
+    }
+
+    playMedia(output, layer, index, indexBg) {
+        this.ccgConnection.play(
+            output,
+            layer,
+            this.props.store.dataReducer[0].data.channel[output-1].thumbList[index].name,
+            this.props.store.settingsReducer[0].settings.tabData[output-1].loop,
+            'MIX',
+            MIX_DURATION
+        );
+        this.loadBgMedia(output, 10, indexBg);
+    }
+
+    loadMedia(output, layer, index) {
+        if (this.props.store.settingsReducer[0].settings.tabData[output-1].autoPlay) {
+            this.playMedia(output, 10, index, this.props.store.dataReducer[0].data.channel[output-1].thumbActiveBgIndex);
+        } else {
+            this.ccgConnection.load(
+                output,
+                layer,
+                this.props.store.dataReducer[0].data.channel[output-1].thumbList[index].name,
+                this.props.store.settingsReducer[0].settings.tabData[output-1].loop,
+                'MIX',
+                MIX_DURATION
+            );
+        }
+    }
+
+    loadBgMedia(output, layer, index) {
+        if (this.props.store.settingsReducer[0].settings.tabData[output-1].autoPlay) {
+            this.ccgConnection.loadbgAuto(
+                output,
+                layer,
+                this.props.store.dataReducer[0].data.channel[output-1].thumbList[index].name,
+                this.props.store.settingsReducer[0].settings.tabData[output-1].loop,
+                'MIX',
+                MIX_DURATION
+            );
+        } else {
+            this.ccgConnection.loadbg(
+                output,
+                layer,
+                this.props.store.dataReducer[0].data.channel[output-1].thumbList[index].name,
+                this.props.store.settingsReducer[0].settings.tabData[output-1].loop,
+                'MIX',
+                MIX_DURATION
+            );
+        }
+    }
+
+
+    secondsToTimeCode(time) {
+        if (time) {
+            var hour = ('0' + (time/(60*60)).toFixed()).slice(-2);
+            var minute = ('0' + (time/(60)).toFixed()).slice(-2);
+            var sec = ('0' + time.toFixed()).slice(-2);
+            var frm = ('0' + (100*(time - parseInt(time))*(FPS/100)).toFixed()).slice(-2);
+        return (
+            hour + "." + minute + "." + sec + "." + frm
+        );
+        } else {
+            return "00.00.00.00";
+        }
+    }
 
     resetCcgIsUpdated() {
         this.setState({ccgIsUpdated: 0});
@@ -296,6 +370,67 @@ class App extends Component {
 
     //Rendering functions:
 
+    renderHeader() {
+        return (
+            <header className="App-header">
+                <div className="App-title-background">
+                <img src={this.props.store.dataReducer[0].data.activePvwPix[this.props.store.appNavReducer[0].appNav.activeTab]} className="headerPvwThumbnailImage" />
+                <button className="headerPgmCounter">
+                    {this.secondsToTimeCode(this.props.store.dataReducer[0].data.ccgTimeLeft[this.props.store.appNavReducer[0].appNav.activeTab].timeLeft)}
+                </button>
+                <img src={this.props.store.dataReducer[0].data.activePgmPix[this.props.store.appNavReducer[0].appNav.activeTab]} className="headerPgmThumbnailImage" />
+                </div>
+
+                <div className="Reload-setup-background">
+                <button className="App-connection-status"
+                    style={this.props.store.appNavReducer[0].appNav.connectionStatus ? {backgroundColor: "rgb(0, 128, 4)"} : {backgroundColor: "red"}}>
+                    {this.props.store.appNavReducer[0].appNav.connectionStatus ? "CONNECTED" : "CONNECTING"}
+                </button>
+                <button className="App-settings-button"
+                    onClick={this.handleSettingsPage}>
+                    SETTINGS
+                </button>
+                <button className="Reload-button"
+                    onClick={this.reloadPage}>
+                    RELOAD
+                </button>
+                </div>
+
+                <div className="loop-autoPlay-background">
+                <button className="loop-button"
+                    onClick={this.handleLoopStatus}
+                    style={this.props.store.settingsReducer[0].settings.tabData[this.props.store.appNavReducer[0].appNav.activeTab].loop ? {backgroundColor: 'rgb(28, 115, 165)'} : {backgroundColor: 'grey'}}
+                >
+                    LOOP
+                </button>
+                <button className="autoPlay-button"
+                    onClick={this.handleAutoPlayStatus}
+                    style={this.props.store.settingsReducer[0].settings.tabData[this.props.store.appNavReducer[0].appNav.activeTab].autoPlay ? {backgroundColor: 'red'} : {backgroundColor: 'grey'}}
+                >
+                    AUTO START
+                </button>
+                </div>
+
+                <div className="mixButtonBackground">
+                <a className="mixButtonText">START:</a>
+                <br/>
+                <button className="mixButton"
+                    onClick={
+                        () => this.pvwPlay(this.props.store.appNavReducer[0].appNav.activeTab + 1)
+                    }>
+                    PVW
+                </button>
+                <button className="startButton"
+                    onClick={
+                        () => this.pgmPlay(this.props.store.appNavReducer[0].appNav.activeTab + 1)
+                    }>
+                    PGM
+                </button>
+                </div>
+            </header>
+        )
+    }
+
     renderTabData() {
         var tabDataList = this.state.tabData.map((item) => {
             return (
@@ -308,6 +443,8 @@ class App extends Component {
                 getCcgIsUpdatedProps={this.getCcgIsUpdated.bind(this)}
                 resetCcgIsUpdatedProps={this.resetCcgIsUpdated.bind(this)}
                 getTabSettingsProps={this.getTabSettings.bind(this)}
+                loadMediaProps={this.loadMedia.bind(this)}
+                loadBgMediaProps={this.loadBgMedia.bind(this)}
             />
             </div>
             )
@@ -318,10 +455,15 @@ class App extends Component {
     render() {
         return (
         <div className="App">
-            <Header />
+            <this.renderHeader/>
             {this.state.showSettingsMenu ?
-            <SettingsPage globalSettingsProps={this.props.store.settingsReducer[0].settings} loadSettingsProps={this.loadSettings.bind(this)} saveSettingsProps={this.saveSettings.bind(this)}/>
-            : null }
+                <SettingsPage
+                    globalSettingsProps={this.props.store.settingsReducer[0].settings}
+                    loadSettingsProps={this.loadSettings.bind(this)}
+                    saveSettingsProps={this.saveSettings.bind(this)}
+                />
+                : null
+            }
             <div className="App-body">
             <Tabs
                 tabs={this.state.tabData}
