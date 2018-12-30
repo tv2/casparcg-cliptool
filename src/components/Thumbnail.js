@@ -22,50 +22,53 @@ class Thumbnail extends PureComponent {
     //ccgStateConnectionProps Current CCG-state connection
     //getCcgIsUpdatedProps: returns info if a channel is updated
     //resetCcgIsUpdatedProps: resets ccgIsUpdated state to 0 (no update)
-    //getTabSettingsProps return the setting parameter from argument
+
 
     constructor(props) {
         super(props);
         this.state = {
-            thumbListRendered: [],
             thumbActiveIndex: 0,
             thumbActiveBgIndex: 0,
             isTabActive: false,
         };
-        this.thumbList = [];
 
         this.updatePlayingStatus = this.updatePlayingStatus.bind(this);
-        this.updateTimerStatus = this.updateTimerStatus.bind(this);
-        this.updateThumbnail = this.updateThumbnail.bind(this);
         this.renderThumbnail = this.renderThumbnail.bind(this);
-
         this.loadMedia = this.loadMedia.bind(this);
         this.loadBgMedia = this.loadBgMedia.bind(this);
     }
 
-    componentWillMount() {
-        document.addEventListener("keydown", this._handleKeyDown.bind(this));
-    }
-
     componentDidMount() {
-        this.props.ccgConnectionProps.cls(this.props.getTabSettingsProps(this.props.ccgOutputProps,'subFolder'))
+        this.props.ccgConnectionProps.cls(this.props.store.settingsReducer[0].settings.tabData[this.props.ccgOutputProps-1].subFolder)
         .then((results) => {
             results.response.data.map((item, index) => {
                 item.tally = false;
                 item.tallyBg = false;
-                this.thumbList.push(item);
+                this.props.dispatch({
+                    type: 'ADD_THUMB_LIST',
+                    data: {
+                        tab: this.props.store.appNavReducer[0].appNav.activeTab,
+                        thumbList: item
+                    }
+                });
 
                 this.props.ccgConnectionProps.thumbnailRetrieve(item.name)
                 .then((pixResponse) => {
-                    this.thumbList[index].thumbPix = pixResponse.response.data;
-                    this.updateThumbnail(index);
+                    this.props.dispatch({
+                        type: 'ADD_THUMB_PIX',
+                        data: {
+                            tab: this.props.store.appNavReducer[0].appNav.activeTab,
+                            index: index,
+                            thumbPix: pixResponse.response.data
+                        }
+                    });
                 });
             });
             this.startTimers();
         })
         .catch ((error) => {
             if (error.response.code === 404 ) {
-                window.alert("Folder: " + this.props.getTabSettingsProps(this.props.ccgOutputProps, 'subFolder') + " does not exist");
+                window.alert("Folder: " + this.props.store.settingsReducer[0].settings.tabData[this.props.ccgOutputProps-1].subFolder + " does not exist");
             }
         });
     }
@@ -78,38 +81,6 @@ class Thumbnail extends PureComponent {
                 this.props.resetCcgIsUpdatedProps();
             }
         }, 100);
-
-        // Update TimeCodes:
-        thumbCountTimer = setInterval(() => {
-            this.updateTimerStatus();
-        }, 40);
-    }
-
-    //Shortcut for mix and take
-    _handleKeyDown(event) {
-        //Play PVW 1-4 key 1-4:
-        const pvwPlay = JSON.stringify(this.props.ccgOutputProps).charCodeAt(0);
-        //Play PGM 1-4 key: QWER:
-        const pgmPlay = ["Q", "W", "E", "R"][this.props.ccgOutputProps-1].charCodeAt(0);
-
-        switch( event.keyCode ) {
-            case pvwPlay:
-                this.playMedia(
-                    10,
-                    this.state.thumbActiveBgIndex,
-                    this.state.thumbActiveIndex
-                );
-                break;
-            case pgmPlay:
-                this.playMedia(
-                    10,
-                    this.state.thumbActiveIndex,
-                    this.state.thumbActiveBgIndex
-                );
-                break;
-            default:
-                break;
-        }
     }
 
     updatePlayingStatus() {
@@ -117,62 +88,30 @@ class Thumbnail extends PureComponent {
             var fileNameFg = this.cleanUpFilename(infoStatus.foreground.name || '');
             var fileNameBg = this.cleanUpFilename(infoStatus.background.name || '');
 
-            this.thumbList.map((item, index)=>{
-                this.thumbList[index].tally = false;
-                if (fileNameBg != "") {
-                    this.thumbList[index].tallyBg = false;
-                }
+            this.props.store.dataReducer[0].data.channel[this.props.ccgOutputProps-1].thumbList
+            .map((item, index)=>{
+
                 //Handle Foreground:
                 if(fileNameFg === item.name) {
-                    this.thumbList[index].tally = true;
-                    this.setState({thumbActiveIndex: index});
-                    this.thumbList[index].loop = infoStatus.foreground.loop;
+                    this.props.dispatch({
+                        type: 'SET_THUMB_ACTIVE_INDEX',
+                        data: {
+                            tab: (this.props.ccgOutputProps - 1),
+                            thumbActiveIndex: index
+                        }
+                    });
                 }
                 //Handle Background:
                 if(fileNameBg === item.name) {
-                    this.thumbList[index].tallyBg = true;
-                    this.setState({thumbActiveBgIndex: index});
-                }
-                this.updateThumbnail(index);
-            });
-    }
-
-    updateThumbnail(index) {
-        if (this.thumbList[index].tally) {
-            this.props.dispatch({
-                type: 'SET_PGM_PIX',
-                data: {
-                    tab: (this.props.ccgOutputProps - 1),
-                    pix: this.thumbList[index].thumbPix
+                    this.props.dispatch({
+                        type: 'SET_THUMB_ACTIVE_BG_INDEX',
+                        data: {
+                            tab: (this.props.ccgOutputProps - 1),
+                            thumbActiveBgIndex: index
+                        }
+                    });
                 }
             });
-        }
-        if (this.thumbList[index].tallyBg) {
-            this.props.dispatch({
-                type: 'SET_PVW_PIX',
-                data: {
-                    tab: (this.props.ccgOutputProps - 1),
-                    pix: this.thumbList[index].thumbPix
-                }
-            });
-        }
-        var prevStateList = this.state.thumbListRendered;
-        prevStateList[index] = this.renderThumbnail(index);
-        this.setState({thumbListRendered: prevStateList});
-    }
-
-    updateTimerStatus() {
-        //Check for active state, and update state if it becomes active or in-active
-        if (this.props.store.appNavReducer[0].appNav.activeTab === (this.props.ccgOutputProps-1) ) {
-            if (!this.state.isTabActive ) this.updatePlayingStatus();
-            this.setState({isTabActive: true});
-        } else {
-            this.setState({isTabActive: false });
-        }
-        //only update timer when tab is selected:
-        if (this.state.isTabActive) {
-                this.updateThumbnail(this.state.thumbActiveIndex);
-        }
     }
 
     cleanUpFilename(filename) {
@@ -197,8 +136,8 @@ class Thumbnail extends PureComponent {
         this.props.ccgConnectionProps.play(
             this.props.ccgOutputProps,
             layer,
-            this.thumbList[index].name,
-            this.props.getTabSettingsProps(this.props.ccgOutputProps, "loop"),
+            this.props.store.dataReducer[0].data.channel[this.props.ccgOutputProps-1].thumbList[index].name,
+            this.props.store.settingsReducer[0].settings.tabData[this.props.ccgOutputProps-1].loop,
             'MIX',
             MIX_DURATION
         );
@@ -206,14 +145,14 @@ class Thumbnail extends PureComponent {
     }
 
     loadMedia(layer, index) {
-        if (this.props.getTabSettingsProps(this.props.ccgOutputProps, "autoPlay")) {
+        if (this.props.store.settingsReducer[0].settings.tabData[this.props.ccgOutputProps-1].autoPlay) {
             this.playMedia(10, index, this.state.thumbActiveBgIndex);
         } else {
             this.props.ccgConnectionProps.load(
                 this.props.ccgOutputProps,
                 layer,
-                this.thumbList[index].name,
-                this.props.getTabSettingsProps(this.props.ccgOutputProps, "loop"),
+                this.props.store.dataReducer[0].data.channel[this.props.ccgOutputProps-1].thumbList[index].name,
+                this.props.store.settingsReducer[0].settings.tabData[this.props.ccgOutputProps-1].loop,
                 'MIX',
                 MIX_DURATION
             );
@@ -221,12 +160,12 @@ class Thumbnail extends PureComponent {
     }
 
     loadBgMedia(layer, index) {
-        if (this.props.getTabSettingsProps(this.props.ccgOutputProps, "autoPlay")) {
+        if (this.props.store.settingsReducer[0].settings.tabData[this.props.ccgOutputProps-1].autoPlay) {
             this.props.ccgConnectionProps.loadbgAuto(
                 this.props.ccgOutputProps,
                 layer,
-                this.thumbList[index].name,
-                this.props.getTabSettingsProps(this.props.ccgOutputProps, "loop"),
+                this.props.store.dataReducer[0].data.channel[this.props.ccgOutputProps-1].thumbList[index].name,
+                this.props.store.settingsReducer[0].settings.tabData[this.props.ccgOutputProps-1].loop,
                 'MIX',
                 MIX_DURATION
             );
@@ -234,8 +173,8 @@ class Thumbnail extends PureComponent {
             this.props.ccgConnectionProps.loadbg(
                 this.props.ccgOutputProps,
                 layer,
-                this.thumbList[index].name,
-                this.props.getTabSettingsProps(this.props.ccgOutputProps, "loop"),
+                this.props.store.dataReducer[0].data.channel[this.props.ccgOutputProps-1].thumbList[index].name,
+                this.props.store.settingsReducer[0].settings.tabData[this.props.ccgOutputProps-1].loop,
                 'MIX',
                 MIX_DURATION
             );
@@ -256,43 +195,45 @@ class Thumbnail extends PureComponent {
         }
     }
 
-    renderThumbnail(index) {
+    renderThumbnail() {
         return(
-            <li key={index} className="boxComponent">
-                <img src={this.thumbList[index].thumbPix}
-                    className="thumbnailImage"
-                    style = {Object.assign({},
-                        this.thumbList[index].tally ?
-                            {borderWidth: '4px'} : {borderWidth: '0px'},
-                            this.thumbList[index].tallyBg ?
-                            {boxShadow: '0px 0px 1px 5px green'} : {boxShadow: ''}
-                    )}
-                />
-                <button className="thumbnailImageClickPvw"
-                    onClick={() => this.loadBgMedia(10, index)}
-                />
-                <button className="thumbnailImageClickPgm"
-                    onClick={() => this.loadMedia(10, index)}
-                />
-                <a className="playing">
-                    {this.thumbList[index].tally ?
-                        this.secondsToTimeCode(this.props.store.dataReducer[0].data.ccgTimeLeft[this.props.ccgOutputProps-1].timeLeft)
-                        : ""
-                    }
-                </a>
-                <p className="text">
-                    {this.thumbList[index].name.substring(this.thumbList[index].name.lastIndexOf('/')+1).slice(-45)}
-                </p>
-            </li>
+            <ul className="flexBoxes" >
+                {this.props.store.dataReducer[0].data.channel[this.props.ccgOutputProps-1].thumbList.map((item, index) => (
+                    <li key={index} className="boxComponent">
+                        <img src={this.props.store.dataReducer[0].data.channel[this.props.ccgOutputProps-1].thumbList[index].thumbPix}
+                            className="thumbnailImage"
+                            style = {Object.assign({},
+                                this.props.store.dataReducer[0].data.channel[this.props.ccgOutputProps-1].thumbList[index].tally ?
+                                    {borderWidth: '4px'} : {borderWidth: '0px'},
+                                this.props.store.dataReducer[0].data.channel[this.props.ccgOutputProps-1].thumbList[index].tallyBg ?
+                                    {boxShadow: '0px 0px 1px 5px green'} : {boxShadow: ''}
+                            )}
+                        />
+                        <button className="thumbnailImageClickPvw"
+                            onClick={() => this.loadBgMedia(10, index)}
+                        />
+                        <button className="thumbnailImageClickPgm"
+                            onClick={() => this.loadMedia(10, index)}
+                        />
+                        <a className="playing">
+                            {this.props.store.dataReducer[0].data.channel[this.props.ccgOutputProps-1].thumbList[index].tally ?
+                                this.secondsToTimeCode(this.props.store.dataReducer[0].data.ccgTimeLeft[this.props.ccgOutputProps-1].timeLeft)
+                                : ""
+                            }
+                        </a>
+                        <p className="text">
+                            {this.props.store.dataReducer[0].data.channel[this.props.ccgOutputProps-1].thumbList[index].name.substring(this.props.store.dataReducer[0].data.channel[this.props.ccgOutputProps-1].thumbList[index].name.lastIndexOf('/')+1).slice(-45)}
+                        </p>
+                    </li>
+                ))}
+            </ul>
         )
     }
 
     render() {
         return (
         <div className="Thumb-body">
-            <ul className="flexBoxes" >
-                {this.state.thumbListRendered}
-            </ul>
+            <this.renderThumbnail/>
         </div>
     )}
 
