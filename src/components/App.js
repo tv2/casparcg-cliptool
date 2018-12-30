@@ -374,58 +374,72 @@ class App extends Component {
         return (
             <header className="App-header">
                 <div className="App-title-background">
-                <img src={this.props.store.dataReducer[0].data.activePvwPix[this.props.store.appNavReducer[0].appNav.activeTab]} className="headerPvwThumbnailImage" />
-                <button className="headerPgmCounter">
-                    {this.secondsToTimeCode(this.props.store.dataReducer[0].data.ccgTimeLeft[this.props.store.appNavReducer[0].appNav.activeTab].timeLeft)}
-                </button>
-                <img src={this.props.store.dataReducer[0].data.activePgmPix[this.props.store.appNavReducer[0].appNav.activeTab]} className="headerPgmThumbnailImage" />
+                    <img src=
+                        {this.props.store.dataReducer[0].data.
+                            channel[this.props.store.appNavReducer[0].appNav.activeTab]
+                            .thumbList[this.props.store.dataReducer[0].data.channel[this.props.store.appNavReducer[0].appNav.activeTab].thumbActiveBgIndex]
+                            .thumbPix
+                        }
+                        className="headerPvwThumbnailImage"
+                        />
+                    <button className="headerPgmCounter">
+                        {this.secondsToTimeCode(this.props.store.dataReducer[0].data.ccgTimeLeft[this.props.store.appNavReducer[0].appNav.activeTab].timeLeft)}
+                    </button>
+                    <img src=
+                        {this.props.store.dataReducer[0].data.
+                            channel[this.props.store.appNavReducer[0].appNav.activeTab]
+                            .thumbList[this.props.store.dataReducer[0].data.channel[this.props.store.appNavReducer[0].appNav.activeTab].thumbActiveIndex]
+                            .thumbPix
+                        }
+                        className="headerPgmThumbnailImage"
+                    />
                 </div>
 
                 <div className="Reload-setup-background">
-                <button className="App-connection-status"
-                    style={this.props.store.appNavReducer[0].appNav.connectionStatus ? {backgroundColor: "rgb(0, 128, 4)"} : {backgroundColor: "red"}}>
-                    {this.props.store.appNavReducer[0].appNav.connectionStatus ? "CONNECTED" : "CONNECTING"}
-                </button>
-                <button className="App-settings-button"
-                    onClick={this.handleSettingsPage}>
-                    SETTINGS
-                </button>
-                <button className="Reload-button"
-                    onClick={this.reloadPage}>
-                    RELOAD
-                </button>
+                    <button className="App-connection-status"
+                        style={this.props.store.appNavReducer[0].appNav.connectionStatus ? {backgroundColor: "rgb(0, 128, 4)"} : {backgroundColor: "red"}}>
+                        {this.props.store.appNavReducer[0].appNav.connectionStatus ? "CONNECTED" : "CONNECTING"}
+                    </button>
+                    <button className="App-settings-button"
+                        onClick={this.handleSettingsPage}>
+                        SETTINGS
+                    </button>
+                    <button className="Reload-button"
+                        onClick={this.reloadPage}>
+                        RELOAD
+                    </button>
                 </div>
 
                 <div className="loop-autoPlay-background">
-                <button className="loop-button"
-                    onClick={this.handleLoopStatus}
-                    style={this.props.store.settingsReducer[0].settings.tabData[this.props.store.appNavReducer[0].appNav.activeTab].loop ? {backgroundColor: 'rgb(28, 115, 165)'} : {backgroundColor: 'grey'}}
-                >
-                    LOOP
-                </button>
-                <button className="autoPlay-button"
-                    onClick={this.handleAutoPlayStatus}
-                    style={this.props.store.settingsReducer[0].settings.tabData[this.props.store.appNavReducer[0].appNav.activeTab].autoPlay ? {backgroundColor: 'red'} : {backgroundColor: 'grey'}}
-                >
-                    AUTO START
-                </button>
+                    <button className="loop-button"
+                        onClick={this.handleLoopStatus}
+                        style={this.props.store.settingsReducer[0].settings.tabData[this.props.store.appNavReducer[0].appNav.activeTab].loop ? {backgroundColor: 'rgb(28, 115, 165)'} : {backgroundColor: 'grey'}}
+                    >
+                        LOOP
+                    </button>
+                    <button className="autoPlay-button"
+                        onClick={this.handleAutoPlayStatus}
+                        style={this.props.store.settingsReducer[0].settings.tabData[this.props.store.appNavReducer[0].appNav.activeTab].autoPlay ? {backgroundColor: 'red'} : {backgroundColor: 'grey'}}
+                    >
+                        AUTO START
+                    </button>
                 </div>
 
                 <div className="mixButtonBackground">
-                <a className="mixButtonText">START:</a>
-                <br/>
-                <button className="mixButton"
-                    onClick={
-                        () => this.pvwPlay(this.props.store.appNavReducer[0].appNav.activeTab + 1)
-                    }>
-                    PVW
-                </button>
-                <button className="startButton"
-                    onClick={
-                        () => this.pgmPlay(this.props.store.appNavReducer[0].appNav.activeTab + 1)
-                    }>
-                    PGM
-                </button>
+                    <a className="mixButtonText">START:</a>
+                    <br/>
+                    <button className="mixButton"
+                        onClick={
+                            () => this.pvwPlay(this.props.store.appNavReducer[0].appNav.activeTab + 1)
+                        }>
+                        PVW
+                    </button>
+                    <button className="startButton"
+                        onClick={
+                            () => this.pgmPlay(this.props.store.appNavReducer[0].appNav.activeTab + 1)
+                        }>
+                        PGM
+                    </button>
                 </div>
             </header>
         )
@@ -435,17 +449,17 @@ class App extends Component {
         var tabDataList = this.state.tabData.map((item) => {
             return (
             <div className="App-intro" key={(item.key)}>
-            <Thumbnail
-                ref={"thumbnailRef" + item.key}
-                ccgOutputProps={item.key}
-                ccgConnectionProps={this.ccgConnection}
-                ccgStateConnectionProps={this.ccgStateConnection}
-                getCcgIsUpdatedProps={this.getCcgIsUpdated.bind(this)}
-                resetCcgIsUpdatedProps={this.resetCcgIsUpdated.bind(this)}
-                getTabSettingsProps={this.getTabSettings.bind(this)}
-                loadMediaProps={this.loadMedia.bind(this)}
-                loadBgMediaProps={this.loadBgMedia.bind(this)}
-            />
+                <Thumbnail
+                    ref={"thumbnailRef" + item.key}
+                    ccgOutputProps={item.key}
+                    ccgConnectionProps={this.ccgConnection}
+                    ccgStateConnectionProps={this.ccgStateConnection}
+                    getCcgIsUpdatedProps={this.getCcgIsUpdated.bind(this)}
+                    resetCcgIsUpdatedProps={this.resetCcgIsUpdated.bind(this)}
+                    getTabSettingsProps={this.getTabSettings.bind(this)}
+                    loadMediaProps={this.loadMedia.bind(this)}
+                    loadBgMediaProps={this.loadBgMedia.bind(this)}
+                />
             </div>
             )
         })
@@ -458,7 +472,6 @@ class App extends Component {
             <this.renderHeader/>
             {this.state.showSettingsMenu ?
                 <SettingsPage
-                    globalSettingsProps={this.props.store.settingsReducer[0].settings}
                     loadSettingsProps={this.loadSettings.bind(this)}
                     saveSettingsProps={this.saveSettings.bind(this)}
                 />

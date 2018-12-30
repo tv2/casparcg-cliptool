@@ -43,18 +43,28 @@ class Thumbnail extends PureComponent {
             results.response.data.map((item, index) => {
                 item.tally = false;
                 item.tallyBg = false;
-                this.props.dispatch({
-                    type: 'ADD_THUMB_LIST',
-                    data: {
-                        tab: this.props.store.appNavReducer[0].appNav.activeTab,
-                        thumbList: item
-                    }
-                });
+                if (index === 0) {
+                    this.props.dispatch({
+                        type: 'SET_THUMB_LIST',
+                        data: {
+                            tab: this.props.store.appNavReducer[0].appNav.activeTab,
+                            thumbList: item
+                        }
+                    });
+                } else {
+                    this.props.dispatch({
+                        type: 'ADD_THUMB_LIST',
+                        data: {
+                            tab: this.props.store.appNavReducer[0].appNav.activeTab,
+                            thumbList: item
+                        }
+                    });
+                }
 
                 this.props.ccgConnectionProps.thumbnailRetrieve(item.name)
                 .then((pixResponse) => {
                     this.props.dispatch({
-                        type: 'ADD_THUMB_PIX',
+                        type: 'SET_THUMB_PIX',
                         data: {
                             tab: this.props.store.appNavReducer[0].appNav.activeTab,
                             index: index,
@@ -64,6 +74,7 @@ class Thumbnail extends PureComponent {
                 });
             });
             this.startTimers();
+            this.updatePlayingStatus();
         })
         .catch ((error) => {
             if (error.response.code === 404 ) {
