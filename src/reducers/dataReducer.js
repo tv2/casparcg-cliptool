@@ -23,6 +23,11 @@ export const dataReducer = ((state = defaultDataReducerState, action) => {
         case 'SET_INFO_CHANNEL':
             nextState[0].data.ccgInfo = action.data;
             return nextState;
+        case 'SET_LAYER_10':
+            action.data.playLayer.map((item,index) => {
+                nextState[0].data.ccgInfo[index].layers[9] = item.layers[0];
+            });
+            return nextState;
         case 'SET_TIMELEFT':
             nextState[0].data.ccgTimeLeft = action.data;
             return nextState;

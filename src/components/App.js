@@ -3,9 +3,7 @@ import {CasparCG} from 'casparcg-connection';
 import { Tabs } from 'rmc-tabs';
 
 //Apollo-Client Graphql implementation:
-import ApolloClient from "apollo-client";
-import { WebSocketLink } from 'apollo-link-ws';
-import { InMemoryCache } from 'apollo-cache-inmemory';
+
 import gql from "graphql-tag";
 import { ALL_CHANNELS_QUERY, ALL_CHANNELS_SUBSCRIPTION } from '../graphql/CasparCgQuery';
 
@@ -16,14 +14,12 @@ import { connect } from "react-redux";
 import Thumbnail from './Thumbnail';
 import SettingsPage from './Settings';
 
+//Utils:
+import { saveSettings } from '../util/SettingsStorage';
+
 //CSS files:
 import '../assets/css/Rmc-tabs.css';
 import '../assets/css/App.css';
-
-//Load settings.json file:
-const fs = require('fs');
-const electron = require('electron');
-const folder = electron.remote.app.getPath('userData');
 
 //Global const:
 const FPS = 25;
@@ -49,68 +45,34 @@ class App extends Component {
         this.updatePlayingStatus = this.updatePlayingStatus.bind(this);
     }
 
-
     componentWillMount() {
+        //Setup Keyboard shortcuts:
         document.addEventListener("keydown", this._handleKeyDown.bind(this));
-    }
-
-
-    componentDidMount() {
-        // Load Settings,
-        // use mountSettings in ComponentDidMount (as SetState is async)
-        var mountSettings = this.loadSettings();
-
-        this.props.dispatch({
-            type:'UPDATE_SETTINGS',
-            data: mountSettings
-        });
 
         //Define Output Tabs:
-        this.setState({tabData: mountSettings.tabData.filter((item) => {
+        this.setState({tabData: this.props.store.settingsReducer[0].settings.tabData.filter((item) => {
                 return item.title != "";
             })
         });
 
         this.ccgConnection = new CasparCG(
-        {
-            host: mountSettings.ipAddress,
-            port: mountSettings.port,
-            autoConnect: false,
-        });
-        this.ccgConnection.connect();
+            {
+                host: this.props.store.settingsReducer[0].settings.ipAddress,
+                port: this.props.store.settingsReducer[0].settings.port,
+                autoConnect: true,
+            });
 
-        // Initialize CasparCG-State-Scanner GraphQL:
-
-        const wsLink = new WebSocketLink({
-            uri: "ws://" + mountSettings.ipAddress + ":5254/graphql",
-            options: {
-                reconnect: true
-            }
-        });
-
-        this.ccgStateConnection = new ApolloClient({
-            link: wsLink,
-            cache: new InMemoryCache(),
-            defaultOptions: {
-                watchQuery: {
-                    fetchPolicy: 'cache-and-network',
-                    errorPolicy: 'ignore',
-                },
-                query: {
-                    fetchPolicy: 'network-only',
-                    errorPolicy: 'all',
-                },
-                mutate: {
-                    errorPolicy: 'all'
-                }
-            }
-        });
         // Initialize CasparCG subscriptions:
         this.ccgSubscribeInfoData();
         this.ccgSubscribeTimeLeft();
 
         // Initialize timer connection status:
         var connectionTimer = setInterval(this.checkConnectionStatus, 2000);
+
+    }
+
+    componentDidMount() {
+
     }
 
     //Logical funtions:
@@ -119,44 +81,8 @@ class App extends Component {
         location.reload();
     }
 
-    loadSettings() {
-        var settingsInterface = this.props.store.settingsReducer[0].settings;
-        try {
-            const settingsFromFile = JSON.parse(fs.readFileSync(folder + "/settings.json"));
-            if (this.compareOldNewSettings(settingsFromFile, settingsInterface)) {
-                settingsFromFile.tabData.map((item, index) => {
-                item.loop = item.loop || false;
-                item.autoPlay = item.autoPlay || false;
-                });
-                return (settingsFromFile);
-            } else {
-                return settingsInterface;
-            }
-        }
-        catch (error) {
-            return (settingsInterface);
-        }
-    }
-
-    compareOldNewSettings(a, b) {
-        var aKeys = Object.keys(a).sort();
-        var bKeys = Object.keys(b).sort();
-        return JSON.stringify(aKeys) === JSON.stringify(bKeys);
-    }
-
-    saveSettings(settings) {
-        var json = JSON.stringify(settings);
-        fs.writeFile(folder + "/settings.json", json, 'utf8', (error)=>{
-            console.log(error);
-        });
-    }
-
-    getTabSettings(ccgOutput, argument) {
-        return this.props.store.settingsReducer[0].settings.tabData[ccgOutput-1][argument];
-    }
-
     checkConnectionStatus() {
-        this.ccgStateConnection.query({
+        window.__APOLLO_CLIENT__.query({
             query: gql`
                 {
                     serverOnline
@@ -187,7 +113,7 @@ class App extends Component {
             type:'AUTOPLAY_STATUS',
             data: this.props.store.appNavReducer[0].appNav.activeTab
         });
-        this.saveSettings(this.props.store.settingsReducer[0].settings);
+        saveSettings(this.props.store.settingsReducer[0].settings);
     }
 
     handleLoopStatus() {
@@ -195,7 +121,7 @@ class App extends Component {
             type:'LOOP_STATUS',
             data: this.props.store.appNavReducer[0].appNav.activeTab
         });
-        this.saveSettings(this.props.store.settingsReducer[0].settings);
+        saveSettings(this.props.store.settingsReducer[0].settings);
     }
 
     setActiveTab(tab) {
@@ -208,11 +134,11 @@ class App extends Component {
     ccgSubscribeInfoData() {
         var _this2 = this;
         //Initial query channels to object:
-        this.ccgStateConnection.query({
+        window.__APOLLO_CLIENT__.query({
         query: ALL_CHANNELS_QUERY
         })
         .then((response) => {
-            console.log("InfoData request Data: ", response.data.channels);
+            console.log("InfoData request Data: ", response.data);
             _this2.props.dispatch({
                 type:'SET_INFO_CHANNEL',
                 data: response.data.channels
@@ -222,19 +148,19 @@ class App extends Component {
             });
 
             //Subscribe to CasparCG-State changes:
-            this.ccgStateConnection.subscribe({
+            window.__APOLLO_CLIENT__.subscribe({
                 query: ALL_CHANNELS_SUBSCRIPTION
             })
             .subscribe({
                 next(response) {
-                    console.log("infoChannelChanged subscription Data: ", response.data.channels
+                    console.log("infoChannelChanged subscription Data: ", response.data
                     );
-//                    _this2.setState({ccgIsUpdated: 1});
+
                     _this2.props.dispatch({
-                        type:'SET_INFO_CHANNEL',
-                        data: response.data.channels
+                        type:'SET_LAYER_10',
+                        data: response.data
                     });
-                    response.data.channels.map((item,index) => {
+                    response.data.playLayer.map((item,index) => {
                         _this2.updatePlayingStatus(index);
                     });
 
@@ -249,7 +175,6 @@ class App extends Component {
         var infoStatus = this.props.store.dataReducer[0].data.ccgInfo[tab].layers[10-1];
         var fileNameFg = this.cleanUpFilename(infoStatus.foreground.name || '');
         var fileNameBg = this.cleanUpFilename(infoStatus.background.name || '');
-
         this.props.store.dataReducer[0].data.channel[tab].thumbList
         .map((item, index)=>{
 
@@ -276,7 +201,6 @@ class App extends Component {
         });
     }
 
-
     cleanUpFilename(filename) {
         // casparcg-connection library bug: returns filename with media// or media/
         return (filename.replace(/\\/g, '/')
@@ -286,9 +210,6 @@ class App extends Component {
             .replace(/\..+$/, '')
         );
     }
-
-
-
 
     //Shortcut for mix and take
     _handleKeyDown(event) {
@@ -390,18 +311,10 @@ class App extends Component {
         }
     }
 
-    resetCcgIsUpdated() {
-        this.setState({ccgIsUpdated: 0});
-    }
-
-    getCcgIsUpdated() {
-        return parseInt(this.state.ccgIsUpdated);
-    }
-
     ccgSubscribeTimeLeft() {
         var _this2 = this;
         //Subscribe to CasparCG-State changes:
-        this.ccgStateConnection.subscribe({
+        window.__APOLLO_CLIENT__.subscribe({
             query: gql`
                 subscription {
                     timeLeft {
@@ -450,7 +363,12 @@ class App extends Component {
 
                 <div className="Reload-setup-background">
                     <button className="App-connection-status"
-                        style={this.props.store.appNavReducer[0].appNav.connectionStatus ? {backgroundColor: "rgb(0, 128, 4)"} : {backgroundColor: "red"}}>
+                        style={
+                            this.props.store.appNavReducer[0].appNav.connectionStatus
+                            ? {backgroundColor: "rgb(0, 128, 4)"}
+                            : {backgroundColor: "red"}
+                        }
+                    >
                         {this.props.store.appNavReducer[0].appNav.connectionStatus ? "CONNECTED" : "CONNECTING"}
                     </button>
                     <button className="App-settings-button"
@@ -466,13 +384,21 @@ class App extends Component {
                 <div className="loop-autoPlay-background">
                     <button className="loop-button"
                         onClick={this.handleLoopStatus}
-                        style={this.props.store.settingsReducer[0].settings.tabData[this.props.store.appNavReducer[0].appNav.activeTab].loop ? {backgroundColor: 'rgb(28, 115, 165)'} : {backgroundColor: 'grey'}}
+                        style={
+                            this.props.store.settingsReducer[0].settings.tabData[this.props.store.appNavReducer[0].appNav.activeTab].loop
+                            ? {backgroundColor: 'rgb(28, 115, 165)'}
+                            : {backgroundColor: 'grey'}
+                        }
                     >
                         LOOP
                     </button>
                     <button className="autoPlay-button"
                         onClick={this.handleAutoPlayStatus}
-                        style={this.props.store.settingsReducer[0].settings.tabData[this.props.store.appNavReducer[0].appNav.activeTab].autoPlay ? {backgroundColor: 'red'} : {backgroundColor: 'grey'}}
+                        style={
+                            this.props.store.settingsReducer[0].settings.tabData[this.props.store.appNavReducer[0].appNav.activeTab].autoPlay
+                            ? {backgroundColor: 'red'}
+                            : {backgroundColor: 'grey'}
+                        }
                     >
                         AUTO START
                     </button>
@@ -503,15 +429,11 @@ class App extends Component {
             return (
             <div className="App-intro" key={(item.key)}>
                 <Thumbnail
-                    ref={"thumbnailRef" + item.key}
                     ccgOutputProps={item.key}
                     ccgConnectionProps={this.ccgConnection}
-                    ccgStateConnectionProps={this.ccgStateConnection}
-                    getCcgIsUpdatedProps={this.getCcgIsUpdated.bind(this)}
-                    resetCcgIsUpdatedProps={this.resetCcgIsUpdated.bind(this)}
-                    getTabSettingsProps={this.getTabSettings.bind(this)}
                     loadMediaProps={this.loadMedia.bind(this)}
                     loadBgMediaProps={this.loadBgMedia.bind(this)}
+                    updatePlayingStatusProps={this.updatePlayingStatus.bind(this)}
                 />
             </div>
             )
@@ -524,10 +446,7 @@ class App extends Component {
         <div className="App">
             <this.renderHeader/>
             {this.state.showSettingsMenu ?
-                <SettingsPage
-                    loadSettingsProps={this.loadSettings.bind(this)}
-                    saveSettingsProps={this.saveSettings.bind(this)}
-                />
+                <SettingsPage/>
                 : null
             }
             <div className="App-body">

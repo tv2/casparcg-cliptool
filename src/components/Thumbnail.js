@@ -16,14 +16,11 @@ import { connect } from "react-redux";
 
 class Thumbnail extends PureComponent {
     //Props:
-    //ccgOutputProps what output on CCG to play at
-    //ccgConnectionProps Current CCG connection
-    //ccgStateConnectionProps Current CCG-state connection
-    //getCcgIsUpdatedProps: returns info if a channel is updated
-    //resetCcgIsUpdatedProps: resets ccgIsUpdated state to 0 (no update)
-    //loadMediaProps: Loads media
-    //loadBgMediaProps: Loads media in Background
-
+    // ccgOutputProps={item.key} what output on CCG to play at
+    // ccgConnectionProps={this.ccgConnection} Current CCG connection object
+    // loadMediaProps={this.loadMedia.bind(this)}
+    // loadBgMediaProps={this.loadBgMedia.bind(this)}
+    // updatePlayingStatusProps={this.updatePlayingStatus.bind(this)}
 
     constructor(props) {
         super(props);
@@ -72,6 +69,8 @@ class Thumbnail extends PureComponent {
                     });
                 });
             });
+            this.props.updatePlayingStatusProps(this.props.ccgOutputProps-1);
+            console.log("Channel: ", this.props.ccgOutputProps, " loaded");
         })
         .catch ((error) => {
             if (error.response.code === 404 ) {

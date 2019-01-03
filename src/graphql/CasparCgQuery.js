@@ -3,7 +3,7 @@ import gql from 'graphql-tag';
 export const ALL_CHANNELS_QUERY = gql`
     {
         channels {
-            layers {
+            layers  {
                 foreground {
                     name
                     path
@@ -24,7 +24,7 @@ export const ALL_CHANNELS_QUERY = gql`
 
 export const ALL_CHANNELS_SUBSCRIPTION = gql`
     subscription {
-        channels {
+        playLayer {
             layers {
                 foreground {
                     name

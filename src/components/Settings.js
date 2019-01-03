@@ -4,14 +4,10 @@ import '../assets/css/Settings.css';
 //Redux:
 import { connect } from "react-redux";
 
-const fs = require('fs');
-const electron = require('electron');
-const folder = electron.remote.app.getPath('userData');
+//Utils:
+import { saveSettings } from '../util/SettingsStorage';
 
 class SettingsPage extends Component {
-    //Props:
-    //loadSettingsProps={this.loadSettings.bind(this)} load function
-    //saveSettingsProps={this.saveSettings.bind(this)} save function
 
     constructor(props) {
         super(props);
@@ -25,7 +21,6 @@ class SettingsPage extends Component {
     }
 
     componentDidMount() {
-        this.setState({settings: this.props.loadSettingsProps()});
     }
 
     handleChange(event) {
@@ -53,7 +48,7 @@ class SettingsPage extends Component {
     }
 
     handleSubmit(event) {
-        this.props.saveSettingsProps(this.state.settings);
+        saveSettings(this.state.settings);
     }
 
     render() {
@@ -118,7 +113,7 @@ class SettingsPage extends Component {
             </form>
             </div>
         );
-      }
+    }
 }
 
 
