@@ -4,7 +4,8 @@ const defaultDataReducerState = [{
         ccgTimeLeft: [0 , 0, 0, 0],
         channel: [{
             thumbList: [{
-                name: '',
+                name: 'none',
+                path: 'none',
                 thumbPix: '',
                 tally: false,
                 tallyBg: false,
@@ -39,6 +40,13 @@ export const dataReducer = ((state = defaultDataReducerState, action) => {
             return nextState;
         case 'SET_THUMB_PIX':
             nextState[0].data.channel[action.data.tab].thumbList[action.data.index].thumbPix = action.data.thumbPix;
+            return nextState;
+        case 'MOVE_THUMB_IN_LIST':
+            const result = Array.from(nextState[0].data.channel[action.data.tab].thumbList);
+            const [removed] = result.splice(action.data.source, 1);
+            result.splice(action.data.destination, 0, removed);
+
+            nextState[0].data.channel[action.data.tab].thumbList = result;
             return nextState;
         case 'SET_THUMB_ACTIVE_INDEX':
             //Reset old Tally and set new:

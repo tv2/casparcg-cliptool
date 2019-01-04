@@ -1,9 +1,8 @@
-import React, { Component, PureComponent } from 'react';
+import React, { PureComponent } from 'react';
 import {CasparCG} from 'casparcg-connection';
 import { Tabs } from 'rmc-tabs';
 
 //Apollo-Client Graphql implementation:
-
 import gql from "graphql-tag";
 import { ALL_CHANNELS_QUERY, ALL_CHANNELS_SUBSCRIPTION } from '../graphql/CasparCgQuery';
 
@@ -25,7 +24,7 @@ import '../assets/css/App.css';
 const FPS = 25;
 const MIX_DURATION = 6;
 
-class App extends Component {
+class App extends PureComponent {
     constructor(props) {
         super(props);
 
@@ -213,6 +212,9 @@ class App extends Component {
 
     //Shortcut for mix and take
     _handleKeyDown(event) {
+
+        //TODO: Shorcut does not work after moving to App.js (still referencing to old Thumbnail)
+
         //Play PVW 1-4 key 1-4:
         const pvwPlay = JSON.stringify(this.props.store.appNavReducer[0].appNav.activeTab+1).charCodeAt(0);
         //Play PGM 1-4 key: QWER:

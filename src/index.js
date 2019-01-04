@@ -8,7 +8,7 @@ import { InMemoryCache } from 'apollo-cache-inmemory';
 import { ApolloProvider } from 'react-apollo';
 
 //Redux:
-import { createStore, compose, applyMiddleware } from 'redux';
+import { createStore } from 'redux';
 import { Provider as ReduxProvider} from 'react-redux';
 import indexReducer from './reducers/indexReducer';
 

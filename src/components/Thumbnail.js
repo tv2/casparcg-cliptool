@@ -1,14 +1,9 @@
-import React, { Component, PureComponent } from 'react';
+import React, { PureComponent } from 'react';
 import '../assets/css/Thumbnail.css';
 import './App';
-import gql from "graphql-tag";
 
 //Global const:
 const FPS = 25;
-
-//thumb counterDown reference:
-var thumbTimer;
-var thumbCountTimer;
 
 //Redux:
 import { connect } from "react-redux";
@@ -24,16 +19,18 @@ class Thumbnail extends PureComponent {
 
     constructor(props) {
         super(props);
-        this.state = {
-            thumbActiveIndex: 0,
-            thumbActiveBgIndex: 0,
-            isTabActive: false,
-        };
-
-        this.renderThumbnail = this.renderThumbnail.bind(this);
+        this.loadThumbs = this.loadThumbs.bind(this);
+        this.onDragEnd = this.onDragEnd.bind(this);
+        this.onBeforeDragStart = this.onBeforeDragStart.bind(this);
+        this.onDragStart = this.onDragStart.bind(this);
+        this.onDragUpdate = this.onDragUpdate.bind(this);
     }
 
     componentDidMount() {
+        this.loadThumbs();
+    }
+
+    loadThumbs() {
         this.props.ccgConnectionProps.cls(this.props.store.settingsReducer[0].settings.tabData[this.props.ccgOutputProps-1].subFolder)
         .then((results) => {
             results.response.data.map((item, index) => {
@@ -43,7 +40,7 @@ class Thumbnail extends PureComponent {
                     this.props.dispatch({
                         type: 'SET_THUMB_LIST',
                         data: {
-                            tab: this.props.store.appNavReducer[0].appNav.activeTab,
+                            tab: this.props.ccgOutputProps-1,
                             thumbList: item
                         }
                     });
@@ -51,7 +48,7 @@ class Thumbnail extends PureComponent {
                     this.props.dispatch({
                         type: 'ADD_THUMB_LIST',
                         data: {
-                            tab: this.props.store.appNavReducer[0].appNav.activeTab,
+                            tab: this.props.ccgOutputProps-1,
                             thumbList: item
                         }
                     });
@@ -62,7 +59,7 @@ class Thumbnail extends PureComponent {
                     this.props.dispatch({
                         type: 'SET_THUMB_PIX',
                         data: {
-                            tab: this.props.store.appNavReducer[0].appNav.activeTab,
+                            tab: this.props.ccgOutputProps-1,
                             index: index,
                             thumbPix: pixResponse.response.data
                         }
@@ -93,48 +90,78 @@ class Thumbnail extends PureComponent {
         }
     }
 
-    renderThumbnail() {
-        return(
-            <ul className="flexBoxes" >
-                {this.props.store.dataReducer[0].data.channel[this.props.ccgOutputProps-1].thumbList.map((item, index) => (
-                    <li key={index} className="boxComponent">
-                        <img src={this.props.store.dataReducer[0].data.channel[this.props.ccgOutputProps-1].thumbList[index].thumbPix}
-                            className="thumbnailImage"
-                            style = {Object.assign({},
-                                this.props.store.dataReducer[0].data.channel[this.props.ccgOutputProps-1].thumbList[index].tally ?
-                                    {borderWidth: '4px'} : {borderWidth: '0px'},
-                                this.props.store.dataReducer[0].data.channel[this.props.ccgOutputProps-1].thumbList[index].tallyBg ?
-                                    {boxShadow: '0px 0px 1px 5px green'} : {boxShadow: ''}
-                            )}
-                        />
-                        <button className="thumbnailImageClickPvw"
-                            onClick={() => this.props.loadBgMediaProps(this.props.ccgOutputProps, 10, index)}
-                        />
-                        <button className="thumbnailImageClickPgm"
-                            onClick={() => this.props.loadMediaProps(this.props.ccgOutputProps, 10, index)}
-                        />
-                        <a className="playing">
-                            {this.props.store.dataReducer[0].data.channel[this.props.ccgOutputProps-1].thumbList[index].tally ?
-                                this.secondsToTimeCode(this.props.store.dataReducer[0].data.ccgTimeLeft[this.props.ccgOutputProps-1].timeLeft)
-                                : ""
-                            }
-                        </a>
-                        <p className="text">
-                            {this.props.store.dataReducer[0].data.channel[this.props.ccgOutputProps-1].thumbList[index].name.substring(this.props.store.dataReducer[0].data.channel[this.props.ccgOutputProps-1].thumbList[index].name.lastIndexOf('/')+1).slice(-45)}
-                        </p>
-                    </li>
-                ))}
-            </ul>
+    onBeforeDragStart()  {
+        /*...*/
+    }
+
+    onDragStart() {
+    /*...*/
+    }
+    onDragUpdate()  {
+    /*...*/
+    }
+    onDragEnd(result) {
+        console.log("DRAGGED: ", result);
+        this.props.dispatch({
+            type: 'MOVE_THUMB_IN_LIST',
+            data: {
+                tab: this.props.store.appNavReducer[0].appNav.activeTab,
+                source: result.source.index,
+                destination: result.destination.index
+            }
+        });
+    // the only one that is required
+    }
+
+    renderThumb(item, index) {
+        return (
+            <div>
+                <img src={item.thumbPix}
+                    className="thumbnailImage"
+                    style = {Object.assign({},
+                        item.tally ?
+                            {borderWidth: '4px'} : {borderWidth: '0px'},
+                        item.tallyBg ?
+                            {boxShadow: '0px 0px 1px 5px green'} : {boxShadow: ''}
+                    )}
+                />
+                <button className="thumbnailImageClickPvw"
+                    onClick={() => this.props.loadBgMediaProps(this.props.ccgOutputProps, 10, index)}
+                />
+                <button className="thumbnailImageClickPgm"
+                    onClick={() => this.props.loadMediaProps(this.props.ccgOutputProps, 10, index)}
+                />
+                <a className="playing">
+                    {item.tally ?
+                        this.secondsToTimeCode(this.props.store.dataReducer[0].data.ccgTimeLeft[this.props.ccgOutputProps-1].timeLeft)
+                        : ""
+                    }
+                </a>
+                <p className="text">
+                    {item.name.substring(item.name.lastIndexOf('/')+1).slice(-45)}
+                </p>
+            </div>
         )
+
     }
 
     render() {
         return (
-        <div className="Thumb-body">
-            <this.renderThumbnail/>
-        </div>
-    )}
+            <div
+                className="flexBoxes"
+            >
+                {this.props.store.dataReducer[0].data.channel[this.props.ccgOutputProps-1].thumbList
+                .map((item, index) => (
+                    <div
+                        className="boxComponent"
+                    >
+                        { this.renderThumb(item, index) }
+                    </div>
+                ))}
+            </div>
 
+        )
+    }
 }
 
 
