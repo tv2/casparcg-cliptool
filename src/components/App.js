@@ -249,6 +249,14 @@ class App extends PureComponent {
         this.playMedia(output, 10, this.props.store.dataReducer[0].data.channel[output-1].thumbActiveIndex, this.props.store.dataReducer[0].data.channel[output-1].thumbActiveBgIndex);
     }
 
+    nextPlay(output) {
+        this.playMedia(output, 10, this.props.store.dataReducer[0].data.channel[output-1].thumbActiveIndex+1, this.props.store.dataReducer[0].data.channel[output-1].thumbActiveBgIndex);
+    }
+
+    nextCue(output) {
+        this.loadMedia(output, 10, this.props.store.dataReducer[0].data.channel[output-1].thumbActiveIndex+1);
+    }
+
     playMedia(output, layer, index, indexBg) {
         this.ccgConnection.play(
             output,
@@ -420,6 +428,18 @@ class App extends PureComponent {
                             () => this.pgmPlay(this.props.store.appNavReducer[0].appNav.activeTab + 1)
                         }>
                         PGM
+                    </button>
+                    <button className="cueNextButton"
+                        onClick={
+                            () => this.nextCue(this.props.store.appNavReducer[0].appNav.activeTab + 1)
+                        }>
+                        CUE NEXT
+                    </button>
+                    <button className="nextButton"
+                        onClick={
+                            () => this.nextPlay(this.props.store.appNavReducer[0].appNav.activeTab + 1)
+                        }>
+                        PLAY NEXT
                     </button>
                 </div>
             </header>
