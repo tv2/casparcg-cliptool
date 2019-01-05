@@ -150,6 +150,7 @@ class Thumbnail extends PureComponent {
                 .map((item, index) => (
                     <div
                         className="boxComponent"
+                        key={"item" + index}
                     >
                         { this.renderThumb(item, index) }
                     </div>

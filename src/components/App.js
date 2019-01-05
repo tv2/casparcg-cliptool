@@ -415,29 +415,33 @@ class App extends PureComponent {
                 </div>
 
                 <div className="mixButtonBackground">
-                    <button className="mixButton"
-                        onClick={
-                            () => this.pvwPlay(this.props.store.appNavReducer[0].appNav.activeTab + 1)
-                        }>
-                        PVW
-                    </button>
-                    <button className="startButton"
-                        onClick={
-                            () => this.pgmPlay(this.props.store.appNavReducer[0].appNav.activeTab + 1)
-                        }>
-                        START
-                    </button>
                     <button className="prevCueButton"
                         onClick={
                             () => this.prevCue(this.props.store.appNavReducer[0].appNav.activeTab + 1)
-                        }>
+                        }
+                    >
                         PREV
                     </button>
                     <button className="nextCueButton"
                         onClick={
                             () => this.nextCue(this.props.store.appNavReducer[0].appNav.activeTab + 1)
-                        }>
+                        }
+                    >
                         NEXT
+                    </button>
+                    <button className="mixButton"
+                        onClick={
+                            () => this.pvwPlay(this.props.store.appNavReducer[0].appNav.activeTab + 1)
+                        }
+                    >
+                        PVW
+                    </button>
+                    <button className="startButton"
+                        onClick={
+                            () => this.pgmPlay(this.props.store.appNavReducer[0].appNav.activeTab + 1)
+                        }
+                    >
+                        START
                     </button>
                 </div>
             </header>
