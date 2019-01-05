@@ -5766,7 +5766,7 @@ promise@~1.3.0:
   dependencies:
     is-promise "~1"
 
-prop-types@^15.6.0, prop-types@^15.6.2:
+prop-types@>=15.0.0, prop-types@^15.6.0, prop-types@^15.6.2:
   version "15.6.2"
   resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.6.2.tgz#05d5ca77b4453e985d60fc7ff8c859094a497102"
   integrity sha512-3pboPvLiWD7dkI3qf3KbUe6hKFKa52w+AE0VCqECtf+QHAKgOL37tTaNCnuX1nAAQ4ZhyP+kYVKf8rLmJ/feDQ==
@@ -5959,6 +5959,13 @@ react-redux@^6.0.0:
     loose-envify "^1.4.0"
     prop-types "^15.6.2"
     react-is "^16.6.3"
+
+react-sortablejs@^1.4.0:
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/react-sortablejs/-/react-sortablejs-1.4.0.tgz#4d9527c5b0186250767adaec597b0bdf937b36f9"
+  integrity sha512-wro0jY9h0BSDg4tC5pAFT6quwBL7lPn9D+CnAvqy2ftiA6+3WPFSDGM76buG8RnOPtssD2uDVrr4K8U7E70BPw==
+  dependencies:
+    prop-types ">=15.0.0"
 
 react@^16.5.2:
   version "16.7.0"
@@ -6583,6 +6590,11 @@ sockjs@0.3.19:
   dependencies:
     faye-websocket "^0.10.0"
     uuid "^3.0.1"
+
+sortablejs@^1.8.0-rc1:
+  version "1.8.0-rc1"
+  resolved "https://registry.yarnpkg.com/sortablejs/-/sortablejs-1.8.0-rc1.tgz#fe4731b2cb3ccb4730a26a8cdde2f74a634bb259"
+  integrity sha512-umyNbQVDwRgc0SZvUB+FRUIUqACnu5vCCmK0zv/xWA3eDSOh+IZsg3GHdWvEOcUBwnykqyk760+YPgVa8HfxFg==
 
 source-list-map@^2.0.0:
   version "2.0.1"

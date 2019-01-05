@@ -2,6 +2,8 @@ import React, { PureComponent } from 'react';
 import '../assets/css/Thumbnail.css';
 import './App';
 
+import Sortable from 'react-sortablejs';
+
 //Global const:
 const FPS = 25;
 
@@ -21,9 +23,6 @@ class Thumbnail extends PureComponent {
         super(props);
         this.loadThumbs = this.loadThumbs.bind(this);
         this.onDragEnd = this.onDragEnd.bind(this);
-        this.onBeforeDragStart = this.onBeforeDragStart.bind(this);
-        this.onDragStart = this.onDragStart.bind(this);
-        this.onDragUpdate = this.onDragUpdate.bind(this);
     }
 
     componentDidMount() {
@@ -90,26 +89,17 @@ class Thumbnail extends PureComponent {
         }
     }
 
-    onBeforeDragStart()  {
-        /*...*/
-    }
-
-    onDragStart() {
-    /*...*/
-    }
-    onDragUpdate()  {
-    /*...*/
-    }
-    onDragEnd(result) {
-        console.log("DRAGGED: ", result);
+    onDragEnd(order, sortable, evt) {
+        console.log("DRAGGED: ", evt);
         this.props.dispatch({
             type: 'MOVE_THUMB_IN_LIST',
             data: {
                 tab: this.props.store.appNavReducer[0].appNav.activeTab,
-                source: result.source.index,
-                destination: result.destination.index
+                source: evt.oldIndex,
+                destination: evt.newIndex
             }
         });
+    this.props.updatePlayingStatusProps(this.props.ccgOutputProps-1);
     // the only one that is required
     }
 
@@ -147,8 +137,11 @@ class Thumbnail extends PureComponent {
 
     render() {
         return (
-            <div
+            <Sortable
                 className="flexBoxes"
+                onChange={(order, sortable, evt) => {
+                    this.onDragEnd(order, sortable, evt);
+                }}
             >
                 {this.props.store.dataReducer[0].data.channel[this.props.ccgOutputProps-1].thumbList
                 .map((item, index) => (
@@ -158,7 +151,7 @@ class Thumbnail extends PureComponent {
                         { this.renderThumb(item, index) }
                     </div>
                 ))}
-            </div>
+            </Sortable>
 
         )
     }

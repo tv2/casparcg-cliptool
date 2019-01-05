@@ -10,6 +10,13 @@ const defaultDataReducerState = [{
                 tally: false,
                 tallyBg: false,
             }],
+            playList: [{
+                name: 'none',
+                path: 'none',
+                thumbPix: '',
+                tally: false,
+                tallyBg: false,
+            }],
             thumbActiveIndex: 0,
             thumbActiveBgIndex: 0
         }]

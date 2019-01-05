@@ -49,8 +49,10 @@
     "react-apollo": "^2.2.4",
     "react-dom": "^16.5.2",
     "react-redux": "^6.0.0",
+    "react-sortablejs": "^1.4.0",
     "redux": "^4.0.1",
     "rmc-tabs": "^1.2.27",
+    "sortablejs": "^1.8.0-rc1",
     "subscriptions-transport-ws": "^0.9.15"
   },
   "devDependencies": {

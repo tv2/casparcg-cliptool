@@ -22,6 +22,7 @@ import App from './components/App';
 const storeRedux = createStore(
     indexReducer
 );
+window.store = storeRedux;
 
 storeRedux.dispatch({
     type:'UPDATE_SETTINGS',
