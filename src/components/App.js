@@ -250,11 +250,17 @@ class App extends PureComponent {
     }
 
     prevCue(output) {
-        this.loadMedia(output, 10, this.props.store.dataReducer[0].data.channel[output-1].thumbActiveIndex-1);
+        if (this.props.store.dataReducer[0].data.channel[output-1].thumbActiveIndex > 0) {
+            this.loadMedia(output, 10, this.props.store.dataReducer[0].data.channel[output-1].thumbActiveIndex-1);
+        }
     }
 
     nextCue(output) {
-        this.loadMedia(output, 10, this.props.store.dataReducer[0].data.channel[output-1].thumbActiveIndex+1);
+        if (this.props.store.dataReducer[0].data.channel[output-1].thumbActiveIndex + 1 <
+            this.props.store.dataReducer[0].data.channel[output-1].thumbList.length
+            ) {
+            this.loadMedia(output, 10, this.props.store.dataReducer[0].data.channel[output-1].thumbActiveIndex+1);
+        }
     }
 
     playMedia(output, layer, index, indexBg) {
