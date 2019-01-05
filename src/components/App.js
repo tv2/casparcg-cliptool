@@ -249,8 +249,8 @@ class App extends PureComponent {
         this.playMedia(output, 10, this.props.store.dataReducer[0].data.channel[output-1].thumbActiveIndex, this.props.store.dataReducer[0].data.channel[output-1].thumbActiveBgIndex);
     }
 
-    nextPlay(output) {
-        this.playMedia(output, 10, this.props.store.dataReducer[0].data.channel[output-1].thumbActiveIndex+1, this.props.store.dataReducer[0].data.channel[output-1].thumbActiveBgIndex);
+    prevCue(output) {
+        this.loadMedia(output, 10, this.props.store.dataReducer[0].data.channel[output-1].thumbActiveIndex-1);
     }
 
     nextCue(output) {
@@ -415,8 +415,6 @@ class App extends PureComponent {
                 </div>
 
                 <div className="mixButtonBackground">
-                    <a className="mixButtonText">START:</a>
-                    <br/>
                     <button className="mixButton"
                         onClick={
                             () => this.pvwPlay(this.props.store.appNavReducer[0].appNav.activeTab + 1)
@@ -427,19 +425,19 @@ class App extends PureComponent {
                         onClick={
                             () => this.pgmPlay(this.props.store.appNavReducer[0].appNav.activeTab + 1)
                         }>
-                        PGM
+                        START
                     </button>
-                    <button className="cueNextButton"
+                    <button className="prevCueButton"
+                        onClick={
+                            () => this.prevCue(this.props.store.appNavReducer[0].appNav.activeTab + 1)
+                        }>
+                        PREV
+                    </button>
+                    <button className="nextCueButton"
                         onClick={
                             () => this.nextCue(this.props.store.appNavReducer[0].appNav.activeTab + 1)
                         }>
-                        CUE NEXT
-                    </button>
-                    <button className="nextButton"
-                        onClick={
-                            () => this.nextPlay(this.props.store.appNavReducer[0].appNav.activeTab + 1)
-                        }>
-                        PLAY NEXT
+                        NEXT
                     </button>
                 </div>
             </header>

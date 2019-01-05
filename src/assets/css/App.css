@@ -162,19 +162,13 @@ body {
   box-shadow: 6px 6px 6px rgb(34, 34, 34);
 }
 
-.mixButtonText {
-  position: relative;
-  top: 5px;
-  color: rgb(255, 255, 255);
-  font-size: 1.2em;
-  margin: 10px;
-}
-
 .mixButton {
-  margin: 12px;
+    margin-left: 12px;
+    margin-right: 12px;
+    margin-top: 5px;
   font-size: 1.2em;
   width: 40%;
-  line-height: 55px;
+  line-height: 45px;
   background: rgb(0, 73, 4);
   color: white;
   font-family: 'Roboto Condensed', sans-serif;
@@ -185,10 +179,12 @@ body {
 }
 
 .startButton {
-  margin: 12px;
+    margin-left: 12px;
+    margin-right: 12px;
+    margin-top: 5px;
   font-size: 1.2em;
   width: 40%;
-  line-height: 55px;
+  line-height: 45px;
   background: rgb(68, 0, 0);
   color: white;
   font-family: 'Roboto Condensed', sans-serif;
@@ -197,6 +193,40 @@ body {
   border-color: rgba(85, 85, 85, 0.507);
   outline: 1px;
 }
+
+
+.prevCueButton {
+    margin-left: 12px;
+    margin-right: 12px;
+    margin-top: 5px;
+    font-size: 1.2em;
+    width: 40%;
+    line-height: 45px;
+    background: rgb(105, 105, 105);
+    color: white;
+    font-family: 'Roboto Condensed', sans-serif;
+    border-radius: 16px;
+    border-width: 1px;
+    border-color: rgba(59, 53, 53, 0.808);
+    outline: 1px;
+  }
+
+
+.nextCueButton {
+    margin-left: 12px;
+    margin-right: 12px;
+    margin-top: 5px;
+    font-size: 1.2em;
+    width: 40%;
+    line-height: 45px;
+    background: rgb(105, 105, 105);
+    color: white;
+    font-family: 'Roboto Condensed', sans-serif;
+    border-radius: 16px;
+    border-width: 1px;
+    border-color: rgba(59, 53, 53, 0.808);
+    outline: 1px;
+  }
 
 /* LOOP and AUTO STARt buttons: */
 .loop-autoPlay-background {
