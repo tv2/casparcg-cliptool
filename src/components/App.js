@@ -29,7 +29,7 @@ class App extends PureComponent {
         super(props);
 
         this.state = {
-            ccgIsUpdated: 0,
+            ccgIsUpdated: false,
             showSettingsMenu: false,
             tabData: []
         };
@@ -127,6 +127,36 @@ class App extends PureComponent {
         this.props.dispatch({
             type: 'SET_ACTIVE_TAB',
             data: tab
+        });
+    }
+
+
+    ccgSubscribeTimeLeft() {
+        var _this2 = this;
+        //Subscribe to CasparCG-State changes:
+        window.__APOLLO_CLIENT__.subscribe({
+            query: gql`
+                subscription {
+                    timeLeft {
+                        timeLeft
+                    }
+                }`
+        })
+        .subscribe({
+            next(response) {
+                _this2.props.dispatch({
+                    type:'SET_TIMELEFT',
+                    data: response.data.timeLeft
+                });
+                response.data.timeLeft.map((item, index) => {
+                    if (1.41 > item.timeLeft && item.timeLeft > 1.39 &&
+                        _this2.props.store.settingsReducer[0].settings.tabData[index].autoPlay
+                    ) {
+                        _this2.loadBgMedia(index + 1, 10, _this2.props.store.dataReducer[0].data.channel[index].thumbActiveIndex+1);
+                    }
+                });
+            },
+            error(err) { console.error('Subscription error: ', err); },
         });
     }
 
@@ -327,29 +357,6 @@ class App extends PureComponent {
         }
     }
 
-    ccgSubscribeTimeLeft() {
-        var _this2 = this;
-        //Subscribe to CasparCG-State changes:
-        window.__APOLLO_CLIENT__.subscribe({
-            query: gql`
-                subscription {
-                    timeLeft {
-                        timeLeft
-                    }
-                }`
-        })
-        .subscribe({
-            next(response) {
-                _this2.props.dispatch({
-                    type:'SET_TIMELEFT',
-                    data: response.data.timeLeft
-                });
-
-            },
-            error(err) { console.error('Subscription error: ', err); },
-        });
-    }
-
     //Rendering functions:
 
     renderHeader() {
@@ -416,7 +423,7 @@ class App extends PureComponent {
                             : {backgroundColor: 'grey'}
                         }
                     >
-                        AUTO START
+                        AUTO NEXT
                     </button>
                 </div>
 
