@@ -152,7 +152,13 @@ class App extends PureComponent {
                     if (1.41 > item.timeLeft && item.timeLeft > 1.39 &&
                         _this2.props.store.settingsReducer[0].settings.tabData[index].autoPlay
                     ) {
-                        _this2.loadBgMedia(index + 1, 10, _this2.props.store.dataReducer[0].data.channel[index].thumbActiveIndex+1);
+                        if (_this2.props.store.dataReducer[0].data.channel[index].thumbActiveIndex + 1 <
+                            _this2.props.store.dataReducer[0].data.channel[index].thumbList.length
+                            ) {
+                            _this2.loadBgMedia(index + 1, 10, _this2.props.store.dataReducer[0].data.channel[index].thumbActiveIndex+1);
+                        } else {
+                            _this2.loadBgMedia(index + 1, 10, 0);
+                        }
                     }
                 });
             },
@@ -182,8 +188,8 @@ class App extends PureComponent {
             })
             .subscribe({
                 next(response) {
-                    console.log("infoChannelChanged subscription Data: ", response.data
-                    );
+                    console.log("Subscription Data Foreground: ", response.data.playLayer[0].layers[0].foreground);
+                    console.log("Subscription Data Background: ", response.data.playLayer[0].layers[0].background);
 
                     _this2.props.dispatch({
                         type:'SET_LAYER_10',
@@ -447,7 +453,7 @@ class App extends PureComponent {
                             () => this.pvwPlay(this.props.store.appNavReducer[0].appNav.activeTab + 1)
                         }
                     >
-                        PVW
+                        TAKE
                     </button>
                     <button className="startButton"
                         onClick={
