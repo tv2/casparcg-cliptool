@@ -30,11 +30,9 @@ class Thumbnail extends PureComponent {
     }
 
     loadThumbs() {
-        this.props.ccgConnectionProps.cls(this.props.store.settingsReducer[0].settings.tabData[this.props.ccgOutputProps-1].subFolder)
+        this.props.ccgConnectionProps.thumbnailList(this.props.store.settingsReducer[0].settings.tabData[this.props.ccgOutputProps-1].subFolder)
         .then((results) => {
-            var items = results.response.data.filter((item) => {
-                return item.type === 'video';
-            });
+            var items = results.response.data;
             items.map((item, index) => {
                 item.tally = false;
                 item.tallyBg = false;

@@ -19,6 +19,7 @@ export const loadSettings = (storeRedux) => {
         }
     }
     catch (error) {
+        saveSettings(settingsInterface);
         return (settingsInterface);
     }
 };
