@@ -76,20 +76,6 @@ class Thumbnail extends PureComponent {
         });
     }
 
-    secondsToTimeCode(time) {
-        if (time) {
-            var hour = ('0' + (time/(60*60)).toFixed()).slice(-2);
-            var minute = ('0' + (time/(60)).toFixed()).slice(-2);
-            var sec = ('0' + time.toFixed()).slice(-2);
-            var frm = ('0' + (100*(time - parseInt(time))*(FPS/100)).toFixed()).slice(-2);
-        return (
-            hour + "." + minute + "." + sec + "." + frm
-        );
-        } else {
-            return "00.00.00.00";
-        }
-    }
-
     onDragEnd(order, sortable, evt) {
         console.log("DRAGGED: ", evt);
         this.props.dispatch({
@@ -124,7 +110,7 @@ class Thumbnail extends PureComponent {
                 />
                 <a className="playing">
                     {item.tally ?
-                        this.secondsToTimeCode(this.props.store.dataReducer[0].data.ccgTimeLeft[this.props.ccgOutputProps-1].timeLeft)
+                        this.props.store.dataReducer[0].data.ccgTimeCounter[this.props.ccgOutputProps-1]
                         : ""
                     }
                 </a>

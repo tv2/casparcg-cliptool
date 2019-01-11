@@ -149,7 +149,7 @@ class App extends PureComponent {
                     data: response.data.timeLeft
                 });
                 response.data.timeLeft.map((item, index) => {
-                    if (1.41 > item.timeLeft && item.timeLeft > 1.39 &&
+                    if (1.45 > item.timeLeft && item.timeLeft > 1.35 &&
                         _this2.props.store.settingsReducer[0].settings.tabData[index].autoPlay
                     ) {
                         if (_this2.props.store.dataReducer[0].data.channel[index].thumbActiveIndex + 1 <
@@ -348,21 +348,6 @@ class App extends PureComponent {
         }
     }
 
-
-    secondsToTimeCode(time) {
-        if (time) {
-            var hour = ('0' + (time/(60*60)).toFixed()).slice(-2);
-            var minute = ('0' + (time/(60)).toFixed()).slice(-2);
-            var sec = ('0' + time.toFixed()).slice(-2);
-            var frm = ('0' + (100*(time - parseInt(time))*(FPS/100)).toFixed()).slice(-2);
-        return (
-            hour + "." + minute + "." + sec + "." + frm
-        );
-        } else {
-            return "00.00.00.00";
-        }
-    }
-
     //Rendering functions:
 
     renderHeader() {
@@ -378,7 +363,7 @@ class App extends PureComponent {
                         className="headerPvwThumbnailImage"
                         />
                     <button className="headerPgmCounter">
-                        {this.secondsToTimeCode(this.props.store.dataReducer[0].data.ccgTimeLeft[this.props.store.appNavReducer[0].appNav.activeTab].timeLeft)}
+                        {this.props.store.dataReducer[0].data.ccgTimeCounter[this.props.store.appNavReducer[0].appNav.activeTab].timeLeft}
                     </button>
                     <img src=
                         {this.props.store.dataReducer[0].data.

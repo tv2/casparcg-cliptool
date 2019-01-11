@@ -2,15 +2,9 @@ const defaultDataReducerState = [{
     data: {
         ccgInfo: {},
         ccgTimeLeft: [0 , 0, 0, 0],
+        ccgTimeCounter: ['', '', '', ''],
         channel: [{
             thumbList: [{
-                name: 'none',
-                path: 'none',
-                thumbPix: '',
-                tally: false,
-                tallyBg: false,
-            }],
-            playList: [{
                 name: 'none',
                 path: 'none',
                 thumbPix: '',
@@ -22,6 +16,23 @@ const defaultDataReducerState = [{
         }]
     }
 }];
+
+const FPS = 25;
+
+const secondsToTimeCode = (time => {
+    if (time) {
+        var hour = ('0' + (time/(60*60)).toFixed()).slice(-2);
+        var minute = ('0' + (time/(60)).toFixed()).slice(-2);
+        var sec = ('0' + parseFloat(time).toFixed()).slice(-2);
+        var frm = ('0' + (100*(time - parseInt(time))*(FPS/100)).toFixed()).slice(-2);
+    return (
+        hour + "." + minute + "." + sec + "." + frm
+    );
+    } else {
+        return "00.00.00.00";
+    }
+});
+
 
 export const dataReducer = ((state = defaultDataReducerState, action) => {
 
@@ -37,7 +48,10 @@ export const dataReducer = ((state = defaultDataReducerState, action) => {
             });
             return nextState;
         case 'SET_TIMELEFT':
-            nextState[0].data.ccgTimeLeft = action.data;
+            action.data.map((item, index) => {
+                nextState[0].data.ccgTimeLeft[index] = item.timeLeft;
+                nextState[0].data.ccgTimeCounter[index] = secondsToTimeCode(item.timeLeft);
+            });
             return nextState;
         case 'SET_THUMB_LIST':
             nextState[0].data.channel[action.data.tab].thumbList[0] = action.data.thumbList;
