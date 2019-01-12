@@ -23,11 +23,32 @@ class Thumbnail extends PureComponent {
         super(props);
         this.loadThumbs = this.loadThumbs.bind(this);
         this.onDragEnd = this.onDragEnd.bind(this);
+        this.ccgMediaFilesChanges = this.ccgMediaFilesChanges.bind(this);
     }
 
     componentDidMount() {
         this.loadThumbs();
+        this.ccgMediaFilesChanges();
     }
+
+
+    ccgMediaFilesChanges() {
+        var _this2 = this;
+        //Subscribe to CasparCG-State changes:
+        window.__APOLLO_CLIENT__.subscribe({
+            query: gql`
+                subscription {
+                    mediaFilesChanged
+                }`
+        })
+        .subscribe({
+            next(response) {
+                loadThumbs();
+            },
+            error(err) { console.error('Subscription error: ', err); },
+        });
+    }
+
 
     loadThumbs() {
         this.props.ccgConnectionProps.thumbnailList(this.props.store.settingsReducer[0].settings.tabData[this.props.ccgOutputProps-1].subFolder)

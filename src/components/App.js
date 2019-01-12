@@ -205,7 +205,6 @@ class App extends PureComponent {
         });
     }
 
-
     updatePlayingStatus(tab) {
         var infoStatus = this.props.store.dataReducer[0].data.ccgInfo[tab].layers[10-1];
         var fileNameFg = this.cleanUpFilename(infoStatus.foreground.name || '');
