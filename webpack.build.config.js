@@ -51,7 +51,7 @@ module.exports = {
       'process.env.NODE_ENV': JSON.stringify('development')
     }),
     new BabiliPlugin()
-  ],
+],
   stats: {
     colors: true,
     children: false,

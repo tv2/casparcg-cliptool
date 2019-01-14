@@ -54,10 +54,11 @@ export const dataReducer = ((state = defaultDataReducerState, action) => {
             });
             return nextState;
         case 'SET_THUMB_LIST':
-            nextState[0].data.channel[action.data.tab].thumbList[0] = action.data.thumbList;
-            return nextState;
-        case 'ADD_THUMB_LIST':
-            nextState[0].data.channel[action.data.tab].thumbList.push(action.data.thumbList);
+            if (action.data.index <= nextState[0].data.channel[action.data.tab].thumbList.length) {
+                nextState[0].data.channel[action.data.tab].thumbList[action.data.index] = action.data.thumbList;
+            } else {
+                nextState[0].data.channel[action.data.tab].thumbList.push(action.data.thumbList);
+            }
             return nextState;
         case 'SET_THUMB_PIX':
             nextState[0].data.channel[action.data.tab].thumbList[action.data.index].thumbPix = action.data.thumbPix;
