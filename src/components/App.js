@@ -188,9 +188,6 @@ class App extends PureComponent {
             })
             .subscribe({
                 next(response) {
-                    console.log("Subscription Data Foreground: ", response.data.playLayer[0].layers[0].foreground);
-                    console.log("Subscription Data Background: ", response.data.playLayer[0].layers[0].background);
-
                     _this2.props.dispatch({
                         type:'SET_LAYER_10',
                         data: response.data
@@ -213,7 +210,7 @@ class App extends PureComponent {
         .map((item, index)=>{
 
             //Handle Foreground:
-            if(fileNameFg === item.name) {
+            if(item.name.includes(fileNameFg)) {
                 this.props.dispatch({
                     type: 'SET_THUMB_ACTIVE_INDEX',
                     data: {
@@ -223,7 +220,7 @@ class App extends PureComponent {
                 });
             }
             //Handle Background:
-            if(fileNameBg === item.name) {
+            if(item.name.includes(fileNameBg)) {
                 this.props.dispatch({
                     type: 'SET_THUMB_ACTIVE_BG_INDEX',
                     data: {
@@ -362,7 +359,7 @@ class App extends PureComponent {
                         className="headerPvwThumbnailImage"
                         />
                     <button className="headerPgmCounter">
-                        {this.props.store.dataReducer[0].data.ccgTimeCounter[this.props.store.appNavReducer[0].appNav.activeTab].timeLeft}
+                        {this.props.store.dataReducer[0].data.ccgTimeCounter[this.props.store.appNavReducer[0].appNav.activeTab]}
                     </button>
                     <img src=
                         {this.props.store.dataReducer[0].data.

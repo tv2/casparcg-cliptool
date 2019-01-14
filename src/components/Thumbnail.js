@@ -3,6 +3,7 @@ import '../assets/css/Thumbnail.css';
 import './App';
 
 import Sortable from 'react-sortablejs';
+import gql from "graphql-tag";
 
 //Global const:
 const FPS = 25;
@@ -23,16 +24,16 @@ class Thumbnail extends PureComponent {
         super(props);
         this.loadThumbs = this.loadThumbs.bind(this);
         this.onDragEnd = this.onDragEnd.bind(this);
-        this.ccgMediaFilesChanges = this.ccgMediaFilesChanges.bind(this);
+        this.ccgMediaFilesChanges = this.ccgMediaFilesChanged.bind(this);
     }
 
     componentDidMount() {
         this.loadThumbs();
-        this.ccgMediaFilesChanges();
+        this.ccgMediaFilesChanged();
     }
 
 
-    ccgMediaFilesChanges() {
+    ccgMediaFilesChanged() {
         var _this2 = this;
         //Subscribe to CasparCG-State changes:
         window.__APOLLO_CLIENT__.subscribe({
@@ -43,7 +44,8 @@ class Thumbnail extends PureComponent {
         })
         .subscribe({
             next(response) {
-                loadThumbs();
+                console.log("Media Files Changed");
+                _this2.loadThumbs();
             },
             error(err) { console.error('Subscription error: ', err); },
         });
@@ -57,24 +59,15 @@ class Thumbnail extends PureComponent {
             items.map((item, index) => {
                 item.tally = false;
                 item.tallyBg = false;
-                if (index === 0) {
-                    this.props.dispatch({
-                        type: 'SET_THUMB_LIST',
-                        data: {
-                            tab: this.props.ccgOutputProps-1,
-                            thumbList: item
-                        }
-                    });
-                } else {
-                    this.props.dispatch({
-                        type: 'ADD_THUMB_LIST',
-                        data: {
-                            tab: this.props.ccgOutputProps-1,
-                            thumbList: item
-                        }
-                    });
-                }
 
+                this.props.dispatch({
+                    type: 'SET_THUMB_LIST',
+                    data: {
+                        tab: this.props.ccgOutputProps-1,
+                        index: index,
+                        thumbList: item
+                    }
+                });
                 this.props.ccgConnectionProps.thumbnailRetrieve(item.name)
                 .then((pixResponse) => {
                     this.props.dispatch({
