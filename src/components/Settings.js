@@ -1,20 +1,18 @@
 import React, { Component } from 'react';
 import '../assets/css/Settings.css';
 
-const fs = require('fs');
-const electron = require('electron');
-const folder = electron.remote.app.getPath('userData');
-        
+//Redux:
+import { connect } from "react-redux";
+
+//Utils:
+import { saveSettings } from '../util/SettingsStorage';
+
 class SettingsPage extends Component {
-    //Props:
-    //globalSettingsProps={this.state.globalSettings}  Pass settings object
-    //loadSettingsProps={this.loadSettings.bind(this)} load function
-    //saveSettingsProps={this.saveSettings.bind(this)} save function
 
     constructor(props) {
         super(props);
-        this.state = { 
-            settings: this.props.globalSettingsProps,
+        this.state = {
+            settings: this.props.store.settingsReducer[0].settings,
         };
         this.handleChange = this.handleChange.bind(this);
         this.handleTabDataTitle = this.handleTabDataTitle.bind(this);
@@ -23,7 +21,6 @@ class SettingsPage extends Component {
     }
 
     componentDidMount() {
-        this.setState({settings: this.props.loadSettingsProps()});
     }
 
     handleChange(event) {
@@ -33,7 +30,7 @@ class SettingsPage extends Component {
             {settings: settingsCopy}
         );
     }
-    
+
     handleTabDataTitle(event) {
         var settingsCopy= Object.assign({}, this.state.settings);
         settingsCopy.tabData[event.target.name].title = event.target.value;
@@ -41,7 +38,7 @@ class SettingsPage extends Component {
             {settings: settingsCopy}
         );
     }
-    
+
     handleTabDataFolder(event) {
         var settingsCopy= Object.assign({}, this.state.settings);
         settingsCopy.tabData[event.target.name].subFolder = event.target.value;
@@ -51,16 +48,16 @@ class SettingsPage extends Component {
     }
 
     handleSubmit(event) {
-        this.props.saveSettingsProps(this.state.settings);
+        saveSettings(this.state.settings);
     }
-    
+
     render() {
         return (
             <div className="Settings-body">
             <p className="Settings-header">SETTINGS :</p>
             <form className="Settings-form" onSubmit={this.handleSubmit}>
                 <label className="Settings-input-field">
-                    IP ADDRESS :  
+                    IP ADDRESS :
                     <input name="ipAddress" type="text" value={this.state.settings.ipAddress} onChange={this.handleChange} />
                 </label>
                 <br/>
@@ -80,12 +77,12 @@ class SettingsPage extends Component {
                     CHANNEL 2 :
                     <input name="1" type="text" value={this.state.settings.tabData[1].title} onChange={this.handleTabDataTitle} />
                 </label>
-                
+
                 <label className="Settings-input-field">
                     CHANNEL 3 :
                     <input name="2" type="text" value={this.state.settings.tabData[2].title} onChange={this.handleTabDataTitle} />
                 </label>
-                
+
                 <label className="Settings-input-field">
                     CHANNEL 4 :
                     <input name="3" type="text" value={this.state.settings.tabData[3].title} onChange={this.handleTabDataTitle} />
@@ -111,12 +108,19 @@ class SettingsPage extends Component {
                     <input name="3" type="text" value={this.state.settings.tabData[3].subFolder} onChange={this.handleTabDataFolder} />
                 </label>
                 <br/>
-                
+
                 <input className="Save-button" type="submit" value="SAVE SETTINGS" />
             </form>
             </div>
         );
-      }
+    }
 }
 
-export default SettingsPage
+
+const mapStateToProps = (state) => {
+    return {
+        store: state
+    }
+}
+
+export default connect(mapStateToProps)(SettingsPage);
