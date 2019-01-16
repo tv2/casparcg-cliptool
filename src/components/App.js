@@ -38,6 +38,7 @@ class App extends PureComponent {
         this.handleSettingsPage = this.handleSettingsPage.bind(this);
         this.handleAutoPlayStatus = this.handleAutoPlayStatus.bind(this);
         this.handleLoopStatus = this.handleLoopStatus.bind(this);
+        this.handleAutoNext = this.handleAutoNext.bind(this);
         this.ccgSubscribeTimeLeft = this.ccgSubscribeTimeLeft.bind(this);
         this.ccgSubscribeInfoData = this.ccgSubscribeInfoData.bind(this);
         this.renderHeader = this.renderHeader.bind(this);
@@ -148,21 +149,25 @@ class App extends PureComponent {
                     type:'SET_TIMELEFT',
                     data: response.data.timeLeft
                 });
-                response.data.timeLeft.map((item, index) => {
-                    if (1.45 > item.timeLeft && item.timeLeft > 1.35 &&
-                        _this2.props.store.settingsReducer[0].settings.tabData[index].autoPlay
-                    ) {
-                        if (_this2.props.store.dataReducer[0].data.channel[index].thumbActiveIndex + 1 <
-                            _this2.props.store.dataReducer[0].data.channel[index].thumbList.length
-                            ) {
-                            _this2.loadBgMedia(index + 1, 10, _this2.props.store.dataReducer[0].data.channel[index].thumbActiveIndex+1);
-                        } else {
-                            _this2.loadBgMedia(index + 1, 10, 0);
-                        }
-                    }
-                });
+                _this2.handleAutoNext(response.data.timeLeft);
             },
             error(err) { console.error('Subscription error: ', err); },
+        });
+    }
+
+    handleAutoNext(timeLeft) {
+        timeLeft.map((item, index) => {
+            if (1.45 > item.timeLeft && item.timeLeft > 1.35 &&
+                this.props.store.settingsReducer[0].settings.tabData[index].autoPlay
+            ) {
+                if (this.props.store.dataReducer[0].data.channel[index].thumbActiveIndex + 1 <
+                    this.props.store.dataReducer[0].data.channel[index].thumbList.length
+                    ) {
+                    this.loadBgMedia(index + 1, 10, this.props.store.dataReducer[0].data.channel[index].thumbActiveIndex+1);
+                } else {
+                    this.loadBgMedia(index + 1, 10, 0);
+                }
+            }
         });
     }
 
