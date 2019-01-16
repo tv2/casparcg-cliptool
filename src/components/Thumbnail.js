@@ -53,37 +53,51 @@ class Thumbnail extends PureComponent {
 
 
     loadThumbs() {
-        this.props.ccgConnectionProps.thumbnailList(this.props.store.settingsReducer[0].settings.tabData[this.props.ccgOutputProps-1].subFolder)
+        this.props.ccgConnectionProps.cls(this.props.store.settingsReducer[0].settings.tabData[this.props.ccgOutputProps-1].subFolder)
         .then((results) => {
-            var items = results.response.data;
-            items.map((item, index) => {
-                item.tally = false;
-                item.tallyBg = false;
+            let items = results.response.data.filter((item) => {
+                return item.type === 'video';
+            });
 
-                this.props.dispatch({
-                    type: 'SET_THUMB_LIST',
-                    data: {
-                        tab: this.props.ccgOutputProps-1,
-                        index: index,
-                        thumbList: item
-                    }
-                });
-                this.props.ccgConnectionProps.thumbnailRetrieve(item.name)
-                .then((pixResponse) => {
+            this.props.dispatch({
+                type: 'SET_THUMB_LENGTH',
+                data: {
+                    tab: this.props.ccgOutputProps-1,
+                    length: items.length
+                }
+            });
+            items.map((item, index) => {
+                var currentAtIndex = this.props.store.dataReducer[0].data.channel[this.props.ccgOutputProps-1].thumbList[index] | { name: ''};
+                if (item.name != currentAtIndex)
+                    {
+                    item.tally = false;
+                    item.tallyBg = false;
                     this.props.dispatch({
-                        type: 'SET_THUMB_PIX',
+                        type: 'SET_THUMB_LIST',
                         data: {
                             tab: this.props.ccgOutputProps-1,
                             index: index,
-                            thumbPix: pixResponse.response.data
+                            thumbList: item
                         }
                     });
-                });
+                    this.props.ccgConnectionProps.thumbnailRetrieve(item.name)
+                    .then((pixResponse) => {
+                        this.props.dispatch({
+                            type: 'SET_THUMB_PIX',
+                            data: {
+                                tab: this.props.ccgOutputProps-1,
+                                index: index,
+                                thumbPix: pixResponse.response.data
+                            }
+                        });
+                    });
+                }
             });
             this.props.updatePlayingStatusProps(this.props.ccgOutputProps-1);
             console.log("Channel: ", this.props.ccgOutputProps, " loaded");
         })
         .catch ((error) => {
+            console.log("Error :" , error);
             if (error.response.code === 404 ) {
                 window.alert("Folder: " + this.props.store.settingsReducer[0].settings.tabData[this.props.ccgOutputProps-1].subFolder + " does not exist");
             }
