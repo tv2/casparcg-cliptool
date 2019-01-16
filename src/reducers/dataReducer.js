@@ -53,6 +53,11 @@ export const dataReducer = ((state = defaultDataReducerState, action) => {
                 nextState[0].data.ccgTimeCounter[index] = secondsToTimeCode(item.timeLeft);
             });
             return nextState;
+        case 'SET_THUMB_LENGTH':
+            if (action.data.length < nextState[0].data.channel[action.data.tab].thumbList.length) {
+                nextState[0].data.channel[action.data.tab].thumbList.length = action.data.length;
+            }
+            return nextState;
         case 'SET_THUMB_LIST':
             if (action.data.index <= nextState[0].data.channel[action.data.tab].thumbList.length) {
                 nextState[0].data.channel[action.data.tab].thumbList[action.data.index] = action.data.thumbList;
@@ -71,17 +76,25 @@ export const dataReducer = ((state = defaultDataReducerState, action) => {
             nextState[0].data.channel[action.data.tab].thumbList = result;
             return nextState;
         case 'SET_THUMB_ACTIVE_INDEX':
-            //Reset old Tally and set new:
-            nextState[0].data.channel[action.data.tab].thumbList[nextState[0].data.channel[action.data.tab].thumbActiveIndex].tally = false;
+            //Reset old Tally:
+            if (nextState[0].data.channel[action.data.tab].thumbActiveIndex <
+                nextState[0].data.channel[action.data.tab].thumbList.length)
+            {
+                nextState[0].data.channel[action.data.tab].thumbList[nextState[0].data.channel[action.data.tab].thumbActiveIndex].tally = false;
+            }
+            //Set new tally:
             nextState[0].data.channel[action.data.tab].thumbList[action.data.thumbActiveIndex].tally = true;
-
             nextState[0].data.channel[action.data.tab].thumbActiveIndex = action.data.thumbActiveIndex;
             return nextState;
         case 'SET_THUMB_ACTIVE_BG_INDEX':
-            //Reset Old BG Tally and set new:
-            nextState[0].data.channel[action.data.tab].thumbList[nextState[0].data.channel[action.data.tab].thumbActiveBgIndex].tallyBg = false;
+            //Reset old Bg Tally:
+            if (nextState[0].data.channel[action.data.tab].thumbActiveBgIndex <
+                nextState[0].data.channel[action.data.tab].thumbList.length)
+            {
+                nextState[0].data.channel[action.data.tab].thumbList[nextState[0].data.channel[action.data.tab].thumbActiveBgIndex].tallyBg = false;
+            }
+            //Set new Bg Tally:
             nextState[0].data.channel[action.data.tab].thumbList[action.data.thumbActiveBgIndex].tallyBg = true;
-
             nextState[0].data.channel[action.data.tab].thumbActiveBgIndex = action.data.thumbActiveBgIndex;
             return nextState;
         default:
