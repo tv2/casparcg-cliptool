@@ -16,13 +16,13 @@ import SettingsPage from './Settings';
 //Utils:
 import { saveSettings } from '../util/SettingsStorage';
 import {cleanUpFilename, extractFilenameFromPath} from '../util/filePathStringHandling';
+import CcgLoadPlay from '../util/CcgLoadPlay';
+
 
 //CSS files:
 import '../assets/css/Rmc-tabs.css';
 import '../assets/css/App.css';
 
-//Global const:
-const FPS = 25;
 const MIX_DURATION = 6;
 
 class App extends PureComponent {
@@ -63,6 +63,8 @@ class App extends PureComponent {
                 port: this.props.store.settingsReducer[0].settings.port,
                 autoConnect: true,
             });
+        this.ccgLoadPlay = new CcgLoadPlay(this.ccgConnection);
+
 
         // Initialize CasparCG subscriptions:
         this.ccgSubscribeInfoData();
@@ -154,7 +156,7 @@ class App extends PureComponent {
                 });
                 response.data.timeLeft.map((item, index) => {
                     _this2.handleAutoNext(item, index);
-                    //_this2.handleOverlay(item, index);
+                    _this2.handleOverlay(item, index);
                 });
             },
             error(err) { console.error('Subscription error: ', err); },
@@ -170,9 +172,9 @@ class App extends PureComponent {
                 if (this.props.store.dataReducer[0].data.channel[channelIndex].thumbActiveIndex + 1 <
                     this.props.store.dataReducer[0].data.channel[channelIndex].thumbList.length
                     ) {
-                    this.loadBgMedia(channelIndex + 1, 10, this.props.store.dataReducer[0].data.channel[channelIndex].thumbActiveIndex+1);
+                    this.ccgLoadPlay.loadBgMedia(channelIndex + 1, 10, this.props.store.dataReducer[0].data.channel[channelIndex].thumbActiveIndex+1);
                 } else {
-                    this.loadBgMedia(channelIndex + 1, 10, 0);
+                    this.ccgLoadPlay.loadBgMedia(channelIndex + 1, 10, 0);
                 }
             }
         }
@@ -271,14 +273,14 @@ class App extends PureComponent {
 
         switch( event.keyCode ) {
             case pvwPlay:
-                this.playMedia(
+                this.ccgLoadPlay.playMedia(
                     10,
                     this.state.thumbActiveBgIndex,
                     this.state.thumbActiveIndex
                 );
                 break;
             case pgmPlay:
-                this.playMedia(
+                this.ccgLoadPlay.playMedia(
                     10,
                     this.state.thumbActiveIndex,
                     this.state.thumbActiveBgIndex
@@ -286,78 +288,6 @@ class App extends PureComponent {
                 break;
             default:
                 break;
-        }
-    }
-
-
-    pvwPlay(output) {
-        this.playMedia(output, 10, this.props.store.dataReducer[0].data.channel[output-1].thumbActiveBgIndex, this.props.store.dataReducer[0].data.channel[output-1].thumbActiveIndex);
-    }
-
-    pgmPlay(output) {
-        this.playMedia(output, 10, this.props.store.dataReducer[0].data.channel[output-1].thumbActiveIndex, this.props.store.dataReducer[0].data.channel[output-1].thumbActiveBgIndex);
-    }
-
-    prevCue(output) {
-        if (this.props.store.dataReducer[0].data.channel[output-1].thumbActiveIndex > 0) {
-            this.loadMedia(output, 10, this.props.store.dataReducer[0].data.channel[output-1].thumbActiveIndex-1);
-        }
-    }
-
-    nextCue(output) {
-        if (this.props.store.dataReducer[0].data.channel[output-1].thumbActiveIndex + 1 <
-            this.props.store.dataReducer[0].data.channel[output-1].thumbList.length
-            ) {
-            this.loadMedia(output, 10, this.props.store.dataReducer[0].data.channel[output-1].thumbActiveIndex+1);
-        }
-    }
-
-    playMedia(output, layer, index, indexBg) {
-        this.ccgConnection.play(
-            output,
-            layer,
-            this.props.store.dataReducer[0].data.channel[output-1].thumbList[index].name,
-            this.props.store.settingsReducer[0].settings.tabData[output-1].loop,
-            'MIX',
-            MIX_DURATION
-        );
-        this.loadBgMedia(output, 10, indexBg);
-    }
-
-    loadMedia(output, layer, index) {
-        if (this.props.store.settingsReducer[0].settings.tabData[output-1].autoPlay) {
-            this.playMedia(output, 10, index, this.props.store.dataReducer[0].data.channel[output-1].thumbActiveBgIndex);
-        } else {
-            this.ccgConnection.load(
-                output,
-                layer,
-                this.props.store.dataReducer[0].data.channel[output-1].thumbList[index].name,
-                this.props.store.settingsReducer[0].settings.tabData[output-1].loop,
-                'MIX',
-                MIX_DURATION
-            );
-        }
-    }
-
-    loadBgMedia(output, layer, index) {
-        if (this.props.store.settingsReducer[0].settings.tabData[output-1].autoPlay) {
-            this.ccgConnection.loadbgAuto(
-                output,
-                layer,
-                this.props.store.dataReducer[0].data.channel[output-1].thumbList[index].name,
-                this.props.store.settingsReducer[0].settings.tabData[output-1].loop,
-                'MIX',
-                MIX_DURATION
-            );
-        } else {
-            this.ccgConnection.loadbg(
-                output,
-                layer,
-                this.props.store.dataReducer[0].data.channel[output-1].thumbList[index].name,
-                this.props.store.settingsReducer[0].settings.tabData[output-1].loop,
-                'MIX',
-                MIX_DURATION
-            );
         }
     }
 
@@ -434,28 +364,28 @@ class App extends PureComponent {
                 <div className="mixButtonBackground">
                     <button className="prevCueButton"
                         onClick={
-                            () => this.prevCue(this.props.store.appNavReducer[0].appNav.activeTab + 1)
+                            () => this.ccgLoadPlay.prevCue(this.props.store.appNavReducer[0].appNav.activeTab + 1)
                         }
                     >
                         PREV
                     </button>
                     <button className="nextCueButton"
                         onClick={
-                            () => this.nextCue(this.props.store.appNavReducer[0].appNav.activeTab + 1)
+                            () => this.ccgLoadPlay.nextCue(this.props.store.appNavReducer[0].appNav.activeTab + 1)
                         }
                     >
                         NEXT
                     </button>
                     <button className="mixButton"
                         onClick={
-                            () => this.pvwPlay(this.props.store.appNavReducer[0].appNav.activeTab + 1)
+                            () => this.ccgLoadPlay.pvwPlay(this.props.store.appNavReducer[0].appNav.activeTab + 1)
                         }
                     >
                         TAKE
                     </button>
                     <button className="startButton"
                         onClick={
-                            () => this.pgmPlay(this.props.store.appNavReducer[0].appNav.activeTab + 1)
+                            () => this.ccgLoadPlay.pgmPlay(this.props.store.appNavReducer[0].appNav.activeTab + 1)
                         }
                     >
                         START
@@ -472,8 +402,8 @@ class App extends PureComponent {
                 <Thumbnail
                     ccgOutputProps={item.key}
                     ccgConnectionProps={this.ccgConnection}
-                    loadMediaProps={this.loadMedia.bind(this)}
-                    loadBgMediaProps={this.loadBgMedia.bind(this)}
+                    loadMediaProps={this.ccgLoadPlay.loadMedia}
+                    loadBgMediaProps={this.ccgLoadPlay.loadBgMedia}
                     updatePlayingStatusProps={this.updatePlayingStatus.bind(this)}
                 />
             </div>
