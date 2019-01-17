@@ -15,6 +15,7 @@ import SettingsPage from './Settings';
 
 //Utils:
 import { saveSettings } from '../util/SettingsStorage';
+import {cleanUpFilename, extractFilenameFromPath} from '../util/filePathStringHandling';
 
 //CSS files:
 import '../assets/css/Rmc-tabs.css';
@@ -39,6 +40,7 @@ class App extends PureComponent {
         this.handleAutoPlayStatus = this.handleAutoPlayStatus.bind(this);
         this.handleLoopStatus = this.handleLoopStatus.bind(this);
         this.handleAutoNext = this.handleAutoNext.bind(this);
+        this.handleOverlay = this.handleOverlay.bind(this);
         this.ccgSubscribeTimeLeft = this.ccgSubscribeTimeLeft.bind(this);
         this.ccgSubscribeInfoData = this.ccgSubscribeInfoData.bind(this);
         this.renderHeader = this.renderHeader.bind(this);
@@ -140,6 +142,7 @@ class App extends PureComponent {
                 subscription {
                     timeLeft {
                         timeLeft
+                        time
                     }
                 }`
         })
@@ -147,28 +150,47 @@ class App extends PureComponent {
             next(response) {
                 _this2.props.dispatch({
                     type:'SET_TIMELEFT',
-                    data: response.data.timeLeft
+                    data: response.data,
                 });
-                _this2.handleAutoNext(response.data.timeLeft);
+                response.data.timeLeft.map((item, index) => {
+                    _this2.handleAutoNext(item, index);
+                    //_this2.handleOverlay(item, index);
+                });
             },
             error(err) { console.error('Subscription error: ', err); },
         });
     }
 
-    handleAutoNext(timeLeft) {
-        timeLeft.map((item, index) => {
-            if (1.45 > item.timeLeft && item.timeLeft > 1.35 &&
-                this.props.store.settingsReducer[0].settings.tabData[index].autoPlay
-            ) {
-                if (this.props.store.dataReducer[0].data.channel[index].thumbActiveIndex + 1 <
-                    this.props.store.dataReducer[0].data.channel[index].thumbList.length
+    handleAutoNext(item, channelIndex) {
+        if (this.props.store.settingsReducer[0].settings.tabData[channelIndex].autoPlay) {
+
+            //Load Next Clip:
+            if (1.45 > item.timeLeft && item.timeLeft > 1.35 ) {
+                this.ccgConnection.clear(1,20);
+                if (this.props.store.dataReducer[0].data.channel[channelIndex].thumbActiveIndex + 1 <
+                    this.props.store.dataReducer[0].data.channel[channelIndex].thumbList.length
                     ) {
-                    this.loadBgMedia(index + 1, 10, this.props.store.dataReducer[0].data.channel[index].thumbActiveIndex+1);
+                    this.loadBgMedia(channelIndex + 1, 10, this.props.store.dataReducer[0].data.channel[channelIndex].thumbActiveIndex+1);
                 } else {
-                    this.loadBgMedia(index + 1, 10, 0);
+                    this.loadBgMedia(channelIndex + 1, 10, 0);
                 }
             }
-        });
+        }
+    }
+
+    handleOverlay(item, channelIndex) {
+//        if (this.props.store.settingsReducer[0].settings.tabData[channelIndex].overlay) {
+            if (0.10 < item.time && item.time < 0.14) {
+                this.ccgConnection.cgAdd(
+                    1,20, 1,
+                    "htmlTemplates/HTML-Bundt/BUNDT",
+                    1,
+                    "<templateData><componentData id=\"f0\"><data id=\"text\" value=\""
+                    + extractFilenameFromPath(cleanUpFilename(this.props.store.dataReducer[0].data.ccgInfo[channelIndex].layers[10-1].foreground.name))
+                    + "\"/></componentData><componentData id=\"f1\"><data id=\"text\" value=\"\"/></componentData></templateData>"
+                );
+            }
+//        }
     }
 
     ccgSubscribeInfoData() {
@@ -209,8 +231,8 @@ class App extends PureComponent {
 
     updatePlayingStatus(tab) {
         var infoStatus = this.props.store.dataReducer[0].data.ccgInfo[tab].layers[10-1];
-        var fileNameFg = this.cleanUpFilename(infoStatus.foreground.name || '');
-        var fileNameBg = this.cleanUpFilename(infoStatus.background.name || '');
+        var fileNameFg = cleanUpFilename(infoStatus.foreground.name || '');
+        var fileNameBg = cleanUpFilename(infoStatus.background.name || '');
         this.props.store.dataReducer[0].data.channel[tab].thumbList
         .map((item, index)=>{
 
@@ -235,16 +257,6 @@ class App extends PureComponent {
                 });
             }
         });
-    }
-
-    cleanUpFilename(filename) {
-        // casparcg-connection library bug: returns filename with media// or media/
-        return (filename.replace(/\\/g, '/')
-            .replace('media//', '')
-            .replace('media/', '')
-            .toUpperCase()
-            .replace(/\..+$/, '')
-        );
     }
 
     //Shortcut for mix and take

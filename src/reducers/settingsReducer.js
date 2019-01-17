@@ -5,11 +5,11 @@ const defaultSettingsReducerState = [{
         mainFolder: '',
         tabData: [
             { key: 1, title: 'SCREEN 1', subFolder: '', loop: false, autoPlay: false},
-            { key: 2, title: '', subFolder: '', loop: false, autoPlay: false},
-            { key: 3, title: '', subFolder: '', loop: false, autoPlay: false},
-            { key: 4, title: '', subFolder: '', loop: false, autoPlay: false},
-            { key: 5, title: '', subFolder: '', loop: false, autoPlay: false},
-            { key: 6, title: '', subFolder: '', loop: false, autoPlay: false},
+            { key: 2, title: '', subFolder: '', loop: false, autoPlay: false, overlay: false},
+            { key: 3, title: '', subFolder: '', loop: false, autoPlay: false, overlay: false},
+            { key: 4, title: '', subFolder: '', loop: false, autoPlay: false, overlay: false},
+            { key: 5, title: '', subFolder: '', loop: false, autoPlay: false, overlay: false},
+            { key: 6, title: '', subFolder: '', loop: false, autoPlay: false, overlay: false},
         ]
     }
 }];

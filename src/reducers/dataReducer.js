@@ -2,6 +2,7 @@ const defaultDataReducerState = [{
     data: {
         ccgInfo: {},
         ccgTimeLeft: [0 , 0, 0, 0],
+        ccgTime: [0 , 0, 0, 0],
         ccgTimeCounter: ['', '', '', ''],
         channel: [{
             thumbList: [{
@@ -48,8 +49,9 @@ export const dataReducer = ((state = defaultDataReducerState, action) => {
             });
             return nextState;
         case 'SET_TIMELEFT':
-            action.data.map((item, index) => {
+            action.data.timeLeft.map((item, index) => {
                 nextState[0].data.ccgTimeLeft[index] = item.timeLeft;
+                nextState[0].data.ccgTime[index] = item.time;
                 nextState[0].data.ccgTimeCounter[index] = secondsToTimeCode(item.timeLeft);
             });
             return nextState;
