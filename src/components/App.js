@@ -80,7 +80,6 @@ class App extends PureComponent {
     }
 
     //Logical funtions:
-
     reloadPage() {
         location.reload();
     }
@@ -168,6 +167,7 @@ class App extends PureComponent {
 
             //Load Next Clip:
             if (1.45 > item.timeLeft && item.timeLeft > 1.35 ) {
+
                 this.ccgConnection.clear(1,20);
                 if (this.props.store.dataReducer[0].data.channel[channelIndex].thumbActiveIndex + 1 <
                     this.props.store.dataReducer[0].data.channel[channelIndex].thumbList.length
@@ -181,18 +181,22 @@ class App extends PureComponent {
     }
 
     handleOverlay(item, channelIndex) {
-//        if (this.props.store.settingsReducer[0].settings.tabData[channelIndex].overlay) {
+        const overlayFolder = this.props.store.settingsReducer[0].settings.tabData[channelIndex].overlayFolder;
+        if (overlayFolder != '') {
             if (0.10 < item.time && item.time < 0.14) {
                 this.ccgConnection.cgAdd(
                     1,20, 1,
-                    "htmlTemplates/HTML-Bundt/BUNDT",
+                    overlayFolder + "/HTML-Bundt/BUNDT",
                     1,
                     "<templateData><componentData id=\"f0\"><data id=\"text\" value=\""
                     + extractFilenameFromPath(cleanUpFilename(this.props.store.dataReducer[0].data.ccgInfo[channelIndex].layers[10-1].foreground.name))
                     + "\"/></componentData><componentData id=\"f1\"><data id=\"text\" value=\"\"/></componentData></templateData>"
                 );
             }
-//        }
+            if (1.15 > item.timeLeft && item.timeLeft > 1.10 ) {
+                this.ccgConnection.play(1, 11, overlayFolder + "/wipe");
+            }
+        }
     }
 
     ccgSubscribeInfoData() {
