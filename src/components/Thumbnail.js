@@ -58,7 +58,7 @@ class Thumbnail extends PureComponent {
             let items = results.response.data.filter((item) => {
                 return item.type === 'video';
             });
-
+            if (items.length === 0) return false;
             this.props.dispatch({
                 type: 'SET_THUMB_LENGTH',
                 data: {
