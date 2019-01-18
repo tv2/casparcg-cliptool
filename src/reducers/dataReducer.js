@@ -46,7 +46,7 @@ export const dataReducer = ((state = defaultDataReducerState, action) => {
             }
             return nextState;
         case 'SET_THUMB_LIST':
-            if (action.data.index <= nextState[0].data.channel[action.data.tab].thumbList.length) {
+            if (action.data.index <= (nextState[0].data.channel[action.data.tab].thumbList.length-1)) {
                 nextState[0].data.channel[action.data.tab].thumbList[action.data.index] = action.data.thumbList;
             } else {
                 nextState[0].data.channel[action.data.tab].thumbList.push(action.data.thumbList);
