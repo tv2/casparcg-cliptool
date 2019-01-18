@@ -1,7 +1,10 @@
+import { secondsToTimeCode } from '../util/TimeCodeToString';
+
 const defaultDataReducerState = [{
     data: {
         ccgInfo: {},
         ccgTimeLeft: [0 , 0, 0, 0],
+        ccgTime: [0 , 0, 0, 0],
         ccgTimeCounter: ['', '', '', ''],
         channel: [{
             thumbList: [{
@@ -17,23 +20,6 @@ const defaultDataReducerState = [{
     }
 }];
 
-const FPS = 25;
-
-const secondsToTimeCode = (time => {
-    if (time) {
-        var hour = ('0' + parseInt(time/(60*60))).slice(-2);
-        var minute = ('0' + parseInt(time/(60))).slice(-2);
-        var sec = ('0' + (parseInt(time % 60))).slice(-2);
-        var frm = ('0' + (100*(time - parseInt(time))*(FPS/100)).toFixed()).slice(-2);
-    return (
-        hour + "." + minute + "." + sec + "." + frm
-    );
-    } else {
-        return "00.00.00.00";
-    }
-});
-
-
 export const dataReducer = ((state = defaultDataReducerState, action) => {
 
     let { ...nextState } = state;
@@ -48,8 +34,9 @@ export const dataReducer = ((state = defaultDataReducerState, action) => {
             });
             return nextState;
         case 'SET_TIMELEFT':
-            action.data.map((item, index) => {
+            action.data.timeLeft.map((item, index) => {
                 nextState[0].data.ccgTimeLeft[index] = item.timeLeft;
+                nextState[0].data.ccgTime[index] = item.time;
                 nextState[0].data.ccgTimeCounter[index] = secondsToTimeCode(item.timeLeft);
             });
             return nextState;
@@ -59,7 +46,7 @@ export const dataReducer = ((state = defaultDataReducerState, action) => {
             }
             return nextState;
         case 'SET_THUMB_LIST':
-            if (action.data.index <= nextState[0].data.channel[action.data.tab].thumbList.length) {
+            if (action.data.index <= (nextState[0].data.channel[action.data.tab].thumbList.length-1)) {
                 nextState[0].data.channel[action.data.tab].thumbList[action.data.index] = action.data.thumbList;
             } else {
                 nextState[0].data.channel[action.data.tab].thumbList.push(action.data.thumbList);
