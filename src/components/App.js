@@ -52,10 +52,14 @@ class App extends PureComponent {
         document.addEventListener("keydown", this._handleKeyDown.bind(this));
 
         //Define Output Tabs:
-        this.setState({tabData: this.props.store.settingsReducer[0].settings.tabData.filter((item) => {
-                return item.title != "";
+
+        this.setState({tabData: this.props.store.dataReducer[0].data.channel.map((item, index) => {
+            return this.props.store.settingsReducer[0].settings.tabData[index];
             })
         });
+        if (this.state.tabData.length > this.props.store.dataReducer[0].data.channel.length) {
+            this.state.tabData.length = this.props.store.dataReducer[0].data.channel.length;
+        }
 
         this.ccgConnection = new CasparCG(
             {
@@ -64,7 +68,6 @@ class App extends PureComponent {
                 autoConnect: true,
             });
         this.ccgLoadPlay = new CcgLoadPlay(this.ccgConnection);
-
 
         // Initialize CasparCG subscriptions:
         this.ccgSubscribeInfoData();
@@ -402,15 +405,15 @@ class App extends PureComponent {
     renderTabData() {
         var tabDataList = this.state.tabData.map((item) => {
             return (
-            <div className="App-intro" key={(item.key)}>
-                <Thumbnail
-                    ccgOutputProps={item.key}
-                    ccgConnectionProps={this.ccgConnection}
-                    loadMediaProps={this.ccgLoadPlay.loadMedia}
-                    loadBgMediaProps={this.ccgLoadPlay.loadBgMedia}
-                    updatePlayingStatusProps={this.updatePlayingStatus.bind(this)}
-                />
-            </div>
+                <div className="App-intro" key={(item.key)}>
+                    <Thumbnail
+                        ccgOutputProps={item.key}
+                        ccgConnectionProps={this.ccgConnection}
+                        loadMediaProps={this.ccgLoadPlay.loadMedia}
+                        loadBgMediaProps={this.ccgLoadPlay.loadBgMedia}
+                        updatePlayingStatusProps={this.updatePlayingStatus.bind(this)}
+                    />
+                </div>
             )
         })
         return (tabDataList)
