@@ -3,7 +3,7 @@ const defaultMetadataReducerState = [{
     data: {
         channel: [{
             metaList: [{
-                template: '',
+                templatePath: '',
                 startTime: 0,
                 duration: 0,
                 templateText: [{

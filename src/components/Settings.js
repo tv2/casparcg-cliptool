@@ -19,6 +19,7 @@ class SettingsPage extends Component {
         this.handleTabDataFolder = this.handleTabDataFolder.bind(this);
         this.handleTabDataOverlayFolder = this.handleTabDataOverlayFolder.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.renderChannelSettings = this.renderChannelSettings.bind(this);
     }
 
     componentDidMount() {
@@ -61,6 +62,25 @@ class SettingsPage extends Component {
         saveSettings(this.state.settings);
     }
 
+    renderChannelSettings(item, index) {
+        return (
+            <div className="Settings-channel-form" onSubmit={this.handleSubmit}>
+                <label className="Settings-input-field">
+                    OUT {index+1} :
+                    <input name={index} type="text" value={item.title} onChange={this.handleTabDataTitle} />
+                </label>
+                <label className="Settings-input-field">
+                    SUBFOLDER :
+                    <input name={index} type="text" value={item.subFolder} onChange={this.handleTabDataFolder} />
+                </label>
+                <label className="Settings-input-field">
+                    OVERLAYFOLDER :
+                    <input name={index} type="text" value={item.overlayFolder} onChange={this.handleTabDataOverlayFolder} />
+                </label>
+            </div>
+        )
+    }
+
     render() {
         return (
             <div className="Settings-body">
@@ -76,67 +96,12 @@ class SettingsPage extends Component {
                     <input name="port" type="text" value={this.state.settings.port} onChange={this.handleChange} />
                 </label>
                 <br/>
-            </form>
-            <form className="Settings-channel-form" onSubmit={this.handleSubmit}>
-                <label className="Settings-input-field">
-                    OUT 1 :
-                    <input name="0" type="text" value={this.state.settings.tabData[0].title} onChange={this.handleTabDataTitle} />
-                </label>
-                <label className="Settings-subfolder-field">
-                    SUBFOLDER :
-                    <input name="0" type="text" value={this.state.settings.tabData[0].subFolder} onChange={this.handleTabDataFolder} />
-                </label>
-                <label className="Settings-overlayfolder-field">
-                    OVERLAYFOLDER :
-                    <input name="0" type="text" value={this.state.settings.tabData[0].overlayFolder} onChange={this.handleTabDataOverlayFolder} />
-                </label>
+                {this.renderChannelSettings(this.state.settings.tabData[0], 0)}
+                {this.renderChannelSettings(this.state.settings.tabData[1], 1)}
+                {this.renderChannelSettings(this.state.settings.tabData[2], 2)}
+                {this.renderChannelSettings(this.state.settings.tabData[3], 3)}
                 <input className="Save-button" type="submit" value="SAVE SETTINGS" />
             </form>
-
-            <form className="Settings-channel-form" onSubmit={this.handleSubmit}>
-            <label className="Settings-input-field">
-                OUT 2 :
-                <input name="1" type="text" value={this.state.settings.tabData[1].title} onChange={this.handleTabDataTitle} />
-            </label>
-            <label className="Settings-subfolder-field">
-                SUBFOLDER :
-                <input name="1" type="text" value={this.state.settings.tabData[1].subFolder} onChange={this.handleTabDataFolder} />
-            </label>
-            <label className="Settings-overlayfolder-field">
-                OVERLAYFOLDER :
-                <input name="1" type="text" value={this.state.settings.tabData[1].overlayFolder} onChange={this.handleTabDataOverlayFolder} />
-            </label>
-            </form>
-
-            <form className="Settings-channel-form" onSubmit={this.handleSubmit}>
-            <label className="Settings-input-field">
-                OUT 2 :
-                <input name="2" type="text" value={this.state.settings.tabData[2].title} onChange={this.handleTabDataTitle} />
-            </label>
-            <label className="Settings-subfolder-field">
-                SUBFOLDER :
-                <input name="2" type="text" value={this.state.settings.tabData[2].subFolder} onChange={this.handleTabDataFolder} />
-            </label>
-            <label className="Settings-overlayfolder-field">
-                OVERLAYFOLDER :
-                <input name="2" type="text" value={this.state.settings.tabData[2].overlayFolder} onChange={this.handleTabDataOverlayFolder} />
-            </label>
-            </form>
-
-            <form className="Settings-channel-form" onSubmit={this.handleSubmit}>
-            <label className="Settings-input-field">
-                OUT 2 :
-                <input name="3" type="text" value={this.state.settings.tabData[3].title} onChange={this.handleTabDataTitle} />
-            </label>
-            <label className="Settings-subfolder-field">
-                SUBFOLDER :
-                <input name="3" type="text" value={this.state.settings.tabData[3].subFolder} onChange={this.handleTabDataFolder} />
-            </label>
-            <label className="Settings-overlayfolder-field">
-                OVERLAYFOLDER :
-                <input name="3" type="text" value={this.state.settings.tabData[3].overlayFolder} onChange={this.handleTabDataOverlayFolder} />
-            </label>
-        </form>
             </div>
         );
     }
