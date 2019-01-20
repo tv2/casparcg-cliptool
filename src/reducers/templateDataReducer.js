@@ -6,9 +6,10 @@ const defaultMetadataReducerState = [{
                 templatePath: '',
                 startTime: 0,
                 duration: 0,
-                templateText: [{
-                    key: '',
-                    text: ''
+                templateData: [{
+                    id: '',
+                    type: '',
+                    data: ''
                 }]
             }]
         }]

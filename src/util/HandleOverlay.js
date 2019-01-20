@@ -16,6 +16,7 @@ class HandleOverlay {
                 this.ccgConnection.clear(1,20);
             }
             if (0.10 < item.time && item.time < 0.14) {
+                this.loadOverlayData(this.store.settingsReducer[0].settings.tabData[channelIndex].subFolder + "/Fox.meta");
                 this.ccgConnection.cgAdd(
                     1,20, 1,
                     overlayFolder + "/HTML-Bundt/BUNDT",
@@ -29,6 +30,13 @@ class HandleOverlay {
                 this.ccgConnection.play(1, 11, overlayFolder + "/wipe");
             }
         }
+    }
+
+    loadOverlayData(fileName) {
+        this.ccgConnection.dataRetrieve(fileName)
+        .then((data) => {
+            console.log(data.response);
+        });
     }
 }
 

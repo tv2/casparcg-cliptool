@@ -1,0 +1,14 @@
+{
+    channel: [{
+        metaList: [{
+            templatePath: '/HTML-Bundt/BUNDT',
+            startTime: 0.9,
+            duration: 2.0,
+            templateData: [{
+                id: 'f0',
+                type: 'text',
+                data: 'Mogens Hockerup'
+            }]
+        }]
+    }]
+}
