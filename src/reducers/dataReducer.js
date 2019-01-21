@@ -66,7 +66,7 @@ export const dataReducer = ((state = defaultDataReducerState, action) => {
             nextState[0].data.channel[action.data.tab].thumbList[action.data.index].thumbPix = action.data.thumbPix;
             return nextState;
         case 'SET_META_LIST':
-            nextState[0].data.channel[action.data.tab].thumbList[action.data.index].metaList = action.data;
+            nextState[0].data.channel[action.tab].thumbList[action.index].metaList = action.metaList;
             return nextState;
         case 'MOVE_THUMB_IN_LIST':
             const result = Array.from(nextState[0].data.channel[action.data.tab].thumbList);

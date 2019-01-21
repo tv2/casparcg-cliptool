@@ -85,17 +85,33 @@ class Thumbnail extends PureComponent {
                         }
                     });
 
-                    this.ccgConnection.dataRetrieve(
-                        this.props.store.settingsReducer[0].settings.tabData[this.props.ccgOutputProps-1].subFolder +
-                        "/" + extractFilenameFromPath(cleanUpFilename(this.props.store.dataReducer[0].data.ccgInfo[this.props.ccgOutputProps-1].layers[10-1].foreground.name)) +
-                        ".meta"
-                    )
+                    console.log("MetaFileName: ", item.name +
+                    ".meta");
+
+                    this.props.ccgConnectionProps.dataRetrieve(item.name + ".meta")
                     .then((data) => {
                         window.store.dispatch({
                             type:'SET_META_LIST',
                             index: index,
                             tab: this.props.ccgOutputProps-1,
-                            data: JSON.parse(data.response.data)
+                            metaList: JSON.parse(data.response.data).channel[this.props.ccgOutputProps-1].metaList
+                        });
+                    })
+                    .catch((error) => {
+                        window.store.dispatch({
+                            type:'SET_META_LIST',
+                            index: index,
+                            tab: this.props.ccgOutputProps-1,
+                            metaList: [{
+                                templatePath: '',
+                                startTime: 0,
+                                duration: 0,
+                                templateData: [{
+                                    id: '',
+                                    type: '',
+                                    data: ''
+                                }]
+                            }]
                         });
                     });
 
