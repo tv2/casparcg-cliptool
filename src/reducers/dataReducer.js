@@ -30,16 +30,7 @@ const defaultDataReducerState = [{
     }
 }];
 
-const emptyMetaList = [{
-    templatePath: '',
-    startTime: 0,
-    duration: 0,
-    templateData: [{
-        id: '',
-        type: '',
-        data: ''
-    }]
-}];
+const emptyMetaList = defaultDataReducerState[0].data.channel[0].thumbList[0].metaList;
 
 export const dataReducer = ((state = defaultDataReducerState, action) => {
 
