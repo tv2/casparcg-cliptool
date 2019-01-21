@@ -1,0 +1,76 @@
+* {
+    -webkit-box-sizing:border-box;
+    -webkit-backface-visibility:hidden;
+    -webkit-transition:translate3d(0,0,0)
+}
+
+
+
+@font-face {
+    font-family:SourceSansPro-Bold;
+    src:url(../fonts/SourceSansPro-Bold.svg) format('svg');
+    font-weight:bold;
+}
+
+HTML,BODY {
+    width:1920px;
+    height:1080px;
+    margin:0;
+    padding:0;
+    background:transparent;
+	background-repeat: no-repeat;
+    overflow:hidden;
+    -webkit-font-smoothing:antialiased!important;
+}
+
+#text-name{
+	display: inline-block;
+	position: absolute;
+	top:36px;
+	-webkit-transform-origin: 0% 100%;
+	-webkit-transform: scale(0.0,0.0);
+	background: -webkit-gradient(linear, left top, right bottom, color-stop(0%,#bebebe), color-stop(23%,#e6e6e6), color-stop(50%,#bebebe), color-stop(78%,#e6e6e6), color-stop(100%,#bebebe));
+	background-size: 400% 100%;
+}
+
+.text-name {
+	color:#FFF;
+	text-align: center;
+	font-size:56px;
+	letter-spacing: 4px;
+	line-height: 56px;
+	display: inline-block;
+	vertical-align: middle;
+    padding-top: 10px;
+	padding-left: 150px;
+	padding-right: 30px;
+	font-family:SourceSansPro-Bold;
+	text-shadow: 2px 2px 7px rgba(0, 0, 0, 1);
+	text-transform: uppercase;
+}
+
+#text-location{
+	display: inline-block;
+	position: absolute;
+	top:14px;
+	-webkit-transform-origin: 0% 100%;
+	-webkit-transform: scale(0.0,0.0);
+	background: -webkit-gradient(linear, left bottom, right top, color-stop(0%,#ff3000), color-stop(26%,#ff6040), color-stop(49%,#ff4010), color-stop(73%,#ff6f43), color-stop(100%,#ff4010));
+	background-size: 400% 100%;
+}
+
+.text-location {
+	color:#FFF;
+	text-align: center;
+	font-size:24px;
+	letter-spacing: 4px;
+	line-height: 32px;
+	display: inline-block;
+	vertical-align: middle;
+	padding-left: 150px;
+	padding-right: 30px;
+    padding-top: 4px;
+	font-family:SourceSansPro-Bold;
+	text-shadow: 2px 2px 7px rgba(0, 0, 0, 1);
+	text-transform: uppercase;
+}

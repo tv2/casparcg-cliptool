@@ -1,0 +1,40 @@
+{
+    "channel": [{
+        "metaList": [
+            {
+                "templatePath": "/HTML-Bundt/BUNDT",
+                "startTime": 0.9,
+                "duration": 4.0,
+                "templateData": [
+                    {
+                        "id": "f0",
+                        "type": "text",
+                        "data": "AMB is a great Loop"
+                    },
+                    {
+                        "id": "f1",
+                        "type": "text",
+                        "data": "CasparCG forever"
+                    }
+                ]
+            },
+            {
+                "templatePath": "/HTML-Bundt/BUNDT",
+                "startTime": 5.5,
+                "duration": 3.5,
+                "templateData": [
+                    {
+                        "id": "f0",
+                        "type": "text",
+                        "data": "And a little more"
+                    },
+                    {
+                        "id": "f1",
+                        "type": "text",
+                        "data": "CasparCG forever"
+                    }
+                ]
+            }
+        ]
+    }]
+}
