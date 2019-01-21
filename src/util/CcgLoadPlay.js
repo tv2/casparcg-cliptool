@@ -50,7 +50,6 @@ class CcgLoadPlay {
     }
 
     loadMedia(output, layer, index) {
-        console.log(this.store);
         if (this.store.settingsReducer[0].settings.tabData[output-1].autoPlay) {
             this.playMedia(output, 10, index, this.store.dataReducer[0].data.channel[output-1].thumbActiveBgIndex);
         } else {

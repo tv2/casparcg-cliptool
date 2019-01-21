@@ -3,8 +3,6 @@
     z-index: 10;
     top: 100px;
     left: 5%;
-    width: 1200px;
-    height: 600px;
     background-color: rgb(44, 44, 44);
     border-width: 1px;
     border-style: solid;
@@ -25,39 +23,24 @@
 }
 
 .Settings-channel-form {
-    margin-top: 20px;
-}
-
-.Settings-folder-form {
-    margin-top: 20px;
-}
-
-.Settings-overlay-form {
-    margin-top: 20px;
+    display:flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    margin-top: 10px;
+    font-size: 1.1em;
+    background-color: rgb(31, 31, 31);
 }
 
 .Settings-input-field {
+    white-space: nowrap;
+    margin: 5px;
     color: rgb(255, 255, 255);
-    background-color: rgb(63, 63, 63);
-    font-size: 1.2em;
-}
-.Settings-subfolder-field {
-    color: rgb(255, 255, 255);
-    background-color: rgb(63, 63, 63);
-    font-size: 1.2em;
-}
-
-.Settings-overlayfolder-field {
-    color: rgb(255, 255, 255);
-    background-color: rgb(63, 63, 63);
-    font-size: 1.2em;
 }
 
 input[type=text] {
     text-align: right;
-    margin-top: 10px;
-    margin-left: 5px;
-    font-size: 1.2em;
+    margin: 5px;
+    font-size: 1.1em;
     border: 1px solid rgb(104, 104, 104);
     background-color: rgb(87, 86, 86);
     color: white;
@@ -67,8 +50,7 @@ input[type=text] {
 
 
 .Save-button {
-    position: fixed;
-    top: 640px;
+    bottom: 10px;
     left: calc(50% - 90px);
     font-size: 1.1em;
     width: 180px;

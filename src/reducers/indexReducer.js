@@ -6,7 +6,7 @@ import { dataReducer } from './dataReducer';
 const indexReducer = combineReducers({
     dataReducer,
     settingsReducer,
-    appNavReducer,
+    appNavReducer
 });
 
 export default indexReducer;
