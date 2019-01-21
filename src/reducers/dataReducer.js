@@ -30,6 +30,16 @@ const defaultDataReducerState = [{
     }
 }];
 
+const emptyMetaList = [{
+    templatePath: '',
+    startTime: 0,
+    duration: 0,
+    templateData: [{
+        id: '',
+        type: '',
+        data: ''
+    }]
+}];
 
 export const dataReducer = ((state = defaultDataReducerState, action) => {
 
@@ -62,6 +72,7 @@ export const dataReducer = ((state = defaultDataReducerState, action) => {
             } else {
                 nextState[0].data.channel[action.data.tab].thumbList.push(action.data.thumbList);
             }
+            nextState[0].data.channel[action.data.tab].thumbList[action.data.index].metaList = emptyMetaList;
             return nextState;
         case 'SET_THUMB_PIX':
             nextState[0].data.channel[action.data.tab].thumbList[action.data.index].thumbPix = action.data.thumbPix;
@@ -70,17 +81,7 @@ export const dataReducer = ((state = defaultDataReducerState, action) => {
             nextState[0].data.channel[action.tab].thumbList[action.index].metaList = action.metaList;
             return nextState;
         case 'SET_EMPTY_META':
-            nextState[0].data.channel[action.tab].thumbList[action.index].metaList =
-                [{
-                    templatePath: '',
-                    startTime: 0,
-                    duration: 0,
-                    templateData: [{
-                        id: '',
-                        type: '',
-                        data: ''
-                    }]
-                }];
+            nextState[0].data.channel[action.tab].thumbList[action.index].metaList = emptyMetaList;
             return nextState;
         case 'MOVE_THUMB_IN_LIST':
             const result = Array.from(nextState[0].data.channel[action.data.tab].thumbList);
