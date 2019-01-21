@@ -99,19 +99,9 @@ class Thumbnail extends PureComponent {
                     })
                     .catch((error) => {
                         window.store.dispatch({
-                            type:'SET_META_LIST',
+                            type:'SET_EMPTY_META',
                             index: index,
-                            tab: this.props.ccgOutputProps-1,
-                            metaList: [{
-                                templatePath: '',
-                                startTime: 0,
-                                duration: 0,
-                                templateData: [{
-                                    id: '',
-                                    type: '',
-                                    data: ''
-                                }]
-                            }]
+                            tab: this.props.ccgOutputProps-1
                         });
                     });
 
