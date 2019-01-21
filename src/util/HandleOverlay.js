@@ -1,5 +1,3 @@
-import {cleanUpFilename, extractFilenameFromPath} from '../util/filePathStringHandling';
-
 
 class HandleOverlay {
     constructor(ccgConnection) {
@@ -9,22 +7,24 @@ class HandleOverlay {
         });
     }
 
-    overlay(item, channelIndex) {
-        const overlayFolder = this.store.settingsReducer[0].settings.tabData[channelIndex].overlayFolder;
+    overlay(item, indexChannel, thumbIndex) {
+        const metaData = this.store.dataReducer[0].data.channel[indexChannel].thumbList[thumbIndex].metaList[0];
+        const overlayFolder = this.store.settingsReducer[0].settings.tabData[indexChannel].overlayFolder;
         if (overlayFolder != '') {
             if (1.05 < item.timeLeft && item.timeLeft < 1.10) {
                 this.ccgConnection.clear(1,20);
             }
-            if (0.10 < item.time && item.time < 0.14) {
-                this.loadOverlayData(this.store.settingsReducer[0].settings.tabData[channelIndex].subFolder + "/Fox.meta");
+            if (metaData.startTime < item.time && item.time < (metaData.startTime + 0.08)) {
                 this.ccgConnection.cgAdd(
                     1,20, 1,
-                    overlayFolder + "/HTML-Bundt/BUNDT",
+                    overlayFolder + metaData.templatePath,
                     1,
-                    "<templateData><componentData id=\"f0\"><data id=\"text\" value=\""
-                    + extractFilenameFromPath(cleanUpFilename(this.store.dataReducer[0].data.ccgInfo[channelIndex].layers[10-1].foreground.name))
+                    "<templateData><componentData id=\""+ metaData.templateData[0].id
+                    + "\"><data id=\"" + metaData.templateData[0].type
+                    + "\" value=\"" + metaData.templateData[0].data
                     + "\"/></componentData><componentData id=\"f1\"><data id=\"text\" value=\"\"/></componentData></templateData>"
-                );
+                    );
+//If Filename should be used? + extractFilenameFromPath(cleanUpFilename(this.store.dataReducer[0].data.ccgInfo[indexChannel].layers[10-1].foreground.name))
             }
             if (1.15 > item.timeLeft && item.timeLeft > 1.10 ) {
                 this.ccgConnection.play(1, 11, overlayFolder + "/wipe");
@@ -32,12 +32,7 @@ class HandleOverlay {
         }
     }
 
-    loadOverlayData(fileName) {
-        this.ccgConnection.dataRetrieve(fileName)
-        .then((data) => {
-            console.log(data.response);
-        });
-    }
+
 }
 
 export default HandleOverlay;

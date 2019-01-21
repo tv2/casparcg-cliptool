@@ -11,6 +11,9 @@ const FPS = 25;
 //Redux:
 import { connect } from "react-redux";
 
+//Utils:
+import {cleanUpFilename, extractFilenameFromPath} from '../util/filePathStringHandling';
+
 
 class Thumbnail extends PureComponent {
     //Props:
@@ -19,6 +22,7 @@ class Thumbnail extends PureComponent {
     // loadMediaProps={this.loadMedia.bind(this)}
     // loadBgMediaProps={this.loadBgMedia.bind(this)}
     // updatePlayingStatusProps={this.updatePlayingStatus.bind(this)}
+
 
     constructor(props) {
         super(props);
@@ -80,6 +84,21 @@ class Thumbnail extends PureComponent {
                             thumbList: item
                         }
                     });
+
+                    this.ccgConnection.dataRetrieve(
+                        this.props.store.settingsReducer[0].settings.tabData[this.props.ccgOutputProps-1].subFolder +
+                        "/" + extractFilenameFromPath(cleanUpFilename(this.props.store.dataReducer[0].data.ccgInfo[this.props.ccgOutputProps-1].layers[10-1].foreground.name)) +
+                        ".meta"
+                    )
+                    .then((data) => {
+                        window.store.dispatch({
+                            type:'SET_META_LIST',
+                            index: index,
+                            tab: this.props.ccgOutputProps-1,
+                            data: JSON.parse(data.response.data)
+                        });
+                    });
+
                     this.props.ccgConnectionProps.thumbnailRetrieve(item.name)
                     .then((pixResponse) => {
                         this.props.dispatch({

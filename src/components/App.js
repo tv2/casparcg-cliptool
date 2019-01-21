@@ -67,8 +67,8 @@ class App extends PureComponent {
                 autoConnect: true,
             });
         this.ccgLoadPlay = new CcgLoadPlay(this.ccgConnection);
-        this.handleAutoNext = new HandleAutoNext(this.ccgLoadPlay);
         this.handleOverlay = new HandleOverlay(this.ccgConnection);
+        this.handleAutoNext = new HandleAutoNext(this.ccgLoadPlay);
 
         // Initialize CasparCG subscriptions:
         this.ccgSubscribeInfoData();
@@ -159,7 +159,11 @@ class App extends PureComponent {
                 });
                 response.data.timeLeft.map((item, index) => {
                     _this2.handleAutoNext.autoNext(item, index);
-                    _this2.handleOverlay.overlay(item, index);
+                    _this2.handleOverlay.overlay(
+                        item,
+                        index,
+                        _this2.props.store.dataReducer[0].data.channel[index].thumbActiveIndex
+                    );
                 });
             },
             error(err) { console.error('Subscription error: ', err); },
@@ -376,6 +380,7 @@ class App extends PureComponent {
                         loadMediaProps={this.ccgLoadPlay.loadMedia}
                         loadBgMediaProps={this.ccgLoadPlay.loadBgMedia}
                         updatePlayingStatusProps={this.updatePlayingStatus.bind(this)}
+                        handleOverlayProps={this.handleOverlay}
                     />
                 </div>
             )
