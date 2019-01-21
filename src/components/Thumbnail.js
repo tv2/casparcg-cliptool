@@ -85,9 +85,6 @@ class Thumbnail extends PureComponent {
                         }
                     });
 
-                    console.log("MetaFileName: ", item.name +
-                    ".meta");
-
                     this.props.ccgConnectionProps.dataRetrieve(item.name + ".meta")
                     .then((data) => {
                         window.store.dispatch({

@@ -20,7 +20,7 @@ class HandleOverlay {
                         this.metaDataToXml(metaItem)
                     );
                 }
-                if ((metaItem.startTime + metaItem.duration) < item.timeLeft && item.timeLeft < (metaItem.startTime + metaItem.duration + 0.08)) {
+                if ((metaItem.startTime + metaItem.duration) < item.time && item.time < (metaItem.startTime + metaItem.duration + 0.08)) {
                     this.ccgConnection.clear(1,20);
                 }
                 if (1.15 > item.timeLeft && item.timeLeft > 1.10 ) {
@@ -37,7 +37,7 @@ class HandleOverlay {
                     "<componentData id=\""+ item.id +
                     "\"><data id=\"" + item.type +
                     "\" value=\"" + item.data +
-                    "\"/>";
+                    "\"/></componentData>";
         });
         xmlString = xmlString + "</templateData>";
         return xmlString;
