@@ -25,7 +25,7 @@ class HandleOverlay {
                 }
                 //ToDo: better timing of Wipe (maybe: start half the lenght)
                 if (1.15 > item.timeLeft && item.timeLeft > 1.10 ) {
-                    this.ccgConnection.play(1, 11, overlayFolder + "/wipe");
+                    this.ccgConnection.play(1, 11, this.store.settingsReducer[0].settings.tabData[indexChannel].wipe);
                 }
             });
         }

@@ -18,6 +18,7 @@ class SettingsPage extends Component {
         this.handleTabDataTitle = this.handleTabDataTitle.bind(this);
         this.handleTabDataFolder = this.handleTabDataFolder.bind(this);
         this.handleTabDataOverlayFolder = this.handleTabDataOverlayFolder.bind(this);
+        this.handleTabDataWipe = this.handleTabDataWipe.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.renderChannelSettings = this.renderChannelSettings.bind(this);
     }
@@ -58,6 +59,15 @@ class SettingsPage extends Component {
     }
 
 
+    handleTabDataWipe(event) {
+        var settingsCopy= Object.assign({}, this.state.settings);
+        settingsCopy.tabData[event.target.name].wipe = event.target.value;
+        this.setState(
+            {settings: settingsCopy}
+        );
+    }
+
+
     handleSubmit(event) {
         saveSettings(this.state.settings);
     }
@@ -70,12 +80,16 @@ class SettingsPage extends Component {
                     <input name={index} type="text" value={item.title} onChange={this.handleTabDataTitle} />
                 </label>
                 <label className="Settings-input-field">
-                    SUBFOLDER :
+                    MEDIAFOLDER :
                     <input name={index} type="text" value={item.subFolder} onChange={this.handleTabDataFolder} />
                 </label>
                 <label className="Settings-input-field">
-                    OVERLAYFOLDER :
+                    TEMPLATEFOLDER :
                     <input name={index} type="text" value={item.overlayFolder} onChange={this.handleTabDataOverlayFolder} />
+                </label>
+                <label className="Settings-input-field">
+                    WIPE :
+                    <input name={index} type="text" value={item.wipe} onChange={this.handleTabDataWipe} />
                 </label>
             </div>
         )
