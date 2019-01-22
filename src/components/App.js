@@ -159,11 +159,7 @@ class App extends PureComponent {
                 });
                 response.data.timeLeft.map((item, index) => {
                     _this2.handleAutoNext.autoNext(item, index);
-                    _this2.handleOverlay.overlay(
-                        item,
-                        index,
-                        _this2.props.store.dataReducer[0].data.channel[index].thumbActiveIndex
-                    );
+                    _this2.handleOverlay.overlay(item, index);
                 });
             },
             error(err) { console.error('Subscription error: ', err); },

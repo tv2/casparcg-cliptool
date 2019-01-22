@@ -7,7 +7,8 @@ class HandleOverlay {
         });
     }
 
-    overlay(item, indexChannel, thumbIndex) {
+    overlay(item, indexChannel) {
+        const thumbIndex = this.store.dataReducer[0].data.channel[indexChannel].thumbActiveIndex;
         const metaData = this.store.dataReducer[0].data.channel[indexChannel].thumbList[thumbIndex].metaList;
         const overlayFolder = this.store.settingsReducer[0].settings.tabData[indexChannel].overlayFolder;
         if (overlayFolder != '') {
