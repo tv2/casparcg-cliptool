@@ -67,6 +67,13 @@ export const dataReducer = ((state = defaultDataReducerState, action) => {
         case 'SET_THUMB_LENGTH':
             if (action.data.length < nextState[0].data.channel[action.data.tab].thumbList.length) {
                 nextState[0].data.channel[action.data.tab].thumbList.length = action.data.length;
+                // Check if active thumb is out of range of new thumblist.
+                if (nextState[0].data.channel[action.data.tab].thumbActiveIndex > (action.data.length - 1)) {
+                    nextState[0].data.channel[action.data.tab].thumbActiveIndex = action.data.length - 1;
+                }
+                if (nextState[0].data.channel[action.data.tab].thumbActiveBgIndex > (action.data.length-1)) {
+                    nextState[0].data.channel[action.data.tab].thumbActiveBgIndex = action.data.length - 1;
+                }
             }
             return nextState;
         case 'SET_THUMB_LIST':
