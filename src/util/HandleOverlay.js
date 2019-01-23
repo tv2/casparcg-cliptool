@@ -11,7 +11,7 @@ class HandleOverlay {
         const thumbIndex = this.store.dataReducer[0].data.channel[indexChannel].thumbActiveIndex;
         const metaData = this.store.dataReducer[0].data.channel[indexChannel].thumbList[thumbIndex].metaList;
         const overlayFolder = this.store.settingsReducer[0].settings.tabData[indexChannel].overlayFolder;
-        if (overlayFolder != '') {
+        if (overlayFolder != '' && !this.store.dataReducer[0].data.ccgInfo[indexChannel].layers[9].paused) {
             metaData.map((metaItem) => {
                 if (metaItem.startTime < item.time && item.time < (metaItem.startTime + 0.10)) {
                     console.log("Lower third on: ", metaItem.startTime, item.time, metaItem.templateData[0].data);

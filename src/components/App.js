@@ -100,6 +100,7 @@ class App extends PureComponent {
                 type: 'SET_CONNECTION_STATUS',
                 data: response.data.serverOnline
             });
+            this.handleAutoNext.isAutoNextStopped();
         })
         .catch((error) => {
             console.log(error);
@@ -265,6 +266,7 @@ class App extends PureComponent {
     //Rendering functions:
 
     renderHeader() {
+
         return (
             <header className="App-header">
                 <div className="App-title-background">
@@ -272,7 +274,7 @@ class App extends PureComponent {
                         {this.props.store.dataReducer[0].data.
                             channel[this.props.store.appNavReducer[0].appNav.activeTab]
                             .thumbList[this.props.store.dataReducer[0].data.channel[this.props.store.appNavReducer[0].appNav.activeTab].thumbActiveBgIndex]
-                            .thumbPix
+                            .thumbPix || ''
                         }
                         className="headerPvwThumbnailImage"
                         />
@@ -283,7 +285,7 @@ class App extends PureComponent {
                         {this.props.store.dataReducer[0].data.
                             channel[this.props.store.appNavReducer[0].appNav.activeTab]
                             .thumbList[this.props.store.dataReducer[0].data.channel[this.props.store.appNavReducer[0].appNav.activeTab].thumbActiveIndex]
-                            .thumbPix
+                            .thumbPix || ''
                         }
                         className="headerPgmThumbnailImage"
                     />
