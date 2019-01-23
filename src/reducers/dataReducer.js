@@ -5,6 +5,7 @@ const defaultDataReducerState = [{
         ccgInfo: {},
         ccgTimeLeft: [0 , 0, 0, 0],
         ccgTime: [0 , 0, 0, 0],
+        ccgPrevTime: [0, 0, 0, 0],
         ccgTimeCounter: ['', '', '', ''],
         channel: [{
             thumbList: [{
@@ -32,6 +33,8 @@ const defaultDataReducerState = [{
 
 const emptyMetaList = defaultDataReducerState[0].data.channel[0].thumbList[0].metaList;
 
+let lastTimeCounter = 0;
+
 export const dataReducer = ((state = defaultDataReducerState, action) => {
 
     let { ...nextState } = state;
@@ -47,6 +50,15 @@ export const dataReducer = ((state = defaultDataReducerState, action) => {
             return nextState;
         case 'SET_TIMELEFT':
             action.data.timeLeft.map((item, index) => {
+                //Test for media playing or paused
+                //ToDo: paused should be correct from CCG statescanner,
+                //but it does not show correctly with CCG 2.1.3
+                nextState[0].data.ccgInfo[index].layers[9].foreground.paused = (state[0].data.ccgTime[index] === item.time) && (state[0].data.ccgPrevTime[index] === item.time);
+                if (lastTimeCounter++ === 5) {
+                    nextState[0].data.ccgPrevTime[index] = state[0].data.ccgTime[index];
+                    lastTimeCounter = 0;
+                }
+
                 nextState[0].data.ccgTimeLeft[index] = item.timeLeft;
                 nextState[0].data.ccgTime[index] = item.time;
                 nextState[0].data.ccgTimeCounter[index] = secondsToTimeCode(item.timeLeft);

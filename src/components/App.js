@@ -159,11 +159,7 @@ class App extends PureComponent {
                 });
                 response.data.timeLeft.map((item, index) => {
                     _this2.handleAutoNext.autoNext(item, index);
-                    _this2.handleOverlay.overlay(
-                        item,
-                        index,
-                        _this2.props.store.dataReducer[0].data.channel[index].thumbActiveIndex
-                    );
+                    _this2.handleOverlay.overlay(item, index);
                 });
             },
             error(err) { console.error('Subscription error: ', err); },
@@ -356,7 +352,7 @@ class App extends PureComponent {
                             () => this.ccgLoadPlay.pvwPlay(this.props.store.appNavReducer[0].appNav.activeTab + 1)
                         }
                     >
-                        TAKE
+                        MIX
                     </button>
                     <button className="startButton"
                         onClick={
