@@ -352,7 +352,7 @@ class App extends PureComponent {
                             () => this.ccgLoadPlay.pvwPlay(this.props.store.appNavReducer[0].appNav.activeTab + 1)
                         }
                     >
-                        TAKE
+                        MIX
                     </button>
                     <button className="startButton"
                         onClick={
