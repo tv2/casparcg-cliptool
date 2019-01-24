@@ -38,8 +38,10 @@ class HandleOverlay {
                     console.log("Lower third OFF: ", (metaItem.startTime + metaItem.duration), item.time, metaItem.templateData[0].data);
                     this.ccgConnection.clear(indexChannel + 1, 20);
                 }
-                //ToDo: better timing of Wipe (start half the lenght) and only when autoNext is engaged
-                if (1.15 > item.timeLeft && item.timeLeft > 1.10 && this.store.settingsReducer[0].settings.tabData[indexChannel].autoPlay) {
+
+                //ToDo: only fire once.
+                let wipeOffset = parseFloat(this.store.settingsReducer[0].settings.tabData[indexChannel].wipeOffset);
+                if (wipeOffset < item.timeLeft && item.timeLeft < (wipeOffset + 0.5) && this.store.settingsReducer[0].settings.tabData[indexChannel].autoPlay) {
                     this.ccgConnection.play(1, 11, this.store.settingsReducer[0].settings.tabData[indexChannel].wipe);
                 }
             });
