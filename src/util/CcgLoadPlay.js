@@ -65,6 +65,7 @@ class CcgLoadPlay {
                 paused: true
             });
             this.ccgConnection.clear(output,20);
+            this.ccgConnection.clear(output,11);
             this.ccgConnection.load(
                 output,
                 layer,
