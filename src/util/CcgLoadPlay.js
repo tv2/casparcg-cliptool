@@ -38,6 +38,7 @@ class CcgLoadPlay {
     }
 
     playMedia(output, layer, index, indexBg) {
+        this.ccgConnection.clear(output,20);
         this.ccgConnection.play(
             output,
             layer,
@@ -46,6 +47,11 @@ class CcgLoadPlay {
             'MIX',
             MIX_DURATION
         );
+        window.store.dispatch({
+            type:'SET_MEDIA_PAUSED',
+            index: (output-1),
+            paused: false
+        });
         this.loadBgMedia(output, 10, indexBg);
     }
 
@@ -53,6 +59,12 @@ class CcgLoadPlay {
         if (this.store.settingsReducer[0].settings.tabData[output-1].autoPlay) {
             this.playMedia(output, 10, index, this.store.dataReducer[0].data.channel[output-1].thumbActiveBgIndex);
         } else {
+            window.store.dispatch({
+                type:'SET_MEDIA_PAUSED',
+                index: (output-1),
+                paused: true
+            });
+            this.ccgConnection.clear(output,20);
             this.ccgConnection.load(
                 output,
                 layer,
