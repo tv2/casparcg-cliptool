@@ -10,16 +10,11 @@ class HandleShortcuts {
 
     //Shortcut for mix and take
     _handleKeyDown(event) {
+        //Corresponding output for QWER shortcut:
+        const keyTuple = {Q: 1, W: 2, E: 3, R: 4};
 
-        const keyTuple = {
-            Q: 1,
-            W: 2,
-            E: 3,
-            R: 4
-        };
-
-        //Only Assign Active Tab to shortcut:
-        //key 1-4
+        //Only Allow Active Tab to shortcut:
+        //key: 1-4
         const pvwPlay = JSON.stringify(this.store.appNavReducer[0].appNav.activeTab+1).charCodeAt(0);
         //key: QWER:
         const pgmPlay = ["Q", "W", "E", "R"][this.store.appNavReducer[0].appNav.activeTab].charCodeAt(0);
