@@ -19,6 +19,7 @@ import {cleanUpFilename} from '../util/filePathStringHandling';
 import CcgLoadPlay from '../util/CcgLoadPlay';
 import HandleAutoNext from '../util/HandleAutoNext';
 import HandleOverlay from '../util/HandleOverlay';
+import HandleShortcuts from '../util/HandleShortcuts';
 
 //CSS files:
 import '../assets/css/Rmc-tabs.css';
@@ -46,19 +47,8 @@ class App extends PureComponent {
         this.updatePlayingStatus = this.updatePlayingStatus.bind(this);
     }
 
-    static getDerivedStateFromError(error) {
-        // Update state so the next render will show the fallback UI.
-        return { hasError: true };
-    }
-
-    componentDidCatch(error, info) {
-        // You can also log the error to an error reporting service
-        logErrorToMyService(error, info);
-    }
 
     componentWillMount() {
-        //Setup Keyboard shortcuts:
-        document.addEventListener("keydown", this._handleKeyDown.bind(this));
 
         //Define Output Tabs:
 
@@ -79,6 +69,7 @@ class App extends PureComponent {
         this.ccgLoadPlay = new CcgLoadPlay(this.ccgConnection);
         this.handleOverlay = new HandleOverlay(this.ccgConnection);
         this.handleAutoNext = new HandleAutoNext(this.ccgLoadPlay);
+        this.handleShortcuts = new HandleShortcuts(this.ccgLoadPlay);
 
         // Initialize CasparCG subscriptions:
         this.ccgSubscribeInfoData();
@@ -241,36 +232,6 @@ class App extends PureComponent {
                 });
             }
         });
-    }
-
-    //Shortcut for mix and take
-    _handleKeyDown(event) {
-
-        //TODO: Shorcut does not work after moving to App.js (still referencing to old Thumbnail)
-
-        //Play PVW 1-4 key 1-4:
-        const pvwPlay = JSON.stringify(this.props.store.appNavReducer[0].appNav.activeTab+1).charCodeAt(0);
-        //Play PGM 1-4 key: QWER:
-        const pgmPlay = ["Q", "W", "E", "R"][this.props.store.appNavReducer[0].appNav.activeTab].charCodeAt(0);
-
-        switch( event.keyCode ) {
-            case pvwPlay:
-                this.ccgLoadPlay.playMedia(
-                    10,
-                    this.state.thumbActiveBgIndex,
-                    this.state.thumbActiveIndex
-                );
-                break;
-            case pgmPlay:
-                this.ccgLoadPlay.playMedia(
-                    10,
-                    this.state.thumbActiveIndex,
-                    this.state.thumbActiveBgIndex
-                );
-                break;
-            default:
-                break;
-        }
     }
 
     //Rendering functions:

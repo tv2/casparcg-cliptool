@@ -19,6 +19,7 @@ class SettingsPage extends Component {
         this.handleTabDataFolder = this.handleTabDataFolder.bind(this);
         this.handleTabDataOverlayFolder = this.handleTabDataOverlayFolder.bind(this);
         this.handleTabDataWipe = this.handleTabDataWipe.bind(this);
+        this.handleTabDataWipeOffset = this.handleTabDataWipeOffset.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.renderChannelSettings = this.renderChannelSettings.bind(this);
     }
@@ -58,7 +59,6 @@ class SettingsPage extends Component {
         );
     }
 
-
     handleTabDataWipe(event) {
         var settingsCopy= Object.assign({}, this.state.settings);
         settingsCopy.tabData[event.target.name].wipe = event.target.value;
@@ -67,6 +67,14 @@ class SettingsPage extends Component {
         );
     }
 
+
+    handleTabDataWipeOffset(event) {
+        var settingsCopy= Object.assign({}, this.state.settings);
+        settingsCopy.tabData[event.target.name].wipeOffset = event.target.value;
+        this.setState(
+            {settings: settingsCopy}
+        );
+    }
 
     handleSubmit(event) {
         saveSettings(this.state.settings);
@@ -90,6 +98,10 @@ class SettingsPage extends Component {
                 <label className="Settings-input-field">
                     WIPE :
                     <input name={index} type="text" value={item.wipe} onChange={this.handleTabDataWipe} />
+                </label>
+                <label className="Settings-input-field">
+                    WIPE OFFSET :
+                    <input name={index} type="text" value={item.wipeOffset} onChange={this.handleTabDataWipeOffset} />
                 </label>
             </div>
         )

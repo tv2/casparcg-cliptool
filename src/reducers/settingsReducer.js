@@ -3,10 +3,10 @@ const defaultSettingsReducerState = [{
         ipAddress: 'localhost',
         port: '5250',
         tabData: [
-            { key: 1, title: 'SCREEN 1', subFolder: '', loop: false, autoPlay: false, overlayFolder: '', wipe: ''},
-            { key: 2, title: 'SCREEN 2', subFolder: '', loop: false, autoPlay: false, overlayFolder: '', wipe: ''},
-            { key: 3, title: 'SCREEN 3', subFolder: '', loop: false, autoPlay: false, overlayFolder: '', wipe: ''},
-            { key: 4, title: 'SCREEN 4', subFolder: '', loop: false, autoPlay: false, overlayFolder: '', wipe: ''}
+            { key: 1, title: 'SCREEN 1', subFolder: '', loop: false, autoPlay: false, overlayFolder: '', wipe: '', wipeOffset: 0.0},
+            { key: 2, title: 'SCREEN 2', subFolder: '', loop: false, autoPlay: false, overlayFolder: '', wipe: '', wipeOffset: 0.0},
+            { key: 3, title: 'SCREEN 3', subFolder: '', loop: false, autoPlay: false, overlayFolder: '', wipe: '', wipeOffset: 0.0},
+            { key: 4, title: 'SCREEN 4', subFolder: '', loop: false, autoPlay: false, overlayFolder: '', wipe: '', wipeOffset: 0.0}
         ]
     }
 }];
@@ -25,6 +25,7 @@ export const settingsReducer = ((state = defaultSettingsReducerState, action) =>
                 nextState[0].settings.tabData[index].autoPlay = action.data.tabData[index].autoPlay || false;
                 nextState[0].settings.tabData[index].overlayFolder = action.data.tabData[index].overlayFolder || '';
                 nextState[0].settings.tabData[index].wipe = action.data.tabData[index].wipe || '';
+                nextState[0].settings.tabData[index].wipeOffset = action.data.tabData[index].wipeOffset || 0.0;
             });
             return nextState;
         case 'LOOP_STATUS':

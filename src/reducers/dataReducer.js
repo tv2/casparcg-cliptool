@@ -64,6 +64,9 @@ export const dataReducer = ((state = defaultDataReducerState, action) => {
                 nextState[0].data.ccgTimeCounter[index] = secondsToTimeCode(item.timeLeft);
             });
             return nextState;
+        case 'SET_MEDIA_PAUSED':
+            nextState[0].data.ccgInfo[action.index].layers[9].foreground.paused = action.paused;
+            return nextState;
         case 'SET_THUMB_LENGTH':
             if (action.data.length < nextState[0].data.channel[action.data.tab].thumbList.length) {
                 nextState[0].data.channel[action.data.tab].thumbList.length = action.data.length;

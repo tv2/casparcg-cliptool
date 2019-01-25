@@ -70,6 +70,7 @@ class Thumbnail extends PureComponent {
                     length: items.length
                 }
             });
+
             items.map((item, index) => {
                 var currentAtIndex = this.props.store.dataReducer[0].data.channel[this.props.ccgOutputProps-1].thumbList[index] | { name: ''};
                 if (item.name != currentAtIndex)
@@ -87,7 +88,7 @@ class Thumbnail extends PureComponent {
 
                     this.props.ccgConnectionProps.dataRetrieve(item.name + ".meta")
                     .then((data) => {
-                        window.store.dispatch({
+                        this.props.dispatch({
                             type:'SET_META_LIST',
                             index: index,
                             tab: this.props.ccgOutputProps-1,
@@ -95,7 +96,7 @@ class Thumbnail extends PureComponent {
                         });
                     })
                     .catch((error) => {
-                        window.store.dispatch({
+                        this.props.dispatch({
                             type:'SET_EMPTY_META',
                             index: index,
                             tab: this.props.ccgOutputProps-1
