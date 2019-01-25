@@ -45,7 +45,7 @@ class HandleOverlay {
         ) {
             let wipeOffset = parseFloat(this.store.settingsReducer[0].settings.tabData[indexChannel].wipeOffset);
             if (wipeOffset < item.timeLeft && item.timeLeft < (wipeOffset + 0.0799) && !this.wipeIsStarted) {
-                this.ccgConnection.play(1, 21, this.store.settingsReducer[0].settings.tabData[indexChannel].wipe);
+                this.ccgConnection.play(1, 11, this.store.settingsReducer[0].settings.tabData[indexChannel].wipe);
                 this.wipeIsStarted = true;
             } else {
                 this.wipeIsStarted = false;
