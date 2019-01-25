@@ -29,7 +29,7 @@ HTML,BODY {
 	top:36px;
 	-webkit-transform-origin: 0% 100%;
 	-webkit-transform: scale(0.0,0.0);
-	background: -webkit-gradient(linear, left top, right bottom, color-stop(0%,#bebebe), color-stop(23%,#e6e6e6), color-stop(50%,#bebebe), color-stop(78%,#e6e6e6), color-stop(100%,#bebebe));
+	background: -webkit-gradient(linear, left bottom, right top, color-stop(0%,#c20000), color-stop(26%,#a32626), color-stop(49%,#b60b0b), color-stop(73%,#be3232), color-stop(100%,#ce0c0c));
 	background-size: 400% 100%;
 }
 
