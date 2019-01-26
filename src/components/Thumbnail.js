@@ -12,7 +12,7 @@ const FPS = 25;
 import { connect } from "react-redux";
 
 //Utils:
-import {cleanUpFilename, extractFilenameFromPath} from '../util/filePathStringHandling';
+import { cleanUpFilename } from '../util/filePathStringHandling';
 
 
 class Thumbnail extends PureComponent {
@@ -57,10 +57,18 @@ class Thumbnail extends PureComponent {
 
 
     loadThumbs() {
-        this.props.ccgConnectionProps.cls(this.props.store.settingsReducer[0].settings.tabData[this.props.ccgOutputProps-1].subFolder)
+        //Filter files manually as
+        //CCG 2.2 does not support subfolder argument in the CLS command
+        let subFolder = cleanUpFilename(this.props.store.settingsReducer[0].settings.tabData[this.props.ccgOutputProps-1].subFolder);
+        //Remove first backslash if it´s there:
+        subFolder = (subFolder.length && subFolder[0] == '/') ? subFolder.slice(1) : subFolder;
+
+        this.props.ccgConnectionProps.cls()
         .then((results) => {
             let items = results.response.data.filter((item) => {
-                return item.type === 'video';
+                return (item.type === 'video' &&
+                        item.name.includes(subFolder)
+                        );
             });
             if (items.length === 0) return false;
             this.props.dispatch({
