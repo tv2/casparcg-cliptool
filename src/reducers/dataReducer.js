@@ -16,6 +16,7 @@ const defaultDataReducerState = [{
                 tallyBg: false,
                 metaList: [{
                     templatePath: '',
+                    layer: 20,
                     startTime: 0,
                     duration: 0,
                     templateData: [{

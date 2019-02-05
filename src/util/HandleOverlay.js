@@ -23,7 +23,7 @@ class HandleOverlay {
                 if (metaItem.startTime < item.time && item.time < (metaItem.startTime + 0.0799) && !this.overlayIsStarted) {
                     console.log("Lower third on: ", metaItem.startTime, item.time, metaItem.templateData[0].data);
                     this.ccgConnection.cgAdd(
-                        1,20, 1,
+                        1, metaItem.layer, 1,
                         overlayFolder + metaItem.templatePath,
                         1,
                         this.metaDataToXml(metaItem)
@@ -31,7 +31,7 @@ class HandleOverlay {
                     this.overlayIsStarted = true;
                 } else if ((metaItem.startTime + metaItem.duration) < item.time && item.time < (metaItem.startTime + metaItem.duration + 0.0799) && !this.overlayIsStarted) {
                     console.log("Lower third OFF: ", (metaItem.startTime + metaItem.duration), item.time, metaItem.templateData[0].data);
-                    this.ccgConnection.clear(indexChannel + 1, 20);
+                    this.ccgConnection.clear(indexChannel + 1, metaItem.layer);
                     this.overlayIsStarted = true;
                 } else {
                     this.overlayIsStarted = false;
