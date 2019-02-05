@@ -38,7 +38,9 @@ class CcgLoadPlay {
     }
 
     playMedia(output, layer, index, indexBg) {
-        this.ccgConnection.clear(output);
+        for (let i = 11; i<30; i++) {
+            this.ccgConnection.clear(output, i);
+        }
         this.ccgConnection.play(
             output,
             layer,
