@@ -37,6 +37,7 @@ class App extends PureComponent {
             tabData: []
         };
 
+        //BINDS:
         this.checkConnectionStatus = this.checkConnectionStatus.bind(this);
         this.handleSettingsPage = this.handleSettingsPage.bind(this);
         this.handleAutoPlayStatus = this.handleAutoPlayStatus.bind(this);
@@ -52,13 +53,12 @@ class App extends PureComponent {
 
         //Define Output Tabs:
 
-        this.setState({tabData: this.props.store.dataReducer[0].data.channel.map((item, index) => {
-            return this.props.store.settingsReducer[0].settings.tabData[index];
-            })
+        this.setState({
+            tabData: this.props.store.dataReducer[0].data.channel
+                .map((item, index) => {
+                    return this.props.store.settingsReducer[0].settings.tabData[index];
+                })
         });
-        if (this.state.tabData.length > this.props.store.dataReducer[0].data.channel.length) {
-            this.state.tabData.length = this.props.store.dataReducer[0].data.channel.length;
-        }
 
         this.ccgConnection = new CasparCG(
             {

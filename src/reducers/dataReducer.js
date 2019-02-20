@@ -1,42 +1,53 @@
 import { secondsToTimeCode } from '../util/TimeCodeToString';
 
-const defaultDataReducerState = [{
-    data: {
-        ccgInfo: {},
-        ccgTimeLeft: [0 , 0, 0, 0],
-        ccgTime: [0 , 0, 0, 0],
-        ccgPrevTime: [0, 0, 0, 0],
-        ccgTimeCounter: ['', '', '', ''],
-        channel: [{
-            thumbList: [{
-                name: 'none',
-                path: 'none',
-                thumbPix: '',
-                tally: false,
-                tallyBg: false,
-                metaList: [{
-                    templatePath: '',
-                    layer: 20,
-                    startTime: 0,
-                    duration: 0,
-                    templateData: [{
-                        id: '',
-                        type: '',
-                        data: ''
-                    }]
-                }],
-            }],
-            thumbActiveIndex: 0,
-            thumbActiveBgIndex: 0
-        }]
-    }
-}];
+//ToDo: Important!!! Change this to a check from server!!!!!
+const numberOfChannels = 4;
 
-const emptyMetaList = defaultDataReducerState[0].data.channel[0].thumbList[0].metaList;
+const defaultDataReducerState = () => {
+    let stateDefault = [{
+        data: {
+            ccgInfo: {},
+            ccgTimeLeft: [0 , 0, 0, 0],
+            ccgTime: [0 , 0, 0, 0],
+            ccgPrevTime: [0, 0, 0, 0],
+            ccgTimeCounter: ['', '', '', ''],
+            channel: []
+        }
+    }];
+    let channel = {
+        thumbList: [{
+            name: 'none',
+            path: 'none',
+            thumbPix: '',
+            tally: false,
+            tallyBg: false,
+            metaList: [{
+                templatePath: '',
+                layer: 20,
+                startTime: 0,
+                duration: 0,
+                templateData: [{
+                    id: '',
+                    type: '',
+                    data: ''
+                }]
+            }],
+        }],
+        thumbActiveIndex: 0,
+        thumbActiveBgIndex: 0
+    };
+    for (let i=0; i<numberOfChannels; i++) {
+        stateDefault[0].data.channel.push(JSON.parse(JSON.stringify(channel)));
+    }
+    return stateDefault;
+};
+
+const temp = defaultDataReducerState();
+const emptyMetaList = temp[0].data.channel[0].thumbList[0].metaList;
 
 let lastTimeCounter = 0;
 
-export const dataReducer = ((state = defaultDataReducerState, action) => {
+export const dataReducer = ((state = defaultDataReducerState(), action) => {
 
     let { ...nextState } = state;
 
