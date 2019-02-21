@@ -52,10 +52,9 @@ class App extends PureComponent {
     componentWillMount() {
 
         //Define Output Tabs:
-
-        let tabs = this.props.store.dataReducer[0].data.channel
+        let tabs = this.props.store.data[0].channel
                 .map((item, index) => {
-                    return this.props.store.settingsReducer[0].settings.tabData[index];
+                    return this.props.store.settings[0].tabData[index];
                 });
         //Hide Tabs with no name:
         tabs = tabs.filter((item) => {
@@ -65,8 +64,8 @@ class App extends PureComponent {
 
         this.ccgConnection = new CasparCG(
             {
-                host: this.props.store.settingsReducer[0].settings.ipAddress,
-                port: this.props.store.settingsReducer[0].settings.port,
+                host: this.props.store.settings[0].ipAddress,
+                port: this.props.store.settings[0].port,
                 autoConnect: true,
             });
         this.ccgLoadPlay = new CcgLoadPlay(this.ccgConnection);
@@ -125,7 +124,7 @@ class App extends PureComponent {
             type:'AUTOPLAY_STATUS',
             data: this.props.store.appNavReducer[0].appNav.activeTab
         });
-        saveSettings(this.props.store.settingsReducer[0].settings);
+        saveSettings(this.props.store.settings[0]);
     }
 
     handleLoopStatus() {
@@ -133,7 +132,7 @@ class App extends PureComponent {
             type:'LOOP_STATUS',
             data: this.props.store.appNavReducer[0].appNav.activeTab
         });
-        saveSettings(this.props.store.settingsReducer[0].settings);
+        saveSettings(this.props.store.settings[0]);
     }
 
     setActiveTab(tab) {
@@ -208,10 +207,10 @@ class App extends PureComponent {
     }
 
     updatePlayingStatus(tab) {
-        var infoStatus = this.props.store.dataReducer[0].data.ccgInfo[tab].layers[10-1];
+        var infoStatus = this.props.store.data[0].ccgInfo[tab].layers[10-1];
         var fileNameFg = cleanUpFilename(infoStatus.foreground.name || '');
         var fileNameBg = cleanUpFilename(infoStatus.background.name || '');
-        this.props.store.dataReducer[0].data.channel[tab].thumbList
+        this.props.store.data[0].channel[tab].thumbList
         .map((item, index)=>{
 
             //Handle Foreground:
@@ -245,20 +244,20 @@ class App extends PureComponent {
             <header className="App-header">
                 <div className="App-title-background">
                     <img src=
-                        {this.props.store.dataReducer[0].data.
+                        {this.props.store.data[0].
                             channel[this.props.store.appNavReducer[0].appNav.activeTab]
-                            .thumbList[this.props.store.dataReducer[0].data.channel[this.props.store.appNavReducer[0].appNav.activeTab].thumbActiveBgIndex]
+                            .thumbList[this.props.store.data[0].channel[this.props.store.appNavReducer[0].appNav.activeTab].thumbActiveBgIndex]
                             .thumbPix || ''
                         }
                         className="headerPvwThumbnailImage"
                         />
                     <button className="headerPgmCounter">
-                        {this.props.store.dataReducer[0].data.ccgTimeCounter[this.props.store.appNavReducer[0].appNav.activeTab]}
+                        {this.props.store.data[0].ccgTimeCounter[this.props.store.appNavReducer[0].appNav.activeTab]}
                     </button>
                     <img src=
-                        {this.props.store.dataReducer[0].data.
+                        {this.props.store.data[0].
                             channel[this.props.store.appNavReducer[0].appNav.activeTab]
-                            .thumbList[this.props.store.dataReducer[0].data.channel[this.props.store.appNavReducer[0].appNav.activeTab].thumbActiveIndex]
+                            .thumbList[this.props.store.data[0].channel[this.props.store.appNavReducer[0].appNav.activeTab].thumbActiveIndex]
                             .thumbPix || ''
                         }
                         className="headerPgmThumbnailImage"
@@ -289,7 +288,7 @@ class App extends PureComponent {
                     <button className="loop-button"
                         onClick={this.handleLoopStatus}
                         style={
-                            this.props.store.settingsReducer[0].settings.tabData[this.props.store.appNavReducer[0].appNav.activeTab].loop
+                            this.props.store.settings[0].tabData[this.props.store.appNavReducer[0].appNav.activeTab].loop
                             ? {backgroundColor: 'rgb(28, 115, 165)'}
                             : {backgroundColor: 'grey'}
                         }
@@ -299,7 +298,7 @@ class App extends PureComponent {
                     <button className="autoPlay-button"
                         onClick={this.handleAutoPlayStatus}
                         style={
-                            this.props.store.settingsReducer[0].settings.tabData[this.props.store.appNavReducer[0].appNav.activeTab].autoPlay
+                            this.props.store.settings[0].tabData[this.props.store.appNavReducer[0].appNav.activeTab].autoPlay
                             ? {backgroundColor: 'red'}
                             : {backgroundColor: 'grey'}
                         }

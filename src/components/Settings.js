@@ -12,7 +12,7 @@ class SettingsPage extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            settings: this.props.store.settingsReducer[0].settings,
+            settings: this.props.store.settings[0],
         };
         this.handleChange = this.handleChange.bind(this);
         this.handleTabDataTitle = this.handleTabDataTitle.bind(this);

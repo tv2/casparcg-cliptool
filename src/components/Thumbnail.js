@@ -59,7 +59,7 @@ class Thumbnail extends PureComponent {
     loadThumbs() {
         //Filter files manually as
         //CCG 2.2 does not support subfolder argument in the CLS command
-        let subFolder = cleanUpFilename(this.props.store.settingsReducer[0].settings.tabData[this.props.ccgOutputProps-1].subFolder);
+        let subFolder = cleanUpFilename(this.props.store.settings[0].tabData[this.props.ccgOutputProps-1].subFolder);
         //Remove first backslash if it´s there:
         subFolder = (subFolder.length && subFolder[0] == '/') ? subFolder.slice(1) : subFolder;
 
@@ -80,7 +80,7 @@ class Thumbnail extends PureComponent {
             });
 
             items.map((item, index) => {
-                var currentAtIndex = this.props.store.dataReducer[0].data.channel[this.props.ccgOutputProps-1].thumbList[index] | { name: ''};
+                var currentAtIndex = this.props.store.data[0].channel[this.props.ccgOutputProps-1].thumbList[index] | { name: ''};
                 if (item.name != currentAtIndex)
                     {
                     item.tally = false;
@@ -130,7 +130,7 @@ class Thumbnail extends PureComponent {
         .catch ((error) => {
             console.log("Error :" , error);
             if (error.response.code === 404 ) {
-                window.alert("Folder: " + this.props.store.settingsReducer[0].settings.tabData[this.props.ccgOutputProps-1].subFolder + " does not exist");
+                window.alert("Folder: " + this.props.store.settings[0].tabData[this.props.ccgOutputProps-1].subFolder + " does not exist");
             }
         });
     }
@@ -169,7 +169,7 @@ class Thumbnail extends PureComponent {
                 />
                 <a className="playing">
                     {item.tally ?
-                        this.props.store.dataReducer[0].data.ccgTimeCounter[this.props.ccgOutputProps-1]
+                        this.props.store.data[0].ccgTimeCounter[this.props.ccgOutputProps-1]
                         : ""
                     }
                 </a>
@@ -189,7 +189,7 @@ class Thumbnail extends PureComponent {
                     this.onDragEnd(order, sortable, evt);
                 }}
             >
-                {this.props.store.dataReducer[0].data.channel[this.props.ccgOutputProps-1].thumbList
+                {this.props.store.data[0].channel[this.props.ccgOutputProps-1].thumbList
                 .map((item, index) => (
                     <div
                         className="boxComponent"
