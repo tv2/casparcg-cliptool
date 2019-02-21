@@ -53,12 +53,15 @@ class App extends PureComponent {
 
         //Define Output Tabs:
 
-        this.setState({
-            tabData: this.props.store.dataReducer[0].data.channel
+        let tabs = this.props.store.dataReducer[0].data.channel
                 .map((item, index) => {
                     return this.props.store.settingsReducer[0].settings.tabData[index];
-                })
+                });
+        //Hide Tabs with no name:
+        tabs = tabs.filter((item) => {
+            return item.title != "";
         });
+        this.setState({tabData: tabs});
 
         this.ccgConnection = new CasparCG(
             {
