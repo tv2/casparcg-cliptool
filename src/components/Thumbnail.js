@@ -29,10 +29,12 @@ class Thumbnail extends PureComponent {
         this.loadThumbs = this.loadThumbs.bind(this);
         this.onDragEnd = this.onDragEnd.bind(this);
         this.ccgMediaFilesChanges = this.ccgMediaFilesChanged.bind(this);
+
+        this.loadThumbs();
+
     }
 
     componentDidMount() {
-        this.loadThumbs();
         this.ccgMediaFilesChanged();
     }
 
