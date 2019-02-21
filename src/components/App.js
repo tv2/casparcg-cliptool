@@ -207,7 +207,13 @@ class App extends PureComponent {
     }
 
     updatePlayingStatus(tab) {
-        var infoStatus = this.props.store.data[0].ccgInfo[tab].layers[10-1];
+        //Don´t update if data not loaded:
+        if (this.props.store.data[0].ccgInfo.length < 1) {
+            console.log("Still loading....");
+            return;
+        }
+        var infoStatus = this.props.store.data[0].ccgInfo[tab].layers[10-1] || '';
+
         var fileNameFg = cleanUpFilename(infoStatus.foreground.name || '');
         var fileNameBg = cleanUpFilename(infoStatus.background.name || '');
         this.props.store.data[0].channel[tab].thumbList

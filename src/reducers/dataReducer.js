@@ -6,7 +6,7 @@ const numberOfChannels = 4;
 
 const defaultDataReducerState = () => {
     let stateDefault = [{
-        ccgInfo: {},
+        ccgInfo: [],
         ccgTimeLeft: [0 , 0, 0, 0],
         ccgTime: [0 , 0, 0, 0],
         ccgPrevTime: [0, 0, 0, 0],
