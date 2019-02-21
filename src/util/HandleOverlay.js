@@ -5,8 +5,14 @@ class HandleOverlay {
         const unsubscribe = store.subscribe(() => {
             this.store = window.store.getState();
         });
-
-        this.overlayIsStarted = [false, false, false, false];
+        this.overlayIsStarted = [];
+        for (let iChannel = 0; iChannel<4; iChannel++) {
+            let layerItems = [];
+            for (let iLayer = 0; iLayer<30; iLayer++) {
+                layerItems.push(false);
+            }
+            this.overlayIsStarted.push(layerItems);
+        }
         this.wipeIsStarted = [false, false, false, false];
     }
 
@@ -20,21 +26,21 @@ class HandleOverlay {
                 if (metaItem.startTime < 0.08) {
                     metaItem.startTime = 0.08;
                 }
-                if (metaItem.startTime < item.time && item.time < (metaItem.startTime + 0.0799) && !this.overlayIsStarted) {
+                if (metaItem.startTime < item.time && item.time < (metaItem.startTime + 0.0799) && !this.overlayIsStarted[indexChannel][metaItem.layer]) {
                     console.log("Lower third on: ", metaItem.startTime, item.time, metaItem.templateData[0].data);
                     this.ccgConnection.cgAdd(
-                        1,20, 1,
+                        1, metaItem.layer, 1,
                         overlayFolder + metaItem.templatePath,
                         1,
                         this.metaDataToXml(metaItem)
                     );
-                    this.overlayIsStarted = true;
-                } else if ((metaItem.startTime + metaItem.duration) < item.time && item.time < (metaItem.startTime + metaItem.duration + 0.0799) && !this.overlayIsStarted) {
+                    this.overlayIsStarted[indexChannel][metaItem.layer] = true;
+                } else if ((metaItem.startTime + metaItem.duration) < item.time && item.time < (metaItem.startTime + metaItem.duration + 0.0799) && !this.overlayIsStarted[indexChannel][metaItem.layer]) {
                     console.log("Lower third OFF: ", (metaItem.startTime + metaItem.duration), item.time, metaItem.templateData[0].data);
-                    this.ccgConnection.clear(indexChannel + 1, 20);
-                    this.overlayIsStarted = true;
+                    this.ccgConnection.clear(indexChannel + 1, metaItem.layer);
+                    this.overlayIsStarted[indexChannel][metaItem.layer] = true;
                 } else {
-                    this.overlayIsStarted = false;
+                    this.overlayIsStarted[indexChannel][metaItem.layer] = false;
                 }
 
             });
