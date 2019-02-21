@@ -122,7 +122,7 @@ class App extends PureComponent {
     handleAutoPlayStatus() {
         this.props.dispatch({
             type:'AUTOPLAY_STATUS',
-            data: this.props.store.appNavReducer[0].appNav.activeTab
+            data: this.props.store.appNav[0].appNav.activeTab
         });
         saveSettings(this.props.store.settings[0]);
     }
@@ -130,7 +130,7 @@ class App extends PureComponent {
     handleLoopStatus() {
         this.props.dispatch({
             type:'LOOP_STATUS',
-            data: this.props.store.appNavReducer[0].appNav.activeTab
+            data: this.props.store.appNav[0].appNav.activeTab
         });
         saveSettings(this.props.store.settings[0]);
     }
@@ -245,19 +245,19 @@ class App extends PureComponent {
                 <div className="App-title-background">
                     <img src=
                         {this.props.store.data[0].
-                            channel[this.props.store.appNavReducer[0].appNav.activeTab]
-                            .thumbList[this.props.store.data[0].channel[this.props.store.appNavReducer[0].appNav.activeTab].thumbActiveBgIndex]
+                            channel[this.props.store.appNav[0].appNav.activeTab]
+                            .thumbList[this.props.store.data[0].channel[this.props.store.appNav[0].appNav.activeTab].thumbActiveBgIndex]
                             .thumbPix || ''
                         }
                         className="headerPvwThumbnailImage"
                         />
                     <button className="headerPgmCounter">
-                        {this.props.store.data[0].ccgTimeCounter[this.props.store.appNavReducer[0].appNav.activeTab]}
+                        {this.props.store.data[0].ccgTimeCounter[this.props.store.appNav[0].appNav.activeTab]}
                     </button>
                     <img src=
                         {this.props.store.data[0].
-                            channel[this.props.store.appNavReducer[0].appNav.activeTab]
-                            .thumbList[this.props.store.data[0].channel[this.props.store.appNavReducer[0].appNav.activeTab].thumbActiveIndex]
+                            channel[this.props.store.appNav[0].appNav.activeTab]
+                            .thumbList[this.props.store.data[0].channel[this.props.store.appNav[0].appNav.activeTab].thumbActiveIndex]
                             .thumbPix || ''
                         }
                         className="headerPgmThumbnailImage"
@@ -267,12 +267,12 @@ class App extends PureComponent {
                 <div className="Reload-setup-background">
                     <button className="App-connection-status"
                         style={
-                            this.props.store.appNavReducer[0].appNav.connectionStatus
+                            this.props.store.appNav[0].appNav.connectionStatus
                             ? {backgroundColor: "rgb(0, 128, 4)"}
                             : {backgroundColor: "red"}
                         }
                     >
-                        {this.props.store.appNavReducer[0].appNav.connectionStatus ? "CONNECTED" : "CONNECTING"}
+                        {this.props.store.appNav[0].appNav.connectionStatus ? "CONNECTED" : "CONNECTING"}
                     </button>
                     <button className="App-settings-button"
                         onClick={this.handleSettingsPage}>
@@ -288,7 +288,7 @@ class App extends PureComponent {
                     <button className="loop-button"
                         onClick={this.handleLoopStatus}
                         style={
-                            this.props.store.settings[0].tabData[this.props.store.appNavReducer[0].appNav.activeTab].loop
+                            this.props.store.settings[0].tabData[this.props.store.appNav[0].appNav.activeTab].loop
                             ? {backgroundColor: 'rgb(28, 115, 165)'}
                             : {backgroundColor: 'grey'}
                         }
@@ -298,7 +298,7 @@ class App extends PureComponent {
                     <button className="autoPlay-button"
                         onClick={this.handleAutoPlayStatus}
                         style={
-                            this.props.store.settings[0].tabData[this.props.store.appNavReducer[0].appNav.activeTab].autoPlay
+                            this.props.store.settings[0].tabData[this.props.store.appNav[0].appNav.activeTab].autoPlay
                             ? {backgroundColor: 'red'}
                             : {backgroundColor: 'grey'}
                         }
@@ -310,28 +310,28 @@ class App extends PureComponent {
                 <div className="mixButtonBackground">
                     <button className="prevCueButton"
                         onClick={
-                            () => this.ccgLoadPlay.prevCue(this.props.store.appNavReducer[0].appNav.activeTab + 1)
+                            () => this.ccgLoadPlay.prevCue(this.props.store.appNav[0].appNav.activeTab + 1)
                         }
                     >
                         PREV
                     </button>
                     <button className="nextCueButton"
                         onClick={
-                            () => this.ccgLoadPlay.nextCue(this.props.store.appNavReducer[0].appNav.activeTab + 1)
+                            () => this.ccgLoadPlay.nextCue(this.props.store.appNav[0].appNav.activeTab + 1)
                         }
                     >
                         NEXT
                     </button>
                     <button className="mixButton"
                         onClick={
-                            () => this.ccgLoadPlay.pvwPlay(this.props.store.appNavReducer[0].appNav.activeTab + 1)
+                            () => this.ccgLoadPlay.pvwPlay(this.props.store.appNav[0].appNav.activeTab + 1)
                         }
                     >
                         MIX
                     </button>
                     <button className="startButton"
                         onClick={
-                            () => this.ccgLoadPlay.pgmPlay(this.props.store.appNavReducer[0].appNav.activeTab + 1)
+                            () => this.ccgLoadPlay.pgmPlay(this.props.store.appNav[0].appNav.activeTab + 1)
                         }
                     >
                         START
