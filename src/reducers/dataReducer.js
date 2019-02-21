@@ -1,4 +1,5 @@
 import { secondsToTimeCode } from '../util/TimeCodeToString';
+import { deepCloneCopy } from '../util/deepCloneObject';
 
 //ToDo: Important!!! Change this to a check from server!!!!!
 const numberOfChannels = 4;
@@ -37,7 +38,7 @@ const defaultDataReducerState = () => {
         thumbActiveBgIndex: 0
     };
     for (let i=0; i<numberOfChannels; i++) {
-        stateDefault[0].data.channel.push(JSON.parse(JSON.stringify(channel)));
+        stateDefault[0].data.channel.push(deepCloneCopy(channel));
     }
     return stateDefault;
 };
@@ -49,7 +50,7 @@ let lastTimeCounter = 0;
 
 export const dataReducer = ((state = defaultDataReducerState(), action) => {
 
-    let { ...nextState } = state;
+    let nextState = deepCloneCopy(state);
 
     switch(action.type) {
         case 'SET_INFO_CHANNEL':
