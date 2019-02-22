@@ -5,6 +5,7 @@
                 "templatePath": "/HTML-Bundt/BUNDT",
                 "startTime": 0.9,
                 "duration": 4.0,
+                "layer": 20,
                 "templateData": [
                     {
                         "id": "f0",
@@ -22,11 +23,12 @@
                 "templatePath": "/HTML-Bundt/BUNDT",
                 "startTime": 5.5,
                 "duration": 3.5,
+                "layer": 19,
                 "templateData": [
                     {
                         "id": "f0",
                         "type": "text",
-                        "data": "And a little more"
+                        "data": "And a little more in another layer"
                     },
                     {
                         "id": "f1",

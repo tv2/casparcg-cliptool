@@ -15,12 +15,12 @@ class SettingsPage extends Component {
             settings: this.props.store.settings[0],
         };
         this.handleChange = this.handleChange.bind(this);
-        this.handleTabDataTitle = this.handleTabDataTitle.bind(this);
-        this.handleTabDataMediaFolder = this.handleTabDataMediaFolder.bind(this);
-        this.handleTabDataDataFolder = this.handleTabDataDataFolder.bind(this);
-        this.handleTabDataOverlayFolder = this.handleTabDataOverlayFolder.bind(this);
-        this.handleTabDataWipe = this.handleTabDataWipe.bind(this);
-        this.handleTabDataWipeOffset = this.handleTabDataWipeOffset.bind(this);
+        this.handleTabTitle = this.handleTabTitle.bind(this);
+        this.handleTabMediaFolder = this.handleTabMediaFolder.bind(this);
+        this.handleTabDataFolder = this.handleTabDataFolder.bind(this);
+        this.handleTabOverlayFolder = this.handleTabOverlayFolder.bind(this);
+        this.handleTabWipe = this.handleTabWipe.bind(this);
+        this.handleTabWipeOffset = this.handleTabWipeOffset.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.renderChannelSettings = this.renderChannelSettings.bind(this);
     }
@@ -36,7 +36,7 @@ class SettingsPage extends Component {
         );
     }
 
-    handleTabDataTitle(event) {
+    handleTabTitle(event) {
         var settingsCopy= Object.assign({}, this.state.settings);
         settingsCopy.tabData[event.target.name].title = event.target.value;
         this.setState(
@@ -44,7 +44,7 @@ class SettingsPage extends Component {
         );
     }
 
-    handleTabDataMediaFolder(event) {
+    handleTabMediaFolder(event) {
         var settingsCopy= Object.assign({}, this.state.settings);
         settingsCopy.tabData[event.target.name].subFolder = event.target.value;
         this.setState(
@@ -53,7 +53,7 @@ class SettingsPage extends Component {
     }
 
 
-    handleTabDataDataFolder(event) {
+    handleTabDataFolder(event) {
         var settingsCopy= Object.assign({}, this.state.settings);
         settingsCopy.tabData[event.target.name].dataFolder = event.target.value;
         this.setState(
@@ -61,7 +61,7 @@ class SettingsPage extends Component {
         );
     }
 
-    handleTabDataOverlayFolder(event) {
+    handleTabOverlayFolder(event) {
         var settingsCopy= Object.assign({}, this.state.settings);
         settingsCopy.tabData[event.target.name].overlayFolder = event.target.value;
         this.setState(
@@ -69,7 +69,7 @@ class SettingsPage extends Component {
         );
     }
 
-    handleTabDataWipe(event) {
+    handleTabWipe(event) {
         var settingsCopy= Object.assign({}, this.state.settings);
         settingsCopy.tabData[event.target.name].wipe = event.target.value;
         this.setState(
@@ -78,7 +78,7 @@ class SettingsPage extends Component {
     }
 
 
-    handleTabDataWipeOffset(event) {
+    handleTabWipeOffset(event) {
         var settingsCopy= Object.assign({}, this.state.settings);
         settingsCopy.tabData[event.target.name].wipeOffset = event.target.value;
         this.setState(
@@ -95,27 +95,27 @@ class SettingsPage extends Component {
             <div className="Settings-channel-form" onSubmit={this.handleSubmit}>
                 <label className="Settings-input-field">
                     OUT {index+1} :
-                    <input name={index} type="text" value={item.title} onChange={this.handleTabDataTitle} />
+                    <input name={index} type="text" value={item.title} onChange={this.handleTabTitle} />
                 </label>
                 <label className="Settings-input-field">
                     MEDIAFOLDER :
-                    <input name={index} type="text" value={item.subFolder} onChange={this.handleTabDataMediaFolder} />
+                    <input name={index} type="text" value={item.subFolder} onChange={this.handleTabMediaFolder} />
                 </label>
                 <label className="Settings-input-field">
                     DATAFOLDER :
-                    <input name={index} type="text" value={item.dataFolder} onChange={this.handleTabDataDataFolder} />
+                    <input name={index} type="text" value={item.dataFolder} onChange={this.handleTabDataFolder} />
                 </label>
                 <label className="Settings-input-field">
                     TEMPLATEFOLDER :
-                    <input name={index} type="text" value={item.overlayFolder} onChange={this.handleTabDataOverlayFolder} />
+                    <input name={index} type="text" value={item.overlayFolder} onChange={this.handleTabOverlayFolder} />
                 </label>
                 <label className="Settings-input-field">
                     WIPE :
-                    <input name={index} type="text" value={item.wipe} onChange={this.handleTabDataWipe} />
+                    <input name={index} type="text" value={item.wipe} onChange={this.handleTabWipe} />
                 </label>
                 <label className="Settings-input-field">
                     WIPE OFFSET :
-                    <input name={index} type="text" value={item.wipeOffset} onChange={this.handleTabDataWipeOffset} />
+                    <input name={index} type="text" value={item.wipeOffset} onChange={this.handleTabWipeOffset} />
                 </label>
             </div>
         )
