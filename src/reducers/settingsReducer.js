@@ -1,29 +1,41 @@
-const defaultSettingsReducerState = [{
+import { deepCloneCopy } from '../util/deepCloneObject';
+
+const defaultSettingsReducerState = () => {
+    let defaultState = [{
         ipAddress: 'localhost',
         port: '5250',
-        tabData: [
-            { key: 1, title: 'SCREEN 1', subFolder: '', loop: false, autoPlay: false, overlayFolder: '', wipe: '', wipeOffset: 0.0},
-            { key: 2, title: 'SCREEN 2', subFolder: '', loop: false, autoPlay: false, overlayFolder: '', wipe: '', wipeOffset: 0.0},
-            { key: 3, title: 'SCREEN 3', subFolder: '', loop: false, autoPlay: false, overlayFolder: '', wipe: '', wipeOffset: 0.0},
-            { key: 4, title: 'SCREEN 4', subFolder: '', loop: false, autoPlay: false, overlayFolder: '', wipe: '', wipeOffset: 0.0}
-        ]
-}];
+        tabData: []
+    }];
+    for (let i=0; i<4; i++) {
+        defaultState[0].tabData.push({ key: (i+1),
+            title: 'SCREEN ' + (i+1),
+            subFolder: '',
+            loop: false,
+            autoPlay: false,
+            overlayFolder: '',
+            wipe: '',
+            wipeOffset: 0.0
+        });
+    }
+    return defaultState;
+}
 
-export const settings = ((state = defaultSettingsReducerState, action) => {
+export const settings = ((state = defaultSettingsReducerState(), action) => {
     let { ...nextState } = state;
 
     switch(action.type) {
         case 'UPDATE_SETTINGS':
+            let { tabData } = action.data;
             nextState[0].ipAddress = action.data.ipAddress;
             nextState[0].port = action.data.port;
             nextState[0].tabData.map((item, index) => {
-                nextState[0].tabData[index].title = action.data.tabData[index].title || '';
-                nextState[0].tabData[index].subFolder = action.data.tabData[index].subFolder || '';
-                nextState[0].tabData[index].loop = action.data.tabData[index].loop || false;
-                nextState[0].tabData[index].autoPlay = action.data.tabData[index].autoPlay || false;
-                nextState[0].tabData[index].overlayFolder = action.data.tabData[index].overlayFolder || '';
-                nextState[0].tabData[index].wipe = action.data.tabData[index].wipe || '';
-                nextState[0].tabData[index].wipeOffset = action.data.tabData[index].wipeOffset || 0.0;
+                item.title = tabData[index].title || '';
+                item.subFolder = tabData[index].subFolder || '';
+                item.loop = tabData[index].loop || false;
+                item.autoPlay = tabData[index].autoPlay || false;
+                item.overlayFolder = tabData[index].overlayFolder || '';
+                item.wipe = tabData[index].wipe || '';
+                item.wipeOffset = tabData[index].wipeOffset || 0.0;
             });
             return nextState;
         case 'LOOP_STATUS':
