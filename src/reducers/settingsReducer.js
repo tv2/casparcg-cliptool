@@ -13,12 +13,13 @@ const defaultSettingsReducerState = () => {
             loop: false,
             autoPlay: false,
             overlayFolder: '',
+            dataFolder: '',
             wipe: '',
             wipeOffset: 0.0
         });
     }
     return defaultState;
-}
+};
 
 export const settings = ((state = defaultSettingsReducerState(), action) => {
     let { ...nextState } = state;
@@ -34,6 +35,7 @@ export const settings = ((state = defaultSettingsReducerState(), action) => {
                 item.loop = tabData[index].loop || false;
                 item.autoPlay = tabData[index].autoPlay || false;
                 item.overlayFolder = tabData[index].overlayFolder || '';
+                item.dataFolder = tabData[index].dataFolder || '';
                 item.wipe = tabData[index].wipe || '';
                 item.wipeOffset = tabData[index].wipeOffset || 0.0;
             });

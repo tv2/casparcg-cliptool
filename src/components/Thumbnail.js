@@ -95,7 +95,12 @@ class Thumbnail extends PureComponent {
                         }
                     });
 
-                    this.props.ccgConnectionProps.dataRetrieve(item.name + ".meta")
+                    let regEx = new RegExp(this.props.store.settings[0].tabData[this.props.ccgOutputProps-1].subFolder, "ig");
+                    let dataName = item.name.replace(
+                        regEx,
+                        this.props.store.settings[0].tabData[this.props.ccgOutputProps-1].dataFolder
+                    );
+                    this.props.ccgConnectionProps.dataRetrieve(dataName + ".meta")
                     .then((data) => {
                         this.props.dispatch({
                             type:'SET_META_LIST',

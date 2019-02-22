@@ -41,7 +41,6 @@ const defaultDataReducerState = () => {
     return stateDefault;
 };
 
-const emptyMetaList = defaultDataReducerState()[0].channel[0].thumbList[0].metaList;
 let lastTimeCounter = 0;
 
 export const data = ((state = defaultDataReducerState(), action) => {
@@ -94,7 +93,7 @@ export const data = ((state = defaultDataReducerState(), action) => {
             } else {
                 nextState[0].channel[action.data.tab].thumbList.push(action.data.thumbList);
             }
-            nextState[0].channel[action.data.tab].thumbList[action.data.index].metaList = deepCloneCopy(emptyMetaList);
+            nextState[0].channel[action.data.tab].thumbList[action.data.index].metaList = [];
             return nextState;
         case 'SET_THUMB_PIX':
             nextState[0].channel[action.data.tab].thumbList[action.data.index].thumbPix = action.data.thumbPix;
@@ -103,7 +102,7 @@ export const data = ((state = defaultDataReducerState(), action) => {
             nextState[0].channel[action.tab].thumbList[action.index].metaList = action.metaList;
             return nextState;
         case 'SET_EMPTY_META':
-            nextState[0].channel[action.tab].thumbList[action.index].metaList = deepCloneCopy(emptyMetaList);
+            nextState[0].channel[action.tab].thumbList[action.index].metaList = [];
             return nextState;
         case 'MOVE_THUMB_IN_LIST':
             const result = Array.from(nextState[0].channel[action.data.tab].thumbList);
