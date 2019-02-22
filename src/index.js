@@ -33,7 +33,7 @@ storeRedux.dispatch({
 // Initialize CasparCG-State-Scanner GraphQL:
 
 const wsLink = new WebSocketLink({
-    uri: "ws://" + storeRedux.getState().settingsReducer[0].settings.ipAddress + ":5254/graphql",
+    uri: "ws://" + storeRedux.getState().settings[0].ipAddress + ":5254/graphql",
     options: {
         reconnect: true
     }

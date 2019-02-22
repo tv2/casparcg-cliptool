@@ -12,11 +12,12 @@ class SettingsPage extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            settings: this.props.store.settingsReducer[0].settings,
+            settings: this.props.store.settings[0],
         };
         this.handleChange = this.handleChange.bind(this);
         this.handleTabDataTitle = this.handleTabDataTitle.bind(this);
-        this.handleTabDataFolder = this.handleTabDataFolder.bind(this);
+        this.handleTabDataMediaFolder = this.handleTabDataMediaFolder.bind(this);
+        this.handleTabDataDataFolder = this.handleTabDataDataFolder.bind(this);
         this.handleTabDataOverlayFolder = this.handleTabDataOverlayFolder.bind(this);
         this.handleTabDataWipe = this.handleTabDataWipe.bind(this);
         this.handleTabDataWipeOffset = this.handleTabDataWipeOffset.bind(this);
@@ -43,9 +44,18 @@ class SettingsPage extends Component {
         );
     }
 
-    handleTabDataFolder(event) {
+    handleTabDataMediaFolder(event) {
         var settingsCopy= Object.assign({}, this.state.settings);
         settingsCopy.tabData[event.target.name].subFolder = event.target.value;
+        this.setState(
+            {settings: settingsCopy}
+        );
+    }
+
+
+    handleTabDataDataFolder(event) {
+        var settingsCopy= Object.assign({}, this.state.settings);
+        settingsCopy.tabData[event.target.name].dataFolder = event.target.value;
         this.setState(
             {settings: settingsCopy}
         );
@@ -89,7 +99,11 @@ class SettingsPage extends Component {
                 </label>
                 <label className="Settings-input-field">
                     MEDIAFOLDER :
-                    <input name={index} type="text" value={item.subFolder} onChange={this.handleTabDataFolder} />
+                    <input name={index} type="text" value={item.subFolder} onChange={this.handleTabDataMediaFolder} />
+                </label>
+                <label className="Settings-input-field">
+                    DATAFOLDER :
+                    <input name={index} type="text" value={item.dataFolder} onChange={this.handleTabDataDataFolder} />
                 </label>
                 <label className="Settings-input-field">
                     TEMPLATEFOLDER :

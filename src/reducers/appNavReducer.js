@@ -5,7 +5,7 @@ const defaultAppNavReducerState = [{
     }
 }];
 
-export const appNavReducer = ((state = defaultAppNavReducerState, action) => {
+export const appNav = ((state = defaultAppNavReducerState, action) => {
 
     let { ...nextState } = state;
 

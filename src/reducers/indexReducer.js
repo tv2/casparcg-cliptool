@@ -1,12 +1,12 @@
 import { combineReducers } from 'redux';
-import { settingsReducer } from './settingsReducer';
-import { appNavReducer } from './appNavReducer';
-import { dataReducer } from './dataReducer';
+import { settings } from './settingsReducer';
+import { appNav } from './appNavReducer';
+import { data } from './dataReducer';
 
 const indexReducer = combineReducers({
-    dataReducer,
-    settingsReducer,
-    appNavReducer
+    data,
+    settings,
+    appNav
 });
 
 export default indexReducer;
