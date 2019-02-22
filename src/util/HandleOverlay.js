@@ -23,6 +23,7 @@ class HandleOverlay {
 
         if (overlayFolder != '' && !this.store.data[0].ccgInfo[indexChannel].layers[9].foreground.paused) {
             metaData.map((metaItem) => {
+                metaItem.layer = metaItem.layer || 20;
                 if (metaItem.startTime < 0.08) {
                     metaItem.startTime = 0.08;
                 }

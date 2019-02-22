@@ -38,7 +38,6 @@ class Thumbnail extends PureComponent {
         this.ccgMediaFilesChanged();
     }
 
-
     ccgMediaFilesChanged() {
         var _this2 = this;
         //Subscribe to CasparCG-State changes:
@@ -102,7 +101,7 @@ class Thumbnail extends PureComponent {
                             type:'SET_META_LIST',
                             index: index,
                             tab: this.props.ccgOutputProps-1,
-                            metaList: JSON.parse(data.response.data).channel[this.props.ccgOutputProps-1].metaList
+                            metaList: JSON.parse(data.response.data).channel[0].metaList
                         });
                     })
                     .catch((error) => {

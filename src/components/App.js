@@ -212,6 +212,7 @@ class App extends PureComponent {
             console.log("Still loading....");
             return;
         }
+
         var infoStatus = this.props.store.data[0].ccgInfo[tab].layers[10-1] || '';
 
         var fileNameFg = cleanUpFilename(infoStatus.foreground.name || '');
