@@ -12,7 +12,7 @@ const FPS = 25;
 import { connect } from "react-redux";
 
 //Utils:
-import { cleanUpFilename } from '../util/filePathStringHandling';
+import { cleanUpFilename, extractFilenameFromPath } from '../util/filePathStringHandling';
 
 
 class Thumbnail extends PureComponent {
@@ -94,13 +94,10 @@ class Thumbnail extends PureComponent {
                             thumbList: item
                         }
                     });
-
-                    let regEx = new RegExp(this.props.store.settings[0].tabData[this.props.ccgOutputProps-1].subFolder, "ig");
-                    let dataName = item.name.replace(
-                        regEx,
-                        this.props.store.settings[0].tabData[this.props.ccgOutputProps-1].dataFolder
-                    );
-                    this.props.ccgConnectionProps.dataRetrieve(dataName + ".meta")
+                    let dataName = this.props.store.settings[0].tabData[this.props.ccgOutputProps-1].subFolder +
+                                    "/" +
+                                    extractFilenameFromPath(item.name) + ".meta";
+                    this.props.ccgConnectionProps.dataRetrieve(dataName)
                     .then((data) => {
                         this.props.dispatch({
                             type:'SET_META_LIST',
