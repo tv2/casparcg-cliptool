@@ -94,7 +94,7 @@ class Thumbnail extends PureComponent {
                             thumbList: item
                         }
                     });
-                    let dataName = this.props.store.settings[0].tabData[this.props.ccgOutputProps-1].subFolder +
+                    let dataName = this.props.store.settings[0].tabData[this.props.ccgOutputProps-1].dataFolder +
                                     "/" +
                                     extractFilenameFromPath(item.name) + ".meta";
                     this.props.ccgConnectionProps.dataRetrieve(dataName)
