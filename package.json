@@ -36,9 +36,6 @@
     "package-rpi": "electron-packager . casparcg-cliptool --overwrite --asar=true --platform=linux --arch=armv7l --icon=assets/icons/png/1024x1024.png --prune=true --out=release-builds"
   },
   "dependencies": {
-    "@babel/core": "^7.3.3",
-    "@babel/plugin-proposal-object-rest-spread": "^7.3.2",
-    "@babel/register": "^7.0.0",
     "apollo-cache-inmemory": "^1.3.9",
     "apollo-client": "^2.4.5",
     "apollo-link-http": "^1.5.5",
@@ -58,6 +55,9 @@
     "subscriptions-transport-ws": "^0.9.15"
   },
   "devDependencies": {
+    "@babel/core": "^7.3.3",
+    "@babel/plugin-proposal-object-rest-spread": "^7.3.2",
+    "@babel/register": "^7.0.0",
     "@babel/preset-env": "^7.2.3",
     "@babel/preset-react": "^7.0.0",
     "babel-loader": "^8.0.4",
