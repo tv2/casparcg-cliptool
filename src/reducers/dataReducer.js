@@ -41,7 +41,7 @@ const defaultDataReducerState = () => {
     return stateDefault;
 };
 
-let lastTimeCounter = 0;
+let lastTimeCounter = [0, 0, 0, 0];
 
 export const data = ((state = defaultDataReducerState(), action) => {
 
@@ -62,9 +62,9 @@ export const data = ((state = defaultDataReducerState(), action) => {
                 //ToDo: paused should be correct from CCG statescanner,
                 //but it does not show correctly with CCG 2.1.3
                 nextState[0].ccgInfo[index].layers[9].foreground.paused = (state[0].ccgTime[index] === item.time) && (state[0].ccgPrevTime[index] === item.time);
-                if (lastTimeCounter++ === 5) {
+                if (lastTimeCounter[index]++ === 5) {
                     nextState[0].ccgPrevTime[index] = state[0].ccgTime[index];
-                    lastTimeCounter = 0;
+                    lastTimeCounter[index] = 0;
                 }
 
                 nextState[0].ccgTimeLeft[index] = item.timeLeft;
