@@ -25,7 +25,7 @@ export const saveSettings = (settings) => {
 };
 
 export const loadThumbsOrder = (ccgServer) => {
-    ccgServer.dataRetrieve("thumbsorder")
+    ccgServer.dataRetrieve("cliptoolthumbsorder")
     .then((response) => {
         let thumbsOrder = JSON.parse(response.response.data);
         thumbsOrder.map((thumbOrder, index) => {
@@ -38,10 +38,10 @@ export const loadThumbsOrder = (ccgServer) => {
     })
     .catch((error) => {
         console.log("Creating ThumbsOrder file on CCG server", error);
-        ccgServer.dataStore('thumbsorder', [{}, {}, {}, {}]);
+        ccgServer.dataStore('cliptoolthumbsorder', [{}, {}, {}, {}]);
     });
 };
 
 export const saveThumbsOrder = (ccgServer, serverThumbsOrder) => {
-    ccgServer.dataStore('thumbsorder', serverThumbsOrder);
+    ccgServer.dataStore('cliptoolthumbsorder', serverThumbsOrder);
 };

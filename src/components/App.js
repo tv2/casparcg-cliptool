@@ -20,6 +20,8 @@ import CcgLoadPlay from '../util/CcgLoadPlay';
 import HandleAutoNext from '../util/HandleAutoNext';
 import HandleOverlay from '../util/HandleOverlay';
 import HandleShortcuts from '../util/HandleShortcuts';
+import LoadThumbs from '../util/LoadThumbs';
+
 
 //CSS files:
 import '../assets/css/Rmc-tabs.css';
@@ -46,6 +48,8 @@ class App extends PureComponent {
         this.ccgSubscribeInfoData = this.ccgSubscribeInfoData.bind(this);
         this.renderHeader = this.renderHeader.bind(this);
         this.updatePlayingStatus = this.updatePlayingStatus.bind(this);
+        this.ccgMediaFilesChanges = this.ccgMediaFilesChanged.bind(this);
+
     }
 
 
@@ -74,10 +78,13 @@ class App extends PureComponent {
         this.handleOverlay = new HandleOverlay(this.ccgConnection);
         this.handleAutoNext = new HandleAutoNext(this.ccgLoadPlay);
         this.handleShortcuts = new HandleShortcuts(this.ccgLoadPlay);
+        this.loadThumbs = new LoadThumbs(this.ccgConnection);
+
 
         // Initialize CasparCG subscriptions:
         this.ccgSubscribeInfoData();
         this.ccgSubscribeTimeLeft();
+        this.ccgMediaFilesChanged();
 
         // Initialize timer connection status:
         var connectionTimer = setInterval(this.checkConnectionStatus, 2000);
@@ -185,8 +192,10 @@ class App extends PureComponent {
                 data: response.data.channels
             });
             response.data.channels.map((item,index) => {
+                _this2.loadThumbs.loadThumbs(index + 1);
                 _this2.updatePlayingStatus(index);
             });
+
 
             //Subscribe to CasparCG-State changes:
             window.__APOLLO_CLIENT__.subscribe({
@@ -207,6 +216,27 @@ class App extends PureComponent {
             });
         });
     }
+
+    ccgMediaFilesChanged() {
+        var _this2 = this;
+        //Subscribe to CasparCG-State changes:
+        window.__APOLLO_CLIENT__.subscribe({
+            query: gql`
+                subscription {
+                    mediaFilesChanged
+                }`
+        })
+        .subscribe({
+            next(response) {
+                console.log("Media Files Changed");
+                this.tabData.map((data, index) => {
+                    _this2.loadThumbs.loadThumbs(index+1);
+                });
+            },
+            error(err) { console.error('Subscription error: ', err); },
+        });
+    }
+
 
     updatePlayingStatus(tab) {
         //Don´t update if data not loaded:
@@ -356,7 +386,6 @@ class App extends PureComponent {
                 <div className="App-intro" key={(item.key)}>
                     <Thumbnail
                         ccgOutputProps={item.key}
-                        ccgConnectionProps={this.ccgConnection}
                         loadMediaProps={this.ccgLoadPlay.loadMedia}
                         loadBgMediaProps={this.ccgLoadPlay.loadBgMedia}
                         updatePlayingStatusProps={this.updatePlayingStatus.bind(this)}
