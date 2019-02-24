@@ -14,7 +14,7 @@ import Thumbnail from './Thumbnail';
 import SettingsPage from './Settings';
 
 //Utils:
-import { saveSettings } from '../util/SettingsStorage';
+import { saveSettings, loadThumbsOrder } from '../util/SettingsStorage';
 import {cleanUpFilename} from '../util/filePathStringHandling';
 import CcgLoadPlay from '../util/CcgLoadPlay';
 import HandleAutoNext from '../util/HandleAutoNext';
@@ -68,6 +68,8 @@ class App extends PureComponent {
                 port: this.props.store.settings[0].port,
                 autoConnect: true,
             });
+
+        loadThumbsOrder(this.ccgConnection);
         this.ccgLoadPlay = new CcgLoadPlay(this.ccgConnection);
         this.handleOverlay = new HandleOverlay(this.ccgConnection);
         this.handleAutoNext = new HandleAutoNext(this.ccgLoadPlay);

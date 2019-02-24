@@ -11,6 +11,7 @@ const defaultDataReducerState = () => {
         ccgTime: [0 , 0, 0, 0],
         ccgPrevTime: [0, 0, 0, 0],
         ccgTimeCounter: ['', '', '', ''],
+        thumbOrder: [{}, {}, {}, {}],
         channel: []
     }];
     let channel = {
@@ -56,6 +57,10 @@ export const data = ((state = defaultDataReducerState(), action) => {
                 nextState[0].ccgInfo[index].layers[9] = item.layers[0];
             });
             return nextState;
+        case 'SET_THUMB_ORDER':
+            nextState[0].thumbOrder[action.channel-1] = action.thumbOrder || [{}, {}, {}, {}];
+            return nextState;
+
         case 'SET_TIMELEFT':
             action.data.timeLeft.map((item, index) => {
                 //Test for media playing or paused

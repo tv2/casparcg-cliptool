@@ -22,7 +22,26 @@ export const saveSettings = (settings) => {
     fs.writeFile(folder + "/settings.json", json, 'utf8', (error)=>{
         console.log(error);
     });
-}
+};
 
+export const loadThumbsOrder = (ccgServer) => {
+    ccgServer.dataRetrieve("thumbsorder")
+    .then((response) => {
+        let thumbsOrder = JSON.parse(response.response.data);
+        thumbsOrder.map((thumbOrder, index) => {
+            window.store.dispatch({
+                type:'SET_THUMB_ORDER',
+                channel: index +1,
+                thumborder: thumbOrder
+            });
+        });
+    })
+    .catch((error) => {
+        console.log("Creating ThumbsOrder file on CCG server", error);
+        ccgServer.dataStore('thumbsorder', [{}, {}, {}, {}]);
+    });
+};
 
-
+export const saveThumbsOrder = (ccgServer, serverThumbsOrder) => {
+    ccgServer.dataStore('thumbsorder', serverThumbsOrder);
+};

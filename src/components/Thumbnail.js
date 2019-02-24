@@ -12,7 +12,7 @@ const FPS = 25;
 import { connect } from "react-redux";
 
 //Utils:
-import { cleanUpFilename, extractFilenameFromPath } from '../util/filePathStringHandling';
+import LoadThumbs from '../util/LoadThumbs';
 
 
 class Thumbnail extends PureComponent {
@@ -26,12 +26,12 @@ class Thumbnail extends PureComponent {
 
     constructor(props) {
         super(props);
-        this.loadThumbs = this.loadThumbs.bind(this);
         this.onDragEnd = this.onDragEnd.bind(this);
         this.ccgMediaFilesChanges = this.ccgMediaFilesChanged.bind(this);
 
-        this.loadThumbs();
-
+        this.loadThumbs = new LoadThumbs(this.props.ccgConnectionProps, this.props.ccgOutputProps);
+        this.loadThumbs.loadThumbs();
+        this.props.updatePlayingStatusProps (this.props.ccgOutputProps - 1);
     }
 
     componentDidMount() {
@@ -50,91 +50,9 @@ class Thumbnail extends PureComponent {
         .subscribe({
             next(response) {
                 console.log("Media Files Changed");
-                _this2.loadThumbs();
+                _this2.loadThumbs.loadThumbs();
             },
             error(err) { console.error('Subscription error: ', err); },
-        });
-    }
-
-
-    loadThumbs() {
-        //Filter files manually as
-        //CCG 2.2 does not support subfolder argument in the CLS command
-        let subFolder = cleanUpFilename(this.props.store.settings[0].tabData[this.props.ccgOutputProps-1].subFolder);
-        //Remove first backslash if it´s there:
-        subFolder = (subFolder.length && subFolder[0] == '/') ? subFolder.slice(1) : subFolder;
-
-        this.props.ccgConnectionProps.cls()
-        .then((results) => {
-            let items = results.response.data.filter((item) => {
-                return (item.type === 'video' &&
-                        item.name.includes(subFolder)
-                        );
-            });
-            if (items.length === 0) return false;
-            this.props.dispatch({
-                type: 'SET_THUMB_LENGTH',
-                data: {
-                    tab: this.props.ccgOutputProps-1,
-                    length: items.length
-                }
-            });
-
-            items.map((item, index) => {
-                var currentAtIndex = this.props.store.data[0].channel[this.props.ccgOutputProps-1].thumbList[index] | { name: ''};
-                if (item.name != currentAtIndex)
-                    {
-                    item.tally = false;
-                    item.tallyBg = false;
-                    this.props.dispatch({
-                        type: 'SET_THUMB_LIST',
-                        data: {
-                            tab: this.props.ccgOutputProps-1,
-                            index: index,
-                            thumbList: item
-                        }
-                    });
-                    let dataName = this.props.store.settings[0].tabData[this.props.ccgOutputProps-1].dataFolder +
-                                    "/" +
-                                    extractFilenameFromPath(item.name) + ".meta";
-                    this.props.ccgConnectionProps.dataRetrieve(dataName)
-                    .then((data) => {
-                        this.props.dispatch({
-                            type:'SET_META_LIST',
-                            index: index,
-                            tab: this.props.ccgOutputProps-1,
-                            metaList: JSON.parse(data.response.data).channel[0].metaList
-                        });
-                    })
-                    .catch((error) => {
-                        this.props.dispatch({
-                            type:'SET_EMPTY_META',
-                            index: index,
-                            tab: this.props.ccgOutputProps-1
-                        });
-                    });
-
-                    this.props.ccgConnectionProps.thumbnailRetrieve(item.name)
-                    .then((pixResponse) => {
-                        this.props.dispatch({
-                            type: 'SET_THUMB_PIX',
-                            data: {
-                                tab: this.props.ccgOutputProps-1,
-                                index: index,
-                                thumbPix: pixResponse.response.data
-                            }
-                        });
-                    });
-                }
-            });
-            this.props.updatePlayingStatusProps(this.props.ccgOutputProps-1);
-            console.log("Channel: ", this.props.ccgOutputProps, " loaded");
-        })
-        .catch ((error) => {
-            console.log("Error :" , error);
-            if (error.response.code === 404 ) {
-                window.alert("Folder: " + this.props.store.settings[0].tabData[this.props.ccgOutputProps-1].subFolder + " does not exist");
-            }
         });
     }
 
@@ -148,8 +66,14 @@ class Thumbnail extends PureComponent {
                 destination: evt.newIndex
             }
         });
+        thumbsOrder.map((thumbOrder) => {
+            window.store.dispatch({
+                type:'SET_THUMB_ORDER',
+                channel: this.props.ccgOutputProps,
+                thumborder: this.props.store.data[0].channel[this.props.ccgOutputProps-1].thumbList
+            });
+        });
     this.props.updatePlayingStatusProps(this.props.ccgOutputProps-1);
-    // the only one that is required
     }
 
     renderThumb(item, index) {

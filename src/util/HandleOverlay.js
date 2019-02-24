@@ -2,6 +2,8 @@
 class HandleOverlay {
     constructor(ccgConnection) {
         this.ccgConnection = ccgConnection;
+
+        this.store = window.store.getState();
         const unsubscribe = store.subscribe(() => {
             this.store = window.store.getState();
         });

@@ -2,6 +2,8 @@
 class HandleAutoNext {
     constructor(ccgLoadPlay) {
         this.ccgLoadPlay = ccgLoadPlay;
+
+        this.store = window.store.getState();
         const unsubscribe = store.subscribe(() => {
             this.store = window.store.getState();
         });
