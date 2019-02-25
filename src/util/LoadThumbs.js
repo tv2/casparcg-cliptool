@@ -81,6 +81,8 @@ class LoadThumbs {
                         '/' +
                         extractFilenameFromPath (name) +
                         '.meta';
+        //Remove first slash in foldeName if it´s there:
+        dataName = (dataName[0] === '/') ? dataName.slice (1) : dataName;
 
         ccgConnection.dataRetrieve (dataName)
         .then (data => {
