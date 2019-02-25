@@ -4,6 +4,8 @@ import { cleanUpFilename, extractFilenameFromPath } from '../util/filePathString
 class LoadThumbs {
     constructor (ccgConnection) {
         this.ccgConnection = ccgConnection;
+        this.getThumbnail = this.getThumbnail.bind(this);
+        this.getMetaData = this.getMetaData.bind(this);
 
         this.store = window.store.getState ();
         const unsubscribe = store.subscribe (() => {
@@ -38,57 +40,25 @@ class LoadThumbs {
             });
 
             items.map ((item, index) => {
-            var currentAtIndex =
-                this.store.data[0].channel[ccgOutput - 1].thumbList[index] | {name: ''};
-            if (item.name != currentAtIndex) {
-                item.tally = false;
-                item.tallyBg = false;
-                window.store.dispatch ({
-                    type: 'SET_THUMB_LIST',
-                    data: {
-                        tab: ccgOutput - 1,
-                        index: index,
-                        thumbList: item,
-                    },
-                });
-                let dataName =
-                    this.store.settings[0].tabData[
-                        ccgOutput - 1
-                    ].dataFolder +
-                    '/' +
-                    extractFilenameFromPath (item.name) +
-                    '.meta';
-                ccgConnection.dataRetrieve (dataName)
-                .then (data => {
+                var currentAtIndex =
+                    this.store.data[0].channel[ccgOutput - 1].thumbList[index] | {name: ''};
+                if (item.name != currentAtIndex) {
+                    item.tally = false;
+                    item.tallyBg = false;
                     window.store.dispatch ({
-                        type: 'SET_META_LIST',
-                        index: index,
-                        tab: ccgOutput - 1,
-                        metaList: JSON.parse (data.response.data).channel[0].metaList,
-                    });
-                })
-                .catch (error => {
-                    window.store.dispatch ({
-                        type: 'SET_EMPTY_META',
-                        index: index,
-                        tab: ccgOutput - 1,
-                    });
-                });
-
-                ccgConnection.thumbnailRetrieve (item.name)
-                .then (pixResponse => {
-                    window.store.dispatch ({
-                        type: 'SET_THUMB_PIX',
+                        type: 'SET_THUMB_LIST',
                         data: {
                             tab: ccgOutput - 1,
                             index: index,
-                            thumbPix: pixResponse.response.data,
+                            thumbList: item,
                         },
                     });
-                });
-            }
+
+                    this.getMetaData(item.name, ccgOutput, index);
+                    this.getThumbnail(item.name, ccgOutput, index);
+                }
             });
-            console.log ('Channel: ', this.props.ccgOutput, ' loaded');
+            console.log ('Channel: ', ccgOutput, ' loaded');
         })
         .catch (error => {
             console.log ('Error :', error);
@@ -102,7 +72,48 @@ class LoadThumbs {
                 );
             }
         });
-  }
+    }
+
+    getMetaData(name, ccgOutput, index) {
+        let { ccgConnection } = this;
+
+        let dataName = this.store.settings[0].tabData[ ccgOutput - 1].dataFolder +
+                        '/' +
+                        extractFilenameFromPath (name) +
+                        '.meta';
+
+        ccgConnection.dataRetrieve (dataName)
+        .then (data => {
+            window.store.dispatch ({
+                type: 'SET_META_LIST',
+                index: index,
+                tab: ccgOutput - 1,
+                metaList: JSON.parse (data.response.data).channel[0].metaList,
+            });
+        })
+        .catch (error => {
+            window.store.dispatch ({
+                type: 'SET_EMPTY_META',
+                index: index,
+                tab: ccgOutput - 1,
+            });
+        });
+    }
+
+    getThumbnail(name, ccgOutput, index) {
+        let { ccgConnection } = this;
+        ccgConnection.thumbnailRetrieve (name)
+        .then (pixResponse => {
+            window.store.dispatch ({
+                type: 'SET_THUMB_PIX',
+                data: {
+                    tab: ccgOutput - 1,
+                    index: index,
+                    thumbPix: pixResponse.response.data,
+                },
+            });
+        });
+    }
 }
 
 export default LoadThumbs;
