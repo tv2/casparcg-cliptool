@@ -11,14 +11,15 @@ const FPS = 25;
 //Redux:
 import { connect } from "react-redux";
 
-//Utils:
-import { cleanUpFilename, extractFilenameFromPath } from '../util/filePathStringHandling';
+//Utils:import LoadThumbs from '../util/LoadThumbs';
+import { saveThumbsOrder } from '../util/SettingsStorage';
+
 
 
 class Thumbnail extends PureComponent {
     //Props:
     // ccgOutputProps={item.key} what output on CCG to play at
-    // ccgConnectionProps={this.ccgConnection} Current CCG connection object
+    // ccgConnectionProps= {this.ccgConnection}
     // loadMediaProps={this.loadMedia.bind(this)}
     // loadBgMediaProps={this.loadBgMedia.bind(this)}
     // updatePlayingStatusProps={this.updatePlayingStatus.bind(this)}
@@ -26,130 +27,36 @@ class Thumbnail extends PureComponent {
 
     constructor(props) {
         super(props);
-        this.loadThumbs = this.loadThumbs.bind(this);
+        this.ccgOutput = this.props.ccgOutputProps;
+
         this.onDragEnd = this.onDragEnd.bind(this);
-        this.ccgMediaFilesChanges = this.ccgMediaFilesChanged.bind(this);
-
-        this.loadThumbs();
-
     }
 
     componentDidMount() {
-        this.ccgMediaFilesChanged();
     }
 
-    ccgMediaFilesChanged() {
-        var _this2 = this;
-        //Subscribe to CasparCG-State changes:
-        window.__APOLLO_CLIENT__.subscribe({
-            query: gql`
-                subscription {
-                    mediaFilesChanged
-                }`
-        })
-        .subscribe({
-            next(response) {
-                console.log("Media Files Changed");
-                _this2.loadThumbs();
-            },
-            error(err) { console.error('Subscription error: ', err); },
-        });
-    }
-
-
-    loadThumbs() {
-        //Filter files manually as
-        //CCG 2.2 does not support subfolder argument in the CLS command
-        let subFolder = cleanUpFilename(this.props.store.settings[0].tabData[this.props.ccgOutputProps-1].subFolder);
-        //Remove first backslash if it´s there:
-        subFolder = (subFolder.length && subFolder[0] == '/') ? subFolder.slice(1) : subFolder;
-
-        this.props.ccgConnectionProps.cls()
-        .then((results) => {
-            let items = results.response.data.filter((item) => {
-                return (item.type === 'video' &&
-                        item.name.includes(subFolder)
-                        );
-            });
-            if (items.length === 0) return false;
-            this.props.dispatch({
-                type: 'SET_THUMB_LENGTH',
-                data: {
-                    tab: this.props.ccgOutputProps-1,
-                    length: items.length
-                }
-            });
-
-            items.map((item, index) => {
-                var currentAtIndex = this.props.store.data[0].channel[this.props.ccgOutputProps-1].thumbList[index] | { name: ''};
-                if (item.name != currentAtIndex)
-                    {
-                    item.tally = false;
-                    item.tallyBg = false;
-                    this.props.dispatch({
-                        type: 'SET_THUMB_LIST',
-                        data: {
-                            tab: this.props.ccgOutputProps-1,
-                            index: index,
-                            thumbList: item
-                        }
-                    });
-                    let dataName = this.props.store.settings[0].tabData[this.props.ccgOutputProps-1].dataFolder +
-                                    "/" +
-                                    extractFilenameFromPath(item.name) + ".meta";
-                    this.props.ccgConnectionProps.dataRetrieve(dataName)
-                    .then((data) => {
-                        this.props.dispatch({
-                            type:'SET_META_LIST',
-                            index: index,
-                            tab: this.props.ccgOutputProps-1,
-                            metaList: JSON.parse(data.response.data).channel[0].metaList
-                        });
-                    })
-                    .catch((error) => {
-                        this.props.dispatch({
-                            type:'SET_EMPTY_META',
-                            index: index,
-                            tab: this.props.ccgOutputProps-1
-                        });
-                    });
-
-                    this.props.ccgConnectionProps.thumbnailRetrieve(item.name)
-                    .then((pixResponse) => {
-                        this.props.dispatch({
-                            type: 'SET_THUMB_PIX',
-                            data: {
-                                tab: this.props.ccgOutputProps-1,
-                                index: index,
-                                thumbPix: pixResponse.response.data
-                            }
-                        });
-                    });
-                }
-            });
-            this.props.updatePlayingStatusProps(this.props.ccgOutputProps-1);
-            console.log("Channel: ", this.props.ccgOutputProps, " loaded");
-        })
-        .catch ((error) => {
-            console.log("Error :" , error);
-            if (error.response.code === 404 ) {
-                window.alert("Folder: " + this.props.store.settings[0].tabData[this.props.ccgOutputProps-1].subFolder + " does not exist");
-            }
-        });
-    }
-
-    onDragEnd(order, sortable, evt) {
-        console.log("DRAGGED: ", evt);
+    onDragEnd(order, sortable, event) {
+        let { data, appNav } = this.props.store;
+        console.log("DRAGGED: ", event);
         this.props.dispatch({
             type: 'MOVE_THUMB_IN_LIST',
             data: {
-                tab: this.props.store.appNav[0].appNav.activeTab,
-                source: evt.oldIndex,
-                destination: evt.newIndex
+                tab: appNav[0].activeTab,
+                source: event.oldIndex,
+                destination: event.newIndex
             }
         });
-    this.props.updatePlayingStatusProps(this.props.ccgOutputProps-1);
-    // the only one that is required
+
+        let list = data[0].channel[this.ccgOutput-1].thumbList.map((thumb) => {
+            return thumb.name;
+        });
+        window.store.dispatch({
+            type:'SET_THUMB_ORDER',
+            channel: this.ccgOutput,
+            list: list
+        });
+        saveThumbsOrder(this.props.ccgConnectionProps, data[0].thumbOrder);
+        this.props.updatePlayingStatusProps( this.ccgOutput-1);
     }
 
     renderThumb(item, index) {
@@ -165,14 +72,14 @@ class Thumbnail extends PureComponent {
                     )}
                 />
                 <button className="thumbnailImageClickPvw"
-                    onClick={() => this.props.loadBgMediaProps(this.props.ccgOutputProps, 10, index)}
+                    onClick={() => this.props.loadBgMediaProps(this.ccgOutput, 10, index)}
                 />
                 <button className="thumbnailImageClickPgm"
-                    onClick={() => this.props.loadMediaProps(this.props.ccgOutputProps, 10, index)}
+                    onClick={() => this.props.loadMediaProps(this.ccgOutput, 10, index)}
                 />
                 <a className="playing">
                     {item.tally ?
-                        this.props.store.data[0].ccgTimeCounter[this.props.ccgOutputProps-1]
+                        this.props.store.data[0].ccgTimeCounter[this.ccgOutput-1]
                         : ""
                     }
                 </a>
@@ -192,7 +99,7 @@ class Thumbnail extends PureComponent {
                     this.onDragEnd(order, sortable, evt);
                 }}
             >
-                {this.props.store.data[0].channel[this.props.ccgOutputProps-1].thumbList
+                {this.props.store.data[0].channel[this.ccgOutput-1].thumbList
                 .map((item, index) => (
                     <div
                         className="boxComponent"

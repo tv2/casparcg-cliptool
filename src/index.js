@@ -13,7 +13,7 @@ import { Provider as ReduxProvider} from 'react-redux';
 import indexReducer from './reducers/indexReducer';
 
 //Utils:
-import { loadSettings } from './util/SettingsStorage';
+import { loadSettings, loadThumbsOrder } from './util/SettingsStorage';
 
 import App from './components/App';
 
@@ -28,7 +28,6 @@ storeRedux.dispatch({
     type:'UPDATE_SETTINGS',
     data: loadSettings(storeRedux.getState())
 });
-
 
 // Initialize CasparCG-State-Scanner GraphQL:
 
