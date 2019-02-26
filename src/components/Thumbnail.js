@@ -36,17 +36,18 @@ class Thumbnail extends PureComponent {
     }
 
     onDragEnd(order, sortable, event) {
+        let { data, appNav } = this.props.store;
         console.log("DRAGGED: ", event);
         this.props.dispatch({
             type: 'MOVE_THUMB_IN_LIST',
             data: {
-                tab: this.props.store.appNav[0].activeTab,
+                tab: appNav[0].activeTab,
                 source: event.oldIndex,
                 destination: event.newIndex
             }
         });
 
-        let list = this.props.store.data[0].channel[this.ccgOutput-1].thumbList.map((thumb) => {
+        let list = data[0].channel[this.ccgOutput-1].thumbList.map((thumb) => {
             return thumb.name;
         });
         window.store.dispatch({
@@ -54,7 +55,7 @@ class Thumbnail extends PureComponent {
             channel: this.ccgOutput,
             list: list
         });
-        saveThumbsOrder(this.props.ccgConnectionProps, this.props.store.data[0].thumbOrder);
+        saveThumbsOrder(this.props.ccgConnectionProps, data[0].thumbOrder);
         this.props.updatePlayingStatusProps( this.ccgOutput-1);
     }
 

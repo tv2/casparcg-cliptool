@@ -14,64 +14,67 @@ class LoadThumbs {
     }
 
     loadThumbs ( ccgOutput ) {
-        let { ccgConnection } = this;
-        //Filter files manually as
-        //CCG 2.2 does not support subfolder argument in the CLS command
-        let subFolder = cleanUpFilename (
-            this.store.settings[0].tabData[ccgOutput - 1].subFolder
-        );
-        //Remove first backslash if it´s there:
-        subFolder = (subFolder.length && subFolder[0] === '/')
-            ? subFolder.slice (1)
-            : subFolder;
+        return new Promise((resolve, reject) => {
+            let { ccgConnection } = this;
+            //Filter files manually as
+            //CCG 2.2 does not support subfolder argument in the CLS command
+            let subFolder = cleanUpFilename (
+                this.store.settings[0].tabData[ccgOutput - 1].subFolder
+            );
+            //Remove first backslash if it´s there:
+            subFolder = (subFolder.length && subFolder[0] === '/')
+                ? subFolder.slice (1)
+                : subFolder;
 
-        this.ccgConnection.cls ()
-        .then (results => {
-            let items = results.response.data.filter(item => {
-                    return item.type === 'video' && item.name.includes (subFolder);
-                });
-            if (items.length === 0) return false;
-            window.store.dispatch ({
-                type: 'SET_THUMB_LENGTH',
-                data: {
-                    tab: ccgOutput - 1,
-                    length: items.length,
-                },
-            });
-            items = this.sortItems(items, ccgOutput);
-
-            items.map ((item, index) => {
-                var currentAtIndex =
-                    this.store.data[0].channel[ccgOutput - 1].thumbList[index] | {name: ''};
-                if (item.name != currentAtIndex) {
-                    item.tally = false;
-                    item.tallyBg = false;
-                    window.store.dispatch ({
-                        type: 'SET_THUMB_LIST',
-                        data: {
-                            tab: ccgOutput - 1,
-                            index: index,
-                            thumbList: item,
-                        },
+            this.ccgConnection.cls ()
+            .then (results => {
+                let items = results.response.data.filter(item => {
+                        return item.type === 'video' && item.name.includes (subFolder);
                     });
+                if (items.length === 0) return false;
+                window.store.dispatch ({
+                    type: 'SET_THUMB_LENGTH',
+                    data: {
+                        tab: ccgOutput - 1,
+                        length: items.length,
+                    },
+                });
+                items = this.sortItems(items, ccgOutput);
 
-                    this.getMetaData(item.name, ccgOutput, index);
-                    this.getThumbnail(item.name, ccgOutput, index);
+                items.map ((item, index) => {
+                    var currentAtIndex =
+                        this.store.data[0].channel[ccgOutput - 1].thumbList[index] | {name: ''};
+                    if (item.name != currentAtIndex) {
+                        item.tally = false;
+                        item.tallyBg = false;
+                        window.store.dispatch ({
+                            type: 'SET_THUMB_LIST',
+                            data: {
+                                tab: ccgOutput - 1,
+                                index: index,
+                                thumbList: item,
+                            },
+                        });
+
+                        this.getMetaData(item.name, ccgOutput, index);
+                        this.getThumbnail(item.name, ccgOutput, index);
+                        resolve("Everythings loaded");
+                    }
+                });
+                console.log ('Channel: ', ccgOutput, ' loaded');
+            })
+            .catch (error => {
+                console.log ('Error :', error);
+                if (error.response.code === 404) {
+                    window.alert (
+                        'Folder: ' +
+                        this.props.store.settings[0].tabData[
+                            this.props.ccgOutput - 1
+                        ].subFolder +
+                        ' does not exist'
+                    );
                 }
             });
-            console.log ('Channel: ', ccgOutput, ' loaded');
-        })
-        .catch (error => {
-            console.log ('Error :', error);
-            if (error.response.code === 404) {
-                window.alert (
-                    'Folder: ' +
-                    this.props.store.settings[0].tabData[
-                        this.props.ccgOutput - 1
-                    ].subFolder +
-                    ' does not exist'
-                );
-            }
         });
     }
 

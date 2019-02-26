@@ -192,8 +192,10 @@ class App extends PureComponent {
                 data: response.data.channels
             });
             response.data.channels.map((item,index) => {
-                _this2.loadThumbs.loadThumbs(index + 1);
-                _this2.updatePlayingStatus(index);
+                _this2.loadThumbs.loadThumbs(index + 1)
+                .then(() => {
+                    _this2.updatePlayingStatus(index);
+                });
             });
 
 
