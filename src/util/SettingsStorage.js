@@ -32,13 +32,14 @@ export const loadThumbsOrder = (ccgServer) => {
             window.store.dispatch({
                 type:'SET_THUMB_ORDER',
                 channel: index +1,
-                thumborder: thumbOrder
+                list: thumbOrder.list
             });
         });
     })
     .catch((error) => {
+        let store = window.store.getState();
         console.log("Creating ThumbsOrder file on CCG server", error);
-        ccgServer.dataStore('cliptoolthumbsorder', [{}, {}, {}, {}]);
+        ccgServer.dataStore('cliptoolthumbsorder', store.data[0].thumbOrder);
     });
 };
 

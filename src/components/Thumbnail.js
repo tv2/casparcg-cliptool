@@ -11,13 +11,15 @@ const FPS = 25;
 //Redux:
 import { connect } from "react-redux";
 
-//Utils:
-import LoadThumbs from '../util/LoadThumbs';
+//Utils:import LoadThumbs from '../util/LoadThumbs';
+import { saveThumbsOrder } from '../util/SettingsStorage';
+
 
 
 class Thumbnail extends PureComponent {
     //Props:
     // ccgOutputProps={item.key} what output on CCG to play at
+    // ccgConnectionProps= {this.ccgConnection}
     // loadMediaProps={this.loadMedia.bind(this)}
     // loadBgMediaProps={this.loadBgMedia.bind(this)}
     // updatePlayingStatusProps={this.updatePlayingStatus.bind(this)}
@@ -33,24 +35,27 @@ class Thumbnail extends PureComponent {
     componentDidMount() {
     }
 
-    onDragEnd(order, sortable, evt) {
-        console.log("DRAGGED: ", evt);
+    onDragEnd(order, sortable, event) {
+        console.log("DRAGGED: ", event);
         this.props.dispatch({
             type: 'MOVE_THUMB_IN_LIST',
             data: {
                 tab: this.props.store.appNav[0].appNav.activeTab,
-                source: evt.oldIndex,
-                destination: evt.newIndex
+                source: event.oldIndex,
+                destination: event.newIndex
             }
         });
-        thumbsOrder.map((thumbOrder) => {
-            window.store.dispatch({
-                type:'SET_THUMB_ORDER',
-                channel: this.ccgOutput,
-                thumborder: this.props.store.data[0].channel[this.ccgOutput-1].thumbList
-            });
+
+        let list = this.props.store.data[0].channel[this.ccgOutput-1].thumbList.map((thumb) => {
+            return thumb.name;
         });
-        this.props.updatePlayingStatusProps(this.ccgOutput-1);
+        window.store.dispatch({
+            type:'SET_THUMB_ORDER',
+            channel: this.ccgOutput,
+            list: list
+        });
+        saveThumbsOrder(this.props.ccgConnectionProps, this.props.store.data[0].thumbOrder);
+        this.props.updatePlayingStatusProps( this.ccgOutput-1);
     }
 
     renderThumb(item, index) {

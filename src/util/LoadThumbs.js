@@ -38,6 +38,7 @@ class LoadThumbs {
                     length: items.length,
                 },
             });
+            items = this.sortItems(items, ccgOutput);
 
             items.map ((item, index) => {
                 var currentAtIndex =
@@ -115,6 +116,22 @@ class LoadThumbs {
                 },
             });
         });
+    }
+
+    sortItems(items, ccgOutput) {
+        let placeCounter = 0;
+        this.store.data[0].thumbOrder[ccgOutput - 1].list.map((sortItem, index) => {
+            items.map((item, index) => {
+                if (item.name === sortItem) {
+                    items.splice(index, 1);
+                    items.splice(placeCounter, 0, item);
+                    placeCounter++;
+                    return;
+                }
+            });
+        });
+        console.log("Sorted List:", items);
+        return items;
     }
 }
 

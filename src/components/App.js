@@ -386,6 +386,7 @@ class App extends PureComponent {
                 <div className="App-intro" key={(item.key)}>
                     <Thumbnail
                         ccgOutputProps={item.key}
+                        ccgConnectionProps= {this.ccgConnection}
                         loadMediaProps={this.ccgLoadPlay.loadMedia}
                         loadBgMediaProps={this.ccgLoadPlay.loadBgMedia}
                         updatePlayingStatusProps={this.updatePlayingStatus.bind(this)}

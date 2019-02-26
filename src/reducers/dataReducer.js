@@ -1,7 +1,7 @@
 import { secondsToTimeCode } from '../util/TimeCodeToString';
 import { deepCloneCopy } from '../util/deepCloneObject';
 
-//ToDo: Important!!! Change this to a check from server!!!!!
+//ToDo: Change numberOfChannels to a check from server
 const numberOfChannels = 4;
 
 const defaultDataReducerState = () => {
@@ -11,7 +11,7 @@ const defaultDataReducerState = () => {
         ccgTime: [0 , 0, 0, 0],
         ccgPrevTime: [0, 0, 0, 0],
         ccgTimeCounter: ['', '', '', ''],
-        thumbOrder: [{}, {}, {}, {}],
+        thumbOrder: [],
         channel: []
     }];
     let channel = {
@@ -39,6 +39,9 @@ const defaultDataReducerState = () => {
     for (let i=0; i<numberOfChannels; i++) {
         stateDefault[0].channel.push(deepCloneCopy(channel));
     }
+    for (let i=0; i<numberOfChannels; i++) {
+        stateDefault[0].thumbOrder.push({list : []});
+    }
     return stateDefault;
 };
 
@@ -58,9 +61,8 @@ export const data = ((state = defaultDataReducerState(), action) => {
             });
             return nextState;
         case 'SET_THUMB_ORDER':
-            nextState[0].thumbOrder[action.channel-1] = action.thumbOrder || [{}, {}, {}, {}];
+            nextState[0].thumbOrder[action.channel-1].list = action.list || [];
             return nextState;
-
         case 'SET_TIMELEFT':
             action.data.timeLeft.map((item, index) => {
                 //Test for media playing or paused
