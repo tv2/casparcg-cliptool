@@ -40,7 +40,7 @@ class Thumbnail extends PureComponent {
         this.props.dispatch({
             type: 'MOVE_THUMB_IN_LIST',
             data: {
-                tab: this.props.store.appNav[0].appNav.activeTab,
+                tab: this.props.store.appNav[0].activeTab,
                 source: event.oldIndex,
                 destination: event.newIndex
             }

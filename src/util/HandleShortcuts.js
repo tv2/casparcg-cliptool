@@ -17,9 +17,9 @@ class HandleShortcuts {
 
         //Only Allow Active Tab to shortcut:
         //key: 1-4
-        const pvwPlay = JSON.stringify(this.store.appNav[0].appNav.activeTab+1).charCodeAt(0);
+        const pvwPlay = JSON.stringify(this.store.appNav[0].activeTab+1).charCodeAt(0);
         //key: QWER:
-        const pgmPlay = ["Q", "W", "E", "R"][this.store.appNav[0].appNav.activeTab].charCodeAt(0);
+        const pgmPlay = ["Q", "W", "E", "R"][this.store.appNav[0].activeTab].charCodeAt(0);
 
         switch( event.keyCode ) {
             case pvwPlay:
