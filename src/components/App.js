@@ -101,7 +101,7 @@ class App extends PureComponent {
     }
 
     checkConnectionStatus() {
-        window.__APOLLO_CLIENT__.query({
+        window.apolloClient.query({
             query: gql`
                 {
                     serverOnline
@@ -155,7 +155,7 @@ class App extends PureComponent {
     ccgSubscribeTimeLeft() {
         var _this2 = this;
         //Subscribe to CasparCG-State changes:
-        window.__APOLLO_CLIENT__.subscribe({
+        window.apolloClient.subscribe({
             query: gql`
                 subscription {
                     timeLeft {
@@ -182,7 +182,7 @@ class App extends PureComponent {
     ccgSubscribeInfoData() {
         var _this2 = this;
         //Initial query channels to object:
-        window.__APOLLO_CLIENT__.query({
+        window.apolloClient.query({
         query: ALL_CHANNELS_QUERY
         })
         .then((response) => {
@@ -200,7 +200,7 @@ class App extends PureComponent {
 
 
             //Subscribe to CasparCG-State changes:
-            window.__APOLLO_CLIENT__.subscribe({
+            window.apolloClient.subscribe({
                 query: ALL_CHANNELS_SUBSCRIPTION
             })
             .subscribe({
@@ -222,7 +222,7 @@ class App extends PureComponent {
     ccgMediaFilesChanged() {
         var _this2 = this;
         //Subscribe to CasparCG-State changes:
-        window.__APOLLO_CLIENT__.subscribe({
+        window.apolloClient.subscribe({
             query: gql`
                 subscription {
                     mediaFilesChanged
