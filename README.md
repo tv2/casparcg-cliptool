@@ -2,6 +2,7 @@
 ## Caspar CG Clip Tool
 CasparCG ClipTool is a clip tool that scans predefined folders, and let´s you play it out on predefined outputs.
 
+<img src="docs/images/Screendump.png">
 
 ## Features:
 * Each output is in it´s own separate Tab, so it´s easy to change a loop on one screen without messing with the others. If an output is not in use, remove the name of the output in settings. And if you on one client only need e.g. Output 2 - then remove the name of output 1, 3 and 4.
