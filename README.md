@@ -15,6 +15,10 @@ CasparCG ClipTool is a clip tool that scans predefined folders, and let´s you p
 
 * You can use "AUTONEXT" if you wan´t ro run the clips as a playlist, and you just drag´n´drop to change the order of the list.
 
+* Shortcuts for start and mix. Makes it easy to add GPIO triggering.
+  * 1,2,3,4 mixes pvw into pgm
+  * q,w,e,r start clip on output 1,2,3,4
+
 * It´s possible to add overlay graphics by adding metaData files in the CasparCG data folder.
 The name of the metadata has to be:
 ```
