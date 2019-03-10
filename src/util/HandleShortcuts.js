@@ -14,20 +14,23 @@ class HandleShortcuts {
     _handleKeyDown(event) {
         //Corresponding output for QWER shortcut:
         const keyTuple = {Q: 1, W: 2, E: 3, R: 4};
+        //Convert event.keyCode to letter:
+        const keyPressed = String.fromCharCode(event.keyCode);
 
-        //Only Allow Active Tab to shortcut:
-        //key: 1-4
-        const pvwPlay = JSON.stringify(this.store.appNav[0].activeTab+1).charCodeAt(0);
-        //key: QWER:
-        const pgmPlay = ["Q", "W", "E", "R"][this.store.appNav[0].activeTab].charCodeAt(0);
 
-        switch( event.keyCode ) {
-            case pvwPlay:
+        switch( keyPressed ) {
+            case "1":
+            case "2":
+            case "3":
+            case "4":
                 this.ccgLoadPlay.pvwPlay(parseInt(String.fromCharCode(event.keyCode)));
                 break;
-            case pgmPlay:
-                console.log("Play output : ", keyTuple[String.fromCharCode(event.keyCode)]);
-                this.ccgLoadPlay.pgmPlay(keyTuple[String.fromCharCode(event.keyCode)]);
+            case "Q":
+            case "W":
+            case "E":
+            case "R":
+                console.log("Play output : ", keyTuple[keyPressed]);
+                this.ccgLoadPlay.pgmPlay(keyTuple[keyPressed]);
                 break;
             default:
                 break;
