@@ -1,3 +1,4 @@
+import CcgLoadPlay from './CcgLoadPlay';
 
 const fs = require('fs');
 const electron = require('electron');
@@ -8,6 +9,9 @@ export const loadSettings = (storeRedux) => {
     var settingsInterface = storeRedux.settings[0];
     try {
         const settingsFromFile = JSON.parse(fs.readFileSync(folder + "/settings.json"));
+        
+        console.log("File Loaded : ", settingsFromFile);
+
         return (settingsFromFile);
     }
     catch (error) {

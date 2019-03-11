@@ -490,8 +490,8 @@ class App extends PureComponent {
         return (
         <div className="App">
             {this.props.store.settings[0].miniView ? 
-                <this.renderMiniHeader/>
-                : <this.renderFullHeader/>
+                <this.renderFullHeader/>
+                : <this.renderMiniHeader/>
             }
             {this.state.showSettingsMenu ?
                 <SettingsPage/>

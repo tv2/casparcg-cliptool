@@ -15,6 +15,7 @@ class SettingsPage extends Component {
             settings: this.props.store.settings[0],
         };
         this.handleChange = this.handleChange.bind(this);
+        this.handleMiniView = this.handleMiniView.bind(this);
         this.handleTabTitle = this.handleTabTitle.bind(this);
         this.handleTabMediaFolder = this.handleTabMediaFolder.bind(this);
         this.handleTabDataFolder = this.handleTabDataFolder.bind(this);
@@ -31,6 +32,14 @@ class SettingsPage extends Component {
     handleChange(event) {
         var settingsCopy= Object.assign({}, this.state.settings);
         settingsCopy[event.target.name] = event.target.value;
+        this.setState(
+            {settings: settingsCopy}
+        );
+    }
+
+    handleMiniView(event) {
+        var settingsCopy= Object.assign({}, this.state.settings);
+        settingsCopy[event.target.name] = event.target.checked;
         this.setState(
             {settings: settingsCopy}
         );
@@ -138,7 +147,7 @@ class SettingsPage extends Component {
                 <br/>
                 <label className="Settings-input-field">
                     MINIVIEW :
-                    <input name="miniView" type="checkbox" value={this.state.settings.miniView} onChange={this.handleChange} />
+                    <input name="miniView" type="checkbox" value={this.state.settings.miniView} onChange={this.handleMiniView} />
                 </label>                      
                 </div>
 
