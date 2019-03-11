@@ -1,0 +1,204 @@
+
+.App-mini-header {
+    position: sticky;
+    z-index: 10;
+    top: 0px;
+    width: 100%;
+    background-color: rgb(53, 53, 53);
+    height: 300px;
+    color: rgb(28, 115, 165);
+    box-shadow: 2px 2px 2px #555;
+}
+
+.App-mini-title-background {
+    position: relative;
+    top: 5px;
+    left: 10px;
+    width: 520px;
+    height: 270px;
+    background-color: rgb(22, 22, 22);
+    border-width: 0px;
+    border-style: solid;
+    border-color: rgb(63, 63, 63);
+    box-shadow: 6px 6px 6px rgb(34, 34, 34);
+}
+
+.App-mini-header-pgm-counter {
+    position: absolute;
+    top: 240px;
+    left: 270px;
+    text-align: left;
+    background-color:  #aa0101;
+    width: 145px;
+    height: 30px;
+    border-width: 0px;
+    color: rgb(255, 255, 255);
+    font-size: 1.4em;
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+.App-mini-header-pvw-thumbnail-image {
+    position: absolute;
+    top: 127px;
+    left: 5px;
+    border-width: 2px;
+    border-style: solid;
+    border-color: #0a7500;
+    width: 170px;
+    height: 96px;
+    margin-top: 6px;
+    margin-bottom: 4px;
+    margin-right: 8px;
+    background-image: repeating-linear-gradient(-45deg, #2f2c43, #2e2b41 3%, #2a1938 4%);
+}
+
+.App-mini-header-pgm-thumbnail-image {
+    position: absolute;
+    top: 30px;
+    left: 180px;
+    border-width: 2px;
+    border-style: solid;
+    border-color: #aa0101;
+    width: 340px;
+    height: 192px;
+    margin-top: 6px;
+    margin-bottom: 4px;
+    margin-left: 8px;
+    background-image: repeating-linear-gradient(-45deg, #2f2c43, #2e2b41 3%, #2a1938 4%);
+}
+
+.App-mini-reload-setup-background {
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    width: 170px;
+    height: 115px;
+    background-color: rgb(22, 22, 22);
+    border-width: 0px;
+    border-style: solid;
+    border-color: rgb(63, 63, 63);
+    box-shadow: 6px 6px 6px rgb(34, 34, 34);
+}
+
+.App-mini-connection-status {
+    font-size: 0.9em;
+    width: 108px;
+    line-height: 25px;
+    margin-top: 5px;
+    color: white;
+    font-family: 'Roboto Condensed', sans-serif;
+    border-radius: 5px;
+    border-width: 0;
+    outline: 0;
+}
+
+
+.App-mini-settings-button {
+    font-size: 0.9em;
+    width: 110px;
+    line-height: 25px;
+    margin-top: 5px;
+    background: rgb(11, 12, 11);
+    color: white;
+    font-family: 'Roboto Condensed', sans-serif;
+    border-radius: 5px;
+    border-width: 1px;
+    border-color: rgba(170, 170, 170, 0.315);
+    outline: 0;
+}
+
+.App-mini-reload-button {
+    font-size: 0.9em;
+    width: 110px;
+    line-height: 25px;
+    margin-top: 5px;
+    background: rgb(46, 19, 19);
+    color: white;
+    font-family: 'Roboto Condensed', sans-serif;
+    border-radius: 5px;
+    border-width: 1px;
+    border-color: rgba(170, 170, 170, 0.315);
+    outline: 0;
+}
+
+/* Buttons for all thumbs, places at the bottom of the page */
+.App-mini-mix-button-background {
+    position: absolute;
+    top: 5px;
+    right: 15px;
+    width: 450px;
+    height: 270px;
+    background-color: rgb(22, 22, 22);
+    border-width: 0px;
+    border-style: solid;
+    border-color: rgb(63, 63, 63);
+    box-shadow: 6px 6px 6px rgb(34, 34, 34);
+}
+
+.App-mini-mix-button {
+    margin-left: 12px;
+    margin-right: 12px;
+    margin-top: 5px;
+    font-size: 1.2em;
+    width: 40%;
+    line-height: 130px;
+    background: rgb(0, 73, 4);
+    color: white;
+    font-family: 'Roboto Condensed', sans-serif;
+    border-radius: 16px;
+    border-width: 1px;
+    border-color: rgba(85, 85, 85, 0.507);
+    outline: 1px;
+}
+
+.App-mini-start-button {
+    margin-left: 12px;
+    margin-right: 12px;
+    margin-top: 5px;
+    font-size: 1.2em;
+    width: 40%;
+    line-height: 130px;
+    background: rgb(122, 0, 0);
+    color: white;
+    font-family: 'Roboto Condensed', sans-serif;
+    border-radius: 16px;
+    border-width: 1px;
+    border-color: rgba(85, 85, 85, 0.507);
+    outline: 1px;
+}
+
+
+.App-mini-prev-cue-button {
+    margin-left: 12px;
+    margin-right: 12px;
+    margin-top: 5px;
+    font-size: 1.2em;
+    width: 40%;
+    line-height: 130px;
+    background: rgb(83, 125, 150);
+    color: white;
+    font-family: 'Roboto Condensed', sans-serif;
+    border-radius: 16px;
+    border-width: 1px;
+    border-color: rgba(59, 53, 53, 0.808);
+    outline: 1px;
+}
+
+
+.App-mini-next-cue-button {
+    margin-left: 12px;
+    margin-right: 12px;
+    margin-top: 5px;
+    font-size: 1.2em;
+    width: 40%;
+    line-height: 130px;
+    background: rgb(83, 125, 150);
+    color: white;
+    font-family: 'Roboto Condensed', sans-serif;
+    border-radius: 16px;
+    border-width: 1px;
+    border-color: rgba(59, 53, 53, 0.808);
+    outline: 1px;
+}
+

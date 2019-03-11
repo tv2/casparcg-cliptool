@@ -26,6 +26,9 @@ import LoadThumbs from '../util/LoadThumbs';
 //CSS files:
 import '../assets/css/Rmc-tabs.css';
 import '../assets/css/App.css';
+import '../assets/css/App-header.css';
+import '../assets/css/App-mini-header.css';
+
 
 const MIX_DURATION = 6;
 
@@ -131,7 +134,7 @@ class App extends PureComponent {
     handleAutoPlayStatus() {
         this.props.dispatch({
             type:'AUTOPLAY_STATUS',
-            data: this.props.store.appNav[0].activeTab
+            data: this.props.storeAppNav[0].activeTab
         });
         saveSettings(this.props.store.settings[0]);
     }
@@ -139,7 +142,7 @@ class App extends PureComponent {
     handleLoopStatus() {
         this.props.dispatch({
             type:'LOOP_STATUS',
-            data: this.props.store.appNav[0].activeTab
+            data: this.props.storeAppNav[0].activeTab
         });
         saveSettings(this.props.store.settings[0]);
     }
@@ -388,17 +391,17 @@ class App extends PureComponent {
         let { appNav, data, settings} = this.props.store;
 
         return (
-            <header className="App-header">
-                <div className="App-title-background">
+            <header className="App-mini-header">
+                <div className="App-mini-title-background">
                     <img src=
                         {data[0].
                             channel[appNav[0].activeTab]
                             .thumbList[data[0].channel[appNav[0].activeTab].thumbActiveBgIndex]
                             .thumbPix || ''
                         }
-                        className="App-header-pvw-thumbnail-image"
+                        className="App-mini-header-pvw-thumbnail-image"
                         />
-                    <button className="App-header-pgm-counter">
+                    <button className="App-mini-header-pgm-counter">
                         {data[0].ccgTimeCounter[appNav[0].activeTab]}
                     </button>
                     <img src=
@@ -407,12 +410,12 @@ class App extends PureComponent {
                             .thumbList[data[0].channel[appNav[0].activeTab].thumbActiveIndex]
                             .thumbPix || ''
                         }
-                        className="App-header-pgm-thumbnail-image"
+                        className="App-mini-header-pgm-thumbnail-image"
                     />
                 </div>
 
-                <div className="App-reload-setup-background">
-                    <button className="App-connection-status"
+                <div className="App-mini-reload-setup-background">
+                    <button className="App-mini-connection-status"
                         style={
                             appNav[0].connectionStatus
                             ? {backgroundColor: "rgb(0, 128, 4)"}
@@ -421,62 +424,39 @@ class App extends PureComponent {
                     >
                         {appNav[0].connectionStatus ? "CONNECTED" : "CONNECTING"}
                     </button>
-                    <button className="App-settings-button"
+                    <button className="App-mini-settings-button"
                         onClick={this.handleSettingsPage}>
                         SETTINGS
                     </button>
-                    <button className="App-reload-button"
+                    <button className="App-mini-reload-button"
                         onClick={this.reloadPage}>
                         RELOAD
                     </button>
                 </div>
 
-                <div className="App-loop-autoPlay-background">
-                    <button className="App-loop-button"
-                        onClick={this.handleLoopStatus}
-                        style={
-                            settings[0].tabData[appNav[0].activeTab].loop
-                            ? {backgroundColor: 'rgb(28, 115, 165)'}
-                            : {backgroundColor: 'grey'}
-                        }
-                    >
-                        LOOP
-                    </button>
-                    <button className="App-autoPlay-button"
-                        onClick={this.handleAutoPlayStatus}
-                        style={
-                            settings[0].tabData[appNav[0].activeTab].autoPlay
-                            ? {backgroundColor: 'red'}
-                            : {backgroundColor: 'grey'}
-                        }
-                    >
-                        AUTO NEXT
-                    </button>
-                </div>
-
-                <div className="App-mix-button-background">
-                    <button className="App-prev-cue-button"
+                <div className="App-mini-mix-button-background">
+                    <button className="App-mini-prev-cue-button"
                         onClick={
                             () => this.ccgLoadPlay.prevCue(appNav[0].activeTab + 1)
                         }
                     >
                         PREV
                     </button>
-                    <button className="App-next-cue-button"
+                    <button className="App-mini-next-cue-button"
                         onClick={
                             () => this.ccgLoadPlay.nextCue(appNav[0].activeTab + 1)
                         }
                     >
                         NEXT
                     </button>
-                    <button className="App-mix-button"
+                    <button className="App-mini-mix-button"
                         onClick={
                             () => this.ccgLoadPlay.pvwPlay(appNav[0].activeTab + 1)
                         }
                     >
                         MIX
                     </button>
-                    <button className="App-start-button"
+                    <button className="App-mini-start-button"
                         onClick={
                             () => this.ccgLoadPlay.pgmPlay(appNav[0].activeTab + 1)
                         }
