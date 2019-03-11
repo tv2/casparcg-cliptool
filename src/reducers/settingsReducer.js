@@ -4,6 +4,7 @@ const defaultSettingsReducerState = () => {
     let defaultState = [{
         ipAddress: 'localhost',
         port: '5250',
+        miniView: false,
         tabData: []
     }];
     for (let i=0; i<4; i++) {
@@ -29,6 +30,7 @@ export const settings = ((state = defaultSettingsReducerState(), action) => {
             let { tabData } = action.data;
             nextState[0].ipAddress = action.data.ipAddress;
             nextState[0].port = action.data.port;
+            nextState[0].miniView = action.data.miniView || false;
             nextState[0].tabData.map((item, index) => {
                 item.title = tabData[index].title || '';
                 item.subFolder = tabData[index].subFolder || '';

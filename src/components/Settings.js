@@ -15,6 +15,7 @@ class SettingsPage extends Component {
             settings: this.props.store.settings[0],
         };
         this.handleChange = this.handleChange.bind(this);
+        this.handleMiniView = this.handleMiniView.bind(this);
         this.handleTabTitle = this.handleTabTitle.bind(this);
         this.handleTabMediaFolder = this.handleTabMediaFolder.bind(this);
         this.handleTabDataFolder = this.handleTabDataFolder.bind(this);
@@ -31,6 +32,14 @@ class SettingsPage extends Component {
     handleChange(event) {
         var settingsCopy= Object.assign({}, this.state.settings);
         settingsCopy[event.target.name] = event.target.value;
+        this.setState(
+            {settings: settingsCopy}
+        );
+    }
+
+    handleMiniView(event) {
+        var settingsCopy= Object.assign({}, this.state.settings);
+        settingsCopy[event.target.name] = event.target.checked;
         this.setState(
             {settings: settingsCopy}
         );
@@ -126,15 +135,22 @@ class SettingsPage extends Component {
             <div className="Settings-body">
             <p className="Settings-header">SETTINGS :</p>
             <form className="Settings-form" onSubmit={this.handleSubmit}>
+                <div className="Settings-channel-form">
                 <label className="Settings-input-field">
                     IP ADDRESS :
                     <input name="ipAddress" type="text" value={this.state.settings.ipAddress} onChange={this.handleChange} />
                 </label>
-                <br/>
                 <label className="Settings-input-field">
                     PORT :
                     <input name="port" type="text" value={this.state.settings.port} onChange={this.handleChange} />
                 </label>
+                <br/>
+                <label className="Settings-toggle-field">
+                    7" MINIVIEW :
+                    <input name="miniView" type="checkbox" checked={this.state.settings.miniView} onChange={this.handleMiniView} />
+                </label>
+                </div>
+
                 <br/>
                 {this.renderChannelSettings(this.state.settings.tabData[0], 0)}
                 {this.renderChannelSettings(this.state.settings.tabData[1], 1)}
