@@ -13,9 +13,9 @@
 .App-mini-title-background {
     position: relative;
     top: 5px;
-    left: 10px;
-    width: 520px;
-    height: 270px;
+    left: 5px;
+    width: 540px;
+    height: 285px;
     background-color: rgb(22, 22, 22);
     border-width: 0px;
     border-style: solid;
@@ -128,7 +128,7 @@
     top: 5px;
     right: 15px;
     width: 450px;
-    height: 270px;
+    height: 285px;
     background-color: rgb(22, 22, 22);
     border-width: 0px;
     border-style: solid;

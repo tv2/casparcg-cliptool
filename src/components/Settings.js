@@ -145,8 +145,8 @@ class SettingsPage extends Component {
                     <input name="port" type="text" value={this.state.settings.port} onChange={this.handleChange} />
                 </label>
                 <br/>
-                <label className="Settings-input-field">
-                    MINIVIEW :
+                <label className="Settings-toggle-field">
+                    7" MINIVIEW :
                     <input name="miniView" type="checkbox" checked={this.state.settings.miniView} onChange={this.handleMiniView} />
                 </label>
                 </div>
