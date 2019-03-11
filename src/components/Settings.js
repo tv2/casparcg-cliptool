@@ -147,8 +147,8 @@ class SettingsPage extends Component {
                 <br/>
                 <label className="Settings-input-field">
                     MINIVIEW :
-                    <input name="miniView" type="checkbox" value={this.state.settings.miniView} onChange={this.handleMiniView} />
-                </label>                      
+                    <input name="miniView" type="checkbox" checked={this.state.settings.miniView} onChange={this.handleMiniView} />
+                </label>
                 </div>
 
                 <br/>
