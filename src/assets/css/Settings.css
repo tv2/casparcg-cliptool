@@ -3,6 +3,7 @@
     z-index: 10;
     top: 100px;
     left: 5%;
+    max-width: 90vw;
     background-color: rgb(44, 44, 44);
     border-width: 1px;
     border-style: solid;
