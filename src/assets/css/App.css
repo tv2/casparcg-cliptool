@@ -35,7 +35,6 @@ body {
     box-shadow: 2px 2px 2px #555;
 }
 
-
 .App-title-background {
     position: relative;
     top: 5px;
@@ -49,7 +48,7 @@ body {
     box-shadow: 6px 6px 6px rgb(34, 34, 34);
 }
 
-.headerPgmCounter {
+.App-header-pgm-counter {
     position: absolute;
     top: 40px;
     left: 180px;
@@ -64,7 +63,7 @@ body {
     margin-right: 5px;
 }
 
-.headerPvwThumbnailImage {
+.App-header-pvw-thumbnail-image {
     position: absolute;
     top: 2px;
     left: 5px;
@@ -79,7 +78,7 @@ body {
     background-image: repeating-linear-gradient(-45deg, #2f2c43, #2e2b41 3%, #2a1938 4%);
 }
 
-.headerPgmThumbnailImage {
+.App-header-pgm-thumbnail-image {
     position: absolute;
     top: 2px;
     right: 5px;
@@ -94,7 +93,7 @@ body {
     background-image: repeating-linear-gradient(-45deg, #2f2c43, #2e2b41 3%, #2a1938 4%);
 }
 
-.Reload-setup-background {
+.App-reload-setup-background {
     position: absolute;
     top: 5px;
     left: 5px;
@@ -134,7 +133,7 @@ body {
     outline: 0;
 }
 
-.Reload-button {
+.App-reload-button {
     font-size: 0.9em;
     width: 110px;
     line-height: 25px;
@@ -149,7 +148,7 @@ body {
 }
 
 /* Buttons for all thumbs, places at the bottom of the page */
-.mixButtonBackground {
+.App-mix-button-background {
     position: absolute;
     top: 5px;
     right: 15px;
@@ -162,7 +161,7 @@ body {
     box-shadow: 6px 6px 6px rgb(34, 34, 34);
 }
 
-.mixButton {
+.App-mix-button {
     margin-left: 12px;
     margin-right: 12px;
     margin-top: 5px;
@@ -178,7 +177,7 @@ body {
     outline: 1px;
 }
 
-.startButton {
+.App-start-button {
     margin-left: 12px;
     margin-right: 12px;
     margin-top: 5px;
@@ -195,7 +194,7 @@ body {
 }
 
 
-.prevCueButton {
+.App-prev-cue-button {
     margin-left: 12px;
     margin-right: 12px;
     margin-top: 5px;
@@ -212,7 +211,7 @@ body {
 }
 
 
-.nextCueButton {
+.App-next-cue-button {
     margin-left: 12px;
     margin-right: 12px;
     margin-top: 5px;
@@ -229,7 +228,7 @@ body {
 }
 
 /* LOOP and AUTO STARt buttons: */
-.loop-autoPlay-background {
+.App-loop-autoPlay-background {
     position: absolute;
     top: 5px;
     right: 320px;
@@ -242,7 +241,7 @@ body {
     box-shadow: 6px 6px 6px rgb(34, 34, 34);
 }
 
-.loop-button {
+.App-loop-button {
     font-size: 0.9em;
     width: 108px;
     line-height: 30px;
@@ -254,7 +253,7 @@ body {
     outline: 0;
 }
 
-.autoPlay-button {
+.App-autoPlay-button {
     font-size: 0.9em;
     width: 108px;
     line-height: 30px;
