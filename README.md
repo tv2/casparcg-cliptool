@@ -7,7 +7,8 @@ CasparCG ClipTool is a clip tool that scans predefined folders, and let´s you p
 
 ### Control View for small touchscreen: 
 (selected in settings)
-<img src="docs/images/controlview.png">
+
+<img src="docs/images/controlview.png" height="152">
 
 ## Features:
 * Each output is in it´s own separate Tab, so it´s easy to change a loop on one screen without messing with the others. If an output is not in use, remove the name of the output in settings. And if you on one client only need e.g. Output 2 - then remove the name of output 1, 3 and 4.
