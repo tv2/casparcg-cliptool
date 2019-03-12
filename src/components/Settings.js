@@ -146,7 +146,7 @@ class SettingsPage extends Component {
                 </label>
                 <br/>
                 <label className="Settings-toggle-field">
-                    7" MINIVIEW :
+                    CONTROL VIEW :
                     <input name="miniView" type="checkbox" checked={this.state.settings.miniView} onChange={this.handleMiniView} />
                 </label>
                 </div>

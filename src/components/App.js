@@ -134,7 +134,7 @@ class App extends PureComponent {
     handleAutoPlayStatus() {
         this.props.dispatch({
             type:'AUTOPLAY_STATUS',
-            data: this.props.storeAppNav[0].activeTab
+            data: this.props.store.appNav[0].activeTab
         });
         saveSettings(this.props.store.settings[0]);
     }
@@ -142,7 +142,7 @@ class App extends PureComponent {
     handleLoopStatus() {
         this.props.dispatch({
             type:'LOOP_STATUS',
-            data: this.props.storeAppNav[0].activeTab
+            data: this.props.store.appNav[0].activeTab
         });
         saveSettings(this.props.store.settings[0]);
     }
@@ -394,8 +394,8 @@ class App extends PureComponent {
             <header className="App-mini-header">
                 <div className="App-mini-title-background">
                     <img src=
-                        {data[0].
-                            channel[appNav[0].activeTab]
+                        {data[0]
+                            .channel[appNav[0].activeTab]
                             .thumbList[data[0].channel[appNav[0].activeTab].thumbActiveBgIndex]
                             .thumbPix || ''
                         }
@@ -404,6 +404,14 @@ class App extends PureComponent {
                     <button className="App-mini-header-pgm-counter">
                         {data[0].ccgTimeCounter[appNav[0].activeTab]}
                     </button>
+                    <div>
+                        { data[0]
+                            .channel[appNav[0].activeTab]
+                            .thumbList[data[0].channel[appNav[0].activeTab].thumbActiveIndex]
+                            .name
+                            || ''
+                        }
+                    </div>
                     <img src=
                         {data[0].
                             channel[appNav[0].activeTab]
@@ -431,6 +439,30 @@ class App extends PureComponent {
                     <button className="App-mini-reload-button"
                         onClick={this.reloadPage}>
                         RELOAD
+                    </button>
+                </div>
+
+
+                <div className="App-mini-loop-autoPlay-background">
+                    <button className="App-mini-loop-button"
+                        onClick={this.handleLoopStatus}
+                        style={
+                            settings[0].tabData[appNav[0].activeTab].loop
+                            ? {backgroundColor: 'rgb(28, 115, 165)'}
+                            : {backgroundColor: 'grey'}
+                        }
+                    >
+                        LOOP
+                    </button>
+                    <button className="App-mini-autoPlay-button"
+                        onClick={this.handleAutoPlayStatus}
+                        style={
+                            settings[0].tabData[appNav[0].activeTab].autoPlay
+                            ? {backgroundColor: 'red'}
+                            : {backgroundColor: 'grey'}
+                        }
+                    >
+                        AUTO NEXT
                     </button>
                 </div>
 
