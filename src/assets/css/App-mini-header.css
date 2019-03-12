@@ -5,17 +5,18 @@
     top: 0px;
     width: 100%;
     background-color: rgb(53, 53, 53);
-    height: 300px;
+    height: 500px;
     color: rgb(28, 115, 165);
     box-shadow: 2px 2px 2px #555;
 }
 
+/* Thumbviews and counter: */
 .App-mini-title-background {
     position: relative;
-    top: 5px;
+    top: 150px;
     left: 5px;
     width: 540px;
-    height: 285px;
+    height: 315px;
     background-color: rgb(22, 22, 22);
     border-width: 0px;
     border-style: solid;
@@ -68,9 +69,11 @@
     background-image: repeating-linear-gradient(-45deg, #2f2c43, #2e2b41 3%, #2a1938 4%);
 }
 
+
+/* Reload, setup connetionstatus: */
 .App-mini-reload-setup-background {
     position: absolute;
-    top: 5px;
+    top: 20px;
     left: 5px;
     width: 170px;
     height: 115px;
@@ -122,13 +125,13 @@
     outline: 0;
 }
 
-/* Buttons for all thumbs, places at the bottom of the page */
+/* Mix, start prev next  */
 .App-mini-mix-button-background {
     position: absolute;
-    top: 5px;
+    top: 20px;
     right: 15px;
     width: 450px;
-    height: 285px;
+    height: 455px;
     background-color: rgb(22, 22, 22);
     border-width: 0px;
     border-style: solid;
@@ -137,12 +140,12 @@
 }
 
 .App-mini-mix-button {
-    margin-left: 12px;
+    margin-left: 6px;
     margin-right: 12px;
-    margin-top: 5px;
+    margin-top: 15px;
     font-size: 1.2em;
-    width: 40%;
-    line-height: 130px;
+    width: 200px;
+    line-height: 200px;
     background: rgb(0, 73, 4);
     color: white;
     font-family: 'Roboto Condensed', sans-serif;
@@ -153,12 +156,11 @@
 }
 
 .App-mini-start-button {
-    margin-left: 12px;
-    margin-right: 12px;
-    margin-top: 5px;
+    margin-left: 10px;
+    margin-top: 15px;
     font-size: 1.2em;
-    width: 40%;
-    line-height: 130px;
+    width: 200px;
+    line-height: 200px;
     background: rgb(122, 0, 0);
     color: white;
     font-family: 'Roboto Condensed', sans-serif;
@@ -170,12 +172,12 @@
 
 
 .App-mini-prev-cue-button {
-    margin-left: 12px;
+    margin-left: 6px;
     margin-right: 12px;
-    margin-top: 5px;
+    margin-top: 15px;
     font-size: 1.2em;
-    width: 40%;
-    line-height: 130px;
+    width: 200px;
+    line-height: 200px;
     background: rgb(83, 125, 150);
     color: white;
     font-family: 'Roboto Condensed', sans-serif;
@@ -187,12 +189,11 @@
 
 
 .App-mini-next-cue-button {
-    margin-left: 12px;
-    margin-right: 12px;
-    margin-top: 5px;
+    margin-left: 10px;
+    margin-top: 15px;
     font-size: 1.2em;
-    width: 40%;
-    line-height: 130px;
+    width: 200px;
+    line-height: 200px;
     background: rgb(83, 125, 150);
     color: white;
     font-family: 'Roboto Condensed', sans-serif;
@@ -202,3 +203,41 @@
     outline: 1px;
 }
 
+
+/* LOOP and AUTO START buttons: */
+.App-mini-loop-autoPlay-background {
+    position: absolute;
+    top: 20px;
+    left: 200px;
+    width: 170px;
+    height: 115px;
+    background-color: rgb(22, 22, 22);
+    border-width: 0px;
+    border-style: solid;
+    border-color: rgb(63, 63, 63);
+    box-shadow: 6px 6px 6px rgb(34, 34, 34);
+}
+
+.App-mini-loop-button {
+    font-size: 0.9em;
+    width: 108px;
+    line-height: 30px;
+    margin-top: 15px;
+    color: white;
+    font-family: 'Roboto Condensed', sans-serif;
+    border-radius: 5px;
+    border-width: 0;
+    outline: 0;
+}
+
+.App-mini-autoPlay-button {
+    font-size: 0.9em;
+    width: 108px;
+    line-height: 30px;
+    margin-top: 10px;
+    color: white;
+    font-family: 'Roboto Condensed', sans-serif;
+    border-radius: 5px;
+    border-width: 0;
+    outline: 0;
+}

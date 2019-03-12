@@ -105,7 +105,10 @@ class Thumbnail extends PureComponent {
                         className="boxComponent"
                         key={"item" + index}
                     >
-                        { this.renderThumb(item, index) }
+                        { this.props.store.settings[0].miniView ?
+                            ""
+                            : this.renderThumb(item, index)
+                        }
                     </div>
                 ))}
             </Sortable>
