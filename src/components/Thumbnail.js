@@ -97,19 +97,14 @@ class Thumbnail extends PureComponent {
                                 {borderWidth: '4px'} : {borderWidth: '0px'},
                             item.tallyBg ?
                                 {boxShadow: '0px 0px 1px 5px green'} : {boxShadow: ''}
-                        )}>
+                        )}
+                >
                     <button className="thumbnail-text-view-ClickPgm"
                         onClick={() => this.props.loadMediaProps(this.ccgOutput, 10, index)}
                     />
                     <p className="text-text-view">
                         {item.name.substring(item.name.lastIndexOf('/')+1).slice(-45)}
                     </p>
-                    <a className="thumbnail-text-view-timecode">
-                    {item.tally ?
-                        this.props.store.data[0].ccgTimeCounter[this.ccgOutput-1]
-                        : ""
-                    }
-                </a>
                 </div>
             )
         }
