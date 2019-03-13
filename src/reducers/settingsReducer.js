@@ -4,7 +4,7 @@ const defaultSettingsReducerState = () => {
     let defaultState = [{
         ipAddress: 'localhost',
         port: '5250',
-        miniView: false,
+        selectView: 0,
         tabData: []
     }];
     for (let i=0; i<4; i++) {
@@ -30,7 +30,7 @@ export const settings = ((state = defaultSettingsReducerState(), action) => {
             let { tabData } = action.data;
             nextState[0].ipAddress = action.data.ipAddress;
             nextState[0].port = action.data.port;
-            nextState[0].miniView = action.data.miniView || false;
+            nextState[0].selectView = action.data.selectView || 0;
             nextState[0].tabData.map((item, index) => {
                 item.title = tabData[index].title || '';
                 item.subFolder = tabData[index].subFolder || '';
@@ -44,6 +44,13 @@ export const settings = ((state = defaultSettingsReducerState(), action) => {
             return nextState;
         case 'LOOP_STATUS':
             nextState[0].tabData[action.data].loop = !nextState[0].tabData[action.data].loop;
+            return nextState;
+        case 'TOGGLE_VIEW':
+            let nextView = nextState[0].selectView + 1;
+            if (nextView > 2) {
+                nextView = 0;
+            }
+            nextState[0].selectView = nextView;
             return nextState;
         case 'AUTOPLAY_STATUS':
         nextState[0].tabData[action.data].autoPlay = !nextState[0].tabData[action.data].autoPlay;

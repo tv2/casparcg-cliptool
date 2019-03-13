@@ -45,6 +45,7 @@ class App extends PureComponent {
         //BINDS:
         this.checkConnectionStatus = this.checkConnectionStatus.bind(this);
         this.handleSettingsPage = this.handleSettingsPage.bind(this);
+        this.handleSelectView = this.handleSelectView.bind(this);
         this.handleAutoPlayStatus = this.handleAutoPlayStatus.bind(this);
         this.handleLoopStatus = this.handleLoopStatus.bind(this);
         this.ccgSubscribeTimeLeft = this.ccgSubscribeTimeLeft.bind(this);
@@ -144,6 +145,13 @@ class App extends PureComponent {
         this.props.dispatch({
             type:'AUTOPLAY_STATUS',
             data: this.props.store.appNav[0].activeTab
+        });
+        saveSettings(this.props.store.settings[0]);
+    }
+
+    handleSelectView() {
+        this.props.dispatch({
+            type:'TOGGLE_VIEW',
         });
         saveSettings(this.props.store.settings[0]);
     }
@@ -320,13 +328,14 @@ class App extends PureComponent {
 
                 <div className="App-reload-setup-background">
                     <button className="App-connection-status"
+                        onClick={this.handleSelectView}
                         style={
                             appNav[0].connectionStatus
                             ? {backgroundColor: "rgb(0, 128, 4)"}
                             : {backgroundColor: "red"}
                         }
                     >
-                        {appNav[0].connectionStatus ? "CONNECTED" : "CONNECTING"}
+                        {appNav[0].connectionStatus ? "VIEW" : "CONNECTING"}
                     </button>
                     <button className="App-settings-button"
                         onClick={this.handleSettingsPage}>
@@ -410,9 +419,6 @@ class App extends PureComponent {
                         }
                         className="App-mini-header-pvw-thumbnail-image"
                         />
-                    <button className="App-mini-header-pgm-counter">
-                        {data[0].ccgTimeCounter[appNav[0].activeTab]}
-                    </button>
                     <div className="App-mini-header-title">
                         { data[0]
                             .channel[appNav[0].activeTab]
@@ -429,17 +435,21 @@ class App extends PureComponent {
                         }
                         className="App-mini-header-pgm-thumbnail-image"
                     />
+                    <button className="App-mini-header-pgm-counter">
+                        {data[0].ccgTimeCounter[appNav[0].activeTab]}
+                    </button>
                 </div>
 
                 <div className="App-mini-reload-setup-background">
                     <button className="App-mini-connection-status"
+                        onClick={this.handleSelectView}
                         style={
                             appNav[0].connectionStatus
                             ? {backgroundColor: "rgb(0, 128, 4)"}
                             : {backgroundColor: "red"}
                         }
                     >
-                        {appNav[0].connectionStatus ? "CONNECTED" : "CONNECTING"}
+                        {appNav[0].connectionStatus ? "VIEW" : "CONNECTING"}
                     </button>
                     <button className="App-mini-settings-button"
                         onClick={this.handleSettingsPage}>
@@ -530,8 +540,8 @@ class App extends PureComponent {
     render() {
         return (
         <div className="App">
-            {this.props.store.settings[0].miniView ?
-                <this.renderMiniHeader/>
+            {(this.props.store.settings[0].selectView === 2) ?
+                <this.renderControlHeader/>
                 : <this.renderFullHeader/>
             }
             {this.state.showSettingsMenu ?

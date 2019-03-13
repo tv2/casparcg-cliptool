@@ -61,32 +61,6 @@
     outline: 0;
 }
 
-.loopButton {
-    margin: 8px;
-    font-size: 1.2em;
-    width: 40%;
-    line-height: 150%;
-    background: rgb(110, 2, 2);
-    color: white;
-    font-family: 'Roboto Condensed', sans-serif;
-    border-radius: 16px;
-    border-width: 0;
-    outline: 0;
-}
-
-.playButton {
-    margin: 8px;
-    font-size: 1.2em;
-    width: 40%;
-    line-height: 150%;
-    background: green;
-    color: white;
-    font-family: 'Roboto Condensed', sans-serif;
-    border-radius: 16px;
-    border-width: 0;
-    outline: 0;
-}
-
 /* thumbname text */
 .text {
     margin-top: 8px;
@@ -94,7 +68,7 @@
 }
 
 /* on-screen timecode */
-.playing {
+.thumbnail-timecode {
     position: absolute;
     width: 250px;
     left: 25px;
@@ -105,3 +79,51 @@
     background: #ffffff8c;
     border-radius: 16px;
 }
+
+
+
+/* thumbnail textView */
+
+.thumbnail-text-view {
+    height: 140px;
+    border-width: 2px;
+    border-style:  solid;
+    border-color: red;
+    width: 95%;
+    margin: 8px;
+
+}
+
+
+.thumbnail-text-view-ClickPgm {
+    position: absolute;
+    height: 120px;
+    top: 10px;
+    z-index: 2;
+    background-color: transparent;
+    right: 5%;
+    width: 90%;
+    border-style: dotted;
+    border-width: 0px;
+    border-color: rgba(133, 133, 133, 0.371);
+    outline: 0;
+}
+
+.text-text-view {
+    word-wrap: break-word;
+    margin-top: 8px;
+    font-size: 1.4em;
+}
+
+.thumbnail-text-view-timecode {
+    position: absolute;
+    width: 250px;
+    left: 25px;
+    top: 85px;
+    text-align: left;
+    font-size: 2.8em;
+    color: red;
+    background: #ffffff8c;
+    border-radius: 16px;
+}
+

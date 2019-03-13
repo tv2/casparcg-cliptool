@@ -60,34 +60,59 @@ class Thumbnail extends PureComponent {
     }
 
     renderThumb(item, index) {
-        return (
-            <div>
-                <img src={item.thumbPix}
-                    className="thumbnailImage"
-                    style = {Object.assign({},
-                        item.tally ?
-                            {borderWidth: '4px'} : {borderWidth: '0px'},
-                        item.tallyBg ?
-                            {boxShadow: '0px 0px 1px 5px green'} : {boxShadow: ''}
-                    )}
-                />
-                <button className="thumbnailImageClickPvw"
-                    onClick={() => this.props.loadBgMediaProps(this.ccgOutput, 10, index)}
-                />
-                <button className="thumbnailImageClickPgm"
-                    onClick={() => this.props.loadMediaProps(this.ccgOutput, 10, index)}
-                />
-                <a className="playing">
+        if (this.props.store.settings[0].selectView === 0 ) {
+            return (
+                <div>
+                    <img src={item.thumbPix}
+                        className="thumbnailImage"
+                        style = {Object.assign({},
+                            item.tally ?
+                                {borderWidth: '4px'} : {borderWidth: '0px'},
+                            item.tallyBg ?
+                                {boxShadow: '0px 0px 1px 5px green'} : {boxShadow: ''}
+                        )}
+                    />
+                    <button className="thumbnailImageClickPvw"
+                        onClick={() => this.props.loadBgMediaProps(this.ccgOutput, 10, index)}
+                    />
+                    <button className="thumbnailImageClickPgm"
+                        onClick={() => this.props.loadMediaProps(this.ccgOutput, 10, index)}
+                    />
+                    <a className="thumbnail-timecode">
+                        {item.tally ?
+                            this.props.store.data[0].ccgTimeCounter[this.ccgOutput-1]
+                            : ""
+                        }
+                    </a>
+                    <p className="text">
+                        {item.name.substring(item.name.lastIndexOf('/')+1).slice(-45)}
+                    </p>
+                </div>
+        )
+        } else {
+            return (
+                <div className="thumbnail-text-view"
+                        style = {Object.assign({},
+                            item.tally ?
+                                {borderWidth: '4px'} : {borderWidth: '0px'},
+                            item.tallyBg ?
+                                {boxShadow: '0px 0px 1px 5px green'} : {boxShadow: ''}
+                        )}>
+                    <button className="thumbnail-text-view-ClickPgm"
+                        onClick={() => this.props.loadMediaProps(this.ccgOutput, 10, index)}
+                    />
+                    <p className="text-text-view">
+                        {item.name.substring(item.name.lastIndexOf('/')+1).slice(-45)}
+                    </p>
+                    <a className="thumbnail-text-view-timecode">
                     {item.tally ?
                         this.props.store.data[0].ccgTimeCounter[this.ccgOutput-1]
                         : ""
                     }
                 </a>
-                <p className="text">
-                    {item.name.substring(item.name.lastIndexOf('/')+1).slice(-45)}
-                </p>
-            </div>
-        )
+                </div>
+            )
+        }
 
     }
 
@@ -105,9 +130,9 @@ class Thumbnail extends PureComponent {
                         className="boxComponent"
                         key={"item" + index}
                     >
-                        { this.props.store.settings[0].miniView ?
-                            ""
-                            : this.renderThumb(item, index)
+                        { (this.props.store.settings[0].selectView < 2  ) ?
+                            this.renderThumb(item, index)
+                            : ""
                         }
                     </div>
                 ))}
