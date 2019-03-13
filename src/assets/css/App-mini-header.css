@@ -15,7 +15,7 @@
     position: relative;
     top: 250px;
     left: 5px;
-    width: 650px;
+    width: 645px;
     height: 315px;
     background-color: rgb(22, 22, 22);
     border-width: 0px;
@@ -28,7 +28,6 @@
     color: white;
     font-size: 1.4em;
 }
-
 
 .App-mini-header-pgm-counter {
     position: absolute;
@@ -135,7 +134,7 @@
     position: absolute;
     top: 20px;
     right: 15px;
-    width: 600px;
+    width: 584px;
     height: 545px;
     background-color: rgb(22, 22, 22);
     border-width: 0px;
