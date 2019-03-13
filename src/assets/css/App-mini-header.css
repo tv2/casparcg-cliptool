@@ -5,7 +5,7 @@
     top: 0px;
     width: 100%;
     background-color: rgb(53, 53, 53);
-    height: 500px;
+    height: 580px;
     color: rgb(28, 115, 165);
     box-shadow: 2px 2px 2px #555;
 }
@@ -13,9 +13,9 @@
 /* Thumbviews and counter: */
 .App-mini-title-background {
     position: relative;
-    top: 150px;
+    top: 250px;
     left: 5px;
-    width: 540px;
+    width: 650px;
     height: 315px;
     background-color: rgb(22, 22, 22);
     border-width: 0px;
@@ -23,25 +23,31 @@
     border-color: rgb(63, 63, 63);
     box-shadow: 6px 6px 6px rgb(34, 34, 34);
 }
+.App-mini-header-title {
+    margin-top: 5px;
+    color: white;
+    font-size: 1.4em;
+}
+
 
 .App-mini-header-pgm-counter {
     position: absolute;
     top: 240px;
-    left: 270px;
+    left: 5px;
     text-align: left;
     background-color:  #aa0101;
-    width: 145px;
-    height: 30px;
+    width: 175px;
+    height: 40px;
     border-width: 0px;
     color: rgb(255, 255, 255);
-    font-size: 1.4em;
+    font-size: 1.8em;
     margin-left: 5px;
     margin-right: 5px;
 }
 
 .App-mini-header-pvw-thumbnail-image {
     position: absolute;
-    top: 127px;
+    top: 50px;
     left: 5px;
     border-width: 2px;
     border-style: solid;
@@ -56,13 +62,12 @@
 
 .App-mini-header-pgm-thumbnail-image {
     position: absolute;
-    top: 30px;
-    left: 180px;
+    top: 50px;
+    left: 200px;
     border-width: 2px;
     border-style: solid;
     border-color: #aa0101;
-    width: 340px;
-    height: 192px;
+    width: 420px;
     margin-top: 6px;
     margin-bottom: 4px;
     margin-left: 8px;
@@ -75,8 +80,8 @@
     position: absolute;
     top: 20px;
     left: 5px;
-    width: 170px;
-    height: 115px;
+    width: 220px;
+    height: 215px;
     background-color: rgb(22, 22, 22);
     border-width: 0px;
     border-style: solid;
@@ -86,9 +91,9 @@
 
 .App-mini-connection-status {
     font-size: 0.9em;
-    width: 108px;
-    line-height: 25px;
-    margin-top: 5px;
+    width: 158px;
+    line-height: 55px;
+    margin-top: 10px;
     color: white;
     font-family: 'Roboto Condensed', sans-serif;
     border-radius: 5px;
@@ -99,8 +104,8 @@
 
 .App-mini-settings-button {
     font-size: 0.9em;
-    width: 110px;
-    line-height: 25px;
+    width: 158px;
+    line-height: 55px;
     margin-top: 5px;
     background: rgb(11, 12, 11);
     color: white;
@@ -113,8 +118,8 @@
 
 .App-mini-reload-button {
     font-size: 0.9em;
-    width: 110px;
-    line-height: 25px;
+    width: 158px;
+    line-height: 55px;
     margin-top: 5px;
     background: rgb(46, 19, 19);
     color: white;
@@ -130,8 +135,8 @@
     position: absolute;
     top: 20px;
     right: 15px;
-    width: 450px;
-    height: 455px;
+    width: 600px;
+    height: 545px;
     background-color: rgb(22, 22, 22);
     border-width: 0px;
     border-style: solid;
@@ -144,8 +149,8 @@
     margin-right: 12px;
     margin-top: 15px;
     font-size: 1.2em;
-    width: 200px;
-    line-height: 200px;
+    width: 260px;
+    line-height: 245px;
     background: rgb(0, 73, 4);
     color: white;
     font-family: 'Roboto Condensed', sans-serif;
@@ -159,8 +164,8 @@
     margin-left: 10px;
     margin-top: 15px;
     font-size: 1.2em;
-    width: 200px;
-    line-height: 200px;
+    width: 260px;
+    line-height: 245px;
     background: rgb(122, 0, 0);
     color: white;
     font-family: 'Roboto Condensed', sans-serif;
@@ -176,8 +181,8 @@
     margin-right: 12px;
     margin-top: 15px;
     font-size: 1.2em;
-    width: 200px;
-    line-height: 200px;
+    width: 260px;
+    line-height: 245px;
     background: rgb(83, 125, 150);
     color: white;
     font-family: 'Roboto Condensed', sans-serif;
@@ -192,8 +197,8 @@
     margin-left: 10px;
     margin-top: 15px;
     font-size: 1.2em;
-    width: 200px;
-    line-height: 200px;
+    width: 260px;
+    line-height: 245px;
     background: rgb(83, 125, 150);
     color: white;
     font-family: 'Roboto Condensed', sans-serif;
@@ -208,9 +213,9 @@
 .App-mini-loop-autoPlay-background {
     position: absolute;
     top: 20px;
-    left: 200px;
-    width: 170px;
-    height: 115px;
+    left: 300px;
+    width: 220px;
+    height: 215px;
     background-color: rgb(22, 22, 22);
     border-width: 0px;
     border-style: solid;
@@ -220,8 +225,8 @@
 
 .App-mini-loop-button {
     font-size: 0.9em;
-    width: 108px;
-    line-height: 30px;
+    width: 158px;
+    line-height: 80px;
     margin-top: 15px;
     color: white;
     font-family: 'Roboto Condensed', sans-serif;
@@ -232,8 +237,9 @@
 
 .App-mini-autoPlay-button {
     font-size: 0.9em;
-    width: 108px;
-    line-height: 30px;
+    width: 158px;
+    line-height: 80px;
+    margin-top: 15px;
     margin-top: 10px;
     color: white;
     font-family: 'Roboto Condensed', sans-serif;
