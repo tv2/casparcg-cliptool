@@ -1,5 +1,5 @@
 
-.App-mini-header {
+.App-control-view-header {
     position: sticky;
     z-index: 10;
     top: 0px;
@@ -11,7 +11,7 @@
 }
 
 /* Thumbviews and counter: */
-.App-mini-title-background {
+.App-control-view-title-background {
     position: relative;
     top: 250px;
     left: 5px;
@@ -23,13 +23,13 @@
     border-color: rgb(63, 63, 63);
     box-shadow: 6px 6px 6px rgb(34, 34, 34);
 }
-.App-mini-header-title {
+.App-control-view-header-title {
     margin-top: 5px;
     color: white;
     font-size: 1.4em;
 }
 
-.App-mini-header-pgm-counter {
+.App-control-view-header-pgm-counter {
     position: absolute;
     top: 150px;
     left: 325px;
@@ -44,7 +44,7 @@
     margin-right: 5px;
 }
 
-.App-mini-header-pvw-thumbnail-image {
+.App-control-view-header-pvw-thumbnail-image {
     position: absolute;
     top: 50px;
     left: 5px;
@@ -59,7 +59,7 @@
     background-image: repeating-linear-gradient(-45deg, #2f2c43, #2e2b41 3%, #2a1938 4%);
 }
 
-.App-mini-header-pgm-thumbnail-image {
+.App-control-view-header-pgm-thumbnail-image {
     position: absolute;
     top: 50px;
     left: 200px;
@@ -75,7 +75,7 @@
 
 
 /* Reload, setup connetionstatus: */
-.App-mini-reload-setup-background {
+.App-control-view-reload-setup-background {
     position: absolute;
     top: 20px;
     left: 5px;
@@ -88,7 +88,7 @@
     box-shadow: 6px 6px 6px rgb(34, 34, 34);
 }
 
-.App-mini-connection-status {
+.App-control-view-connection-status {
     font-size: 0.9em;
     width: 158px;
     line-height: 55px;
@@ -101,7 +101,7 @@
 }
 
 
-.App-mini-settings-button {
+.App-control-view-settings-button {
     font-size: 0.9em;
     width: 158px;
     line-height: 55px;
@@ -115,7 +115,7 @@
     outline: 0;
 }
 
-.App-mini-reload-button {
+.App-control-view-reload-button {
     font-size: 0.9em;
     width: 158px;
     line-height: 55px;
@@ -130,7 +130,7 @@
 }
 
 /* Mix, start prev next  */
-.App-mini-mix-button-background {
+.App-control-view-mix-button-background {
     position: absolute;
     top: 20px;
     right: 15px;
@@ -143,7 +143,7 @@
     box-shadow: 6px 6px 6px rgb(34, 34, 34);
 }
 
-.App-mini-mix-button {
+.App-control-view-mix-button {
     margin-left: 6px;
     margin-right: 12px;
     margin-top: 15px;
@@ -159,7 +159,7 @@
     outline: 1px;
 }
 
-.App-mini-start-button {
+.App-control-view-start-button {
     margin-left: 10px;
     margin-top: 15px;
     font-size: 1.2em;
@@ -175,7 +175,7 @@
 }
 
 
-.App-mini-prev-cue-button {
+.App-control-view-prev-cue-button {
     margin-left: 6px;
     margin-right: 12px;
     margin-top: 15px;
@@ -192,7 +192,7 @@
 }
 
 
-.App-mini-next-cue-button {
+.App-control-view-next-cue-button {
     margin-left: 10px;
     margin-top: 15px;
     font-size: 1.2em;
@@ -209,7 +209,7 @@
 
 
 /* LOOP and AUTO START buttons: */
-.App-mini-loop-autoPlay-background {
+.App-control-view-loop-autoPlay-background {
     position: absolute;
     top: 20px;
     left: 300px;
@@ -222,7 +222,7 @@
     box-shadow: 6px 6px 6px rgb(34, 34, 34);
 }
 
-.App-mini-loop-button {
+.App-control-view-loop-button {
     font-size: 0.9em;
     width: 158px;
     line-height: 80px;
@@ -234,7 +234,7 @@
     outline: 0;
 }
 
-.App-mini-autoPlay-button {
+.App-control-view-autoPlay-button {
     font-size: 0.9em;
     width: 158px;
     line-height: 80px;
