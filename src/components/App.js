@@ -28,6 +28,7 @@ import '../assets/css/Rmc-tabs.css';
 import '../assets/css/App.css';
 import '../assets/css/App-header.css';
 import '../assets/css/App-control-view-header.css';
+import '../assets/css/App-text-view-header.css';
 
 
 const MIX_DURATION = 6;
@@ -52,6 +53,7 @@ class App extends PureComponent {
         this.ccgSubscribeInfoData = this.ccgSubscribeInfoData.bind(this);
         this.renderFullHeader = this.renderFullHeader.bind(this);
         this.renderControlHeader = this.renderControlHeader.bind(this);
+        this.renderTextViewHeader = this.renderTextViewHeader.bind(this);
         this.updatePlayingStatus = this.updatePlayingStatus.bind(this);
         this.ccgMediaFilesChanges = this.ccgMediaFilesChanged.bind(this);
     }
@@ -519,6 +521,53 @@ class App extends PureComponent {
         )
     }
 
+
+    renderTextViewHeader() {
+        let { appNav, data, settings} = this.props.store;
+
+        return (
+            <header className="App-text-view-header">
+                <div className="App-text-view-title-background">
+                    <img src=
+                        {data[0].
+                            channel[appNav[0].activeTab]
+                            .thumbList[data[0].channel[appNav[0].activeTab].thumbActiveIndex]
+                            .thumbPix || ''
+                        }
+                        className="App-text-view-header-pgm-thumbnail-image"
+                    />
+                    <button className="App-text-view-header-pgm-counter">
+                        {data[0].ccgTimeCounter[appNav[0].activeTab]}
+                    </button>
+                </div>
+
+                <div className="App-text-view-reload-setup-background">
+                    <button className="App-text-view-connection-status"
+                        onClick={this.handleSelectView}
+                        style={
+                            appNav[0].connectionStatus
+                            ? {backgroundColor: "rgb(0, 128, 4)"}
+                            : {backgroundColor: "red"}
+                        }
+                    >
+                        {appNav[0].connectionStatus ? "VIEW" : "CONNECTING"}
+                    </button>
+                </div>
+
+                <div className="App-text-view-mix-button-background">
+
+                    <button className="App-text-view-start-button"
+                        onClick={
+                            () => this.ccgLoadPlay.pgmPlay(appNav[0].activeTab + 1)
+                        }
+                    >
+                        START
+                    </button>
+                </div>
+            </header>
+        )
+    }
+
     renderTabData() {
         var tabDataList = this.state.tabData.map((item) => {
             return (
@@ -540,9 +589,14 @@ class App extends PureComponent {
     render() {
         return (
         <div className="App">
+            {(this.props.store.settings[0].selectView === 0) ?
+                <this.renderFullHeader/> : ""
+            }
+            {(this.props.store.settings[0].selectView === 1) ?
+                <this.renderTextViewHeader/> : ""
+            }
             {(this.props.store.settings[0].selectView === 2) ?
-                <this.renderControlHeader/>
-                : <this.renderFullHeader/>
+                <this.renderControlHeader/> : ""
             }
             {this.state.showSettingsMenu ?
                 <SettingsPage/>

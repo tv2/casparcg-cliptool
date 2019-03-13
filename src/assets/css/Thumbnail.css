@@ -1,7 +1,7 @@
 
 .flexBoxes {
     position: relative;
-    margin-top: 15px;
+    margin-top: 20px;
     display:flex;
     flex-direction: row;
     flex-wrap: wrap;
@@ -17,7 +17,7 @@
     color: white;
     box-shadow: 6px 6px 6px #555;
     width: 300px;
-    margin: 10px;
+    margin: 5px;
     font-size: 0.9em;
 }
 

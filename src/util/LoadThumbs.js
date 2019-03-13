@@ -133,7 +133,6 @@ class LoadThumbs {
                 }
             });
         });
-        console.log("Sorted List:", items);
         return items;
     }
 }
