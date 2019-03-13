@@ -133,10 +133,10 @@
 /* Mix, start prev next  */
 .App-mini-mix-button-background {
     position: absolute;
-    top: 111px;
+    top: 20px;
     right: 15px;
-    width: 450px;
-    height: 455px;
+    width: 600px;
+    height: 545px;
     background-color: rgb(22, 22, 22);
     border-width: 0px;
     border-style: solid;
@@ -149,8 +149,8 @@
     margin-right: 12px;
     margin-top: 15px;
     font-size: 1.2em;
-    width: 200px;
-    line-height: 200px;
+    width: 260px;
+    line-height: 245px;
     background: rgb(0, 73, 4);
     color: white;
     font-family: 'Roboto Condensed', sans-serif;
@@ -164,8 +164,8 @@
     margin-left: 10px;
     margin-top: 15px;
     font-size: 1.2em;
-    width: 200px;
-    line-height: 200px;
+    width: 260px;
+    line-height: 245px;
     background: rgb(122, 0, 0);
     color: white;
     font-family: 'Roboto Condensed', sans-serif;
@@ -181,8 +181,8 @@
     margin-right: 12px;
     margin-top: 15px;
     font-size: 1.2em;
-    width: 200px;
-    line-height: 200px;
+    width: 260px;
+    line-height: 245px;
     background: rgb(83, 125, 150);
     color: white;
     font-family: 'Roboto Condensed', sans-serif;
@@ -197,8 +197,8 @@
     margin-left: 10px;
     margin-top: 15px;
     font-size: 1.2em;
-    width: 200px;
-    line-height: 200px;
+    width: 260px;
+    line-height: 245px;
     background: rgb(83, 125, 150);
     color: white;
     font-family: 'Roboto Condensed', sans-serif;
