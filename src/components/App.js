@@ -104,6 +104,7 @@ class App extends PureComponent {
     }
 
     checkConnectionStatus() {
+        let { appNav, data } = this.props.store;
         window.apolloClient.query({
             query: gql`
                 {
@@ -111,6 +112,9 @@ class App extends PureComponent {
                 }`
             })
         .then((response) => {
+            loadThumbsOrder(this.ccgConnection);
+            this.loadThumbs.sortThumbnails(
+                data[0].channel[appNav[0].activeTab].thumbList, appNav[0].activeTab + 1);
             this.props.dispatch({
                 type: 'SET_CONNECTION_STATUS',
                 data: response.data.serverOnline

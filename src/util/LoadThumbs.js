@@ -39,7 +39,7 @@ class LoadThumbs {
                         length: items.length,
                     },
                 });
-                items = this.sortItems(items, ccgOutput);
+                items = this.sortThumbnails(items, ccgOutput);
 
                 items.map ((item, index) => {
                     var currentAtIndex =
@@ -121,7 +121,7 @@ class LoadThumbs {
         });
     }
 
-    sortItems(items, ccgOutput) {
+    sortThumbnails(items, ccgOutput) {
         let placeCounter = 0;
         this.store.data[0].thumbOrder[ccgOutput - 1].list.map((sortItem, index) => {
             items.map((item, index) => {
