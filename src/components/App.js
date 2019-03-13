@@ -413,7 +413,7 @@ class App extends PureComponent {
                     <button className="App-mini-header-pgm-counter">
                         {data[0].ccgTimeCounter[appNav[0].activeTab]}
                     </button>
-                    <div>
+                    <div className="App-mini-header-title">
                         { data[0]
                             .channel[appNav[0].activeTab]
                             .thumbList[data[0].channel[appNav[0].activeTab].thumbActiveIndex]
