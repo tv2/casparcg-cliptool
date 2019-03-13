@@ -112,9 +112,14 @@ class App extends PureComponent {
                 }`
             })
         .then((response) => {
+            //Check order of clips:
             loadThumbsOrder(this.ccgConnection);
             this.loadThumbs.sortThumbnails(
-                data[0].channel[appNav[0].activeTab].thumbList, appNav[0].activeTab + 1);
+                data[0].channel[appNav[0].activeTab].thumbList,
+                appNav[0].activeTab + 1
+            );
+            this.updatePlayingStatus(appNav[0].activeTab);
+
             this.props.dispatch({
                 type: 'SET_CONNECTION_STATUS',
                 data: response.data.serverOnline
