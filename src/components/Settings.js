@@ -15,6 +15,7 @@ class SettingsPage extends Component {
             settings: this.props.store.settings[0],
         };
         this.handleChange = this.handleChange.bind(this);
+        this.handleDisableDragNDrop = this.handleDisableDragNDrop.bind(this);
         this.handleTabTitle = this.handleTabTitle.bind(this);
         this.handleTabMediaFolder = this.handleTabMediaFolder.bind(this);
         this.handleTabDataFolder = this.handleTabDataFolder.bind(this);
@@ -36,6 +37,13 @@ class SettingsPage extends Component {
         );
     }
 
+    handleDisableDragNDrop(event) {
+        var settingsCopy= Object.assign({}, this.state.settings);
+        settingsCopy[event.target.name] = event.target.checked;
+        this.setState(
+            {settings: settingsCopy}
+        );
+    }
     handleTabTitle(event) {
         var settingsCopy= Object.assign({}, this.state.settings);
         settingsCopy.tabData[event.target.name].title = event.target.value;
@@ -134,6 +142,10 @@ class SettingsPage extends Component {
                     <label className="Settings-input-field">
                         PORT :
                         <input name="port" type="text" value={this.state.settings.port} onChange={this.handleChange} />
+                    </label>
+                    <label className="Settings-input-field">
+                        DISABLE DRAG´N´DROP :
+                        <input name="disableDragNDrop" type="checkbox" checked={this.state.settings.disableDragNDrop} onChange={this.handleDisableDragNDrop} />
                     </label>
                 </div>
 

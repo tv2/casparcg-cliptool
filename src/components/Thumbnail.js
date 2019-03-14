@@ -115,6 +115,9 @@ class Thumbnail extends PureComponent {
         return (
             <Sortable
                 className="flexBoxes"
+                options={{
+                    disabled: this.props.store.settings[0].disableDragNDrop
+                }}
                 onChange={(order, sortable, evt) => {
                     this.onDragEnd(order, sortable, evt);
                 }}
