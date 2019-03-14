@@ -5,8 +5,13 @@ CasparCG ClipTool is a clip tool that scans predefined folders, and let´s you p
 ### Normal View:
 <img src="docs/images/Screendump.png">
 
+
+### Text View for small touchscreen: 
+
+
+<img src="docs/images/textview.png" height="152">
+
 ### Control View for small touchscreen: 
-(selected in settings)
 
 <img src="docs/images/controlview.png" height="152">
 
