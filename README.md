@@ -3,13 +3,14 @@
 CasparCG ClipTool is a clip tool that scans predefined folders, and let´s you play it out on predefined outputs.
 
 ### Normal View:
+(VIEW button toggles between views)
 <img src="docs/images/Screendump.png">
 
 
 ### Text View for small touchscreen: 
 
 
-<img src="docs/images/textview.png" height="152">
+<img src="docs/images/text-view.png" height="152">
 
 ### Control View for small touchscreen: 
 
@@ -29,6 +30,8 @@ CasparCG ClipTool is a clip tool that scans predefined folders, and let´s you p
 * Shortcuts for start and mix. Makes it easy to add GPIO triggering.
   * 1,2,3,4 mixes pvw into pgm
   * q,w,e,r start clip on output 1,2,3,4
+
+* Disable Drag´n´drop in settings. For touchscreens and when someone else or an external source sets the order of the playlist.
 
 * It´s possible to add overlay graphics by adding metaData files in the CasparCG data folder.
 The name of the metadata has to be:
