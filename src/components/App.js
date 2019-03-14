@@ -93,7 +93,7 @@ class App extends PureComponent {
         this.ccgMediaFilesChanged();
 
         // Initialize timer connection status:
-        var connectionTimer = setInterval(this.checkConnectionStatus, 2000);
+        var connectionTimer = setInterval(this.checkConnectionStatus, 1000);
 
     }
 
@@ -253,7 +253,7 @@ class App extends PureComponent {
         .subscribe({
             next(response) {
                 console.log("Media Files Changed");
-                this.tabData.map((data, index) => {
+                _this2.state.tabData.map((data, index) => {
                     _this2.loadThumbs.loadThumbs(index+1);
                 });
             },
