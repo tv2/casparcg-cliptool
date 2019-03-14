@@ -15,7 +15,7 @@ import SettingsPage from './Settings';
 
 //Utils:
 import { saveSettings, loadThumbsOrder } from '../util/SettingsStorage';
-import {cleanUpFilename} from '../util/filePathStringHandling';
+import { cleanUpFilename } from '../util/filePathStringHandling';
 import CcgLoadPlay from '../util/CcgLoadPlay';
 import HandleAutoNext from '../util/HandleAutoNext';
 import HandleOverlay from '../util/HandleOverlay';
@@ -27,7 +27,8 @@ import LoadThumbs from '../util/LoadThumbs';
 import '../assets/css/Rmc-tabs.css';
 import '../assets/css/App.css';
 import '../assets/css/App-header.css';
-import '../assets/css/App-mini-header.css';
+import '../assets/css/App-control-view-header.css';
+import '../assets/css/App-text-view-header.css';
 
 
 const MIX_DURATION = 6;
@@ -45,12 +46,14 @@ class App extends PureComponent {
         //BINDS:
         this.checkConnectionStatus = this.checkConnectionStatus.bind(this);
         this.handleSettingsPage = this.handleSettingsPage.bind(this);
+        this.handleSelectView = this.handleSelectView.bind(this);
         this.handleAutoPlayStatus = this.handleAutoPlayStatus.bind(this);
         this.handleLoopStatus = this.handleLoopStatus.bind(this);
         this.ccgSubscribeTimeLeft = this.ccgSubscribeTimeLeft.bind(this);
         this.ccgSubscribeInfoData = this.ccgSubscribeInfoData.bind(this);
         this.renderFullHeader = this.renderFullHeader.bind(this);
-        this.renderMiniHeader = this.renderMiniHeader.bind(this);
+        this.renderControlHeader = this.renderControlHeader.bind(this);
+        this.renderTextViewHeader = this.renderTextViewHeader.bind(this);
         this.updatePlayingStatus = this.updatePlayingStatus.bind(this);
         this.ccgMediaFilesChanges = this.ccgMediaFilesChanged.bind(this);
     }
@@ -144,6 +147,13 @@ class App extends PureComponent {
         this.props.dispatch({
             type:'AUTOPLAY_STATUS',
             data: this.props.store.appNav[0].activeTab
+        });
+        saveSettings(this.props.store.settings[0]);
+    }
+
+    handleSelectView() {
+        this.props.dispatch({
+            type:'TOGGLE_VIEW',
         });
         saveSettings(this.props.store.settings[0]);
     }
@@ -320,13 +330,14 @@ class App extends PureComponent {
 
                 <div className="App-reload-setup-background">
                     <button className="App-connection-status"
+                        onClick={this.handleSelectView}
                         style={
                             appNav[0].connectionStatus
                             ? {backgroundColor: "rgb(0, 128, 4)"}
                             : {backgroundColor: "red"}
                         }
                     >
-                        {appNav[0].connectionStatus ? "CONNECTED" : "CONNECTING"}
+                        {appNav[0].connectionStatus ? "VIEW" : "CONNECTING"}
                     </button>
                     <button className="App-settings-button"
                         onClick={this.handleSettingsPage}>
@@ -396,24 +407,21 @@ class App extends PureComponent {
     }
 
 
-    renderMiniHeader() {
+    renderControlHeader() {
         let { appNav, data, settings} = this.props.store;
 
         return (
-            <header className="App-mini-header">
-                <div className="App-mini-title-background">
+            <header className="App-control-view-header">
+                <div className="App-control-view-title-background">
                     <img src=
                         {data[0]
                             .channel[appNav[0].activeTab]
                             .thumbList[data[0].channel[appNav[0].activeTab].thumbActiveBgIndex]
                             .thumbPix || ''
                         }
-                        className="App-mini-header-pvw-thumbnail-image"
+                        className="App-control-view-header-pvw-thumbnail-image"
                         />
-                    <button className="App-mini-header-pgm-counter">
-                        {data[0].ccgTimeCounter[appNav[0].activeTab]}
-                    </button>
-                    <div className="App-mini-header-title">
+                    <div className="App-control-view-header-title">
                         { data[0]
                             .channel[appNav[0].activeTab]
                             .thumbList[data[0].channel[appNav[0].activeTab].thumbActiveIndex]
@@ -427,33 +435,37 @@ class App extends PureComponent {
                             .thumbList[data[0].channel[appNav[0].activeTab].thumbActiveIndex]
                             .thumbPix || ''
                         }
-                        className="App-mini-header-pgm-thumbnail-image"
+                        className="App-control-view-header-pgm-thumbnail-image"
                     />
+                    <button className="App-control-view-header-pgm-counter">
+                        {data[0].ccgTimeCounter[appNav[0].activeTab]}
+                    </button>
                 </div>
 
-                <div className="App-mini-reload-setup-background">
-                    <button className="App-mini-connection-status"
+                <div className="App-control-view-reload-setup-background">
+                    <button className="App-control-view-connection-status"
+                        onClick={this.handleSelectView}
                         style={
                             appNav[0].connectionStatus
                             ? {backgroundColor: "rgb(0, 128, 4)"}
                             : {backgroundColor: "red"}
                         }
                     >
-                        {appNav[0].connectionStatus ? "CONNECTED" : "CONNECTING"}
+                        {appNav[0].connectionStatus ? "VIEW" : "CONNECTING"}
                     </button>
-                    <button className="App-mini-settings-button"
+                    <button className="App-control-view-settings-button"
                         onClick={this.handleSettingsPage}>
                         SETTINGS
                     </button>
-                    <button className="App-mini-reload-button"
+                    <button className="App-control-view-reload-button"
                         onClick={this.reloadPage}>
                         RELOAD
                     </button>
                 </div>
 
 
-                <div className="App-mini-loop-autoPlay-background">
-                    <button className="App-mini-loop-button"
+                <div className="App-control-view-loop-autoPlay-background">
+                    <button className="App-control-view-loop-button"
                         onClick={this.handleLoopStatus}
                         style={
                             settings[0].tabData[appNav[0].activeTab].loop
@@ -463,7 +475,7 @@ class App extends PureComponent {
                     >
                         LOOP
                     </button>
-                    <button className="App-mini-autoPlay-button"
+                    <button className="App-control-view-autoPlay-button"
                         onClick={this.handleAutoPlayStatus}
                         style={
                             settings[0].tabData[appNav[0].activeTab].autoPlay
@@ -475,29 +487,76 @@ class App extends PureComponent {
                     </button>
                 </div>
 
-                <div className="App-mini-mix-button-background">
-                    <button className="App-mini-prev-cue-button"
+                <div className="App-control-view-mix-button-background">
+                    <button className="App-control-view-prev-cue-button"
                         onClick={
                             () => this.ccgLoadPlay.prevCue(appNav[0].activeTab + 1)
                         }
                     >
                         PREV
                     </button>
-                    <button className="App-mini-next-cue-button"
+                    <button className="App-control-view-next-cue-button"
                         onClick={
                             () => this.ccgLoadPlay.nextCue(appNav[0].activeTab + 1)
                         }
                     >
                         NEXT
                     </button>
-                    <button className="App-mini-mix-button"
+                    <button className="App-control-view-mix-button"
                         onClick={
                             () => this.ccgLoadPlay.pvwPlay(appNav[0].activeTab + 1)
                         }
                     >
                         MIX
                     </button>
-                    <button className="App-mini-start-button"
+                    <button className="App-control-view-start-button"
+                        onClick={
+                            () => this.ccgLoadPlay.pgmPlay(appNav[0].activeTab + 1)
+                        }
+                    >
+                        START
+                    </button>
+                </div>
+            </header>
+        )
+    }
+
+
+    renderTextViewHeader() {
+        let { appNav, data, settings} = this.props.store;
+
+        return (
+            <header className="App-text-view-header">
+                <div className="App-text-view-title-background">
+                    <img src=
+                        {data[0].
+                            channel[appNav[0].activeTab]
+                            .thumbList[data[0].channel[appNav[0].activeTab].thumbActiveIndex]
+                            .thumbPix || ''
+                        }
+                        className="App-text-view-header-pgm-thumbnail-image"
+                    />
+                    <button className="App-text-view-header-pgm-counter">
+                        {data[0].ccgTimeCounter[appNav[0].activeTab]}
+                    </button>
+                </div>
+
+                <div className="App-text-view-reload-setup-background">
+                    <button className="App-text-view-connection-status"
+                        onClick={this.handleSelectView}
+                        style={
+                            appNav[0].connectionStatus
+                            ? {backgroundColor: "rgb(0, 128, 4)"}
+                            : {backgroundColor: "red"}
+                        }
+                    >
+                        {appNav[0].connectionStatus ? "VIEW" : "CONNECTING"}
+                    </button>
+                </div>
+
+                <div className="App-text-view-mix-button-background">
+
+                    <button className="App-text-view-start-button"
                         onClick={
                             () => this.ccgLoadPlay.pgmPlay(appNav[0].activeTab + 1)
                         }
@@ -530,9 +589,14 @@ class App extends PureComponent {
     render() {
         return (
         <div className="App">
-            {this.props.store.settings[0].miniView ?
-                <this.renderMiniHeader/>
-                : <this.renderFullHeader/>
+            {(this.props.store.settings[0].selectView === 0) ?
+                <this.renderFullHeader/> : ""
+            }
+            {(this.props.store.settings[0].selectView === 1) ?
+                <this.renderTextViewHeader/> : ""
+            }
+            {(this.props.store.settings[0].selectView === 2) ?
+                <this.renderControlHeader/> : ""
             }
             {this.state.showSettingsMenu ?
                 <SettingsPage/>

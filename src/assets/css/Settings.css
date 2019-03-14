@@ -39,16 +39,6 @@
 }
 
 
-.Settings-toggle-field {
-    white-space: nowrap;
-    margin: 5px;
-    width: 30px;
-    height: 30px;
-    line-height: 40px;
-    font-size: 1.1em;
-    color: rgb(255, 255, 255);
-}
-
 input[type=text] {
     text-align: right;
     margin: 5px;
@@ -60,14 +50,6 @@ input[type=text] {
     -webkit-appearance: none;
 }
 
-
-input[type=checkbox] {
-    -webkit-appearance: checkbox;
-    font-size: 1.1em;
-    border: 1px solid rgb(104, 104, 104);
-    background-color: rgb(87, 86, 86);
-    border-radius: 0;
-}
 
 .Save-button {
     bottom: 10px;

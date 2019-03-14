@@ -15,7 +15,7 @@ class SettingsPage extends Component {
             settings: this.props.store.settings[0],
         };
         this.handleChange = this.handleChange.bind(this);
-        this.handleMiniView = this.handleMiniView.bind(this);
+        this.handleDisableDragNDrop = this.handleDisableDragNDrop.bind(this);
         this.handleTabTitle = this.handleTabTitle.bind(this);
         this.handleTabMediaFolder = this.handleTabMediaFolder.bind(this);
         this.handleTabDataFolder = this.handleTabDataFolder.bind(this);
@@ -37,14 +37,13 @@ class SettingsPage extends Component {
         );
     }
 
-    handleMiniView(event) {
+    handleDisableDragNDrop(event) {
         var settingsCopy= Object.assign({}, this.state.settings);
         settingsCopy[event.target.name] = event.target.checked;
         this.setState(
             {settings: settingsCopy}
         );
     }
-
     handleTabTitle(event) {
         var settingsCopy= Object.assign({}, this.state.settings);
         settingsCopy.tabData[event.target.name].title = event.target.value;
@@ -136,19 +135,18 @@ class SettingsPage extends Component {
             <p className="Settings-header">SETTINGS :</p>
             <form className="Settings-form" onSubmit={this.handleSubmit}>
                 <div className="Settings-channel-form">
-                <label className="Settings-input-field">
-                    IP ADDRESS :
-                    <input name="ipAddress" type="text" value={this.state.settings.ipAddress} onChange={this.handleChange} />
-                </label>
-                <label className="Settings-input-field">
-                    PORT :
-                    <input name="port" type="text" value={this.state.settings.port} onChange={this.handleChange} />
-                </label>
-                <br/>
-                <label className="Settings-toggle-field">
-                    CONTROL VIEW :
-                    <input name="miniView" type="checkbox" checked={this.state.settings.miniView} onChange={this.handleMiniView} />
-                </label>
+                    <label className="Settings-input-field">
+                        IP ADDRESS :
+                        <input name="ipAddress" type="text" value={this.state.settings.ipAddress} onChange={this.handleChange} />
+                    </label>
+                    <label className="Settings-input-field">
+                        PORT :
+                        <input name="port" type="text" value={this.state.settings.port} onChange={this.handleChange} />
+                    </label>
+                    <label className="Settings-input-field">
+                        DISABLE DRAG´N´DROP :
+                        <input name="disableDragNDrop" type="checkbox" checked={this.state.settings.disableDragNDrop} onChange={this.handleDisableDragNDrop} />
+                    </label>
                 </div>
 
                 <br/>
