@@ -15,7 +15,7 @@ import SettingsPage from './Settings';
 
 //Utils:
 import { saveSettings, loadThumbsOrder } from '../util/SettingsStorage';
-import {cleanUpFilename} from '../util/filePathStringHandling';
+import { cleanUpFilename } from '../util/filePathStringHandling';
 import CcgLoadPlay from '../util/CcgLoadPlay';
 import HandleAutoNext from '../util/HandleAutoNext';
 import HandleOverlay from '../util/HandleOverlay';

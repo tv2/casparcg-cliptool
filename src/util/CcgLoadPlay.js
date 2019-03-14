@@ -77,6 +77,7 @@ class CcgLoadPlay {
                 'MIX',
                 MIX_DURATION
             );
+            this.loadBgMedia(output, 10, this.store.data[0].channel[output-1].thumbActiveBgIndex);
         }
     }
 
