@@ -33,6 +33,8 @@ CasparCG ClipTool is a clip tool that scans predefined folders, and let´s you p
 
 * Disable Drag´n´drop in settings. For touchscreens and when someone else or an external source sets the order of the playlist.
 
+* the order of thumbs are stored on the CCG server in cliptoolthumbsorder.ftd and can be controlled by an external app for ordering the playlist or by drag´n´drop on a client.
+
 * It´s possible to add overlay graphics by adding metaData files in the CasparCG data folder.
 The name of the metadata has to be:
 ```
