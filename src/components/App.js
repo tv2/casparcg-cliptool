@@ -147,10 +147,13 @@ class App extends PureComponent {
     }
 
     handleSelectView() {
+        if (this.state.showSettingsMenu) {
+            this.setState({showSettingsMenu: false});
+            return;
+        }
         this.props.dispatch({
             type:'TOGGLE_VIEW',
         });
-
         saveSettings(this.props.store.settings[0], this.ccgConnection);
     }
 
