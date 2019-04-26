@@ -79,7 +79,7 @@ class App extends PureComponent {
                 autoConnect: true,
             });
 
-        loadClipToolCommonrSettings(this.ccgConnection, this.props.store.settings);
+        loadClipToolCommonrSettings(this.ccgConnection, this.props.store.settings, this.state.showSettingsMenu);
         this.ccgLoadPlay = new CcgLoadPlay(this.ccgConnection);
         this.handleOverlay = new HandleOverlay(this.ccgConnection);
         this.handleAutoNext = new HandleAutoNext(this.ccgLoadPlay);
@@ -111,7 +111,7 @@ class App extends PureComponent {
             })
         .then((response) => {
             //Check order of clips:
-            loadClipToolCommonrSettings(this.ccgConnection, this.props.store.settings);
+            loadClipToolCommonrSettings(this.ccgConnection, this.props.store.settings, this.state.showSettingsMenu);
             this.loadThumbs.sortThumbnails(
                 data[0].channel[appNav[0].activeTab].thumbList,
                 appNav[0].activeTab + 1

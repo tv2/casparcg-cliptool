@@ -30,8 +30,11 @@ export const saveSettings = (settings, ccgServer) => {
     }
 };
 
-export const loadClipToolCommonrSettings = (ccgServer, settings) => {
+export const loadClipToolCommonrSettings = (ccgServer, settings, settingsMenuActive) => {
     loadClipToolThumbOrder(ccgServer);
+    if (settingsMenuActive) {
+        return;
+    }
     let nextSettings = JSON.parse(JSON.stringify(settings));
     ccgServer.dataRetrieve("cliptoolsettings")
     .then((data) => {
