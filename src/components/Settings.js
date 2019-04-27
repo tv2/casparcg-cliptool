@@ -95,7 +95,7 @@ class SettingsPage extends Component {
     }
 
     handleSubmit(event) {
-        saveSettings(this.state.settings);
+        saveSettings(this.state.settings, this.props.ccgConnectionProps);
     }
 
     renderChannelSettings(item, index) {

@@ -14,7 +14,7 @@ import Thumbnail from './Thumbnail';
 import SettingsPage from './Settings';
 
 //Utils:
-import { saveSettings, loadThumbsOrder } from '../util/SettingsStorage';
+import { saveSettings, loadClipToolCommonrSettings } from '../util/SettingsStorage';
 import { cleanUpFilename } from '../util/filePathStringHandling';
 import CcgLoadPlay from '../util/CcgLoadPlay';
 import HandleAutoNext from '../util/HandleAutoNext';
@@ -39,7 +39,6 @@ class App extends PureComponent {
 
         this.state = {
             ccgIsUpdated: false,
-            showSettingsMenu: false,
             tabData: []
         };
 
@@ -79,7 +78,7 @@ class App extends PureComponent {
                 autoConnect: true,
             });
 
-        loadThumbsOrder(this.ccgConnection);
+        loadClipToolCommonrSettings(this.ccgConnection, this.props.store.settings, this.props.store.appNav[0].showSettingsActive);
         this.ccgLoadPlay = new CcgLoadPlay(this.ccgConnection);
         this.handleOverlay = new HandleOverlay(this.ccgConnection);
         this.handleAutoNext = new HandleAutoNext(this.ccgLoadPlay);
@@ -94,11 +93,6 @@ class App extends PureComponent {
 
         // Initialize timer connection status:
         var connectionTimer = setInterval(this.checkConnectionStatus, 1000);
-
-    }
-
-    componentDidMount() {
-
     }
 
     //Logical funtions:
@@ -116,7 +110,7 @@ class App extends PureComponent {
             })
         .then((response) => {
             //Check order of clips:
-            loadThumbsOrder(this.ccgConnection);
+            loadClipToolCommonrSettings(this.ccgConnection, this.props.store.settings, this.props.store.appNav[0].showSettingsActive);
             this.loadThumbs.sortThumbnails(
                 data[0].channel[appNav[0].activeTab].thumbList,
                 appNav[0].activeTab + 1
@@ -140,7 +134,9 @@ class App extends PureComponent {
 
     //Handler functions:
     handleSettingsPage() {
-        this.setState({showSettingsMenu: !this.state.showSettingsMenu});
+        this.props.dispatch({
+            type: 'TOGGLE_SHOW_SETTINGS'
+        });
     }
 
     handleAutoPlayStatus() {
@@ -148,14 +144,18 @@ class App extends PureComponent {
             type:'AUTOPLAY_STATUS',
             data: this.props.store.appNav[0].activeTab
         });
-        saveSettings(this.props.store.settings[0]);
+        saveSettings(this.props.store.settings[0], this.ccgConnection);
     }
 
     handleSelectView() {
+        if (this.props.store.appNav[0].showSettingsActive) {
+            this.handleSettingsPage();
+            return;
+        }
         this.props.dispatch({
             type:'TOGGLE_VIEW',
         });
-        saveSettings(this.props.store.settings[0]);
+        saveSettings(this.props.store.settings[0], this.ccgConnection);
     }
 
     handleLoopStatus() {
@@ -163,7 +163,7 @@ class App extends PureComponent {
             type:'LOOP_STATUS',
             data: this.props.store.appNav[0].activeTab
         });
-        saveSettings(this.props.store.settings[0]);
+        saveSettings(this.props.store.settings[0], this.ccgConnection);
     }
 
     setActiveTab(tab) {
@@ -598,8 +598,8 @@ class App extends PureComponent {
             {(this.props.store.settings[0].selectView === 2) ?
                 <this.renderControlHeader/> : ""
             }
-            {this.state.showSettingsMenu ?
-                <SettingsPage/>
+            {this.props.store.appNav[0].showSettingsActive ?
+                <SettingsPage ccgConnectionProps = { this.ccgConnection }/>
                 : null
             }
             <div className="App-body">
