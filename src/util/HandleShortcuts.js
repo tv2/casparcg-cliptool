@@ -1,7 +1,6 @@
 class HandleShortcuts {
-    constructor(ccgLoadPlay, showSettingsMenu) {
+    constructor(ccgLoadPlay) {
         this.ccgLoadPlay = ccgLoadPlay;
-        this.showSettingsMenu = showSettingsMenu;
 
         this.store = window.store.getState();
         const unsubscribe = store.subscribe(() => {
