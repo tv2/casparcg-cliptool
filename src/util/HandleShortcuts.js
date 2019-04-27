@@ -1,6 +1,7 @@
 class HandleShortcuts {
-    constructor(ccgLoadPlay) {
+    constructor(ccgLoadPlay, showSettingsMenu) {
         this.ccgLoadPlay = ccgLoadPlay;
+        this.showSettingsMenu = showSettingsMenu;
 
         this.store = window.store.getState();
         const unsubscribe = store.subscribe(() => {
@@ -12,11 +13,15 @@ class HandleShortcuts {
 
     //Shortcut for mix and take
     _handleKeyDown(event) {
+
         //Corresponding output for QWER shortcut:
         const keyTuple = {Q: 1, W: 2, E: 3, R: 4};
         //Convert event.keyCode to letter:
-        const keyPressed = String.fromCharCode(event.keyCode);
+        let keyPressed = String.fromCharCode(event.keyCode);
 
+        if (this.store.appNav[0].showSettingsActive) {
+            keyPressed = "";
+        }
 
         switch( keyPressed ) {
             case "1":

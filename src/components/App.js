@@ -39,7 +39,6 @@ class App extends PureComponent {
 
         this.state = {
             ccgIsUpdated: false,
-            showSettingsMenu: false,
             tabData: []
         };
 
@@ -79,7 +78,7 @@ class App extends PureComponent {
                 autoConnect: true,
             });
 
-        loadClipToolCommonrSettings(this.ccgConnection, this.props.store.settings, this.state.showSettingsMenu);
+        loadClipToolCommonrSettings(this.ccgConnection, this.props.store.settings, this.props.store.appNav[0].showSettingsActive);
         this.ccgLoadPlay = new CcgLoadPlay(this.ccgConnection);
         this.handleOverlay = new HandleOverlay(this.ccgConnection);
         this.handleAutoNext = new HandleAutoNext(this.ccgLoadPlay);
@@ -111,7 +110,7 @@ class App extends PureComponent {
             })
         .then((response) => {
             //Check order of clips:
-            loadClipToolCommonrSettings(this.ccgConnection, this.props.store.settings, this.state.showSettingsMenu);
+            loadClipToolCommonrSettings(this.ccgConnection, this.props.store.settings, this.props.store.appNav[0].showSettingsActive);
             this.loadThumbs.sortThumbnails(
                 data[0].channel[appNav[0].activeTab].thumbList,
                 appNav[0].activeTab + 1
@@ -135,7 +134,9 @@ class App extends PureComponent {
 
     //Handler functions:
     handleSettingsPage() {
-        this.setState({showSettingsMenu: !this.state.showSettingsMenu});
+        this.props.dispatch({
+            type: 'TOGGLE_SHOW_SETTINGS'
+        });
     }
 
     handleAutoPlayStatus() {
@@ -147,8 +148,8 @@ class App extends PureComponent {
     }
 
     handleSelectView() {
-        if (this.state.showSettingsMenu) {
-            this.setState({showSettingsMenu: false});
+        if (this.props.store.appNav[0].showSettingsActive) {
+            this.handleSettingsPage();
             return;
         }
         this.props.dispatch({
@@ -597,7 +598,7 @@ class App extends PureComponent {
             {(this.props.store.settings[0].selectView === 2) ?
                 <this.renderControlHeader/> : ""
             }
-            {this.state.showSettingsMenu ?
+            {this.props.store.appNav[0].showSettingsActive ?
                 <SettingsPage ccgConnectionProps = { this.ccgConnection }/>
                 : null
             }
