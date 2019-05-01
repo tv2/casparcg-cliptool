@@ -453,10 +453,6 @@ class App extends PureComponent {
                     >
                         {appNav[0].connectionStatus ? "VIEW" : "CONNECTING"}
                     </button>
-                    <button className="App-control-view-settings-button"
-                        onClick={this.handleSettingsPage}>
-                        SETTINGS
-                    </button>
                     <button className="App-control-view-reload-button"
                         onClick={this.reloadPage}>
                         RELOAD
@@ -551,6 +547,10 @@ class App extends PureComponent {
                         }
                     >
                         {appNav[0].connectionStatus ? "VIEW" : "CONNECTING"}
+                    </button>
+                    <button className="App-text-view-reload-button"
+                        onClick={this.reloadPage}>
+                        RELOAD
                     </button>
                 </div>
 
