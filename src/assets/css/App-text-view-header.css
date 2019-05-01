@@ -88,6 +88,22 @@
     outline: 0;
 }
 
+
+.App-text-view-reload-button {
+    font-size: 0.9em;
+    width: 118px;
+    line-height: 35px;
+    margin-top: 5px;
+    background: rgb(46, 19, 19);
+    color: white;
+    font-family: 'Roboto Condensed', sans-serif;
+    border-radius: 5px;
+    border-width: 1px;
+    border-color: rgba(170, 170, 170, 0.315);
+    outline: 0;
+}
+
+
 /* Buttons for all thumbs, places at the bottom of the page */
 .App-text-view-mix-button-background {
     position: absolute;
