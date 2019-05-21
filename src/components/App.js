@@ -14,7 +14,7 @@ import Thumbnail from './Thumbnail';
 import SettingsPage from './Settings';
 
 //Utils:
-import { saveSettings, loadClipToolCommonrSettings } from '../util/SettingsStorage';
+import { saveSettings, loadClipToolCommonSettings } from '../util/SettingsStorage';
 import { cleanUpFilename } from '../util/filePathStringHandling';
 import CcgLoadPlay from '../util/CcgLoadPlay';
 import HandleAutoNext from '../util/HandleAutoNext';
@@ -78,7 +78,7 @@ class App extends PureComponent {
                 autoConnect: true,
             });
 
-        loadClipToolCommonrSettings(this.ccgConnection, this.props.store.settings, this.props.store.appNav[0].showSettingsActive);
+        loadClipToolCommonSettings(this.ccgConnection, this.props.store.settings, this.props.store.appNav[0].showSettingsActive);
         this.ccgLoadPlay = new CcgLoadPlay(this.ccgConnection);
         this.handleOverlay = new HandleOverlay(this.ccgConnection);
         this.handleAutoNext = new HandleAutoNext(this.ccgLoadPlay);
@@ -110,7 +110,7 @@ class App extends PureComponent {
             })
         .then((response) => {
             //Check order of clips:
-            loadClipToolCommonrSettings(this.ccgConnection, this.props.store.settings, this.props.store.appNav[0].showSettingsActive);
+            loadClipToolCommonSettings(this.ccgConnection, this.props.store.settings, this.props.store.appNav[0].showSettingsActive);
             this.loadThumbs.sortThumbnails(
                 data[0].channel[appNav[0].activeTab].thumbList,
                 appNav[0].activeTab + 1
