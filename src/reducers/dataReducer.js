@@ -23,16 +23,19 @@ const defaultDataReducerState = () => {
             tally: false,
             tallyBg: false,
             metaList: [{
+                htmlCcgType: "XML", // "XML" or "INVOKE"
                 templatePath: '',
                 layer: 20,
                 startTime: 0,
                 duration: 0,
                 elementActive: 0, //0=in que, 1=active, 2=done
-                templateData: [{
+                templateXmlData: [{
                     id: '',
                     type: '',
                     data: ''
-                }]
+                }],
+                invokeStart: "",
+                invokeEnd: ""
             }],
         }],
         thumbActiveIndex: 0,

@@ -42,7 +42,7 @@ class HandleOverlay {
                     }
 
                     if (metaItem.startTime < item.time && metaItem.elementActive === 0) {
-                        console.log("Lower third on: ", metaItem.startTime, item.time, metaItem.templateData[0].data);
+                        console.log("Lower third on: ", metaItem.startTime, item.time, metaItem.templateXmlData[0].data);
                         window.store.dispatch ({
                             type: 'SET_META_ELEMENT_ACTIVE',
                             index: thumbIndex,
@@ -63,7 +63,7 @@ class HandleOverlay {
                             started: true
                         });
                     } else if ((metaItem.startTime + metaItem.duration) < item.time && metaItem.elementActive === 1) {
-                        console.log("Lower third OFF: ", (metaItem.startTime + metaItem.duration), item.time, metaItem.templateData[0].data);
+                        console.log("Lower third OFF: ", (metaItem.startTime + metaItem.duration), item.time, metaItem.templateXmlData[0].data);
                         window.store.dispatch ({
                             type: 'SET_META_ELEMENT_ACTIVE',
                             index: thumbIndex,
@@ -101,7 +101,7 @@ class HandleOverlay {
 
     metaDataToXml(metaData) {
         let xmlString = "<templateData>"
-        metaData.templateData.map((item) => {
+        metaData.templateXmlData.map((item) => {
             xmlString = xmlString +
                     "<componentData id=\""+ item.id +
                     "\"><data id=\"" + item.type +
