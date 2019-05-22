@@ -3,6 +3,7 @@ import { deepCloneCopy } from '../util/deepCloneObject';
 
 //ToDo: Change numberOfChannels to a check from server
 const numberOfChannels = 4;
+const numberOfOverlays = 400;
 
 const defaultDataReducerState = () => {
     let stateDefault = [{
@@ -35,11 +36,18 @@ const defaultDataReducerState = () => {
             }],
         }],
         thumbActiveIndex: 0,
-        thumbActiveBgIndex: 0
+        thumbActiveBgIndex: 0,
+        overlayIsStarted: []
     };
+    // Initialise overlayStatus for all layers
+    for (let i=0; i<numberOfOverlays; i++) {
+        channel.overlayIsStarted.push(false);
+    }
+    // Clone for each ccg channel
     for (let i=0; i<numberOfChannels; i++) {
         stateDefault[0].channel.push(deepCloneCopy(channel));
     }
+    // Add Thumborder sorting
     for (let i=0; i<numberOfChannels; i++) {
         stateDefault[0].thumbOrder.push({list : []});
     }
@@ -115,6 +123,9 @@ export const data = ((state = defaultDataReducerState(), action) => {
             return nextState;
         case 'SET_EMPTY_META':
             nextState[0].channel[action.tab].thumbList[action.index].metaList = [];
+            return nextState;
+        case 'SET_OVERLAY_IS_STARTED': // tab, layer, started
+            nextState[0].channel[action.tab].overlayIsStarted[action.layer] = action.started;
             return nextState;
         case 'MOVE_THUMB_IN_LIST':
             const result = Array.from(nextState[0].channel[action.data.tab].thumbList);

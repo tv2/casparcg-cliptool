@@ -40,9 +40,17 @@ class CcgLoadPlay {
     }
 
     playMedia(output, layer, index, indexBg) {
-        for (let i = 11; i<30; i++) {
-            this.ccgConnection.cgClear(output, i);
-        }
+        this.store.data[0].channel[output-1].overlayIsStarted.map((item, index) => {
+            if (item === true) {
+                this.ccgConnection.cgStop(output, index, 1);
+                window.store.dispatch ({
+                    type: 'SET_OVERLAY_IS_STARTED',
+                    tab: output,
+                    layer: index,
+                    started: false
+                });
+            }
+        });
         this.ccgConnection.play(
             output,
             layer,

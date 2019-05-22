@@ -55,8 +55,13 @@ class HandleOverlay {
                             overlayFolder + metaItem.templatePath,
                             1,
                             this.metaDataToXml(metaItem)
-                            );
-                        //this.overlayIsStarted[indexChannel][metaItem.layer] = true;
+                        );
+                        window.store.dispatch ({
+                            type: 'SET_OVERLAY_IS_STARTED',
+                            tab: indexChannel,
+                            layer: metaItem.layer,
+                            started: true
+                        });
                     } else if ((metaItem.startTime + metaItem.duration) < item.time && metaItem.elementActive === 1) {
                         console.log("Lower third OFF: ", (metaItem.startTime + metaItem.duration), item.time, metaItem.templateData[0].data);
                         window.store.dispatch ({
@@ -67,6 +72,12 @@ class HandleOverlay {
                             active: 2
                         });
                         this.ccgConnection.cgStop(1, metaItem.layer, 1);
+                        window.store.dispatch ({
+                            type: 'SET_OVERLAY_IS_STARTED',
+                            tab: indexChannel,
+                            layer: metaItem.layer,
+                            started: false
+                        });
                     }
                 }
             });
