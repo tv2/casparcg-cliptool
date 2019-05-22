@@ -2,6 +2,7 @@
     "channel": [{
         "metaList": [
             {
+                "htmlCcgType": "XML", // "XML" or "INVOKE"
                 "templatePath": "/HTML-Bundt/BUNDT",
                 "startTime": 0.9,
                 "duration": 4.0,
@@ -17,9 +18,12 @@
                         "type": "text",
                         "data": "CasparCG forever"
                     }
-                ]
+                ],
+                "invokeStart": "",
+                "invokeEnd": ""
             },
             {
+                "htmlCcgType": "XML", // "XML" or "INVOKE"
                 "templatePath": "/HTML-Bundt/BUNDT",
                 "startTime": 5.5,
                 "duration": 3.5,
@@ -35,7 +39,9 @@
                         "type": "text",
                         "data": "CasparCG forever"
                     }
-                ]
+                ],
+                "invokeStart": "",
+                "invokeEnd": ""
             }
         ]
     }]
