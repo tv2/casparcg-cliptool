@@ -194,7 +194,8 @@ class App extends PureComponent {
                 });
                 response.data.timeLeft.map((item, index) => {
                     _this2.handleAutoNext.autoNext(item, index);
-                    _this2.handleOverlay.overlay(item, index);
+                    _this2.handleOverlay.handleOverlay(item, index);
+                    _this2.handleOverlay.handleWipe(index);
                 });
             },
             error(err) { console.error('Subscription error: ', err); },

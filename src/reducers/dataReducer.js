@@ -26,6 +26,7 @@ const defaultDataReducerState = () => {
                 layer: 20,
                 startTime: 0,
                 duration: 0,
+                elementActive: 0, //0=in que, 1=active, 2=done
                 templateData: [{
                     id: '',
                     type: '',
@@ -106,7 +107,11 @@ export const data = ((state = defaultDataReducerState(), action) => {
             nextState[0].channel[action.data.tab].thumbList[action.data.index].thumbPix = action.data.thumbPix;
             return nextState;
         case 'SET_META_LIST':
+            action.metaList.map(metaElement => metaElement.elementActive = 0);
             nextState[0].channel[action.tab].thumbList[action.index].metaList = action.metaList;
+            return nextState;
+        case 'SET_META_ELEMENT_ACTIVE': // tab, index (thumblist index), elementIndex, active
+            nextState[0].channel[action.tab].thumbList[action.index].metaList[action.elementIndex].elementActive = action.active;
             return nextState;
         case 'SET_EMPTY_META':
             nextState[0].channel[action.tab].thumbList[action.index].metaList = [];

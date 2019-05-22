@@ -1,4 +1,3 @@
-
 class HandleOverlay {
     constructor(ccgConnection) {
         this.ccgConnection = ccgConnection;
@@ -18,36 +17,63 @@ class HandleOverlay {
         this.wipeIsStarted = [false, false, false, false];
     }
 
-    overlay(item, indexChannel) {
+    handleOverlay(item, indexChannel) {
         const thumbIndex = this.store.data[0].channel[indexChannel].thumbActiveIndex;
         const metaData = this.store.data[0].channel[indexChannel].thumbList[thumbIndex].metaList;
         const overlayFolder = this.store.settings[0].tabData[indexChannel].overlayFolder;
 
         if (overlayFolder != '' && !this.store.data[0].ccgInfo[indexChannel].layers[9].foreground.paused) {
-            metaData.map((metaItem) => {
-                metaItem.layer = metaItem.layer || 20;
-                if (metaItem.startTime < 0.08) {
-                    metaItem.startTime = 0.08;
+            metaData.map((metaItem, elementIndex) => {
+                //Reset metaItem if reloaded:
+                if (item.time < 0.10) {
+                    window.store.dispatch ({
+                        type: 'SET_META_ELEMENT_ACTIVE',
+                        index: thumbIndex,
+                        tab: indexChannel,
+                        elementIndex: elementIndex,
+                        active: 0
+                    });
                 }
-                if (metaItem.startTime < item.time && item.time < (metaItem.startTime + 0.0799) && !this.overlayIsStarted[indexChannel][metaItem.layer]) {
-                    console.log("Lower third on: ", metaItem.startTime, item.time, metaItem.templateData[0].data);
-                    this.ccgConnection.cgAdd(
-                        1, metaItem.layer, 1,
-                        overlayFolder + metaItem.templatePath,
-                        1,
-                        this.metaDataToXml(metaItem)
-                    );
-                    this.overlayIsStarted[indexChannel][metaItem.layer] = true;
-                } else if ((metaItem.startTime + metaItem.duration) < item.time && item.time < (metaItem.startTime + metaItem.duration + 0.0799) && !this.overlayIsStarted[indexChannel][metaItem.layer]) {
-                    console.log("Lower third OFF: ", (metaItem.startTime + metaItem.duration), item.time, metaItem.templateData[0].data);
-                    this.ccgConnection.clear(indexChannel + 1, metaItem.layer);
-                    this.overlayIsStarted[indexChannel][metaItem.layer] = true;
-                } else {
-                    this.overlayIsStarted[indexChannel][metaItem.layer] = false;
-                }
+                if (metaItem.elementActive < 2) {
 
+                    metaItem.layer = metaItem.layer || 20;
+                    if (metaItem.startTime < 0.08) {
+                        metaItem.startTime = 0.08;
+                    }
+
+                    if (metaItem.startTime < item.time && metaItem.elementActive === 0) {
+                        console.log("Lower third on: ", metaItem.startTime, item.time, metaItem.templateData[0].data);
+                        window.store.dispatch ({
+                            type: 'SET_META_ELEMENT_ACTIVE',
+                            index: thumbIndex,
+                            tab: indexChannel,
+                            elementIndex: elementIndex,
+                            active: 1
+                        });
+                        this.ccgConnection.cgAdd(
+                            1, metaItem.layer, 1,
+                            overlayFolder + metaItem.templatePath,
+                            1,
+                            this.metaDataToXml(metaItem)
+                            );
+                        //this.overlayIsStarted[indexChannel][metaItem.layer] = true;
+                    } else if ((metaItem.startTime + metaItem.duration) < item.time && metaItem.elementActive === 1) {
+                        console.log("Lower third OFF: ", (metaItem.startTime + metaItem.duration), item.time, metaItem.templateData[0].data);
+                        window.store.dispatch ({
+                            type: 'SET_META_ELEMENT_ACTIVE',
+                            index: thumbIndex,
+                            tab: indexChannel,
+                            elementIndex: elementIndex,
+                            active: 2
+                        });
+                        this.ccgConnection.cgStop(1, metaItem.layer, 1);
+                    }
+                }
             });
         }
+    }
+
+    handleWipe(indexChannel) {
         //ToDo: only fire once.
         if (this.store.settings[0].tabData[indexChannel].wipe != '' &&
             this.store.settings[0].tabData[indexChannel].autoPlay
