@@ -84,7 +84,7 @@ class HandleOverlay {
         }
     }
 
-    handleWipe(indexChannel) {
+    handleWipe(item, indexChannel) {
         //ToDo: only fire once.
         if (this.store.settings[0].tabData[indexChannel].wipe != '' &&
             this.store.settings[0].tabData[indexChannel].autoPlay
