@@ -15,10 +15,12 @@ class HandleOverlay {
         const metaData = this.store.data[0].channel[indexChannel].thumbList[thumbIndex].metaList;
         const overlayFolder = this.store.settings[0].tabData[indexChannel].overlayFolder;
 
-        if (overlayFolder != '' && !this.store.data[0].ccgInfo[indexChannel].layers[9].foreground.paused) {
+        if (overlayFolder != ''
+            && !this.store.data[0].ccgInfo[indexChannel].layers[9].foreground.paused
+            ) {
             metaData.map((metaItem, elementIndex) => {
                 //Reset metaItem if reloaded:
-                if (item.time < 0.10) {
+                if (item.time < 0.20) {
                     window.store.dispatch ({
                         type: 'SET_META_ELEMENT_ACTIVE',
                         index: thumbIndex,
@@ -28,6 +30,10 @@ class HandleOverlay {
                     });
                 }
                 if (metaItem.elementActive < 2) {
+
+                    if (metaItem.startTime < 0.2 ) {
+                        metaItem.startTime = 0.2;
+                    }
 
                     metaItem.layer = metaItem.layer || 20;
 
@@ -54,6 +60,9 @@ class HandleOverlay {
                             started: true
                         });
                     } else if ((metaItem.startTime + metaItem.duration) < item.time && metaItem.elementActive === 1) {
+                        if (metaItem.duration === -1) {
+                            return;
+                        }
                         console.log("Lower third OFF: ", (metaItem.startTime + metaItem.duration), item.time, metaItem.templateXmlData[0], metaItem.invokeSteps);
                         if (metaItem.htmlCcgType === 'XML') {
                             this.endXmlGfx(indexChannel, metaItem);
@@ -111,22 +120,31 @@ class HandleOverlay {
     }
 
     addInvokeGfx(indexChannel, metaItem, overlayFolder) {
-        this.ccgConnection.cgAdd(
-            indexChannel + 1,
-            metaItem.layer,
-            1,
-            (overlayFolder + metaItem.templatePath),
-            1,
-            "<templateData></templateData>"
-        )
-        .then(()=>{
+        if (metaItem.duration > -1) {
+            this.ccgConnection.cgAdd(
+                indexChannel + 1,
+                metaItem.layer,
+                1,
+                (overlayFolder + metaItem.templatePath),
+                1,
+                "<templateData></templateData>"
+            )
+            .then(()=>{
+                this.ccgConnection.cgInvoke(
+                    indexChannel + 1,
+                    metaItem.layer,
+                    1,
+                    '"' + metaItem.invokeSteps[0] + '"'
+                );
+            });
+        } else {
             this.ccgConnection.cgInvoke(
                 indexChannel + 1,
                 metaItem.layer,
                 1,
                 '"' + metaItem.invokeSteps[0] + '"'
             );
-        });
+        }
     }
 
     endInvokeGfx(indexChannel, metaItem) {
