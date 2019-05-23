@@ -27,7 +27,7 @@ const defaultDataReducerState = () => {
                 templatePath: '',
                 layer: 20,
                 startTime: 0,
-                duration: 0,
+                duration: 0,   //If duration is -1 it will stay onair until next element in that layer
                 elementActive: 0, //0=in que, 1=active, 2=done
                 templateXmlData: [{
                     id: '',

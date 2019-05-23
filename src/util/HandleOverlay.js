@@ -6,14 +6,7 @@ class HandleOverlay {
         const unsubscribe = store.subscribe(() => {
             this.store = window.store.getState();
         });
-        this.overlayIsStarted = [];
-        for (let iChannel = 0; iChannel<4; iChannel++) {
-            let layerItems = [];
-            for (let iLayer = 0; iLayer<30; iLayer++) {
-                layerItems.push(false);
-            }
-            this.overlayIsStarted.push(layerItems);
-        }
+
         this.wipeIsStarted = [false, false, false, false];
     }
 

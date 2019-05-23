@@ -5,7 +5,7 @@
                 "htmlCcgType": "XML", // "XML" or "INVOKE"
                 "templatePath": "/HTML-Bundt/BUNDT",
                 "startTime": 0.9,
-                "duration": 4.0,
+                "duration": 4.0,   //If duration is -1 it will stay onair until next element in that layer
                 "layer": 20,
                 "templateXmlData": [
                     {
