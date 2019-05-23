@@ -55,6 +55,14 @@ class HandleOverlay {
                         });
                     } else if ((metaItem.startTime + metaItem.duration) < item.time && metaItem.elementActive === 1) {
                         console.log("Lower third OFF: ", (metaItem.startTime + metaItem.duration), item.time, metaItem.templateXmlData[0], metaItem.invokeSteps);
+                        if (metaItem.htmlCcgType === 'XML') {
+                            this.endXmlGfx(indexChannel, metaItem);
+                        } else if (metaItem.htmlCcgType === 'INVOKE') {
+                            this.endInvokeGfx(indexChannel, metaItem);
+                        } else {
+                            return error;
+                        }
+
                         window.store.dispatch ({
                             type: 'SET_META_ELEMENT_ACTIVE',
                             index: thumbIndex,
@@ -62,7 +70,6 @@ class HandleOverlay {
                             elementIndex: elementIndex,
                             active: 2
                         });
-                        this.ccgConnection.cgStop(indexChannel, metaItem.layer, 1);
                         window.store.dispatch ({
                             type: 'SET_OVERLAY_IS_STARTED',
                             tab: indexChannel,
@@ -99,21 +106,36 @@ class HandleOverlay {
         );
     }
 
+    endXmlGfx(indexChannel, metaItem) {
+        this.ccgConnection.cgStop(indexChannel, metaItem.layer, 1);
+    }
+
     addInvokeGfx(indexChannel, metaItem, overlayFolder) {
         this.ccgConnection.cgAdd(
-            indexChannel + 1, metaItem.layer, 1,
-            (overlayFolder + metaItem.templatePath)
-        );
+            indexChannel + 1,
+            metaItem.layer,
+            1,
+            (overlayFolder + metaItem.templatePath),
+            1,
+            "<templateData></templateData>"
+        )
+        .then(()=>{
+            this.ccgConnection.cgInvoke(
+                indexChannel + 1,
+                metaItem.layer,
+                1,
+                '"' + metaItem.invokeSteps[0] + '"'
+            );
+        });
+    }
 
-        this.ccgConnection.cgInvoke(
-            indexChannel + 1, metaItem.layer, 1,
-            "mainStrap(true, 'MEJSE EGEBJERG', 'Foto/redigering: ANDERS-CHRISTIAN DAHL')"
-        );
-        return;
-        this.ccgConnection.cgInvoke(
-            1, metaItem.layer, 1,
-            metaItem.invokeSteps[0]
-        );
+    endInvokeGfx(indexChannel, metaItem) {
+            this.ccgConnection.cgInvoke(
+                indexChannel + 1,
+                metaItem.layer,
+                1,
+                '"' + metaItem.invokeSteps[1] + '"'
+            );
     }
 
     metaDataToXml(metaData) {
