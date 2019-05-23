@@ -32,7 +32,14 @@ class HandleOverlay {
                     metaItem.layer = metaItem.layer || 20;
 
                     if (metaItem.startTime < item.time && metaItem.elementActive === 0) {
-                        console.log("Lower third on: ", metaItem.startTime, item.time, metaItem.templateXmlData[0].data);
+                        console.log("Lower third on: ", metaItem.startTime, item.time, metaItem.templateXmlData[0], metaItem.invokeSteps);
+                        if (metaItem.htmlCcgType === 'XML') {
+                            this.addXmlGfx(indexChannel, metaItem, overlayFolder);
+                        } else if (metaItem.htmlCcgType === 'INVOKE') {
+                            this.addInvokeGfx(indexChannel, metaItem, overlayFolder);
+                        } else {
+                            return error;
+                        }
                         window.store.dispatch ({
                             type: 'SET_META_ELEMENT_ACTIVE',
                             index: thumbIndex,
@@ -40,12 +47,6 @@ class HandleOverlay {
                             elementIndex: elementIndex,
                             active: 1
                         });
-                        this.ccgConnection.cgAdd(
-                            1, metaItem.layer, 1,
-                            overlayFolder + metaItem.templatePath,
-                            1,
-                            this.metaDataToXml(metaItem)
-                        );
                         window.store.dispatch ({
                             type: 'SET_OVERLAY_IS_STARTED',
                             tab: indexChannel,
@@ -53,7 +54,7 @@ class HandleOverlay {
                             started: true
                         });
                     } else if ((metaItem.startTime + metaItem.duration) < item.time && metaItem.elementActive === 1) {
-                        console.log("Lower third OFF: ", (metaItem.startTime + metaItem.duration), item.time, metaItem.templateXmlData[0].data);
+                        console.log("Lower third OFF: ", (metaItem.startTime + metaItem.duration), item.time, metaItem.templateXmlData[0], metaItem.invokeSteps);
                         window.store.dispatch ({
                             type: 'SET_META_ELEMENT_ACTIVE',
                             index: thumbIndex,
@@ -61,7 +62,7 @@ class HandleOverlay {
                             elementIndex: elementIndex,
                             active: 2
                         });
-                        this.ccgConnection.cgStop(1, metaItem.layer, 1);
+                        this.ccgConnection.cgStop(indexChannel, metaItem.layer, 1);
                         window.store.dispatch ({
                             type: 'SET_OVERLAY_IS_STARTED',
                             tab: indexChannel,
@@ -87,6 +88,32 @@ class HandleOverlay {
                 this.wipeIsStarted = false;
             }
         }
+    }
+
+    addXmlGfx(indexChannel, metaItem, overlayFolder) {
+        this.ccgConnection.cgAdd(
+            indexChannel + 1, metaItem.layer, 1,
+            overlayFolder + metaItem.templatePath,
+            1,
+            this.metaDataToXml(metaItem)
+        );
+    }
+
+    addInvokeGfx(indexChannel, metaItem, overlayFolder) {
+        this.ccgConnection.cgAdd(
+            indexChannel + 1, metaItem.layer, 1,
+            (overlayFolder + metaItem.templatePath)
+        );
+
+        this.ccgConnection.cgInvoke(
+            indexChannel + 1, metaItem.layer, 1,
+            "mainStrap(true, 'MEJSE EGEBJERG', 'Foto/redigering: ANDERS-CHRISTIAN DAHL')"
+        );
+        return;
+        this.ccgConnection.cgInvoke(
+            1, metaItem.layer, 1,
+            metaItem.invokeSteps[0]
+        );
     }
 
     metaDataToXml(metaData) {
