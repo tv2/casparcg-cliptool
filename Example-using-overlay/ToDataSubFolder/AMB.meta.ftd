@@ -19,8 +19,7 @@
                         "data": "CasparCG forever"
                     }
                 ],
-                "invokeStart": "",
-                "invokeEnd": ""
+                "invokeSteps": []
             },
             {
                 "htmlCcgType": "XML", // "XML" or "INVOKE"
@@ -40,8 +39,7 @@
                         "data": "CasparCG forever"
                     }
                 ],
-                "invokeStart": "",
-                "invokeEnd": ""
+                "invokeSteps": []
             }
         ]
     }]

@@ -34,8 +34,7 @@ const defaultDataReducerState = () => {
                     type: '',
                     data: ''
                 }],
-                invokeStart: "",
-                invokeEnd: ""
+                invokeSteps: []
             }],
         }],
         thumbActiveIndex: 0,
