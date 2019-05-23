@@ -30,9 +30,6 @@ class HandleOverlay {
                 if (metaItem.elementActive < 2) {
 
                     metaItem.layer = metaItem.layer || 20;
-                    if (metaItem.startTime < 0.08) {
-                        metaItem.startTime = 0.08;
-                    }
 
                     if (metaItem.startTime < item.time && metaItem.elementActive === 0) {
                         console.log("Lower third on: ", metaItem.startTime, item.time, metaItem.templateXmlData[0].data);
