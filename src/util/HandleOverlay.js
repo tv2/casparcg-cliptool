@@ -140,6 +140,7 @@ class HandleOverlay {
                 );
             });
         } else {
+            console.log("Current Template loaded: ", this.store.data[0].channel[indexChannel].overlayIsStarted[metaItem.layer].templateName);
             this.ccgConnection.cgInvoke(
                 indexChannel + 1,
                 metaItem.layer,

@@ -45,7 +45,7 @@ class CcgLoadPlay {
                 this.ccgConnection.cgClear(output, index, 1);
                 window.store.dispatch ({
                     type: 'SET_OVERLAY_IS_STARTED',
-                    tab: output,
+                    tab: output - 1,
                     layer: index,
                     started: false,
                     templateName: "",
@@ -78,6 +78,17 @@ class CcgLoadPlay {
                 paused: true
             });
             this.ccgConnection.clear(output);
+
+            this.store.data[0].channel[output-1].overlayIsStarted.map((item, index) => {
+                window.store.dispatch ({
+                    type: 'SET_OVERLAY_IS_STARTED',
+                    tab: output - 1,
+                    layer: index,
+                    started: false,
+                    templateName: "",
+                });
+            });
+
             this.ccgConnection.load(
                 output,
                 layer,
