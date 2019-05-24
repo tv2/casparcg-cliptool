@@ -13,7 +13,7 @@ import { Provider as ReduxProvider} from 'react-redux';
 import indexReducer from './reducers/indexReducer';
 
 //Utils:
-import { loadSettings, loadClipToolCommonrSettings } from './util/SettingsStorage';
+import { loadSettings, loadClipToolCommonSettings } from './util/SettingsStorage';
 
 import App from './components/App';
 

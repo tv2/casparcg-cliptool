@@ -30,7 +30,7 @@ export const saveSettings = (settings, ccgServer) => {
     }
 };
 
-export const loadClipToolCommonrSettings = (ccgServer, settings, settingsMenuActive) => {
+export const loadClipToolCommonSettings = (ccgServer, settings, settingsMenuActive) => {
     loadClipToolThumbOrder(ccgServer);
     if (settingsMenuActive) {
         return;

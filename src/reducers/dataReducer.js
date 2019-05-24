@@ -3,6 +3,7 @@ import { deepCloneCopy } from '../util/deepCloneObject';
 
 //ToDo: Change numberOfChannels to a check from server
 const numberOfChannels = 4;
+const numberOfOverlays = 400;
 
 const defaultDataReducerState = () => {
     let stateDefault = [{
@@ -22,23 +23,33 @@ const defaultDataReducerState = () => {
             tally: false,
             tallyBg: false,
             metaList: [{
+                htmlCcgType: "XML", // "XML" or "INVOKE"
                 templatePath: '',
                 layer: 20,
                 startTime: 0,
-                duration: 0,
-                templateData: [{
+                duration: 0,   //If duration is -1 it will stay onair until next element in that layer
+                elementActive: 0, //0=in que, 1=active, 2=done
+                templateXmlData: [{
                     id: '',
                     type: '',
                     data: ''
-                }]
+                }],
+                invokeSteps: []
             }],
         }],
         thumbActiveIndex: 0,
-        thumbActiveBgIndex: 0
+        thumbActiveBgIndex: 0,
+        overlayIsStarted: []
     };
+    // Initialise overlayStatus for all layers
+    for (let i=0; i<numberOfOverlays; i++) {
+        channel.overlayIsStarted.push({"started": false, "templateName": ""});
+    }
+    // Clone for each ccg channel
     for (let i=0; i<numberOfChannels; i++) {
         stateDefault[0].channel.push(deepCloneCopy(channel));
     }
+    // Add Thumborder sorting
     for (let i=0; i<numberOfChannels; i++) {
         stateDefault[0].thumbOrder.push({list : []});
     }
@@ -106,10 +117,18 @@ export const data = ((state = defaultDataReducerState(), action) => {
             nextState[0].channel[action.data.tab].thumbList[action.data.index].thumbPix = action.data.thumbPix;
             return nextState;
         case 'SET_META_LIST':
+            action.metaList.map(metaElement => metaElement.elementActive = 0);
             nextState[0].channel[action.tab].thumbList[action.index].metaList = action.metaList;
+            return nextState;
+        case 'SET_META_ELEMENT_ACTIVE': // tab, index (thumblist index), elementIndex, active
+            nextState[0].channel[action.tab].thumbList[action.index].metaList[action.elementIndex].elementActive = action.active;
             return nextState;
         case 'SET_EMPTY_META':
             nextState[0].channel[action.tab].thumbList[action.index].metaList = [];
+            return nextState;
+        case 'SET_OVERLAY_IS_STARTED': // tab, layer, started
+            nextState[0].channel[action.tab].overlayIsStarted[action.layer].started = action.started;
+            nextState[0].channel[action.tab].overlayIsStarted[action.layer].templateName = action.templateName;
             return nextState;
         case 'MOVE_THUMB_IN_LIST':
             const result = Array.from(nextState[0].channel[action.data.tab].thumbList);
