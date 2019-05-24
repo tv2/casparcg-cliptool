@@ -57,7 +57,8 @@ class HandleOverlay {
                             type: 'SET_OVERLAY_IS_STARTED',
                             tab: indexChannel,
                             layer: metaItem.layer,
-                            started: true
+                            started: true,
+                            templateName: metaItem.templatePath
                         });
                     } else if ((metaItem.startTime + metaItem.duration) < item.time && metaItem.elementActive === 1) {
                         if (metaItem.duration === -1) {
@@ -83,7 +84,8 @@ class HandleOverlay {
                             type: 'SET_OVERLAY_IS_STARTED',
                             tab: indexChannel,
                             layer: metaItem.layer,
-                            started: false
+                            started: false,
+                            templateName: ""
                         });
                     }
                 }
@@ -120,7 +122,7 @@ class HandleOverlay {
     }
 
     addInvokeGfx(indexChannel, metaItem, overlayFolder) {
-        if (metaItem.duration > -1) {
+        if (this.store.data[0].channel[indexChannel].overlayIsStarted[metaItem.layer].templateName != metaItem.templatePath) {
             this.ccgConnection.cgAdd(
                 indexChannel + 1,
                 metaItem.layer,

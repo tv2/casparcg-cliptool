@@ -43,7 +43,7 @@ const defaultDataReducerState = () => {
     };
     // Initialise overlayStatus for all layers
     for (let i=0; i<numberOfOverlays; i++) {
-        channel.overlayIsStarted.push(false);
+        channel.overlayIsStarted.push({"started": false, "templateName": ""});
     }
     // Clone for each ccg channel
     for (let i=0; i<numberOfChannels; i++) {
@@ -127,7 +127,8 @@ export const data = ((state = defaultDataReducerState(), action) => {
             nextState[0].channel[action.tab].thumbList[action.index].metaList = [];
             return nextState;
         case 'SET_OVERLAY_IS_STARTED': // tab, layer, started
-            nextState[0].channel[action.tab].overlayIsStarted[action.layer] = action.started;
+            nextState[0].channel[action.tab].overlayIsStarted[action.layer].started = action.started;
+            nextState[0].channel[action.tab].overlayIsStarted[action.layer].templateName = action.templateName;
             return nextState;
         case 'MOVE_THUMB_IN_LIST':
             const result = Array.from(nextState[0].channel[action.data.tab].thumbList);
