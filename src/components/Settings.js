@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import '../assets/css/Settings.css';
+import Select from 'react-select';
+
 
 //Redux:
 import { connect } from "react-redux";
@@ -52,9 +54,9 @@ class SettingsPage extends Component {
         );
     }
 
-    handleTabMediaFolder(event) {
+    handleTabMediaFolder(index, event) {
         var settingsCopy= Object.assign({}, this.state.settings);
-        settingsCopy.tabData[event.target.name].subFolder = event.target.value;
+        settingsCopy.tabData[index].subFolder = event.value;
         this.setState(
             {settings: settingsCopy}
         );
@@ -107,7 +109,12 @@ class SettingsPage extends Component {
                 </label>
                 <label className="Settings-input-field">
                     MEDIAFOLDER :
-                    <input name={index} type="text" value={item.subFolder} onChange={this.handleTabMediaFolder} />
+                    <Select
+                        className="Settings-input-selector"
+                        value={{label: item.subFolder, value: item.subFolder}}
+                        onChange={(event) => this.handleTabMediaFolder(index, event)}
+                        options={this.props.mediaFoldersProps}
+                    />
                 </label>
                 <label className="Settings-input-field">
                     DATAFOLDER :

@@ -4,7 +4,7 @@ import { Tabs } from 'rmc-tabs';
 
 //Apollo-Client Graphql implementation:
 import gql from "graphql-tag";
-import { ALL_CHANNELS_QUERY, ALL_CHANNELS_SUBSCRIPTION } from '../graphql/CasparCgQuery';
+import { ALL_CHANNELS_QUERY, ALL_CHANNELS_SUBSCRIPTION, MEDIA_FOLDERS_QUERY } from '../graphql/CasparCgQuery';
 
 //Redux:
 import { connect } from "react-redux";
@@ -248,6 +248,22 @@ class App extends PureComponent {
 
     ccgMediaFilesChanged() {
         var _this2 = this;
+
+        //Get list of media folders:
+        window.apolloClient.query({
+            query: gql`
+            {
+                mediaFolders {
+                    folder
+                }
+            }`
+        })
+        .then((response) => {
+            this.mediaFolders = response.data.mediaFolders.map((item)=> {
+                return {value: item.folder, label: item.folder};
+            });
+        });
+
         //Subscribe to CasparCG-State changes:
         window.apolloClient.subscribe({
             query: gql`
@@ -604,7 +620,7 @@ class App extends PureComponent {
                 <this.renderControlHeader/> : ""
             }
             {this.props.store.appNav[0].showSettingsActive ?
-                <SettingsPage ccgConnectionProps = { this.ccgConnection }/>
+                <SettingsPage mediaFoldersProps = { this.mediaFolders } ccgConnectionProps = { this.ccgConnection }/>
                 : null
             }
             <div className="App-body">

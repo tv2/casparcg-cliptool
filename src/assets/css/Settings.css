@@ -38,6 +38,9 @@
     color: rgb(255, 255, 255);
 }
 
+.Settings-input-selector {
+    color: blue;
+}
 
 input[type=text] {
     text-align: right;
