@@ -77,6 +77,10 @@ class App extends PureComponent {
                 port: this.props.store.settings[0].port,
                 autoConnect: true,
             });
+        this.ccgConnection.infoPaths()
+        .then((response) =>{
+            console.log("List of paths : ", response);
+        });
 
         loadClipToolCommonSettings(this.ccgConnection, this.props.store.settings, this.props.store.appNav[0].showSettingsActive);
         this.ccgLoadPlay = new CcgLoadPlay(this.ccgConnection);
