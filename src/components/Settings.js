@@ -9,6 +9,19 @@ import { connect } from "react-redux";
 //Utils:
 import { saveSettings } from '../util/SettingsStorage';
 
+//Set style for Select dropdown component:
+const selectorColorStyles = {
+    control: styles => ({ ...styles, backgroundColor: '#676767', color: 'white', border: 0 }),
+    option: (styles) => {
+        return {
+            backgroundColor: '#676767',
+            color: 'white'
+        };
+    },
+    singleValue: styles => ({ ...styles, color: 'white' }),
+
+
+};
 class SettingsPage extends Component {
 
     constructor(props) {
@@ -104,12 +117,14 @@ class SettingsPage extends Component {
         return (
             <div className="Settings-channel-form" onSubmit={this.handleSubmit}>
                 <label className="Settings-input-field">
-                    OUT {index+1} :
+                    OUT {index+1} NAME :
+                    <br/>
                     <input name={index} type="text" value={item.title} onChange={this.handleTabTitle} />
                 </label>
                 <label className="Settings-input-field">
                     MEDIAFOLDER :
                     <Select
+                        styles={selectorColorStyles}
                         className="Settings-input-selector"
                         value={{label: item.subFolder, value: item.subFolder}}
                         onChange={(event) => this.handleTabMediaFolder(index, event)}
@@ -118,18 +133,22 @@ class SettingsPage extends Component {
                 </label>
                 <label className="Settings-input-field">
                     DATAFOLDER :
+                    <br/>
                     <input name={index} type="text" value={item.dataFolder} onChange={this.handleTabDataFolder} />
                 </label>
                 <label className="Settings-input-field">
                     TEMPLATEFOLDER :
+                    <br/>
                     <input name={index} type="text" value={item.overlayFolder} onChange={this.handleTabOverlayFolder} />
                 </label>
                 <label className="Settings-input-field">
                     WIPE :
+                    <br/>
                     <input name={index} type="text" value={item.wipe} onChange={this.handleTabWipe} />
                 </label>
                 <label className="Settings-input-field">
                     WIPE OFFSET :
+                    <br/>
                     <input name={index} type="text" value={item.wipeOffset} onChange={this.handleTabWipeOffset} />
                 </label>
             </div>
@@ -144,14 +163,17 @@ class SettingsPage extends Component {
                 <div className="Settings-channel-form">
                     <label className="Settings-input-field">
                         IP ADDRESS :
+                        <br/>
                         <input name="ipAddress" type="text" value={this.state.settings.ipAddress} onChange={this.handleChange} />
                     </label>
                     <label className="Settings-input-field">
                         PORT :
+                        <br/>
                         <input name="port" type="text" value={this.state.settings.port} onChange={this.handleChange} />
                     </label>
                     <label className="Settings-input-field">
                         DISABLE DRAG´N´DROP :
+                        <br/>
                         <input name="disableDragNDrop" type="checkbox" checked={this.state.settings.disableDragNDrop} onChange={this.handleDisableDragNDrop} />
                     </label>
                 </div>
