@@ -39,13 +39,16 @@
 .Settings-input-field {
     white-space: nowrap;
     margin: 5px;
+    min-width: 220px;
     color: rgb(255, 255, 255);
     background-color: rgb(49, 49, 49);
+    border-width: 1px;
+    border-style: solid;
+    border-color: rgb(34, 34, 34);
 }
 
 .Settings-input-selector {
     color: rgb(13, 13, 66);
-    min-width: 220px;
     margin: 5px;
 }
 

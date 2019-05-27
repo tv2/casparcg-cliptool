@@ -31,6 +31,7 @@ class SettingsPage extends Component {
         };
         this.handleChange = this.handleChange.bind(this);
         this.handleDisableDragNDrop = this.handleDisableDragNDrop.bind(this);
+        this.handleDisableOverlay = this.handleDisableOverlay.bind(this);
         this.handleTabTitle = this.handleTabTitle.bind(this);
         this.handleTabMediaFolder = this.handleTabMediaFolder.bind(this);
         this.handleTabDataFolder = this.handleTabDataFolder.bind(this);
@@ -54,11 +55,20 @@ class SettingsPage extends Component {
 
     handleDisableDragNDrop(event) {
         var settingsCopy= Object.assign({}, this.state.settings);
-        settingsCopy[event.target.name] = event.target.checked;
+        settingsCopy.disableDragNDrop = event.target.checked;
         this.setState(
             {settings: settingsCopy}
         );
     }
+
+    handleDisableOverlay(event) {
+        var settingsCopy= Object.assign({}, this.state.settings);
+        settingsCopy.disableOverlay = event.target.checked;
+        this.setState(
+            {settings: settingsCopy}
+        );
+    }
+
     handleTabTitle(event) {
         var settingsCopy= Object.assign({}, this.state.settings);
         settingsCopy.tabData[event.target.name].title = event.target.value;
@@ -184,8 +194,13 @@ class SettingsPage extends Component {
                     <label className="Settings-input-field">
                         DISABLE DRAG´N´DROP :
                         <br/>
-                        <input name="disableDragNDrop" type="checkbox" checked={this.state.settings.disableDragNDrop} onChange={this.handleDisableDragNDrop} />
+                        <input type="checkbox" checked={this.state.settings.disableDragNDrop} onChange={this.handleDisableDragNDrop} />
                     </label>
+                    <label className="Settings-input-field">
+                    CLIPTOOL ONLY :
+                    <br/>
+                    <input type="checkbox" checked={this.state.settings.disableOverlay} onChange={this.handleDisableOverlay} />
+                </label>
                 </div>
 
                 <br/>
