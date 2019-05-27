@@ -14,14 +14,14 @@ const selectorColorStyles = {
     control: styles => ({ ...styles, backgroundColor: '#676767', color: 'white', border: 0 }),
     option: (styles) => {
         return {
-            backgroundColor: '#676767',
+            backgroundColor: '#AAAAAA',
             color: 'white'
         };
     },
     singleValue: styles => ({ ...styles, color: 'white' }),
-
-
 };
+
+
 class SettingsPage extends Component {
 
     constructor(props) {
@@ -69,24 +69,24 @@ class SettingsPage extends Component {
 
     handleTabMediaFolder(index, event) {
         var settingsCopy= Object.assign({}, this.state.settings);
-        settingsCopy.tabData[index].subFolder = event.value;
+        settingsCopy.tabData[index].subFolder = event.value + "/";
         this.setState(
             {settings: settingsCopy}
         );
     }
 
 
-    handleTabDataFolder(event) {
+    handleTabDataFolder(index, event) {
         var settingsCopy= Object.assign({}, this.state.settings);
-        settingsCopy.tabData[event.target.name].dataFolder = event.target.value;
+        settingsCopy.tabData[index].dataFolder = event.value  + "/";
         this.setState(
             {settings: settingsCopy}
         );
     }
 
-    handleTabOverlayFolder(event) {
+    handleTabOverlayFolder(index, event) {
         var settingsCopy= Object.assign({}, this.state.settings);
-        settingsCopy.tabData[event.target.name].overlayFolder = event.target.value;
+        settingsCopy.tabData[index].overlayFolder = event.value  + "/";
         this.setState(
             {settings: settingsCopy}
         );
@@ -133,13 +133,23 @@ class SettingsPage extends Component {
                 </label>
                 <label className="Settings-input-field">
                     DATAFOLDER :
-                    <br/>
-                    <input name={index} type="text" value={item.dataFolder} onChange={this.handleTabDataFolder} />
+                    <Select
+                        styles={selectorColorStyles}
+                        className="Settings-input-selector"
+                        value={{label: item.dataFolder, value: item.dataFolder}}
+                        onChange={(event) => this.handleTabDataFolder(index, event)}
+                        options={this.props.dataFoldersProps}
+                    />
                 </label>
                 <label className="Settings-input-field">
                     TEMPLATEFOLDER :
-                    <br/>
-                    <input name={index} type="text" value={item.overlayFolder} onChange={this.handleTabOverlayFolder} />
+                    <Select
+                        styles={selectorColorStyles}
+                        className="Settings-input-selector"
+                        value={{label: item.overlayFolder, value: item.overlayFolder}}
+                        onChange={(event) => this.handleTabOverlayFolder(index, event)}
+                        options={this.props.templateFoldersProps}
+                    />
                 </label>
                 <label className="Settings-input-field">
                     WIPE :

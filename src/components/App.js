@@ -251,8 +251,7 @@ class App extends PureComponent {
 
         //Get list of media folders:
         window.apolloClient.query({
-            query: gql`
-            {
+            query: gql`{
                 mediaFolders {
                     folder
                 }
@@ -260,6 +259,34 @@ class App extends PureComponent {
         })
         .then((response) => {
             this.mediaFolders = response.data.mediaFolders.map((item)=> {
+                return {value: item.folder, label: item.folder};
+            });
+        });
+
+        //Get list of data folders:
+        window.apolloClient.query({
+            query: gql`{
+                dataFolders {
+                    folder
+                }
+            }`
+        })
+        .then((response) => {
+            this.dataFolders = response.data.dataFolders.map((item)=> {
+                return {value: item.folder, label: item.folder};
+            });
+        });
+
+        //Get list of template folders:
+        window.apolloClient.query({
+            query: gql`{
+                templateFolders {
+                    folder
+                }
+            }`
+        })
+        .then((response) => {
+            this.templateFolders = response.data.templateFolders.map((item)=> {
                 return {value: item.folder, label: item.folder};
             });
         });
@@ -620,7 +647,12 @@ class App extends PureComponent {
                 <this.renderControlHeader/> : ""
             }
             {this.props.store.appNav[0].showSettingsActive ?
-                <SettingsPage mediaFoldersProps = { this.mediaFolders } ccgConnectionProps = { this.ccgConnection }/>
+                <SettingsPage
+                    mediaFoldersProps = { this.mediaFolders }
+                    dataFoldersProps = { this.dataFolders }
+                    templateFoldersProps = { this.templateFolders }
+                    ccgConnectionProps = { this.ccgConnection }
+                />
                 : null
             }
             <div className="App-body">

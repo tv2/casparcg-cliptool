@@ -45,6 +45,7 @@
 
 .Settings-input-selector {
     color: rgb(13, 13, 66);
+    min-width: 220px;
     margin: 5px;
 }
 
