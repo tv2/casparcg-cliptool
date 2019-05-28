@@ -4,7 +4,7 @@
     top: 0px;
     left: 2vw;
     width: 96vw;
-    background-color: rgb(44, 44, 44);
+    background-color: rgb(31, 31, 31);
     border-width: 1px;
     border-style: solid;
     border-color: rgba(156, 156, 156, 0.63);
@@ -27,20 +27,33 @@
     display:flex;
     flex-direction: row;
     flex-wrap: wrap;
-    margin-top: 10px;
+    margin-top: 20px;
     font-size: 1.1em;
-    background-color: rgb(31, 31, 31);
+    text-align: left;
+    background-color: rgb(56, 56, 56);
+    border-width: 1px;
+    border-style: solid;
+    border-color: rgba(230, 230, 230, 0.63);
 }
 
 .Settings-input-field {
     white-space: nowrap;
     margin: 5px;
+    min-width: 220px;
     color: rgb(255, 255, 255);
+    background-color: rgb(49, 49, 49);
+    border-width: 1px;
+    border-style: solid;
+    border-color: rgb(34, 34, 34);
 }
 
+.Settings-input-selector {
+    color: rgb(13, 13, 66);
+    margin: 5px;
+}
 
 input[type=text] {
-    text-align: right;
+    text-align: left;
     margin: 5px;
     font-size: 1.1em;
     border: 1px solid rgb(104, 104, 104);

@@ -4,7 +4,7 @@ import { Tabs } from 'rmc-tabs';
 
 //Apollo-Client Graphql implementation:
 import gql from "graphql-tag";
-import { ALL_CHANNELS_QUERY, ALL_CHANNELS_SUBSCRIPTION } from '../graphql/CasparCgQuery';
+import { ALL_CHANNELS_QUERY, ALL_CHANNELS_SUBSCRIPTION, MEDIA_FOLDERS_QUERY } from '../graphql/CasparCgQuery';
 
 //Redux:
 import { connect } from "react-redux";
@@ -77,6 +77,10 @@ class App extends PureComponent {
                 port: this.props.store.settings[0].port,
                 autoConnect: true,
             });
+        this.ccgConnection.infoPaths()
+        .then((response) =>{
+            console.log("List of paths : ", response);
+        });
 
         loadClipToolCommonSettings(this.ccgConnection, this.props.store.settings, this.props.store.appNav[0].showSettingsActive);
         this.ccgLoadPlay = new CcgLoadPlay(this.ccgConnection);
@@ -192,11 +196,13 @@ class App extends PureComponent {
                     type:'SET_TIMELEFT',
                     data: response.data,
                 });
-                response.data.timeLeft.map((item, index) => {
-                    _this2.handleAutoNext.autoNext(item, index);
-                    _this2.handleOverlay.handleOverlay(item, index);
-                    _this2.handleOverlay.handleWipe(item, index);
-                });
+                if (!_this2.props.store.settings[0].disableOverlay) {
+                    response.data.timeLeft.map((item, index) => {
+                        _this2.handleAutoNext.autoNext(item, index);
+                        _this2.handleOverlay.handleOverlay(item, index);
+                        _this2.handleOverlay.handleWipe(item, index);
+                    });
+                }
             },
             error(err) { console.error('Subscription error: ', err); },
         });
@@ -244,6 +250,49 @@ class App extends PureComponent {
 
     ccgMediaFilesChanged() {
         var _this2 = this;
+
+        //Get list of media folders:
+        window.apolloClient.query({
+            query: gql`{
+                mediaFolders {
+                    folder
+                }
+            }`
+        })
+        .then((response) => {
+            this.mediaFolders = response.data.mediaFolders.map((item)=> {
+                return {value: item.folder, label: item.folder};
+            });
+        });
+
+        //Get list of data folders:
+        window.apolloClient.query({
+            query: gql`{
+                dataFolders {
+                    folder
+                }
+            }`
+        })
+        .then((response) => {
+            this.dataFolders = response.data.dataFolders.map((item)=> {
+                return {value: item.folder, label: item.folder};
+            });
+        });
+
+        //Get list of template folders:
+        window.apolloClient.query({
+            query: gql`{
+                templateFolders {
+                    folder
+                }
+            }`
+        })
+        .then((response) => {
+            this.templateFolders = response.data.templateFolders.map((item)=> {
+                return {value: item.folder, label: item.folder};
+            });
+        });
+
         //Subscribe to CasparCG-State changes:
         window.apolloClient.subscribe({
             query: gql`
@@ -600,7 +649,12 @@ class App extends PureComponent {
                 <this.renderControlHeader/> : ""
             }
             {this.props.store.appNav[0].showSettingsActive ?
-                <SettingsPage ccgConnectionProps = { this.ccgConnection }/>
+                <SettingsPage
+                    mediaFoldersProps = { this.mediaFolders }
+                    dataFoldersProps = { this.dataFolders }
+                    templateFoldersProps = { this.templateFolders }
+                    ccgConnectionProps = { this.ccgConnection }
+                />
                 : null
             }
             <div className="App-body">

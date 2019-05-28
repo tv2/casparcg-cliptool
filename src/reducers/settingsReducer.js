@@ -6,6 +6,7 @@ const defaultSettingsReducerState = () => {
         port: '5250',
         selectView: 0,
         disableDragNDrop: false,
+        disableOverlay: false,
         tabData: []
     }];
     for (let i=0; i<4; i++) {
@@ -33,6 +34,7 @@ export const settings = ((state = defaultSettingsReducerState(), action) => {
             nextState[0].port = action.data.port;
             nextState[0].selectView = action.data.selectView || 0;
             nextState[0].disableDragNDrop = action.data.disableDragNDrop || false;
+            nextState[0].disableOverlay = action.data.disableOverlay || false;
             nextState[0].tabData.map((item, index) => {
                 item.title = tabData[index].title || '';
                 item.subFolder = tabData[index].subFolder || '';
