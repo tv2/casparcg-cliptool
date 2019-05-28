@@ -196,11 +196,13 @@ class App extends PureComponent {
                     type:'SET_TIMELEFT',
                     data: response.data,
                 });
-                response.data.timeLeft.map((item, index) => {
-                    _this2.handleAutoNext.autoNext(item, index);
-                    _this2.handleOverlay.handleOverlay(item, index);
-                    _this2.handleOverlay.handleWipe(item, index);
-                });
+                if (!_this2.props.store.settings[0].disableOverlay) {
+                    response.data.timeLeft.map((item, index) => {
+                        _this2.handleAutoNext.autoNext(item, index);
+                        _this2.handleOverlay.handleOverlay(item, index);
+                        _this2.handleOverlay.handleWipe(item, index);
+                    });
+                }
             },
             error(err) { console.error('Subscription error: ', err); },
         });
