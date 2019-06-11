@@ -113,6 +113,10 @@ class App extends PureComponent {
                 }`
             })
         .then((response) => {
+            this.props.dispatch({
+                type: 'SET_CONNECTION_STATUS',
+                data: response.data.serverOnline
+            });
             //Check order of clips:
             loadClipToolCommonSettings(this.ccgConnection, this.props.store.settings, this.props.store.appNav[0].showSettingsActive);
             this.loadThumbs.sortThumbnails(
@@ -121,10 +125,6 @@ class App extends PureComponent {
             );
             this.updatePlayingStatus(appNav[0].activeTab);
 
-            this.props.dispatch({
-                type: 'SET_CONNECTION_STATUS',
-                data: response.data.serverOnline
-            });
             this.handleAutoNext.isAutoNextStopped();
         })
         .catch((error) => {
