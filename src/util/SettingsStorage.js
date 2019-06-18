@@ -39,6 +39,7 @@ export const loadClipToolCommonSettings = (ccgServer, settings, settingsMenuActi
     ccgServer.dataRetrieve("cliptoolsettings")
     .then((data) => {
         nextSettings[0].tabData = JSON.parse(data.response.data).tabData;
+        saveSettings(nextSettings[0], ccgServer);
         window.store.dispatch({
             type:'UPDATE_SETTINGS',
             data: nextSettings[0]
