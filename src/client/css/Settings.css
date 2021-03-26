@@ -1,0 +1,78 @@
+.Settings-body {
+    position: relative;
+    z-index: 10;
+    top: 0px;
+    left: 2vw;
+    width: 96vw;
+    background-color: rgb(31, 31, 31);
+    border-width: 1px;
+    border-style: solid;
+    border-color: rgba(156, 156, 156, 0.63);
+    box-shadow: 8px 8px 8px rgba(66, 66, 66, 0.37);
+}
+
+.Settings-header {
+    height: 40px;
+    background-color: rgb(34, 34, 34);
+    color: white;
+    font-size: 1.8em;
+    line-height: 40px;
+}
+
+.Settings-form {
+    margin-top: 10px;
+}
+
+.Settings-channel-form {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    margin-top: 20px;
+    font-size: 1.1em;
+    text-align: left;
+    background-color: rgb(56, 56, 56);
+    border-width: 1px;
+    border-style: solid;
+    border-color: rgba(230, 230, 230, 0.63);
+}
+
+.Settings-input-field {
+    white-space: nowrap;
+    margin: 5px;
+    min-width: 220px;
+    color: rgb(255, 255, 255);
+    background-color: rgb(49, 49, 49);
+    border-width: 1px;
+    border-style: solid;
+    border-color: rgb(34, 34, 34);
+}
+
+.Settings-input-selector {
+    color: rgb(13, 13, 66);
+    margin: 5px;
+}
+
+input[type='text'] {
+    text-align: left;
+    margin: 5px;
+    font-size: 1.1em;
+    border: 1px solid rgb(104, 104, 104);
+    background-color: rgb(87, 86, 86);
+    color: white;
+    border-radius: 0;
+    -webkit-appearance: none;
+}
+
+.Save-button {
+    bottom: 10px;
+    left: calc(50% - 90px);
+    font-size: 1.1em;
+    width: 180px;
+    line-height: 300%;
+    background: rgb(43, 4, 4);
+    color: white;
+    font-family: 'Roboto Condensed', sans-serif;
+    border-radius: 16px;
+    border-width: 0;
+    outline: 0;
+}
