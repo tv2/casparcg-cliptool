@@ -9,7 +9,7 @@ release-builds/
 # Development folders and files #
 #################################
 .tmp/
-dist/
+build/
 node_modules/
 *.compiled.*
 yarn.lock

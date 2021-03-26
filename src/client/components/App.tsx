@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react'
-import { CasparCG, IConnectionOptions } from 'casparcg-connection'
+// import { CasparCG, IConnectionOptions } from 'casparcg-connection'
 import { Tabs } from 'rmc-tabs'
 import { reduxStore, reduxState } from '../reducers/store'
 
@@ -60,14 +60,14 @@ class App extends PureComponent {
             return item.title != ''
         })
         this.setState({ tabData: tabs })
-
+/*
         const connectionOptions: IConnectionOptions = {
             host: reduxState.settings[0].ipAddress,
             port: parseInt(reduxState.settings[0].port),
             autoConnect: true,
         }
         this.ccgConnection = new CasparCG(connectionOptions)
-
+*/
         this.ccgConnection.infoPaths().then((response) => {
             console.log('List of paths : ', response)
         })
