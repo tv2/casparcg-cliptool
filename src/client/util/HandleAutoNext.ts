@@ -1,4 +1,4 @@
-import { reduxState } from '../reducers/store'
+import { reduxState } from '../../model/reducers/store'
 
 class HandleAutoNext {
     ccgLoadPlay: any

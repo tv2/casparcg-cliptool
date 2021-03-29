@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react'
 // import { CasparCG, IConnectionOptions } from 'casparcg-connection'
 import { Tabs } from 'rmc-tabs'
-import { reduxStore, reduxState } from '../reducers/store'
+import { reduxStore, reduxState } from '../../model/reducers/store'
 
 //Redux:
 import { connect } from 'react-redux'

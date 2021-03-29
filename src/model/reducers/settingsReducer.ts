@@ -1,4 +1,4 @@
-import { deepCloneCopy } from '../util/deepCloneObject'
+import { deepCloneCopy } from '../../client/util/deepCloneObject'
 
 const defaultSettingsReducerState = () => {
     let defaultState = [

@@ -1,4 +1,4 @@
-import { reduxStore, reduxState } from '../reducers/store'
+import { reduxStore, reduxState } from '../../model/reducers/store'
 
 //Apollo-Client Graphql implementation:
 import {

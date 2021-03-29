@@ -1,3 +1,8 @@
-import { App } from './app'
+import { reduxState, reduxStore } from '../model/reducers/store'
+import * as DEFAULTS from './utils/CONSTANTS'
 
-var app = new App()
+import { serverInit } from './handlers/expressHandler'
+serverInit()
+
+import { casparCgClient } from './handlers/CasparCgHandler'
+casparCgClient()

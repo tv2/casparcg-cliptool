@@ -1,5 +1,5 @@
-import { secondsToTimeCode } from '../util/TimeCodeToString'
-import { deepCloneCopy } from '../util/deepCloneObject'
+import { secondsToTimeCode } from '../../client/util/TimeCodeToString'
+import { deepCloneCopy } from '../../client/util/deepCloneObject'
 
 //ToDo: Change numberOfChannels to a check from server
 const numberOfChannels = 4

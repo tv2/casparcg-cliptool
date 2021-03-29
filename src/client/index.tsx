@@ -5,7 +5,7 @@ import ReactDom from 'react-dom';
 import { Provider as ReduxProvider} from 'react-redux';
 
 //Utils:
-import { reduxStore } from './reducers/store'
+import { reduxStore } from '../model/reducers/store'
 
 import App from './components/App';
 

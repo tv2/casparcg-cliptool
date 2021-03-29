@@ -25,8 +25,8 @@
         "build": "yarn build-client && yarn build-server",
         "build-server": "tsc -p ./src/server",
         "build-client": "cross-env NODE_ENV=production TS_NODE_PROJECT=\"./src/client/tsconfig.json\" webpack && cp ./src/client/index.html ./build/client/index.html",
-        "start": "node ./build/server/server.js",
-        "start-dev": "node --inspect ./build/server/server.js",
+        "start": "node ./build/server/index.js",
+        "start-dev": "node --inspect ./build/server/index.js",
         "release": "standard-version",
         "prepareChangelog": "standard-version --prerelease",
         "validate:dependencies": "yarn audit && yarn license-validate",
@@ -43,7 +43,9 @@
     },
     "dependencies": {
         "casparcg-connection": "^5.1.0",
+        "chokidar": "^3.5.1",
         "express": "^4.17.1",
+        "filehound": "^1.17.4",
         "http": "^0.0.0",
         "osc": "https://github.com/olzzon/tv2-osc.js-no-serialport.git",
         "react": "^17.0.2",
@@ -56,7 +58,8 @@
         "socket.io": "^4.0.0",
         "socket.io-client": "^4.0.0",
         "sortablejs": "^1.13.0",
-        "winston": "^3.3.3"
+        "winston": "^3.3.3",
+        "xml-js": "^1.6.11"
     },
     "devDependencies": {
         "@babel/core": "^7.13.10",

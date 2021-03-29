@@ -1,5 +1,4 @@
-import CcgLoadPlay from './CcgLoadPlay'
-import { store, state } from '../reducers/store'
+import { reduxStore, reduxState } from '../../model/reducers/store'
 
 const fs = require('fs')
 
@@ -42,15 +41,14 @@ export const loadClipToolCommonSettings = (
         .then((data) => {
             nextSettings[0].tabData = JSON.parse(data.response.data).tabData
             saveSettings(nextSettings[0], ccgServer)
-            store.dispatch({
+            reduxStore.dispatch({
                 type: 'UPDATE_SETTINGS',
                 data: nextSettings[0],
             })
         })
         .catch((error) => {
-            let store = window.store.getState()
             console.log('Creating Settings file on CCG server', error)
-            ccgServer.dataStore('cliptoolsettings', store.settings[0])
+            ccgServer.dataStore('cliptoolsettings', reduxState.settings[0])
         })
 }
 
@@ -60,7 +58,7 @@ export const loadClipToolThumbOrder = (ccgServer) => {
         .then((data) => {
             let thumbsOrder = JSON.parse(data.response.data)
             thumbsOrder.map((thumbOrder, index) => {
-                store.dispatch({
+                reduxStore.dispatch({
                     type: 'SET_THUMB_ORDER',
                     channel: index + 1,
                     list: thumbOrder.list,
@@ -69,7 +67,10 @@ export const loadClipToolThumbOrder = (ccgServer) => {
         })
         .catch((error) => {
             console.log('Creating ThumbsOrder file on CCG server', error)
-            ccgServer.dataStore('cliptoolthumbsorder', state.data[0].thumbOrder)
+            ccgServer.dataStore(
+                'cliptoolthumbsorder',
+                reduxState.data[0].thumbOrder
+            )
         })
 }
 

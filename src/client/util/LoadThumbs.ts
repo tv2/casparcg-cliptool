@@ -3,7 +3,7 @@ import {
     cleanUpFilename,
     extractFilenameFromPath,
 } from './filePathStringHandling'
-import { reduxStore, reduxState } from '../reducers/store'
+import { reduxStore, reduxState } from '../../model/reducers/store'
 
 class LoadThumbs {
     ccgConnection: any

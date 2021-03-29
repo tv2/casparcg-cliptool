@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import '../css/Settings.css';
 import Select from 'react-select';
-import { reduxState } from '../reducers/store'
+import { reduxState } from '../../model/reducers/store'
 
 
 

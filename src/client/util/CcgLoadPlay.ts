@@ -1,5 +1,5 @@
 const MIX_DURATION = 6
-import { reduxStore, reduxState } from '../reducers/store'
+import { reduxStore, reduxState } from '../../model/reducers/store'
 
 class CcgLoadPlay {
     ccgConnection: any

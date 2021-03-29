@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import '../css/Thumbnail.css';
 import './App';
-import { reduxStore, reduxState } from '../reducers/store'
+import { reduxStore, reduxState } from '../../model/reducers/store'
 
 import Sortable from 'react-sortablejs';
 

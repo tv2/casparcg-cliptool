@@ -1,7 +1,11 @@
 import chokidar from 'chokidar' //Used to watch filesystem for changes
-import * as DEFAULTS from './utils/CONSTANTS'
-import { getFolders } from './utils/getFolderStructure'
-import './global'
+import * as DEFAULTS from './CONSTANTS'
+import { getFolders } from './getFolderStructure'
+import '../global'
+
+let mediaFolders
+let dataFolders
+let templateFolders
 
 //Follow media directories and pubsub if changes occour:
 export const mediaFileWatchSetup = (folder: string, pubsub: any) => {
@@ -28,7 +32,7 @@ export const mediaFolderWatchSetup = (folder: string) => {
     chokidar
         .watch(folder, { ignored: /(^|[\/\\])\../ })
         .on('all', (event, path) => {
-            global.mediaFolders = getFolders(folder)
+            mediaFolders = getFolders(folder)
         })
         .on('ready', () => {
             console.log('Media Folder "', folder, '" Watch Ready ')
@@ -43,7 +47,7 @@ export const dataFolderWatchSetup = (folder: string) => {
     chokidar
         .watch(folder, { ignored: /(^|[\/\\])\../ })
         .on('all', (event, path) => {
-            global.dataFolders = getFolders(folder)
+            dataFolders = getFolders(folder)
         })
         .on('ready', () => {
             console.log('Data Folder "', folder, '" Watch Ready ')
@@ -58,7 +62,7 @@ export const templateFolderWatchSetup = (folder: string) => {
     chokidar
         .watch(folder, { ignored: /(^|[\/\\])\../ })
         .on('all', (event, path) => {
-            global.templateFolders = getFolders(folder)
+            templateFolders = getFolders(folder)
         })
         .on('ready', () => {
             console.log('Template Folder "', folder, '" Watch Ready ')

@@ -13,7 +13,7 @@
         "skipLibCheck": true,
         "sourceMap": true,
         "strict": false,
-        "target": "esnext",
+        "target": "es2019",
         "forceConsistentCasingInFileNames": true,
         "esModuleInterop": true,
         "resolveJsonModule": true,
@@ -22,5 +22,5 @@
         "noEmit": false
     },
     "exclude": ["node_modules"],
-    "include": ["**/*.ts"]
+    "include": ["**/*.ts", "../model"]
 }
