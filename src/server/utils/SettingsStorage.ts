@@ -67,10 +67,12 @@ export const loadClipToolThumbOrder = (ccgServer) => {
         })
         .catch((error) => {
             console.log('Creating ThumbsOrder file on CCG server', error)
+            /*
             ccgServer.dataStore(
                 'cliptoolthumbsorder',
                 reduxState.data[0].thumbOrder
             )
+            */
         })
 }
 

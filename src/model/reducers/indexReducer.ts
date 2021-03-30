@@ -1,12 +1,14 @@
 import { combineReducers } from 'redux'
 import { settings } from './settingsReducer'
 import { appNav } from './appNavReducer'
-import { data } from './dataReducer'
+import { channels } from './channelsReducer'
+import { media } from './mediaReducer'
 
 const indexReducer = combineReducers({
-    data,
+    channels,
     settings,
     appNav,
+    media,
 })
 
 export default indexReducer

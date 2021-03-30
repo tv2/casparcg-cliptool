@@ -4,17 +4,16 @@ import { socketIoHandlers } from './socketIOHandler'
 const express = require('express')
 const path = require('path')
 const app = express()
-const server = require('http').Server(app)
-const SERVER_PORT = 80
+export const server = require('http').Server(app)
+const SERVER_PORT = 5555
 export const socketServer = require('socket.io')(server)
 
-app.use('/', express.static(path.join(__dirname, '..')))
-server.listen(SERVER_PORT)
-logger.info(`Server started at http://localhost:${SERVER_PORT}`)
+app.use('/', express.static(path.join(__dirname, '../../client')))
 
 server.on('connection', () => {
     app.get('/', (req: any, res: any) => {
-        res.sendFile(path.resolve('dist/index.html'))
+        console.log('Connected Client')
+        res.sendFile('index.html')
     })
 })
 
@@ -24,8 +23,10 @@ socketServer.on('connection', (socket: any) => {
 })
 
 export const serverInit = () => {
-    logger.info('Initialising WebServer')
+    server.listen(SERVER_PORT)
+    logger.info(`Server started at http://localhost:${SERVER_PORT}`)
 }
+
 /*
 
                     subscribe: () =>
