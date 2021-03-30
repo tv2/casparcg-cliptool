@@ -15,7 +15,6 @@ import CcgLoadPlay from '../util/CcgLoadPlay'
 import HandleAutoNext from '../util/HandleAutoNext'
 import HandleOverlay from '../util/HandleOverlay'
 import HandleShortcuts from '../util/HandleShortcuts'
-import LoadThumbs from '../../server/utils/LoadThumbs'
 
 //CSS files:
 import '../css/Rmc-tabs.css'
@@ -74,7 +73,6 @@ class App extends PureComponent {
         this.handleOverlay = new HandleOverlay(this.ccgConnection)
         this.handleAutoNext = new HandleAutoNext(this.ccgLoadPlay)
         this.handleShortcuts = new HandleShortcuts(this.ccgLoadPlay)
-        this.loadThumbs = new LoadThumbs(this.ccgConnection)
     }
 
     //Logical funtions:

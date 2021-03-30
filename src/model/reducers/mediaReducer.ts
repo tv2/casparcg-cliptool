@@ -16,8 +16,8 @@ export interface IThumbFile {
     type: string
     changed: number
     size: number
+    thumbnail?: any
 }
-
 export interface IMedia {
     mediaFiles: IMediaFile[]
     thumbnailList: IThumbFile[]

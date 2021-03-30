@@ -18,7 +18,8 @@ import {
     channelSetTime,
 } from '../../model/reducers/channelsAction'
 import { socketServer } from './expressHandler'
-import { IO_TIME_UPDATE } from '../../model/SocketIoConstants'
+import * as IO from '../../model/SocketIoConstants'
+import { IMedia, IThumbFile } from '../../model/reducers/mediaReducer'
 
 //Setup AMCP Connection:
 export const ccgConnection = new CasparCG({
@@ -160,7 +161,7 @@ const casparCGconnection = () => {
 const startTimerControlledServices = () => {
     //Update of timeleft is set to a default 40ms (same as 25FPS)
     setInterval(() => {
-        socketServer.emit(IO_TIME_UPDATE, reduxState.channels[0])
+        socketServer.emit(IO.CHANNELS_UPDATE, reduxState.channels[0])
     }, 400)
 
     //Check media files on server:
@@ -168,13 +169,40 @@ const startTimerControlledServices = () => {
     setInterval(() => {
         if (!waitingForResponse) {
             waitingForResponse = true
-            ccgConnection.thumbnailList().then((payload) => {
-                reduxStore.dispatch(updateThumbFileList(payload.response.data))
+            ccgConnection.thumbnailList().then((thumbFile) => {
+                let thumbNails = thumbFile.response.data.map(
+                    (element: IThumbFile) => {
+                        return ccgConnection
+                            .thumbnailRetrieve(element.name)
+                            .then(
+                                (thumb: any): IThumbFile => {
+                                    return {
+                                        name: element.name,
+                                        changed: element.changed,
+                                        size: element.size,
+                                        type: element.type,
+                                        thumbnail: thumb.response.data,
+                                    }
+                                }
+                            )
+                    }
+                )
+                Promise.all(thumbNails).then((thumbnailList) => {
+                    reduxStore.dispatch(updateThumbFileList(thumbNails))
+                    socketServer.emit(
+                        IO.THUMB_UPDATE,
+                        reduxState.media.thumbnailList
+                    )
+                })
             })
             ccgConnection
                 .cls()
                 .then((payload) => {
                     reduxStore.dispatch(updateMediaFiles(payload.response.data))
+                    socketServer.emit(
+                        IO.MEDIA_UPDATE,
+                        reduxState.media.mediaFiles
+                    )
                     waitingForResponse = false
                 })
                 .catch((error) => {
