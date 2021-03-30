@@ -1,6 +1,6 @@
-import { UPDATE_MEDIA_FILES } from './mediaActions'
+import { UPDATE_MEDIA_FILES, UPDATE_THUMB_IST } from './mediaActions'
 
-interface IMediaFile {
+export interface IMediaFile {
     name: string
     type: string
     size: number
@@ -11,14 +11,14 @@ interface IMediaFile {
     duration: number
 }
 
-interface IThumbFile {
+export interface IThumbFile {
     name: string
     type: string
     changed: number
     size: number
 }
 
-interface IMedia {
+export interface IMedia {
     mediaFiles: IMediaFile[]
     thumbnailList: IThumbFile[]
 }
@@ -36,6 +36,9 @@ export const media = (state = defaultMediaState(), action) => {
     switch (action.type) {
         case UPDATE_MEDIA_FILES:
             nextState.mediaFiles = action.files
+            return nextState
+        case UPDATE_THUMB_IST:
+            nextState.thumbnailList = action.fileList
             return nextState
         default:
             return nextState

@@ -1,6 +1,16 @@
+import { ICcgChannel } from './channelsReducer'
+
+export const SET_CHANNELS = 'setChannels'
 export const SET_NAME = 'setName'
 export const SET_CLIP = 'setClip'
 export const SET_TIME = 'settime'
+
+export const channelSetChannels = (channels: ICcgChannel[]) => {
+    return {
+        type: SET_CHANNELS,
+        channels: channels,
+    }
+}
 
 export const channelSetName = (
     channel: number,

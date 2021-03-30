@@ -8,13 +8,17 @@ import * as DEFAULTS from '../utils/CONSTANTS'
 //Modules:
 import { CasparCG } from 'casparcg-connection'
 import { reduxState, reduxStore } from '../../model/reducers/store'
-import { updateMediaFiles } from '../../model/reducers/mediaActions'
+import {
+    updateMediaFiles,
+    updateThumbFileList,
+} from '../../model/reducers/mediaActions'
 import {
     channelSetClip,
     channelSetName,
     channelSetTime,
 } from '../../model/reducers/channelsAction'
 import { socketServer } from './expressHandler'
+import { IO_TIME_UPDATE } from '../../model/SocketIoConstants'
 
 //Setup AMCP Connection:
 export const ccgConnection = new CasparCG({
@@ -84,7 +88,7 @@ const setupOscServer = () => {
                         layerIndex
                     ].foreground.paused = message.args[0]
                 }
-*/
+                */
             }
         })
         .on('error', (error: any) => {
@@ -156,13 +160,7 @@ const casparCGconnection = () => {
 const startTimerControlledServices = () => {
     //Update of timeleft is set to a default 40ms (same as 25FPS)
     setInterval(() => {
-        socketServer.emit('OK', 1)
-        console.log(
-            '0: ',
-            reduxState.channels[0][0].layer[9].foreground.file.time[0],
-            ' 1:',
-            reduxState.channels[0][0].layer[9].foreground.file.time[1]
-        )
+        socketServer.emit(IO_TIME_UPDATE, reduxState.channels[0])
     }, 400)
 
     //Check media files on server:
@@ -170,6 +168,9 @@ const startTimerControlledServices = () => {
     setInterval(() => {
         if (!waitingForResponse) {
             waitingForResponse = true
+            ccgConnection.thumbnailList().then((payload) => {
+                reduxStore.dispatch(updateThumbFileList(payload.response.data))
+            })
             ccgConnection
                 .cls()
                 .then((payload) => {

@@ -15,7 +15,7 @@ import CcgLoadPlay from '../util/CcgLoadPlay'
 import HandleAutoNext from '../util/HandleAutoNext'
 import HandleOverlay from '../util/HandleOverlay'
 import HandleShortcuts from '../util/HandleShortcuts'
-import LoadThumbs from '../util/LoadThumbs'
+import LoadThumbs from '../../server/utils/LoadThumbs'
 
 //CSS files:
 import '../css/Rmc-tabs.css'
@@ -52,7 +52,7 @@ class App extends PureComponent {
 
     componentWillMount() {
         //Define Output Tabs:
-        let tabs = reduxState.data[0].channel.map((item, index) => {
+        let tabs = reduxState.channels[0].map((item, index) => {
             return reduxState.settings[0].tabData[index]
         })
         //Hide Tabs with no name:
@@ -68,9 +68,6 @@ class App extends PureComponent {
         }
         this.ccgConnection = new CasparCG(connectionOptions)
 */
-        this.ccgConnection.infoPaths().then((response) => {
-            console.log('List of paths : ', response)
-        })
 
         // loadClipToolCommonSettings(this.ccgConnection, state.settings, state.appNav[0].showSettingsActive);
         this.ccgLoadPlay = new CcgLoadPlay(this.ccgConnection)
@@ -129,29 +126,21 @@ class App extends PureComponent {
     //Rendering functions:
 
     renderFullHeader() {
-        let { appNav, data, settings } = reduxState
+        let { appNav, settings } = reduxState
 
         return (
             <header className="App-header">
                 <div className="App-title-background">
                     <img
                         src={
-                            data[0].channel[appNav[0].activeTab].thumbList[
-                                data[0].channel[appNav[0].activeTab]
-                                    .thumbActiveBgIndex
-                            ].thumbPix || ''
+                            ''
                         }
                         className="App-header-pvw-thumbnail-image"
                     />
                     <button className="App-header-pgm-counter">
-                        {data[0].ccgTimeCounter[appNav[0].activeTab]}
                     </button>
                     <img
-                        src={
-                            data[0].channel[appNav[0].activeTab].thumbList[
-                                data[0].channel[appNav[0].activeTab]
-                                    .thumbActiveIndex
-                            ].thumbPix || ''
+                        src={ ''
                         }
                         className="App-header-pgm-thumbnail-image"
                     />
@@ -160,7 +149,7 @@ class App extends PureComponent {
                 <div className="App-reload-setup-background">
                     <button
                         className="App-connection-status"
-                        onClick={this.handleSelectView}
+                        onClick={() => this.handleSelectView()}
                         style={
                             appNav[0].connectionStatus
                                 ? { backgroundColor: 'rgb(0, 128, 4)' }
@@ -171,13 +160,13 @@ class App extends PureComponent {
                     </button>
                     <button
                         className="App-settings-button"
-                        onClick={this.handleSettingsPage}
+                        onClick={() => this.handleSettingsPage()}
                     >
                         SETTINGS
                     </button>
                     <button
                         className="App-reload-button"
-                        onClick={this.reloadPage}
+                        onClick={() => this.reloadPage()}
                     >
                         RELOAD
                     </button>
@@ -186,7 +175,7 @@ class App extends PureComponent {
                 <div className="App-loop-autoPlay-background">
                     <button
                         className="App-loop-button"
-                        onClick={this.handleLoopStatus}
+                        onClick={() => this.handleLoopStatus()}
                         style={
                             settings[0].tabData[appNav[0].activeTab].loop
                                 ? { backgroundColor: 'rgb(28, 115, 165)' }
@@ -197,7 +186,7 @@ class App extends PureComponent {
                     </button>
                     <button
                         className="App-autoPlay-button"
-                        onClick={this.handleAutoPlayStatus}
+                        onClick={() => this.handleAutoPlayStatus()}
                         style={
                             settings[0].tabData[appNav[0].activeTab].autoPlay
                                 ? { backgroundColor: 'red' }
@@ -247,37 +236,26 @@ class App extends PureComponent {
     }
 
     renderControlHeader() {
-        let { appNav, data, settings } = reduxState
+        let { appNav, channels, settings } = reduxState
 
         return (
             <header className="App-control-view-header">
                 <div className="App-control-view-title-background">
                     <img
-                        src={
-                            data[0].channel[appNav[0].activeTab].thumbList[
-                                data[0].channel[appNav[0].activeTab]
-                                    .thumbActiveBgIndex
-                            ].thumbPix || ''
+                        src={''
                         }
                         className="App-control-view-header-pvw-thumbnail-image"
                     />
                     <div className="App-control-view-header-title">
-                        {data[0].channel[appNav[0].activeTab].thumbList[
-                            data[0].channel[appNav[0].activeTab]
-                                .thumbActiveIndex
-                        ].name || ''}
+                        {''}
                     </div>
                     <img
                         src={
-                            data[0].channel[appNav[0].activeTab].thumbList[
-                                data[0].channel[appNav[0].activeTab]
-                                    .thumbActiveIndex
-                            ].thumbPix || ''
+                            ''
                         }
                         className="App-control-view-header-pgm-thumbnail-image"
                     />
                     <button className="App-control-view-header-pgm-counter">
-                        {data[0].ccgTimeCounter[appNav[0].activeTab]}
                     </button>
                 </div>
 
@@ -365,22 +343,18 @@ class App extends PureComponent {
     }
 
     renderTextViewHeader() {
-        let { appNav, data } = reduxState
+        let { appNav, channels } = reduxState
 
         return (
             <header className="App-text-view-header">
                 <div className="App-text-view-title-background">
                     <img
-                        src={
-                            data[0].channel[appNav[0].activeTab].thumbList[
-                                data[0].channel[appNav[0].activeTab]
-                                    .thumbActiveIndex
-                            ].thumbPix || ''
+                        src={''
                         }
                         className="App-text-view-header-pgm-thumbnail-image"
                     />
                     <button className="App-text-view-header-pgm-counter">
-                        {data[0].ccgTimeCounter[appNav[0].activeTab]}
+
                     </button>
                 </div>
 

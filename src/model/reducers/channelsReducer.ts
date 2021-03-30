@@ -1,5 +1,5 @@
 import { secondsToTimeCode } from '../../client/util/TimeCodeToString'
-import { SET_CLIP, SET_NAME, SET_TIME } from './channelsAction'
+import { SET_CHANNELS, SET_CLIP, SET_NAME, SET_TIME } from './channelsAction'
 
 export interface ICcgChannel {
     layer: Array<ICcgLayer>
@@ -53,6 +53,9 @@ export const channels = (
     let { ...nextState } = state
 
     switch (action.type) {
+        case SET_CHANNELS:
+            nextState[0] = action.channels
+            return nextState
         case SET_NAME:
             checkArray(nextState[0], action.channel, action.layer)
             if (action.foreground) {
