@@ -1,5 +1,5 @@
 import { reduxStore, reduxState } from '../../model/reducers/store'
-
+/*
 class HandleOverlay {
     ccgConnection: any
     wipeIsStarted: any
@@ -231,3 +231,4 @@ class HandleOverlay {
 }
 
 export default HandleOverlay
+*/

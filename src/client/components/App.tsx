@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react'
-// import { CasparCG, IConnectionOptions } from 'casparcg-connection'
 import { Tabs } from 'rmc-tabs'
 import { reduxStore, reduxState } from '../../model/reducers/store'
+import * as IO from '../../model/SocketIoConstants'
 
 //Redux:
 import { connect } from 'react-redux'
@@ -11,9 +11,6 @@ import Thumbnail from './Thumbnail'
 import SettingsPage from './Settings'
 
 //Utils:
-import CcgLoadPlay from '../util/CcgLoadPlay'
-import HandleAutoNext from '../util/HandleAutoNext'
-import HandleOverlay from '../util/HandleOverlay'
 import HandleShortcuts from '../util/HandleShortcuts'
 
 //CSS files:
@@ -22,16 +19,12 @@ import '../css/App.css'
 import '../css/App-header.css'
 import '../css/App-control-view-header.css'
 import '../css/App-text-view-header.css'
+import { socket } from '../util/SocketClientHandlers'
 
 const MIX_DURATION = 6
 
 class App extends PureComponent {
-    ccgConnection: any
-    ccgLoadPlay: any
-    handleOverlay: any
-    handleAutoNext: any
     handleShortcuts: any
-    loadThumbs: any
     state: any
 
     constructor(props) {
@@ -51,28 +44,22 @@ class App extends PureComponent {
 
     componentWillMount() {
         //Define Output Tabs:
-        let tabs = reduxState.channels[0].map((item, index) => {
+        let tabs = [
+            { key: 'a', title: 'Ch 1' },
+            { key: 'b', title: 'Ch 2' },
+        ]
+        /*
+        reduxState.channels[0].map((item, index) => {
             return reduxState.settings[0].tabData[index]
         })
+        */
         //Hide Tabs with no name:
         tabs = tabs.filter((item) => {
             return item.title != ''
         })
         this.setState({ tabData: tabs })
-/*
-        const connectionOptions: IConnectionOptions = {
-            host: reduxState.settings[0].ipAddress,
-            port: parseInt(reduxState.settings[0].port),
-            autoConnect: true,
-        }
-        this.ccgConnection = new CasparCG(connectionOptions)
-*/
 
-        // loadClipToolCommonSettings(this.ccgConnection, state.settings, state.appNav[0].showSettingsActive);
-        this.ccgLoadPlay = new CcgLoadPlay(this.ccgConnection)
-        this.handleOverlay = new HandleOverlay(this.ccgConnection)
-        this.handleAutoNext = new HandleAutoNext(this.ccgLoadPlay)
-        this.handleShortcuts = new HandleShortcuts(this.ccgLoadPlay)
+        // this.handleShortcuts = new HandleShortcuts()
     }
 
     //Logical funtions:
@@ -129,19 +116,9 @@ class App extends PureComponent {
         return (
             <header className="App-header">
                 <div className="App-title-background">
-                    <img
-                        src={
-                            ''
-                        }
-                        className="App-header-pvw-thumbnail-image"
-                    />
-                    <button className="App-header-pgm-counter">
-                    </button>
-                    <img
-                        src={ ''
-                        }
-                        className="App-header-pgm-thumbnail-image"
-                    />
+                    <img src={''} className="App-header-pvw-thumbnail-image" />
+                    <button className="App-header-pgm-counter"></button>
+                    <img src={''} className="App-header-pgm-thumbnail-image" />
                 </div>
 
                 <div className="App-reload-setup-background">
@@ -199,7 +176,7 @@ class App extends PureComponent {
                     <button
                         className="App-prev-cue-button"
                         onClick={() =>
-                            this.ccgLoadPlay.prevCue(appNav[0].activeTab + 1)
+                            socket.emit(IO.CUE_PREV, appNav[0].activeTab + 1)
                         }
                     >
                         PREV
@@ -207,7 +184,7 @@ class App extends PureComponent {
                     <button
                         className="App-next-cue-button"
                         onClick={() =>
-                            this.ccgLoadPlay.nextCue(appNav[0].activeTab + 1)
+                            socket.emit(IO.CUE_NEXT, appNav[0].activeTab + 1)
                         }
                     >
                         NEXT
@@ -215,7 +192,7 @@ class App extends PureComponent {
                     <button
                         className="App-mix-button"
                         onClick={() =>
-                            this.ccgLoadPlay.pvwPlay(appNav[0].activeTab + 1)
+                            socket.emit(IO.PWV_PLAY, appNav[0].activeTab + 1)
                         }
                     >
                         MIX
@@ -223,7 +200,7 @@ class App extends PureComponent {
                     <button
                         className="App-start-button"
                         onClick={() =>
-                            this.ccgLoadPlay.pgmPlay(appNav[0].activeTab + 1)
+                            socket.emit(IO.PGM_PLAY, appNav[0].activeTab + 1)
                         }
                     >
                         START
@@ -240,21 +217,15 @@ class App extends PureComponent {
             <header className="App-control-view-header">
                 <div className="App-control-view-title-background">
                     <img
-                        src={''
-                        }
+                        src={''}
                         className="App-control-view-header-pvw-thumbnail-image"
                     />
-                    <div className="App-control-view-header-title">
-                        {''}
-                    </div>
+                    <div className="App-control-view-header-title">{''}</div>
                     <img
-                        src={
-                            ''
-                        }
+                        src={''}
                         className="App-control-view-header-pgm-thumbnail-image"
                     />
-                    <button className="App-control-view-header-pgm-counter">
-                    </button>
+                    <button className="App-control-view-header-pgm-counter"></button>
                 </div>
 
                 <div className="App-control-view-reload-setup-background">
@@ -306,7 +277,7 @@ class App extends PureComponent {
                     <button
                         className="App-control-view-prev-cue-button"
                         onClick={() =>
-                            this.ccgLoadPlay.prevCue(appNav[0].activeTab + 1)
+                            socket.emit(IO.CUE_PREV, appNav[0].activeTab + 1)
                         }
                     >
                         PREV
@@ -314,7 +285,7 @@ class App extends PureComponent {
                     <button
                         className="App-control-view-next-cue-button"
                         onClick={() =>
-                            this.ccgLoadPlay.nextCue(appNav[0].activeTab + 1)
+                            socket.emit(IO.CUE_NEXT, appNav[0].activeTab + 1)
                         }
                     >
                         NEXT
@@ -322,7 +293,7 @@ class App extends PureComponent {
                     <button
                         className="App-control-view-mix-button"
                         onClick={() =>
-                            this.ccgLoadPlay.pvwPlay(appNav[0].activeTab + 1)
+                            socket.emit(IO.PWV_PLAY, appNav[0].activeTab + 1)
                         }
                     >
                         MIX
@@ -330,7 +301,7 @@ class App extends PureComponent {
                     <button
                         className="App-control-view-start-button"
                         onClick={() =>
-                            this.ccgLoadPlay.pgmPlay(appNav[0].activeTab + 1)
+                            socket.emit(IO.PGM_PLAY, appNav[0].activeTab + 1)
                         }
                     >
                         START
@@ -347,13 +318,10 @@ class App extends PureComponent {
             <header className="App-text-view-header">
                 <div className="App-text-view-title-background">
                     <img
-                        src={''
-                        }
+                        src={''}
                         className="App-text-view-header-pgm-thumbnail-image"
                     />
-                    <button className="App-text-view-header-pgm-counter">
-
-                    </button>
+                    <button className="App-text-view-header-pgm-counter"></button>
                 </div>
 
                 <div className="App-text-view-reload-setup-background">
@@ -380,7 +348,7 @@ class App extends PureComponent {
                     <button
                         className="App-text-view-start-button"
                         onClick={() =>
-                            this.ccgLoadPlay.pgmPlay(appNav[0].activeTab + 1)
+                            socket.emit(IO.PGM_PLAY, appNav[0].activeTab + 1)
                         }
                     >
                         START
@@ -391,14 +359,13 @@ class App extends PureComponent {
     }
 
     renderTabData() {
-        var tabDataList = this.state.tabData.map((item) => {
+        return this.state.tabData.map((item) => {
             return (
                 <div className="App-intro" key={item.key}>
                     <Thumbnail />
                 </div>
             )
         })
-        return tabDataList
     }
 
     render() {
@@ -423,7 +390,7 @@ class App extends PureComponent {
                     <SettingsPage />
                 ) : null}
                 <div className="App-body">
-                    <Tabs onChange={(tab, index) => this.setActiveTab(index)}>
+                    <Tabs tabs={this.state.tabData} onChange={(tab, index) => this.setActiveTab(index)}>
                         {this.renderTabData()}
                     </Tabs>
                 </div>

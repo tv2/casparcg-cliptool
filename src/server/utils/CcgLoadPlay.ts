@@ -1,6 +1,6 @@
 const MIX_DURATION = 6
 import { reduxStore, reduxState } from '../../model/reducers/store'
-
+/*
 class CcgLoadPlay {
     ccgConnection: any
     constructor(ccgConnection) {
@@ -154,3 +154,4 @@ class CcgLoadPlay {
 }
 
 export default CcgLoadPlay
+*/

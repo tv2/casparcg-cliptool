@@ -10,10 +10,12 @@ const FPS = 25;
 
 //Redux:
 import { connect } from "react-redux";
+import { IThumbFile } from '../../model/reducers/mediaReducer';
 
 //Utils:import LoadThumbs from '../util/LoadThumbs';
 //import { saveThumbsOrder } from '../util/SettingsStorage';
-
+let tally = true
+let tallyBg = true
 
 
 class Thumbnail extends PureComponent {
@@ -35,7 +37,7 @@ class Thumbnail extends PureComponent {
     }
 
     onDragEnd(order, sortable, event) {
-        let { data, appNav } = reduxState;
+        let { channels, appNav } = reduxState;
         console.log("DRAGGED: ", event);
         reduxStore.dispatch({
             type: 'MOVE_THUMB_IN_LIST',
@@ -46,7 +48,7 @@ class Thumbnail extends PureComponent {
             }
         });
 
-        let list = data[0].channel[this.ccgOutput-1].thumbList.map((thumb) => {
+/*        let list = data[0].channel[this.ccgOutput-1].thumbList.map((thumb) => {
             return thumb.name;
         });
         reduxStore.dispatch({
@@ -54,20 +56,21 @@ class Thumbnail extends PureComponent {
             channel: this.ccgOutput,
             list: list
         });
+        */
         // saveThumbsOrder(this.props.ccgConnectionProps, data[0].thumbOrder);
         // this.props.updatePlayingStatusProps( this.ccgOutput-1);
     }
 
-    renderThumb(item, index) {
+    renderThumb(item: IThumbFile, index) {
         if (reduxState.settings[0].selectView === 0 ) {
             return (
                 <div>
-                    <img src={item.thumbPix}
+                    <img src={item.thumbnail}
                         className="thumbnailImage"
                         style = {Object.assign({},
-                            item.tally ?
+                            tally ?
                                 {borderWidth: '4px'} : {borderWidth: '0px'},
-                            item.tallyBg ?
+                            tallyBg ?
                                 {boxShadow: '0px 0px 1px 5px green'} : {boxShadow: ''}
                         )}
                     />
@@ -76,8 +79,8 @@ class Thumbnail extends PureComponent {
                     <button className="thumbnailImageClickPgm"
                     />
                     <a className="thumbnail-timecode">
-                        {item.tally ?
-                            reduxState.data[0].ccgTimeCounter[this.ccgOutput-1]
+                        {tally ?
+''
                             : ""
                         }
                     </a>
@@ -90,9 +93,9 @@ class Thumbnail extends PureComponent {
             return (
                 <div className="thumbnail-text-view"
                         style = {Object.assign({},
-                            item.tally ?
+                            tally ?
                                 {borderWidth: '4px'} : {borderWidth: '0px'},
-                            item.tallyBg ?
+                            tallyBg ?
                                 {boxShadow: '0px 0px 1px 5px green'} : {boxShadow: ''}
                         )}
                 >
@@ -112,12 +115,13 @@ class Thumbnail extends PureComponent {
             <div
                 className="flexBoxes"
             >
-                {reduxState.data[0].channel[this.ccgOutput-1].thumbList
-                .map((item, index) => (
+                {reduxState.media[0].thumbnailList
+                .map((item: IThumbFile, index: number) => (
                     <div
                         className="boxComponent"
                         key={"item" + index}
                     >
+                        TEST
                         { (reduxState.settings[0].selectView < 2  ) ?
                             this.renderThumb(item, index)
                             : ""

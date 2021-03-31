@@ -1,5 +1,5 @@
 import { reduxState } from '../../model/reducers/store'
-
+/*
 class HandleAutoNext {
     ccgLoadPlay: any
     constructor(ccgLoadPlay) {
@@ -43,3 +43,4 @@ class HandleAutoNext {
 }
 
 export default HandleAutoNext
+*/

@@ -23,22 +23,24 @@ export interface IMedia {
     thumbnailList: IThumbFile[]
 }
 
-const defaultMediaState = (): IMedia => {
-    return {
-        mediaFiles: [],
-        thumbnailList: [],
-    }
+const defaultMediaState = (): Array<IMedia> => {
+    return [
+        {
+            mediaFiles: [],
+            thumbnailList: [],
+        },
+    ]
 }
 
-export const media = (state = defaultMediaState(), action) => {
+export const media = (state: Array<IMedia> = defaultMediaState(), action) => {
     let { ...nextState } = state
 
     switch (action.type) {
         case UPDATE_MEDIA_FILES:
-            nextState.mediaFiles = action.files
+            nextState[0].mediaFiles = action.files
             return nextState
         case UPDATE_THUMB_IST:
-            nextState.thumbnailList = action.fileList
+            nextState[0].thumbnailList = action.fileList
             return nextState
         default:
             return nextState

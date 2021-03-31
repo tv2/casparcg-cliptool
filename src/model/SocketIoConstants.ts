@@ -2,4 +2,11 @@ export const CHANNELS_UPDATE = 'channelsUpdate'
 export const MEDIA_UPDATE = 'mediaUpdate'
 export const THUMB_UPDATE = 'thumbUpdate'
 
+// Get from server:
 export const GET_SETTINGS = 'getSettings'
+
+// Client Commands:
+export const CUE_PREV = 'quePrevious'
+export const CUE_NEXT = 'queNext'
+export const PWV_PLAY = 'pwvPlay'
+export const PGM_PLAY = 'pgmPlay'

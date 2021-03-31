@@ -170,7 +170,7 @@ const startTimerControlledServices = () => {
         if (!waitingForResponse) {
             waitingForResponse = true
             ccgConnection.thumbnailList().then((thumbFile) => {
-                let thumbNails = thumbFile.response.data.map(
+                let thumbNails: IThumbFile[] = thumbFile.response.data.map(
                     (element: IThumbFile) => {
                         return ccgConnection
                             .thumbnailRetrieve(element.name)
@@ -187,11 +187,11 @@ const startTimerControlledServices = () => {
                             )
                     }
                 )
-                Promise.all(thumbNails).then((thumbnailList) => {
-                    reduxStore.dispatch(updateThumbFileList(thumbNails))
+                Promise.all(thumbNails).then((thumbNailList: IThumbFile[]) => {
+                    reduxStore.dispatch(updateThumbFileList(thumbNailList))
                     socketServer.emit(
                         IO.THUMB_UPDATE,
-                        reduxState.media.thumbnailList
+                        reduxState.media[0].thumbnailList
                     )
                 })
             })
@@ -201,7 +201,7 @@ const startTimerControlledServices = () => {
                     reduxStore.dispatch(updateMediaFiles(payload.response.data))
                     socketServer.emit(
                         IO.MEDIA_UPDATE,
-                        reduxState.media.mediaFiles
+                        reduxState.media[0].mediaFiles
                     )
                     waitingForResponse = false
                 })
