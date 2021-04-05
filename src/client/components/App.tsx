@@ -20,6 +20,7 @@ import '../css/App-header.css'
 import '../css/App-control-view-header.css'
 import '../css/App-text-view-header.css'
 import { socket } from '../util/SocketClientHandlers'
+import { secondsToTimeCode } from '../util/TimeCodeToString'
 
 const MIX_DURATION = 6
 
@@ -48,11 +49,6 @@ class App extends PureComponent {
             { key: 'a', title: 'Ch 1' },
             { key: 'b', title: 'Ch 2' },
         ]
-        /*
-        reduxState.channels[0].map((item, index) => {
-            return reduxState.settings[0].tabData[index]
-        })
-        */
         //Hide Tabs with no name:
         tabs = tabs.filter((item) => {
             return item.title != ''
@@ -117,7 +113,9 @@ class App extends PureComponent {
             <header className="App-header">
                 <div className="App-title-background">
                     <img src={''} className="App-header-pvw-thumbnail-image" />
-                    <button className="App-header-pgm-counter"></button>
+                    <button className="App-header-pgm-counter">
+                        {secondsToTimeCode(reduxState.channels[0][0]?.layer[9]?.foreground?.file?.time[0])}
+                    </button>
                     <img src={''} className="App-header-pgm-thumbnail-image" />
                 </div>
 

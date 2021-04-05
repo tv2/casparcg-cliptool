@@ -9,17 +9,19 @@ import * as DEFAULTS from '../utils/CONSTANTS'
 import { CasparCG } from 'casparcg-connection'
 import { reduxState, reduxStore } from '../../model/reducers/store'
 import {
+    setTallyFileName,
     updateMediaFiles,
     updateThumbFileList,
 } from '../../model/reducers/mediaActions'
 import {
     channelSetClip,
+    channelSetPath,
     channelSetName,
     channelSetTime,
 } from '../../model/reducers/channelsAction'
 import { socketServer } from './expressHandler'
 import * as IO from '../../model/SocketIoConstants'
-import { IMedia, IThumbFile } from '../../model/reducers/mediaReducer'
+import { IThumbFile } from '../../model/reducers/mediaReducer'
 
 //Setup AMCP Connection:
 export const ccgConnection = new CasparCG({
@@ -53,6 +55,16 @@ const setupOscServer = () => {
             let layerIndex = findLayerNumber(message.address) - 1
 
             if (message.address.includes('/stage/layer')) {
+                if (message.address.includes('file/path')) {
+                    reduxStore.dispatch(
+                        channelSetPath(
+                            channelIndex,
+                            layerIndex,
+                            message.address.includes('foreground'),
+                            message.args[0]
+                        )
+                    )
+                }
                 if (message.address.includes('file/name')) {
                     reduxStore.dispatch(
                         channelSetName(
@@ -62,6 +74,14 @@ const setupOscServer = () => {
                             message.args[0]
                         )
                     )
+                    if (layerIndex === 9) {
+                        reduxStore.dispatch(
+                            setTallyFileName(
+                                channelIndex,
+                                message.args[0].split('.')[0]
+                            )
+                        )
+                    }
                 }
                 if (message.address.includes('file/clip')) {
                     reduxStore.dispatch(
@@ -162,7 +182,8 @@ const startTimerControlledServices = () => {
     //Update of timeleft is set to a default 40ms (same as 25FPS)
     setInterval(() => {
         socketServer.emit(IO.CHANNELS_UPDATE, reduxState.channels[0])
-    }, 400)
+        socketServer.emit(IO.TALLY_UPDATE, reduxState.media[0].tallyFile)
+    }, 40)
 
     //Check media files on server:
     let waitingForResponse: boolean = false

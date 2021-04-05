@@ -1,5 +1,11 @@
 import { secondsToTimeCode } from '../../client/util/TimeCodeToString'
-import { SET_CHANNELS, SET_CLIP, SET_NAME, SET_TIME } from './channelsAction'
+import {
+    SET_CHANNELS,
+    SET_CLIP,
+    SET_NAME,
+    SET_PATH,
+    SET_TIME,
+} from './channelsAction'
 
 export interface ICcgChannel {
     layer: Array<ICcgLayer>
@@ -44,8 +50,6 @@ const checkArray = (
     return state
 }
 
-let lastTimeCounter = [0, 0, 0, 0]
-
 export const channels = (
     state: Array<ICcgChannel[]> = defaultChannelsReducerState,
     action
@@ -66,6 +70,18 @@ export const channels = (
                 nextState[0][action.channel].layer[
                     action.layer
                 ].background.file.name = action.name
+            }
+            return nextState
+        case SET_PATH:
+            checkArray(nextState[0], action.channel, action.layer)
+            if (action.foreground) {
+                nextState[0][action.channel].layer[
+                    action.layer
+                ].foreground.file.path = action.path
+            } else {
+                nextState[0][action.channel].layer[
+                    action.layer
+                ].background.file.path = action.path
             }
             return nextState
         case SET_CLIP:

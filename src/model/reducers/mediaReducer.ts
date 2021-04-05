@@ -1,4 +1,4 @@
-import { UPDATE_MEDIA_FILES, UPDATE_THUMB_IST } from './mediaActions'
+import * as IO from './mediaActions'
 
 export interface IMediaFile {
     name: string
@@ -21,6 +21,7 @@ export interface IThumbFile {
 export interface IMedia {
     mediaFiles: IMediaFile[]
     thumbnailList: IThumbFile[]
+    tallyFile: string[]
 }
 
 const defaultMediaState = (): Array<IMedia> => {
@@ -28,6 +29,7 @@ const defaultMediaState = (): Array<IMedia> => {
         {
             mediaFiles: [],
             thumbnailList: [],
+            tallyFile: [],
         },
     ]
 }
@@ -36,12 +38,16 @@ export const media = (state: Array<IMedia> = defaultMediaState(), action) => {
     let { ...nextState } = state
 
     switch (action.type) {
-        case UPDATE_MEDIA_FILES:
+        case IO.UPDATE_MEDIA_FILES:
             nextState[0].mediaFiles = action.files
             return nextState
-        case UPDATE_THUMB_IST:
+        case IO.UPDATE_THUMB_IST:
             nextState[0].thumbnailList = action.fileList
             return nextState
+        case IO.SET_TALLY_FILE_NAME:
+            nextState[0].tallyFile[action.channelIndex] = action.filename
+            return nextState
+
         default:
             return nextState
     }
