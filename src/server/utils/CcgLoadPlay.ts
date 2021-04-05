@@ -1,5 +1,5 @@
 const MIX_DURATION = 6
-import { reduxStore, reduxState } from '../../model/reducers/store'
+import { reduxState } from '../../model/reducers/store'
 import { ccgConnection } from '../handlers/CasparCgHandler'
 
 export const playMedia = (
@@ -7,10 +7,11 @@ export const playMedia = (
     layerIndex: number,
     fileName: string
 ) => {
+    console.log('Loop :', reduxState.media[0].loop[channelIndex] || false)
     ccgConnection.play(
         channelIndex,
         layerIndex + 1,
         fileName,
-        reduxState.channels[0][channelIndex].layer[9].foreground.loop
+        reduxState.media[0].loop[channelIndex] || false
     )
 }

@@ -3,6 +3,7 @@ import * as IO from '../../model/SocketIoConstants'
 
 import io from 'socket.io-client'
 import {
+    setLoop,
     setTallyFileName,
     updateMediaFiles,
     updateThumbFileList,
@@ -33,6 +34,12 @@ socket.on(IO.CHANNELS_UPDATE, (payload: ICcgChannel[]) => {
 socket.on(IO.TALLY_UPDATE, (payload: string[]) => {
     payload.forEach((tally: string, index: number) => {
         reduxStore.dispatch(setTallyFileName(index, tally))
+    })
+})
+
+socket.on(IO.LOOP_STATEUPDATE, (loop: boolean[]) => {
+    loop.forEach((item: boolean, index: number) => {
+        reduxStore.dispatch(setLoop(index, item))
     })
 })
 

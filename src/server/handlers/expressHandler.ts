@@ -1,5 +1,5 @@
 import { logger } from '../utils/logger'
-import { socketIoHandlers } from './socketIOHandler'
+import { socketIoHandlers } from './socketIOServerHandler'
 
 const express = require('express')
 const path = require('path')

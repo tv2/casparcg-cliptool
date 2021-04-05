@@ -22,11 +22,14 @@ export const appNav = (state = defaultAppNavReducerState, action) => {
         case AppNav.SET_ACTIVE_TAB:
             nextState[0].activeTab = action.tabIndex
             return nextState
-        case 'SET_CONNECTION_STATUS':
-            nextState[0].connectionStatus = action.data
+        case AppNav.SET_CONNECTION_STATUS:
+            nextState[0].connectionStatus = action.connectionStatus
             return nextState
-        case 'TOGGLE_SHOW_SETTINGS':
+        case AppNav.TOGGLE_SHOW_SETTINGS:
             nextState[0].showSettingsActive = !nextState[0].showSettingsActive
+            return nextState
+        case AppNav.SELECT_VIEW:
+            nextState[0].selectView = action.selectView
             return nextState
         default:
             return nextState

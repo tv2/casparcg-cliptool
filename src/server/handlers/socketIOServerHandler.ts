@@ -1,9 +1,10 @@
-import { reduxState } from '../../model/reducers/store'
+import { reduxState, reduxStore } from '../../model/reducers/store'
 import { logger } from '../utils/logger'
 import * as IO from '../../model/SocketIoConstants'
 
 import { socketServer } from './expressHandler'
 import { playMedia } from '../utils/CcgLoadPlay'
+import { setLoop } from '../../model/reducers/mediaActions'
 
 export function socketIoHandlers(socket: any) {
     logger.info('SETTING UP SOCKET IO MAIN HANDLERS', {})
@@ -29,5 +30,9 @@ export function socketIoHandlers(socket: any) {
                 ' On ChannelIndex : ',
                 channelIndex
             )
+        })
+        .on(IO.SET_LOOP_STATE, (channelIndex: number, state: boolean) => {
+            reduxStore.dispatch(setLoop(channelIndex, state))
+            socketServer.emit(IO.LOOP_STATEUPDATE, reduxState.media[0].loop)
         })
 }
