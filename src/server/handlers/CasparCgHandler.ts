@@ -22,6 +22,8 @@ import {
 import { socketServer } from './expressHandler'
 import * as IO from '../../model/SocketIoConstants'
 import { IThumbFile } from '../../model/reducers/mediaReducer'
+import { ITabData } from '../../model/reducers/settingsReducer'
+import { setTabData, updateSettings } from '../../model/reducers/settingsAction'
 
 //Setup AMCP Connection:
 export const ccgConnection = new CasparCG({
@@ -160,19 +162,23 @@ const casparCGconnection = () => {
                 DEFAULTS.CCG_AMCP_PORT
             )
             console.log('CasparCG Server Version :', response.response.data)
-            /*
-                    mediaFileWatchSetup(
-                        this.configFile.configuration.paths['media-path']._text,
-                        this.pubsub
-                    )
-                }
-*/
         })
         .catch((error) => {
             console.log('No connection to CasparCG', error)
         })
     ccgConnection.getCasparCGConfig().then((response) => {
-        reduxStore.dispatch({ type: 'SET_CASPARCG_CONFIG', data: response })
+        console.log('CasparCG Config :', response)
+        reduxStore.dispatch(updateSettings(response.channels))
+        let tabData: ITabData[] = response.channels.map(
+            (channel: any, index: number) => {
+                return {
+                    key: String(index),
+                    title: 'Output ' + String(index + 1),
+                }
+            }
+        )
+        reduxStore.dispatch(setTabData(tabData))
+        socketServer.emit(IO.TAB_DATA_UPDATE, reduxState.settings[0].tabData)
     })
 
     startTimerControlledServices()
@@ -228,7 +234,6 @@ const startTimerControlledServices = () => {
                 })
                 .catch((error) => {
                     console.log('Server not connected :', error)
-                    // global.graphQlServer.setServerOnline(false)
                 })
         }
     }, 3000)

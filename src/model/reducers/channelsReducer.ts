@@ -54,7 +54,7 @@ export const channels = (
     state: Array<ICcgChannel[]> = defaultChannelsReducerState,
     action
 ) => {
-    let { ...nextState } = state
+    let nextState = { ...state }
 
     switch (action.type) {
         case SET_CHANNELS:

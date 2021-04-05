@@ -35,7 +35,7 @@ const defaultMediaState = (): Array<IMedia> => {
 }
 
 export const media = (state: Array<IMedia> = defaultMediaState(), action) => {
-    let { ...nextState } = state
+    let nextState = { ...state }
 
     switch (action.type) {
         case IO.UPDATE_MEDIA_FILES:

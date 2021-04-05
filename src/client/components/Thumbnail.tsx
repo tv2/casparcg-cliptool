@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react'
+import React from 'react'
 import '../css/Thumbnail.css'
 import './App'
 import { reduxState } from '../../model/reducers/store'
@@ -8,31 +8,23 @@ import { secondsToTimeCode } from '../util/TimeCodeToString'
 const FPS = 25
 
 //Redux:
-import { connect } from 'react-redux'
 import { IMediaFile, IThumbFile } from '../../model/reducers/mediaReducer'
-class Thumbnail extends PureComponent {
-    ccgOutput: any
-    constructor(props: any) {
-        super(props)
-        this.ccgOutput = 0 // this.props.ccgOutputProps;
+export const Thumbnail = () => {
+        let ccgOutput = 0 // this.props.ccgOutputProps;
 
-    }
-
-    componentDidMount() {}
-
-    getThumb = (fileName: string) => {
+    const getThumb = (fileName: string) => {
         let thumb = reduxState.media[0].thumbnailList.filter((item: IThumbFile) => {
             return item.name === fileName
         })
         return thumb[0]?.thumbnail || ''
     }
 
-    renderThumb(item: IMediaFile, index) {
-        if (reduxState.settings[0].selectView === 0) {
+    const renderThumb = (item: IMediaFile, index) => {
+        if (reduxState.appNav[0].selectView === 0) {
             return (
                 <div>
                     <img
-                        src={this.getThumb(item.name)}
+                        src={getThumb(item.name)}
                         className="thumbnailImage"
                         style={Object.assign(
                             {},
@@ -81,29 +73,19 @@ class Thumbnail extends PureComponent {
         }
     }
 
-    render() {
+
         return (
             <div className="flexBoxes">
                 {reduxState.media[0].mediaFiles.map(
                     (item: IMediaFile, index: number) => (
                         <div className="boxComponent" key={'item' + index}>
-                            {reduxState.settings[0].selectView < 2
-                                ? this.renderThumb(item, index)
+                            {reduxState.appNav[0].selectView < 2
+                                ? renderThumb(item, index)
                                 : ''}
                         </div>
                     )
                 )}
             </div>
         )
-    }
-}
 
-const mapStateToProps = (state) => {
-    return {
-        store: state,
-    }
 }
-
-export default connect(mapStateToProps, null, null, { forwardRef: true })(
-    Thumbnail
-)

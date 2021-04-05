@@ -1,13 +1,12 @@
-import React, { PureComponent } from 'react'
+import React from 'react'
 import { Tabs } from 'rmc-tabs'
 import { reduxStore, reduxState } from '../../model/reducers/store'
+import { useSelector } from 'react-redux'
+
 import * as IO from '../../model/SocketIoConstants'
 
-//Redux:
-import { connect } from 'react-redux'
-
 // Components:
-import Thumbnail from './Thumbnail'
+import { Thumbnail } from './Thumbnail'
 import SettingsPage from './Settings'
 
 //Utils:
@@ -21,56 +20,22 @@ import '../css/App-control-view-header.css'
 import '../css/App-text-view-header.css'
 import { socket } from '../util/SocketClientHandlers'
 import { secondsToTimeCode } from '../util/TimeCodeToString'
+import { SET_ACTIVE_TAB } from '../../model/reducers/appNavAction'
 
 const MIX_DURATION = 6
 
-class App extends PureComponent {
-    handleShortcuts: any
-    state: any
-
-    constructor(props) {
-        super(props)
-
-        this.state = {
-            ccgIsUpdated: false,
-            tabData: [],
-        }
-
-        //BINDS:
-        this.handleSettingsPage = this.handleSettingsPage.bind(this)
-        this.handleSelectView = this.handleSelectView.bind(this)
-        this.handleAutoPlayStatus = this.handleAutoPlayStatus.bind(this)
-        this.handleLoopStatus = this.handleLoopStatus.bind(this)
-    }
-
-    componentWillMount() {
-        //Define Output Tabs:
-        let tabs = [
-            { key: 'a', title: 'Ch 1' },
-            { key: 'b', title: 'Ch 2' },
-        ]
-        //Hide Tabs with no name:
-        tabs = tabs.filter((item) => {
-            return item.title != ''
-        })
-        this.setState({ tabData: tabs })
-
-        // this.handleShortcuts = new HandleShortcuts()
-    }
-
-    //Logical funtions:
-    reloadPage() {
-        location.reload()
-    }
+export const App = () => {
+    const store = useSelector(store => store)
+    // this.handleShortcuts = new HandleShortcuts()
 
     //Handler functions:
-    handleSettingsPage() {
+    const handleSettingsPage = () => {
         reduxStore.dispatch({
             type: 'TOGGLE_SHOW_SETTINGS',
         })
     }
 
-    handleAutoPlayStatus() {
+    const handleAutoPlayStatus = () => {
         reduxStore.dispatch({
             type: 'AUTOPLAY_STATUS',
             data: reduxState.appNav[0].activeTab,
@@ -78,18 +43,7 @@ class App extends PureComponent {
         // saveSettings(state.settings[0], this.ccgConnection)
     }
 
-    handleSelectView() {
-        if (reduxState.appNav[0].showSettingsActive) {
-            this.handleSettingsPage()
-            return
-        }
-        reduxStore.dispatch({
-            type: 'TOGGLE_VIEW',
-        })
-        // saveSettings(state.settings[0], this.ccgConnection)
-    }
-
-    handleLoopStatus() {
+    const handleLoopStatus = () => {
         reduxStore.dispatch({
             type: 'LOOP_STATUS',
             data: reduxState.appNav[0].activeTab,
@@ -97,76 +51,60 @@ class App extends PureComponent {
         // saveSettings(state.settings[0], this.ccgConnection)
     }
 
-    setActiveTab(tab) {
+    const setActiveTab = (tab) => {
         reduxStore.dispatch({
-            type: 'SET_ACTIVE_TAB',
+            type: SET_ACTIVE_TAB,
             data: tab,
         })
     }
 
     //Rendering functions:
 
-    renderFullHeader() {
-        let { appNav, settings } = reduxState
+    const RenderFullHeader = () => {
 
         return (
             <header className="App-header">
                 <div className="App-title-background">
                     <img src={''} className="App-header-pvw-thumbnail-image" />
-                    <button className="App-header-pgm-counter">
-                        {secondsToTimeCode(reduxState.channels[0][0]?.layer[9]?.foreground?.file?.time[0])}
-                    </button>
+                    <label className="App-header-pgm-counter">
+                        {secondsToTimeCode(
+                            reduxState.channels[0][0]?.layer[9]?.foreground
+                                ?.file?.time[0]
+                        )}
+                    </label>
                     <img src={''} className="App-header-pgm-thumbnail-image" />
                 </div>
 
                 <div className="App-reload-setup-background">
-                    <button
+                    <label
                         className="App-connection-status"
-                        onClick={() => this.handleSelectView()}
                         style={
-                            appNav[0].connectionStatus
+                            reduxState.appNav[0].connectionStatus
                                 ? { backgroundColor: 'rgb(0, 128, 4)' }
                                 : { backgroundColor: 'red' }
                         }
                     >
-                        {appNav[0].connectionStatus ? 'VIEW' : 'CONNECTING'}
-                    </button>
+                        {reduxState.appNav[0].connectionStatus ? 'VIEW' : 'CONNECTING'}
+                    </label>
                     <button
                         className="App-settings-button"
-                        onClick={() => this.handleSettingsPage()}
+                        onClick={() => handleSettingsPage()}
                     >
                         SETTINGS
-                    </button>
-                    <button
-                        className="App-reload-button"
-                        onClick={() => this.reloadPage()}
-                    >
-                        RELOAD
                     </button>
                 </div>
 
                 <div className="App-loop-autoPlay-background">
                     <button
                         className="App-loop-button"
-                        onClick={() => this.handleLoopStatus()}
+                        onClick={() => handleLoopStatus()}
                         style={
-                            settings[0].tabData[appNav[0].activeTab].loop
+                            reduxState.channels[0][reduxState.appNav[0].activeTab]?.layer?.[9]?.foreground.loop
                                 ? { backgroundColor: 'rgb(28, 115, 165)' }
                                 : { backgroundColor: 'grey' }
                         }
                     >
                         LOOP
-                    </button>
-                    <button
-                        className="App-autoPlay-button"
-                        onClick={() => this.handleAutoPlayStatus()}
-                        style={
-                            settings[0].tabData[appNav[0].activeTab].autoPlay
-                                ? { backgroundColor: 'red' }
-                                : { backgroundColor: 'grey' }
-                        }
-                    >
-                        AUTO NEXT
                     </button>
                 </div>
 
@@ -174,7 +112,7 @@ class App extends PureComponent {
                     <button
                         className="App-prev-cue-button"
                         onClick={() =>
-                            socket.emit(IO.CUE_PREV, appNav[0].activeTab + 1)
+                            socket.emit(IO.CUE_PREV, reduxState.appNav[0].activeTab + 1)
                         }
                     >
                         PREV
@@ -182,7 +120,7 @@ class App extends PureComponent {
                     <button
                         className="App-next-cue-button"
                         onClick={() =>
-                            socket.emit(IO.CUE_NEXT, appNav[0].activeTab + 1)
+                            socket.emit(IO.CUE_NEXT, reduxState.appNav[0].activeTab + 1)
                         }
                     >
                         NEXT
@@ -190,7 +128,7 @@ class App extends PureComponent {
                     <button
                         className="App-mix-button"
                         onClick={() =>
-                            socket.emit(IO.PWV_PLAY, appNav[0].activeTab + 1)
+                            socket.emit(IO.PWV_PLAY, reduxState.appNav[0].activeTab + 1)
                         }
                     >
                         MIX
@@ -198,7 +136,7 @@ class App extends PureComponent {
                     <button
                         className="App-start-button"
                         onClick={() =>
-                            socket.emit(IO.PGM_PLAY, appNav[0].activeTab + 1)
+                            socket.emit(IO.PGM_PLAY, reduxState.appNav[0].activeTab + 1)
                         }
                     >
                         START
@@ -208,8 +146,8 @@ class App extends PureComponent {
         )
     }
 
-    renderControlHeader() {
-        let { appNav, channels, settings } = reduxState
+    const RenderControlHeader = () => {
+        let { appNav, settings } = reduxState
 
         return (
             <header className="App-control-view-header">
@@ -227,9 +165,8 @@ class App extends PureComponent {
                 </div>
 
                 <div className="App-control-view-reload-setup-background">
-                    <button
+                    <label
                         className="App-control-view-connection-status"
-                        onClick={this.handleSelectView}
                         style={
                             appNav[0].connectionStatus
                                 ? { backgroundColor: 'rgb(0, 128, 4)' }
@@ -237,37 +174,20 @@ class App extends PureComponent {
                         }
                     >
                         {appNav[0].connectionStatus ? 'VIEW' : 'CONNECTING'}
-                    </button>
-                    <button
-                        className="App-control-view-reload-button"
-                        onClick={this.reloadPage}
-                    >
-                        RELOAD
-                    </button>
+                    </label>
                 </div>
 
                 <div className="App-control-view-loop-autoPlay-background">
                     <button
                         className="App-control-view-loop-button"
-                        onClick={this.handleLoopStatus}
+                        onClick={handleLoopStatus}
                         style={
-                            settings[0].tabData[appNav[0].activeTab].loop
+                            reduxState.channels[0][reduxState.appNav[0].activeTab]?.layer?.[9]?.foreground.loop
                                 ? { backgroundColor: 'rgb(28, 115, 165)' }
                                 : { backgroundColor: 'grey' }
                         }
                     >
                         LOOP
-                    </button>
-                    <button
-                        className="App-control-view-autoPlay-button"
-                        onClick={this.handleAutoPlayStatus}
-                        style={
-                            settings[0].tabData[appNav[0].activeTab].autoPlay
-                                ? { backgroundColor: 'red' }
-                                : { backgroundColor: 'grey' }
-                        }
-                    >
-                        AUTO NEXT
                     </button>
                 </div>
 
@@ -309,8 +229,8 @@ class App extends PureComponent {
         )
     }
 
-    renderTextViewHeader() {
-        let { appNav, channels } = reduxState
+    const RenderTextViewHeader = () => {
+        let { appNav } = reduxState
 
         return (
             <header className="App-text-view-header">
@@ -323,9 +243,8 @@ class App extends PureComponent {
                 </div>
 
                 <div className="App-text-view-reload-setup-background">
-                    <button
+                    <label
                         className="App-text-view-connection-status"
-                        onClick={this.handleSelectView}
                         style={
                             appNav[0].connectionStatus
                                 ? { backgroundColor: 'rgb(0, 128, 4)' }
@@ -333,13 +252,7 @@ class App extends PureComponent {
                         }
                     >
                         {appNav[0].connectionStatus ? 'VIEW' : 'CONNECTING'}
-                    </button>
-                    <button
-                        className="App-text-view-reload-button"
-                        onClick={this.reloadPage}
-                    >
-                        RELOAD
-                    </button>
+                    </label>
                 </div>
 
                 <div className="App-text-view-mix-button-background">
@@ -356,8 +269,8 @@ class App extends PureComponent {
         )
     }
 
-    renderTabData() {
-        return this.state.tabData.map((item) => {
+    const renderTabData = () => {
+        return reduxState.settings[0].tabData.map((item) => {
             return (
                 <div className="App-intro" key={item.key}>
                     <Thumbnail />
@@ -365,42 +278,32 @@ class App extends PureComponent {
             )
         })
     }
-
-    render() {
-        return (
-            <div className="App">
-                {reduxState.settings[0].selectView === 0 ? (
-                    <this.renderFullHeader />
-                ) : (
-                    ''
-                )}
-                {reduxState.settings[0].selectView === 1 ? (
-                    <this.renderTextViewHeader />
-                ) : (
-                    ''
-                )}
-                {reduxState.settings[0].selectView === 2 ? (
-                    <this.renderControlHeader />
-                ) : (
-                    ''
-                )}
-                {reduxState.appNav[0].showSettingsActive ? (
-                    <SettingsPage />
-                ) : null}
-                <div className="App-body">
-                    <Tabs tabs={this.state.tabData} onChange={(tab, index) => this.setActiveTab(index)}>
-                        {this.renderTabData()}
-                    </Tabs>
-                </div>
+    return (
+        <div className="App">
+            {reduxState.appNav[0].selectView === 0 ? (
+                <RenderFullHeader />
+            ) : (
+                ''
+            )}
+            {reduxState.appNav[0].selectView === 1 ? (
+                <RenderTextViewHeader />
+            ) : (
+                ''
+            )}
+            {reduxState.appNav[0].selectView === 2 ? (
+                <RenderControlHeader />
+            ) : (
+                ''
+            )}
+            {reduxState.appNav[0].showSettingsActive ? <SettingsPage /> : null}
+            <div className="App-body">
+                <Tabs
+                    tabs={reduxState.settings[0].tabData}
+                    onChange={(tab, index) => setActiveTab(index)}
+                >
+                    {renderTabData()}
+                </Tabs>
             </div>
-        )
-    }
+        </div>
+    )
 }
-
-const mapStateToProps = (state) => {
-    return {
-        store: state,
-    }
-}
-
-export default connect(mapStateToProps)(App)

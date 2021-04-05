@@ -1,5 +1,6 @@
 import { reduxState } from '../../model/reducers/store'
 import { logger } from '../utils/logger'
+import * as IO from '../../model/SocketIoConstants'
 
 import { socketServer } from './expressHandler'
 
@@ -16,7 +17,7 @@ export function socketIoHandlers(socket: any) {
             )
             socketServer.emit('SEND_STORE', reduxState)
         })
-        .on('GET_SETTINGS', () => {
-            socketServer.emit('SEND_SETTINGS', reduxState.settings[0])
+        .on(IO.GET_SETTINGS, () => {
+            socketServer.emit(IO.SETTINGS_UPDATE, reduxState.settings[0])
         })
 }

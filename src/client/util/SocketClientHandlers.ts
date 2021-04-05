@@ -10,6 +10,8 @@ import {
 import { IMediaFile, IThumbFile } from '../../model/reducers/mediaReducer'
 import { ICcgChannel } from '../../model/reducers/channelsReducer'
 import { channelSetChannels } from '../../model/reducers/channelsAction'
+import { setTabData, updateSettings } from '../../model/reducers/settingsAction'
+import { ISettings } from '../../model/reducers/settingsReducer'
 
 export const socket = io()
 
@@ -32,4 +34,9 @@ socket.on(IO.TALLY_UPDATE, (payload: string[]) => {
     payload.forEach((tally: string, index: number) => {
         reduxStore.dispatch(setTallyFileName(index, tally))
     })
+})
+
+socket.on(IO.SETTINGS_UPDATE, (payload: ISettings) => {
+    reduxStore.dispatch(updateSettings(payload.ccgSettings.channels))
+    reduxStore.dispatch(setTabData(payload.tabData))
 })
