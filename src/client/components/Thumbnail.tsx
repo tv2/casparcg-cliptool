@@ -9,6 +9,8 @@ const FPS = 25
 
 //Redux:
 import { IMediaFile, IThumbFile } from '../../model/reducers/mediaReducer'
+import { socket } from '../util/SocketClientHandlers'
+import { PGM_PLAY } from '../../model/SocketIoConstants'
 export const Thumbnail = () => {
         let ccgOutput = 0 // this.props.ccgOutputProps;
 
@@ -35,7 +37,9 @@ export const Thumbnail = () => {
                         )}
                     />
                     <button className="thumbnailImageClickPvw" />
-                    <button className="thumbnailImageClickPgm" />
+                    <button className="thumbnailImageClickPgm" onClick={(()=>{socket.emit(PGM_PLAY, reduxState.appNav[0].activeTab, item.name)})} >
+
+                        </button>
                     <a className="thumbnail-timecode">
                         {reduxState.media[0].tallyFile[0] ===
                         item.name

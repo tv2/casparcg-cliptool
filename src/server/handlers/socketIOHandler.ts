@@ -3,6 +3,7 @@ import { logger } from '../utils/logger'
 import * as IO from '../../model/SocketIoConstants'
 
 import { socketServer } from './expressHandler'
+import { playMedia } from '../utils/CcgLoadPlay'
 
 export function socketIoHandlers(socket: any) {
     logger.info('SETTING UP SOCKET IO MAIN HANDLERS', {})
@@ -19,5 +20,14 @@ export function socketIoHandlers(socket: any) {
         })
         .on(IO.GET_SETTINGS, () => {
             socketServer.emit(IO.SETTINGS_UPDATE, reduxState.settings[0])
+        })
+        .on(IO.PGM_PLAY, (channelIndex: number, fileName: string) => {
+            playMedia(channelIndex, 9, fileName)
+            console.log(
+                'Play out :',
+                fileName,
+                ' On ChannelIndex : ',
+                channelIndex
+            )
         })
 }
