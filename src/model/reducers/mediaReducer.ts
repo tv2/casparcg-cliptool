@@ -23,6 +23,7 @@ export interface IMedia {
     thumbnailList: IThumbFile[]
     tallyFile: string[]
     loop: boolean[]
+    time: Array<[number, number]>
 }
 
 const defaultMediaState = (): Array<IMedia> => {
@@ -32,6 +33,7 @@ const defaultMediaState = (): Array<IMedia> => {
             thumbnailList: [],
             tallyFile: [],
             loop: [],
+            time: [],
         },
     ]
 }
@@ -51,6 +53,9 @@ export const media = (state: Array<IMedia> = defaultMediaState(), action) => {
             return nextState
         case IO.SET_LOOP:
             nextState[0].loop[action.channelIndex] = action.loop
+            return nextState
+        case IO.SET_TIME:
+            nextState[0].time[action.channelIndex] = action.time
             return nextState
         default:
             return nextState

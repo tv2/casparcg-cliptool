@@ -1,4 +1,4 @@
-export const CHANNELS_UPDATE = 'channelsUpdate'
+export const TIME_UPDATE = 'timeUpdate'
 export const MEDIA_UPDATE = 'mediaUpdate'
 export const THUMB_UPDATE = 'thumbUpdate'
 export const TALLY_UPDATE = 'tallyUpdate'

@@ -44,8 +44,7 @@ export const Thumbnail = () => {
                         {reduxState.media[0].tallyFile[0] ===
                         item.name
                             ? secondsToTimeCode(
-                                  reduxState.channels[0][0]?.layer[9]
-                                      ?.foreground?.file?.time[0]
+                                  reduxState.media[0].time[0]?.[0]
                               )
                             : ''}
                     </a>

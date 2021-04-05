@@ -67,8 +67,7 @@ export const App = () => {
                     <img src={''} className="App-header-pvw-thumbnail-image" />
                     <label className="App-header-pgm-counter">
                         {secondsToTimeCode(
-                            reduxState.channels[0][0]?.layer[9]?.foreground
-                                ?.file?.time[0]
+                            reduxState.media[0].time[0]?.[0]
                         )}
                     </label>
                     <img src={''} className="App-header-pgm-thumbnail-image" />

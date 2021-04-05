@@ -10,6 +10,7 @@ import { CasparCG } from 'casparcg-connection'
 import { reduxState, reduxStore } from '../../model/reducers/store'
 import {
     setTallyFileName,
+    setTime,
     updateMediaFiles,
     updateThumbFileList,
 } from '../../model/reducers/mediaActions'
@@ -95,7 +96,7 @@ const setupOscServer = () => {
                 }
                 if (message.address.includes('file/time')) {
                     reduxStore.dispatch(
-                        channelSetTime(channelIndex, layerIndex, [
+                        setTime(channelIndex, [
                             parseFloat(message.args[0]),
                             parseFloat(message.args[1]),
                         ])
@@ -187,7 +188,7 @@ const casparCGconnection = () => {
 const startTimerControlledServices = () => {
     //Update of timeleft is set to a default 40ms (same as 25FPS)
     setInterval(() => {
-        socketServer.emit(IO.CHANNELS_UPDATE, reduxState.channels[0])
+        socketServer.emit(IO.TIME_UPDATE, reduxState.media[0].time)
         socketServer.emit(IO.TALLY_UPDATE, reduxState.media[0].tallyFile)
     }, 40)
 

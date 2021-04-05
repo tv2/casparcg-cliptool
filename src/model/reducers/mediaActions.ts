@@ -1,8 +1,10 @@
 import { IMediaFile, IThumbFile } from './mediaReducer'
+
 export const UPDATE_MEDIA_FILES = 'updateMediaFiles'
 export const UPDATE_THUMB_IST = 'updateThumbList'
 export const SET_TALLY_FILE_NAME = 'setTallyFileName'
 export const SET_LOOP = 'setLoop'
+export const SET_TIME = 'setTime'
 
 export const updateMediaFiles = (fileList: IMediaFile[]) => {
     return {
@@ -31,5 +33,13 @@ export const setLoop = (channelIndex: number, loop: boolean) => {
         type: SET_LOOP,
         channelIndex: channelIndex,
         loop: loop,
+    }
+}
+
+export const setTime = (channelIndex: number, time: [number, number]) => {
+    return {
+        type: SET_TIME,
+        channelIndex: channelIndex,
+        time: time,
     }
 }

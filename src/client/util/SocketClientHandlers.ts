@@ -5,6 +5,7 @@ import io from 'socket.io-client'
 import {
     setLoop,
     setTallyFileName,
+    setTime,
     updateMediaFiles,
     updateThumbFileList,
 } from '../../model/reducers/mediaActions'
@@ -27,8 +28,10 @@ socket.on(IO.THUMB_UPDATE, (payload: IThumbFile[]) => {
     reduxStore.dispatch(updateThumbFileList(payload))
 })
 
-socket.on(IO.CHANNELS_UPDATE, (payload: ICcgChannel[]) => {
-    reduxStore.dispatch(channelSetChannels(payload))
+socket.on(IO.TIME_UPDATE, (time: Array<[number, number]>) => {
+    time.forEach((item, index) => {
+        reduxStore.dispatch(setTime(index, item))
+    })
 })
 
 socket.on(IO.TALLY_UPDATE, (payload: string[]) => {
