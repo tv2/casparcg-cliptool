@@ -9,6 +9,7 @@ import * as DEFAULTS from '../utils/CONSTANTS'
 import { CasparCG } from 'casparcg-connection'
 import { reduxState, reduxStore } from '../../model/reducers/store'
 import {
+    setLoop,
     setTallyFileName,
     setTime,
     updateMediaFiles,
@@ -166,6 +167,7 @@ const startTimerControlledServices = () => {
     setInterval(() => {
         if (!waitingForResponse) {
             waitingForResponse = true
+            socketServer.emit(IO.LOOP_STATEUPDATE, reduxState.media[0].loop)
             ccgConnection.thumbnailList().then((thumbFile) => {
                 let thumbNails: IThumbFile[] = thumbFile.response.data.map(
                     (element: IThumbFile) => {

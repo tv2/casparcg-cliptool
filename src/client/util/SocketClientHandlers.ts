@@ -39,9 +39,15 @@ socket.on(IO.TALLY_UPDATE, (payload: string[]) => {
 })
 
 socket.on(IO.LOOP_STATEUPDATE, (loop: boolean[]) => {
-    loop.forEach((item: boolean, index: number) => {
-        reduxStore.dispatch(setLoop(index, item))
-    })
+    if (reduxState.media[0].loop.length > loop.length) {
+        reduxState.media[0].loop.forEach((item: boolean, index: number) => {
+            reduxStore.dispatch(setLoop(index, false))
+        })
+    } else {
+        loop.forEach((item: boolean, index: number) => {
+            reduxStore.dispatch(setLoop(index, item))
+        })
+    }
 })
 
 socket.on(IO.SETTINGS_UPDATE, (payload: ISettings) => {
