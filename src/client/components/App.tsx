@@ -25,22 +25,14 @@ import { SET_ACTIVE_TAB } from '../../model/reducers/appNavAction'
 const MIX_DURATION = 6
 
 export const App = () => {
+    // Redux hook:
     const store = useSelector((store) => store)
-    // this.handleShortcuts = new HandleShortcuts()
 
     //Handler functions:
     const handleSettingsPage = () => {
         reduxStore.dispatch({
             type: 'TOGGLE_SHOW_SETTINGS',
         })
-    }
-
-    const handleAutoPlayStatus = () => {
-        reduxStore.dispatch({
-            type: 'AUTOPLAY_STATUS',
-            data: reduxState.appNav[0].activeTab,
-        })
-        // saveSettings(state.settings[0], this.ccgConnection)
     }
 
     const handleLoopStatus = () => {
@@ -197,9 +189,7 @@ export const App = () => {
                         className="App-control-view-loop-button"
                         onClick={handleLoopStatus}
                         style={
-                            reduxState.channels[0][
-                                reduxState.appNav[0].activeTab
-                            ]?.layer?.[9]?.foreground.loop
+                            reduxState.media[0].loop[reduxState.appNav[0].activeTab]
                                 ? { backgroundColor: 'rgb(28, 115, 165)' }
                                 : { backgroundColor: 'grey' }
                         }

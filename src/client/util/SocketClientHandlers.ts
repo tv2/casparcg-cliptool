@@ -10,8 +10,6 @@ import {
     updateThumbFileList,
 } from '../../model/reducers/mediaActions'
 import { IMediaFile, IThumbFile } from '../../model/reducers/mediaReducer'
-import { ICcgChannel } from '../../model/reducers/channelsReducer'
-import { channelSetChannels } from '../../model/reducers/channelsAction'
 import { setTabData, updateSettings } from '../../model/reducers/settingsAction'
 import { ISettings } from '../../model/reducers/settingsReducer'
 

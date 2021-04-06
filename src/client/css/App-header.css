@@ -31,6 +31,7 @@
     width: 145px;
     height: 30px;
     border-width: 0px;
+    border-radius: 8px;
     color: rgb(255, 255, 255);
     font-size: 1.4em;
     margin-left: 5px;
@@ -225,11 +226,11 @@
 .App-loop-button {
     font-size: 0.9em;
     width: 108px;
-    line-height: 30px;
-    margin-top: 15px;
+    line-height: 60px;
+    margin-top: 25px;
     color: white;
     font-family: 'Roboto Condensed', sans-serif;
-    border-radius: 5px;
+    border-radius: 10px;
     border-width: 0;
     outline: 0;
 }

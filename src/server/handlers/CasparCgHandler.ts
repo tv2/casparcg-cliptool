@@ -14,12 +14,7 @@ import {
     updateMediaFiles,
     updateThumbFileList,
 } from '../../model/reducers/mediaActions'
-import {
-    channelSetClip,
-    channelSetPath,
-    channelSetName,
-    channelSetTime,
-} from '../../model/reducers/channelsAction'
+
 import { socketServer } from './expressHandler'
 import * as IO from '../../model/SocketIoConstants'
 import { IThumbFile } from '../../model/reducers/mediaReducer'
@@ -58,25 +53,7 @@ const setupOscServer = () => {
             let layerIndex = findLayerNumber(message.address) - 1
 
             if (message.address.includes('/stage/layer')) {
-                if (message.address.includes('file/path')) {
-                    reduxStore.dispatch(
-                        channelSetPath(
-                            channelIndex,
-                            layerIndex,
-                            message.address.includes('foreground'),
-                            message.args[0]
-                        )
-                    )
-                }
                 if (message.address.includes('file/name')) {
-                    reduxStore.dispatch(
-                        channelSetName(
-                            channelIndex,
-                            layerIndex,
-                            message.address.includes('foreground'),
-                            message.args[0]
-                        )
-                    )
                     if (layerIndex === 9) {
                         reduxStore.dispatch(
                             setTallyFileName(
@@ -85,14 +62,6 @@ const setupOscServer = () => {
                             )
                         )
                     }
-                }
-                if (message.address.includes('file/clip')) {
-                    reduxStore.dispatch(
-                        channelSetClip(channelIndex, layerIndex, [
-                            parseFloat(message.args[0]),
-                            parseFloat(message.args[1]),
-                        ])
-                    )
                 }
                 if (message.address.includes('file/time')) {
                     reduxStore.dispatch(

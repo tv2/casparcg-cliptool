@@ -1,5 +1,3 @@
-import { reduxStore, reduxState } from '../../model/reducers/store'
-
 const fs = require('fs')
 
 export const loadSettings = (storeRedux) => {
