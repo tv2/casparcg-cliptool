@@ -3,7 +3,9 @@ import * as IO from '../../model/SocketIoConstants'
 
 import io from 'socket.io-client'
 import {
+    setAutoplay,
     setLoop,
+    setMix,
     setTallyFileName,
     setTime,
     updateMediaFiles,
@@ -39,13 +41,41 @@ socket.on(IO.TALLY_UPDATE, (payload: string[]) => {
 })
 
 socket.on(IO.LOOP_STATEUPDATE, (loop: boolean[]) => {
-    if (reduxState.media[0].loop.length > loop.length) {
-        reduxState.media[0].loop.forEach((item: boolean, index: number) => {
-            reduxStore.dispatch(setLoop(index, false))
-        })
+    if (reduxState.media[0].loopState.length > loop.length) {
+        reduxState.media[0].loopState.forEach(
+            (item: boolean, index: number) => {
+                reduxStore.dispatch(setLoop(index, false))
+            }
+        )
     } else {
         loop.forEach((item: boolean, index: number) => {
             reduxStore.dispatch(setLoop(index, item))
+        })
+    }
+})
+
+socket.on(IO.MIX_STATE_UPDATE, (mix: boolean[]) => {
+    if (reduxState.media[0].mixState.length > mix.length) {
+        reduxState.media[0].mixState.forEach((item: boolean, index: number) => {
+            reduxStore.dispatch(setMix(index, false))
+        })
+    } else {
+        mix.forEach((item: boolean, index: number) => {
+            reduxStore.dispatch(setMix(index, item))
+        })
+    }
+})
+
+socket.on(IO.AUTOPLAY_STATE_UPDATE, (autoplay: boolean[]) => {
+    if (reduxState.media[0].autoplayState.length > autoplay.length) {
+        reduxState.media[0].autoplayState.forEach(
+            (item: boolean, index: number) => {
+                reduxStore.dispatch(setAutoplay(index, false))
+            }
+        )
+    } else {
+        autoplay.forEach((item: boolean, index: number) => {
+            reduxStore.dispatch(setAutoplay(index, item))
         })
     }
 })

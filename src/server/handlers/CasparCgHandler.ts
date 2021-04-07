@@ -167,7 +167,10 @@ const startTimerControlledServices = () => {
     setInterval(() => {
         if (!waitingForResponse) {
             waitingForResponse = true
-            socketServer.emit(IO.LOOP_STATEUPDATE, reduxState.media[0].loop)
+            socketServer.emit(
+                IO.LOOP_STATEUPDATE,
+                reduxState.media[0].loopState
+            )
             ccgConnection.thumbnailList().then((thumbFile) => {
                 let thumbNails: IThumbFile[] = thumbFile.response.data.map(
                     (element: IThumbFile) => {

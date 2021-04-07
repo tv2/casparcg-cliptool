@@ -7,11 +7,11 @@ export const playMedia = (
     layerIndex: number,
     fileName: string
 ) => {
-    console.log('Loop :', reduxState.media[0].loop[channelIndex] || false)
+    console.log('Loop :', reduxState.media[0].loopState[channelIndex] || false)
     ccgConnection.play(
         channelIndex,
         layerIndex + 1,
         fileName,
-        reduxState.media[0].loop[channelIndex] || false
+        reduxState.media[0].loopState[channelIndex] || false
     )
 }

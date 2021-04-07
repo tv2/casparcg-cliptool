@@ -39,7 +39,23 @@ export const App = () => {
         socket.emit(
             IO.SET_LOOP_STATE,
             reduxState.appNav[0].activeTab,
-            !reduxState.media[0].loop[reduxState.appNav[0].activeTab]
+            !reduxState.media[0].loopState[reduxState.appNav[0].activeTab]
+        )
+    }
+
+    const handleMixStatus = () => {
+        socket.emit(
+            IO.SET_MIX_STATE,
+            reduxState.appNav[0].activeTab,
+            !reduxState.media[0].mixState[reduxState.appNav[0].activeTab]
+        )
+    }
+
+    const handleAutoplayStatus = () => {
+        socket.emit(
+            IO.SET_AUTOPLAY_STATE,
+            reduxState.appNav[0].activeTab,
+            !reduxState.media[0].autoplayState[reduxState.appNav[0].activeTab]
         )
     }
 
@@ -59,7 +75,7 @@ export const App = () => {
                     <img src={''} className="App-header-pvw-thumbnail-image" />
                     <label className="App-header-pgm-counter">
                         {secondsToTimeCode(
-                            reduxState.media[0].time[0]?.[0]
+                            reduxState.media[0].time[0]
                         )}
                     </label>
                     <img src={''} className="App-header-pgm-thumbnail-image" />
@@ -90,11 +106,10 @@ export const App = () => {
                     <button
                         className="App-loop-button"
                         onClick={() => {
-                            console.log('handleLoopStatus')
                             handleLoopStatus()
                         }}
                         style={
-                            reduxState.media[0].loop[reduxState.appNav[0].activeTab]
+                            reduxState.media[0].loopState[reduxState.appNav[0].activeTab]
                                 ? { backgroundColor: 'rgb(28, 115, 165)' }
                                 : { backgroundColor: 'grey' }
                         }
@@ -104,129 +119,40 @@ export const App = () => {
                 </div>
 
                 <div className="App-mix-button-background">
-                    <button
-                        className="App-prev-cue-button"
+                <button
+                        className="App-loop-button"
                         onClick={() =>
-                            socket.emit(
-                                IO.CUE_PREV,
-                                reduxState.appNav[0].activeTab + 1
-                            )
+                            handleMixStatus()
                         }
-                    >
-                        PREV
-                    </button>
-                    <button
-                        className="App-next-cue-button"
-                        onClick={() =>
-                            socket.emit(
-                                IO.CUE_NEXT,
-                                reduxState.appNav[0].activeTab + 1
-                            )
-                        }
-                    >
-                        NEXT
-                    </button>
-                    <button
-                        className="App-mix-button"
-                        onClick={() =>
-                            socket.emit(
-                                IO.PWV_PLAY,
-                                reduxState.appNav[0].activeTab + 1
-                            )
+                        style={
+                            reduxState.media[0].mixState[reduxState.appNav[0].activeTab]
+                                ? { backgroundColor: 'rgb(28, 115, 165)' }
+                                : { backgroundColor: 'grey' }
                         }
                     >
                         MIX
                     </button>
                     <button
+                        className="App-loop-button"
+                        onClick={() =>
+                            handleAutoplayStatus()
+                        }
+                        style={
+                            reduxState.media[0].autoplayState[reduxState.appNav[0].activeTab]
+                                ? { backgroundColor: 'rgb(28, 115, 165)' }
+                                : { backgroundColor: 'grey' }
+                        }
+                    >
+                        AUTOPLAY
+                    </button>
+                    <button
+                        hidden = {!reduxState.media[0].autoplayState[reduxState.appNav[0].activeTab]}
                         className="App-start-button"
                         onClick={() =>
                             socket.emit(
                                 IO.PGM_PLAY,
                                 reduxState.appNav[0].activeTab + 1
                             )
-                        }
-                    >
-                        START
-                    </button>
-                </div>
-            </header>
-        )
-    }
-
-    const RenderControlHeader = () => {
-        let { appNav } = reduxState
-
-        return (
-            <header className="App-control-view-header">
-                <div className="App-control-view-title-background">
-                    <img
-                        src={''}
-                        className="App-control-view-header-pvw-thumbnail-image"
-                    />
-                    <div className="App-control-view-header-title">{''}</div>
-                    <img
-                        src={''}
-                        className="App-control-view-header-pgm-thumbnail-image"
-                    />
-                    <button className="App-control-view-header-pgm-counter"></button>
-                </div>
-
-                <div className="App-control-view-reload-setup-background">
-                    <label
-                        className="App-control-view-connection-status"
-                        style={
-                            appNav[0].connectionStatus
-                                ? { backgroundColor: 'rgb(0, 128, 4)' }
-                                : { backgroundColor: 'red' }
-                        }
-                    >
-                        {appNav[0].connectionStatus ? 'VIEW' : 'CONNECTING'}
-                    </label>
-                </div>
-
-                <div className="App-control-view-loop-autoPlay-background">
-                    <button
-                        className="App-control-view-loop-button"
-                        onClick={handleLoopStatus}
-                        style={
-                            reduxState.media[0].loop[reduxState.appNav[0].activeTab]
-                                ? { backgroundColor: 'rgb(28, 115, 165)' }
-                                : { backgroundColor: 'grey' }
-                        }
-                    >
-                        LOOP
-                    </button>
-                </div>
-
-                <div className="App-control-view-mix-button-background">
-                    <button
-                        className="App-control-view-prev-cue-button"
-                        onClick={() =>
-                            socket.emit(IO.CUE_PREV, appNav[0].activeTab + 1)
-                        }
-                    >
-                        PREV
-                    </button>
-                    <button
-                        className="App-control-view-next-cue-button"
-                        onClick={() =>
-                            socket.emit(IO.CUE_NEXT, appNav[0].activeTab + 1)
-                        }
-                    >
-                        NEXT
-                    </button>
-                    <button
-                        className="App-control-view-mix-button"
-                        onClick={() =>
-                            socket.emit(IO.PWV_PLAY, appNav[0].activeTab + 1)
-                        }
-                    >
-                        MIX
-                    </button>
-                    <button
-                        className="App-control-view-start-button"
-                        onClick={() =>
-                            socket.emit(IO.PGM_PLAY, appNav[0].activeTab + 1)
                         }
                     >
                         START
@@ -290,11 +216,6 @@ export const App = () => {
             {reduxState.appNav[0].selectView === 0 ? <RenderFullHeader /> : ''}
             {reduxState.appNav[0].selectView === 1 ? (
                 <RenderTextViewHeader />
-            ) : (
-                ''
-            )}
-            {reduxState.appNav[0].selectView === 2 ? (
-                <RenderControlHeader />
             ) : (
                 ''
             )}
