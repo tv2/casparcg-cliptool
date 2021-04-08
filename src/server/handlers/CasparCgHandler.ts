@@ -157,9 +157,21 @@ const casparCGconnection = () => {
 
 const startTimerControlledServices = () => {
     //Update of timeleft is set to a default 40ms (same as 25FPS)
+    let tallyFilesUpdate: string[] = []
     setInterval(() => {
-        socketServer.emit(IO.TIME_UPDATE, reduxState.media[0].time)
-        socketServer.emit(IO.TALLY_UPDATE, reduxState.media[0].tallyFile)
+        reduxState.media[0].time.forEach(
+            (time: [number, number], index: number) => {
+                socketServer.emit(IO.TIME_UPDATE, index, time)
+            }
+        )
+        reduxState.media[0].tallyFile.forEach(
+            (tallyFile: string, index: number) => {
+                if (tallyFilesUpdate[index] !== tallyFile) {
+                    socketServer.emit(IO.TALLY_UPDATE, index, tallyFile)
+                }
+            }
+        )
+        tallyFilesUpdate = [...reduxState.media[0].tallyFile]
     }, 40)
 
     //Check media files on server:

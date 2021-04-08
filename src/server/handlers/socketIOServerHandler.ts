@@ -25,6 +25,11 @@ export function socketIoHandlers(socket: any) {
         })
         .on(IO.GET_SETTINGS, () => {
             socketServer.emit(IO.SETTINGS_UPDATE, reduxState.settings[0])
+            reduxState.media[0].tallyFile.forEach(
+                (tallyFile: string, index: number) => {
+                    socketServer.emit(IO.TALLY_UPDATE, index, tallyFile)
+                }
+            )
         })
         .on(IO.PGM_PLAY, (channelIndex: number, fileName: string) => {
             playMedia(channelIndex, 9, fileName)

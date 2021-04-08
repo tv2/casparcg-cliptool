@@ -28,16 +28,12 @@ socket.on(IO.THUMB_UPDATE, (payload: IThumbFile[]) => {
     reduxStore.dispatch(updateThumbFileList(payload))
 })
 
-socket.on(IO.TIME_UPDATE, (time: Array<[number, number]>) => {
-    time.forEach((item, index) => {
-        reduxStore.dispatch(setTime(index, item))
-    })
+socket.on(IO.TIME_UPDATE, (index: number, time: [number, number]) => {
+    reduxStore.dispatch(setTime(index, time))
 })
 
-socket.on(IO.TALLY_UPDATE, (payload: string[]) => {
-    payload.forEach((tally: string, index: number) => {
-        reduxStore.dispatch(setTallyFileName(index, tally))
-    })
+socket.on(IO.TALLY_UPDATE, (index: number, payload: string) => {
+    reduxStore.dispatch(setTallyFileName(index, payload))
 })
 
 socket.on(IO.LOOP_STATEUPDATE, (loop: boolean[]) => {

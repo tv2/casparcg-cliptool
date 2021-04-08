@@ -55,7 +55,9 @@ export const App = () => {
         socket.emit(
             IO.SET_MANUAL_START_STATE,
             reduxState.appNav[0].activeTab,
-            !reduxState.media[0].manualstartState[reduxState.appNav[0].activeTab]
+            !reduxState.media[0].manualstartState[
+                reduxState.appNav[0].activeTab
+            ]
         )
     }
 
@@ -64,6 +66,14 @@ export const App = () => {
             type: SET_ACTIVE_TAB,
             data: tab,
         })
+    }
+
+    const RenderTime = () => {
+        return (
+            <button className="App-header-pgm-counter">
+                {secondsToTimeCode(reduxState.media[0].time[0])}
+            </button>
+        )
     }
 
     //Rendering functions:
@@ -94,10 +104,11 @@ export const App = () => {
 
                 <div className="App-timer-background">
                     <img src={''} className="App-header-pvw-thumbnail-image" />
-                    <button className="App-header-pgm-counter">
-                        {secondsToTimeCode(reduxState.media[0].time[0])}
-                    </button>
-                    <img src={getThumb(reduxState.media[0].tallyFile[0])} className="App-header-pgm-thumbnail-image" />
+                    <RenderTime />
+                    <img
+                        src={getThumb(reduxState.media[0].tallyFile[0])}
+                        className="App-header-pgm-thumbnail-image"
+                    />
                 </div>
 
                 <div className="App-button-background">
@@ -132,40 +143,39 @@ export const App = () => {
                     >
                         MIX
                     </button>
-                    </div>
-                    <div className="App-button-background">
-                        <button
-                            className="App-switch-button"
-                            onClick={() => handleManualStartStatus()}
-                            style={
-                                reduxState.media[0].manualstartState[
-                                    reduxState.appNav[0].activeTab
-                                ]
-                                    ? { backgroundColor: 'rgb(28, 115, 165)' }
-                                    : { backgroundColor: 'grey' }
-                            }
-                        >
-                            MANUAL
-                        </button>
+                </div>
+                <div className="App-button-background">
+                    <button
+                        className="App-switch-button"
+                        onClick={() => handleManualStartStatus()}
+                        style={
+                            reduxState.media[0].manualstartState[
+                                reduxState.appNav[0].activeTab
+                            ]
+                                ? { backgroundColor: 'rgb(28, 115, 165)' }
+                                : { backgroundColor: 'grey' }
+                        }
+                    >
+                        MANUAL
+                    </button>
 
-                        <button
-                            hidden={
-                                !reduxState.media[0].manualstartState[
-                                    reduxState.appNav[0].activeTab
-                                ]
-                            }
-                            className="App-start-button"
-                            onClick={() =>
-                                socket.emit(
-                                    IO.PGM_PLAY,
-                                    reduxState.appNav[0].activeTab + 1
-                                )
-                            }
-                        >
-                            START
-                        </button>
-                    </div>
-
+                    <button
+                        hidden={
+                            !reduxState.media[0].manualstartState[
+                                reduxState.appNav[0].activeTab
+                            ]
+                        }
+                        className="App-start-button"
+                        onClick={() =>
+                            socket.emit(
+                                IO.PGM_PLAY,
+                                reduxState.appNav[0].activeTab + 1
+                            )
+                        }
+                    >
+                        START
+                    </button>
+                </div>
             </header>
         )
     }
