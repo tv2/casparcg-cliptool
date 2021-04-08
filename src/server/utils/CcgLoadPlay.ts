@@ -30,3 +30,16 @@ export const mixMedia = (
         MIX_DURATION
     )
 }
+
+export const loadMedia = (
+    channelIndex: number,
+    layerIndex: number,
+    fileName: string
+) => {
+    ccgConnection.load(
+        channelIndex,
+        layerIndex + 1,
+        fileName,
+        reduxState.media[0].loopState[channelIndex] || false
+    )
+}

@@ -14,6 +14,7 @@ export const GET_SETTINGS = 'getSettings'
 
 // Client Commands:
 export const PGM_PLAY = 'pgmPlay'
+export const PGM_LOAD = 'pgmLoad'
 export const SET_LOOP_STATE = 'setLoopState'
 export const SET_MANUAL_START_STATE = 'setManualStartState'
 export const SET_MIX_STATE = 'setMixState'

@@ -3,7 +3,7 @@ import { logger } from '../utils/logger'
 import * as IO from '../../model/SocketIoConstants'
 
 import { socketServer } from './expressHandler'
-import { mixMedia, playMedia } from '../utils/CcgLoadPlay'
+import { mixMedia, playMedia, loadMedia } from '../utils/CcgLoadPlay'
 import {
     setLoop,
     setMix,
@@ -37,11 +37,14 @@ export function socketIoHandlers(socket: any) {
             } else {
                 mixMedia(channelIndex, 9, fileName)
             }
-            console.log(
-                'Play out :',
-                fileName,
-                ' On ChannelIndex : ',
-                channelIndex
+            logger.info(
+                'Play out :' + fileName + ' On ChannelIndex : ' + channelIndex
+            )
+        })
+        .on(IO.PGM_LOAD, (channelIndex: number, fileName: string) => {
+            loadMedia(channelIndex, 9, fileName)
+            logger.info(
+                'Load Media :' + fileName + ' On ChannelIndex : ' + channelIndex
             )
         })
         .on(IO.SET_LOOP_STATE, (channelIndex: number, state: boolean) => {

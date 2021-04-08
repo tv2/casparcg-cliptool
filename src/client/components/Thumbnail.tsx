@@ -10,19 +10,23 @@ const FPS = 25
 //Redux:
 import { IMediaFile, IThumbFile } from '../../model/reducers/mediaReducer'
 import { socket } from '../util/SocketClientHandlers'
-import { PGM_PLAY } from '../../model/SocketIoConstants'
+import { PGM_LOAD, PGM_PLAY } from '../../model/SocketIoConstants'
 
 export const getThumb = (fileName: string) => {
-    let thumb = reduxState.media[0].thumbnailList.filter(
-        (item: IThumbFile) => {
-            return item.name === fileName
-        }
-    )
+    let thumb = reduxState.media[0].thumbnailList.filter((item: IThumbFile) => {
+        return item.name === fileName
+    })
     return thumb[0]?.thumbnail || ''
 }
 
 export const Thumbnail = () => {
-    let ccgOutput = 0 // this.props.ccgOutputProps;
+    const handleClickMedia = (fileName: string) => {
+        if (!reduxState.media[0].manualstartState[reduxState.appNav[0].activeTab]){
+            socket.emit(PGM_PLAY, reduxState.appNav[0].activeTab, fileName)
+        } else {
+            socket.emit(PGM_LOAD, reduxState.appNav[0].activeTab, fileName)
+        }
+    }
 
     const renderThumb = (item: IMediaFile, index) => {
         if (reduxState.appNav[0].selectView === 0) {
@@ -41,18 +45,12 @@ export const Thumbnail = () => {
                     <button
                         className="thumbnailImageClickPgm"
                         onClick={() => {
-                            socket.emit(
-                                PGM_PLAY,
-                                reduxState.appNav[0].activeTab,
-                                item.name
-                            )
+                            handleClickMedia(item.name)
                         }}
                     ></button>
                     <a className="thumbnail-timecode">
                         {reduxState.media[0].tallyFile[0] === item.name
-                            ? secondsToTimeCode(
-                                  reduxState.media[0].time[0]
-                              )
+                            ? secondsToTimeCode(reduxState.media[0].time[0])
                             : ''}
                     </a>
                     <p className="text">
