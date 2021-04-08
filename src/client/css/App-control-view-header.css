@@ -213,7 +213,7 @@
 }
 
 /* LOOP and AUTO START buttons: */
-.App-control-view-loop-autoPlay-background {
+.App-control-view-loop-manualstart-background {
     position: absolute;
     top: 20px;
     left: 300px;
@@ -238,7 +238,7 @@
     outline: 0;
 }
 
-.App-control-view-autoPlay-button {
+.App-control-view-manualstart-button {
     font-size: 0.9em;
     width: 158px;
     line-height: 80px;

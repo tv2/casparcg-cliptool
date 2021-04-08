@@ -24,7 +24,7 @@ export interface IMedia {
     tallyFile: string[]
     loopState: boolean[]
     mixState: boolean[]
-    autoplayState: boolean[]
+    manualstartState: boolean[]
     time: Array<[number, number]>
 }
 
@@ -36,7 +36,7 @@ const defaultMediaState = (): Array<IMedia> => {
             tallyFile: [],
             loopState: [],
             mixState: [],
-            autoplayState: [],
+            manualstartState: [],
             time: [],
         },
     ]
@@ -61,9 +61,9 @@ export const media = (state: Array<IMedia> = defaultMediaState(), action) => {
         case IO.SET_MIX:
             nextState[0].mixState[action.channelIndex] = action.mixState
             return nextState
-        case IO.SET_AUTOPLAY:
-            nextState[0].autoplayState[action.channelIndex] =
-                action.autoplayState
+        case IO.SET_MANUAL_START:
+            nextState[0].manualstartState[action.channelIndex] =
+                action.manualstartState
             return nextState
         case IO.SET_TIME:
             nextState[0].time[action.channelIndex] = action.time

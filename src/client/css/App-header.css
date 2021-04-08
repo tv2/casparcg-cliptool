@@ -1,4 +1,7 @@
 .App-header {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
     position: sticky;
     z-index: 10;
     top: 0px;
@@ -9,11 +12,8 @@
     box-shadow: 2px 2px 2px #555;
 }
 
-.App-title-background {
-    position: relative;
-    top: 5px;
-    left: 17%;
-    width: 520px;
+.App-timer-background {
+    margin-left: 20px;
     height: 115px;
     background-color: rgb(22, 22, 22);
     border-width: 0px;
@@ -23,25 +23,21 @@
 }
 
 .App-header-pgm-counter {
-    position: absolute;
-    top: 40px;
-    left: 180px;
+    vertical-align: top;
+    margin-top: 30px;
+    margin-left: 20px;
+    margin-right: 20px;
     text-align: left;
     background-color: #aa0101;
-    width: 145px;
-    height: 30px;
+    width: 235px;
+    height: 60px;
     border-width: 0px;
     border-radius: 8px;
     color: rgb(255, 255, 255);
-    font-size: 1.4em;
-    margin-left: 5px;
-    margin-right: 5px;
+    font-size: 2.5em;
 }
 
 .App-header-pgm-thumbnail-image {
-    position: absolute;
-    top: 2px;
-    right: 5px;
     border-width: 2px;
     border-style: solid;
     border-color: #aa0101;
@@ -49,7 +45,7 @@
     height: 96px;
     margin-top: 6px;
     margin-bottom: 4px;
-    margin-left: 8px;
+    margin-right: 20px;
     background-image: repeating-linear-gradient(
         -45deg,
         #2f2c43,
@@ -59,7 +55,6 @@
 }
 
 .App-reload-setup-background {
-    position: absolute;
     top: 5px;
     left: 5px;
     width: 170px;
@@ -111,18 +106,29 @@
     outline: 0;
 }
 
-/* Buttons for all thumbs, places at the bottom of the page */
-.App-mix-button-background {
-    position: absolute;
-    top: 5px;
-    right: 15px;
-    width: 280px;
+/* Switch buttons: */
+.App-button-background {
+    margin-left: 20px;
     height: 115px;
     background-color: rgb(22, 22, 22);
     border-width: 0px;
     border-style: solid;
     border-color: rgb(63, 63, 63);
     box-shadow: 6px 6px 6px rgb(34, 34, 34);
+}
+
+.App-switch-button {
+    font-size: 0.9em;
+    width: 108px;
+    line-height: 60px;
+    margin-top: 25px;
+    margin-left: 20px;
+    margin-right: 20px;
+    color: white;
+    font-family: 'Roboto Condensed', sans-serif;
+    border-radius: 10px;
+    border-width: 0;
+    outline: 0;
 }
 
 .App-start-button {
@@ -130,8 +136,8 @@
     margin-right: 12px;
     margin-top: 5px;
     font-size: 1.2em;
-    width: 40%;
-    line-height: 45px;
+    width: 108px;
+    line-height: 60px;
     background: rgb(122, 0, 0);
     color: white;
     font-family: 'Roboto Condensed', sans-serif;
@@ -139,30 +145,4 @@
     border-width: 1px;
     border-color: rgba(85, 85, 85, 0.507);
     outline: 1px;
-}
-
-/* LOOP and AUTO STARt buttons: */
-.App-loop-autoPlay-background {
-    position: absolute;
-    top: 5px;
-    right: 320px;
-    width: 170px;
-    height: 115px;
-    background-color: rgb(22, 22, 22);
-    border-width: 0px;
-    border-style: solid;
-    border-color: rgb(63, 63, 63);
-    box-shadow: 6px 6px 6px rgb(34, 34, 34);
-}
-
-.App-loop-button {
-    font-size: 0.9em;
-    width: 108px;
-    line-height: 60px;
-    margin-top: 25px;
-    color: white;
-    font-family: 'Roboto Condensed', sans-serif;
-    border-radius: 10px;
-    border-width: 0;
-    outline: 0;
 }

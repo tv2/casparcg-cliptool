@@ -13,8 +13,8 @@ export const secondsToTimeCode = (timer: [number, number] = [0, 0]) => {
             '0' +
             (100 * (time - parseInt(String(time))) * (FPS / 100)).toFixed()
         ).slice(-2)
-        return hour + '.' + minute + '.' + sec + '.' + frm
+        return ' ' + hour + '.' + minute + '.' + sec + '.' + frm + ' '
     } else {
-        return '00.00.00.00'
+        return ' 00.00.00.00 '
     }
 }

@@ -3,7 +3,7 @@ import * as IO from '../../model/SocketIoConstants'
 
 import io from 'socket.io-client'
 import {
-    setAutoplay,
+    setManualStart,
     setLoop,
     setMix,
     setTallyFileName,
@@ -66,16 +66,16 @@ socket.on(IO.MIX_STATE_UPDATE, (mix: boolean[]) => {
     }
 })
 
-socket.on(IO.AUTOPLAY_STATE_UPDATE, (autoplay: boolean[]) => {
-    if (reduxState.media[0].autoplayState.length > autoplay.length) {
-        reduxState.media[0].autoplayState.forEach(
+socket.on(IO.MANUAL_START_STATE_UPDATE, (manualstart: boolean[]) => {
+    if (reduxState.media[0].manualstartState.length > manualstart.length) {
+        reduxState.media[0].manualstartState.forEach(
             (item: boolean, index: number) => {
-                reduxStore.dispatch(setAutoplay(index, false))
+                reduxStore.dispatch(setManualStart(index, false))
             }
         )
     } else {
-        autoplay.forEach((item: boolean, index: number) => {
-            reduxStore.dispatch(setAutoplay(index, item))
+        manualstart.forEach((item: boolean, index: number) => {
+            reduxStore.dispatch(setManualStart(index, item))
         })
     }
 })

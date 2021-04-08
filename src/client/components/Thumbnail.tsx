@@ -11,17 +11,18 @@ const FPS = 25
 import { IMediaFile, IThumbFile } from '../../model/reducers/mediaReducer'
 import { socket } from '../util/SocketClientHandlers'
 import { PGM_PLAY } from '../../model/SocketIoConstants'
+
+export const getThumb = (fileName: string) => {
+    let thumb = reduxState.media[0].thumbnailList.filter(
+        (item: IThumbFile) => {
+            return item.name === fileName
+        }
+    )
+    return thumb[0]?.thumbnail || ''
+}
+
 export const Thumbnail = () => {
     let ccgOutput = 0 // this.props.ccgOutputProps;
-
-    const getThumb = (fileName: string) => {
-        let thumb = reduxState.media[0].thumbnailList.filter(
-            (item: IThumbFile) => {
-                return item.name === fileName
-            }
-        )
-        return thumb[0]?.thumbnail || ''
-    }
 
     const renderThumb = (item: IMediaFile, index) => {
         if (reduxState.appNav[0].selectView === 0) {

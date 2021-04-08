@@ -5,7 +5,7 @@ export const UPDATE_THUMB_IST = 'updateThumbList'
 export const SET_TALLY_FILE_NAME = 'setTallyFileName'
 export const SET_LOOP = 'setLoop'
 export const SET_MIX = 'setMix'
-export const SET_AUTOPLAY = 'setAutoplay'
+export const SET_MANUAL_START = 'setManualStart'
 export const SET_TIME = 'setTime'
 
 export const updateMediaFiles = (fileList: IMediaFile[]) => {
@@ -46,11 +46,14 @@ export const setMix = (channelIndex: number, mixState: boolean) => {
     }
 }
 
-export const setAutoplay = (channelIndex: number, autoplayState: boolean) => {
+export const setManualStart = (
+    channelIndex: number,
+    manualstartState: boolean
+) => {
     return {
-        type: SET_AUTOPLAY,
+        type: SET_MANUAL_START,
         channelIndex: channelIndex,
-        autoplayState: autoplayState,
+        manualstartState: manualstartState,
     }
 }
 
