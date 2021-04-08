@@ -3,7 +3,7 @@ import { logger } from '../utils/logger'
 import * as IO from '../../model/SocketIoConstants'
 
 import { socketServer } from './expressHandler'
-import { playMedia } from '../utils/CcgLoadPlay'
+import { mixMedia, playMedia } from '../utils/CcgLoadPlay'
 import {
     setLoop,
     setMix,
@@ -32,7 +32,11 @@ export function socketIoHandlers(socket: any) {
             )
         })
         .on(IO.PGM_PLAY, (channelIndex: number, fileName: string) => {
-            playMedia(channelIndex, 9, fileName)
+            if (!reduxState.media[0].mixState[channelIndex]) {
+                playMedia(channelIndex, 9, fileName)
+            } else {
+                mixMedia(channelIndex, 9, fileName)
+            }
             console.log(
                 'Play out :',
                 fileName,
