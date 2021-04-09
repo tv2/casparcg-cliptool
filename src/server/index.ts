@@ -1,3 +1,6 @@
+import { loadSettings } from './utils/SettingsStorage'
+loadSettings()
+
 import { serverInit } from './handlers/expressHandler'
 serverInit()
 

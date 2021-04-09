@@ -1,8 +1,8 @@
-import { SET_TAB_DATA, UPDATE_SETTINGS } from './settingsAction'
+import { SET_GENERICS, SET_TAB_DATA, UPDATE_SETTINGS } from './settingsAction'
 export interface ISettings {
     ccgConfig: ICcgConfig
     tabData: ITabData[]
-    generic: IGenericSettings
+    generics: IGenericSettings
 }
 export interface ITabData {
     key: string
@@ -37,7 +37,7 @@ const defaultSettingsReducerState: ISettings[] = [
             channels: [],
         },
         tabData: [],
-        generic: {
+        generics: {
             transistionTime: 16,
             ccgIp: '0.0.0.0',
             ccgAmcpPort: 5250,
@@ -61,6 +61,9 @@ export const settings = (
             return nextState
         case SET_TAB_DATA:
             nextState[0].tabData = [...action.tabData]
+            return nextState
+        case SET_GENERICS:
+            nextState[0].generics = { ...action.generics }
             return nextState
         default:
             return nextState

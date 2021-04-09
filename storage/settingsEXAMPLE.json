@@ -1,0 +1,9 @@
+{
+    "transistionTime": 16,
+    "ccgIp": "192.168.0.7",
+    "ccgAmcpPort": 5250,
+    "ccgOscPort": 5253,
+    "ccgDefaultLayer": 10,
+    "outputLabels": [],
+    "outputFolders": []
+}

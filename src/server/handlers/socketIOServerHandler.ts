@@ -9,6 +9,9 @@ import {
     setMix,
     setManualStart,
 } from '../../model/reducers/mediaActions'
+import { setGenerics } from '../../model/reducers/settingsAction'
+import { IGenericSettings } from '../../model/reducers/settingsReducer'
+import { saveSettings } from '../utils/SettingsStorage'
 
 export function socketIoHandlers(socket: any) {
     logger.info('SETTING UP SOCKET IO MAIN HANDLERS', {})
@@ -67,5 +70,11 @@ export function socketIoHandlers(socket: any) {
         .on(IO.SET_MIX_STATE, (channelIndex: number, state: boolean) => {
             reduxStore.dispatch(setMix(channelIndex, state))
             socketServer.emit(IO.MIX_STATE_UPDATE, reduxState.media[0].mixState)
+        })
+        .on(IO.SET_GENERICS, (generics: IGenericSettings) => {
+            console.log('Updating and storing Generic Settings Serverside')
+            reduxStore.dispatch(setGenerics(generics))
+            saveSettings()
+            socketServer.emit(IO.SETTINGS_UPDATE, reduxState.settings[0])
         })
 }

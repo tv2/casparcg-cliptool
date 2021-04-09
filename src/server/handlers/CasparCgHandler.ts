@@ -20,8 +20,8 @@ import { setTabData, updateSettings } from '../../model/reducers/settingsAction'
 
 //Setup AMCP Connection:
 export const ccgConnection = new CasparCG({
-    host: reduxState.settings[0].generic.ccgIp,
-    port: reduxState.settings[0].generic.ccgAmcpPort,
+    host: reduxState.settings[0].generics.ccgIp,
+    port: reduxState.settings[0].generics.ccgAmcpPort,
     autoConnect: true,
 })
 
@@ -29,7 +29,7 @@ const setupOscServer = () => {
     let _this2 = this
     const oscConnection = new osc.UDPPort({
         localAddress: '0.0.0.0',
-        localPort: reduxState.settings[0].generic.ccgOscPort,
+        localPort: reduxState.settings[0].generics.ccgOscPort,
     })
 
     oscConnection
@@ -124,9 +124,9 @@ const casparCGconnection = () => {
         .then((response) => {
             console.log(
                 'AMCP connection established to: ',
-                reduxState.settings[0].generic.ccgIp,
+                reduxState.settings[0].generics.ccgIp,
                 ':',
-                reduxState.settings[0].generic.ccgAmcpPort
+                reduxState.settings[0].generics.ccgAmcpPort
             )
             console.log('CasparCG Server Version :', response.response.data)
         })
