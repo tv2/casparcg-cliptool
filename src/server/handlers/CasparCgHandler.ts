@@ -136,15 +136,7 @@ const casparCGconnection = () => {
     ccgConnection.getCasparCGConfig().then((response) => {
         console.log('CasparCG Config :', response)
         reduxStore.dispatch(updateSettings(response.channels))
-        let tabData: ITabData[] = response.channels.map(
-            (channel: any, index: number) => {
-                return {
-                    key: String(index),
-                    title: 'Output ' + String(index + 1),
-                }
-            }
-        )
-        reduxStore.dispatch(setTabData(tabData))
+        reduxStore.dispatch(setTabData(response.channels.length))
         socketServer.emit(IO.TAB_DATA_UPDATE, reduxState.settings[0].tabData)
     })
     startTimerControlledServices()

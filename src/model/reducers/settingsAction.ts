@@ -1,4 +1,5 @@
-import { IGenericSettings } from './settingsReducer'
+import { IGenericSettings, ITabData } from './settingsReducer'
+import { reduxState } from './store'
 
 export const UPDATE_SETTINGS = 'updateSettings'
 export const SET_TAB_DATA = 'setTabData'
@@ -11,7 +12,16 @@ export const updateSettings = (settings) => {
     }
 }
 
-export const setTabData = (tabData) => {
+export const setTabData = (amount: number) => {
+    let tabData: ITabData[] = []
+    for (let i = 0; i < amount; i++) {
+        tabData.push({
+            key: String(i),
+            title:
+                reduxState.settings[0].generics.outputLabels[i] ||
+                'Output ' + String(i + 1),
+        })
+    }
     return {
         type: SET_TAB_DATA,
         tabData: tabData,

@@ -43,8 +43,8 @@ const defaultSettingsReducerState: ISettings[] = [
             ccgAmcpPort: 5250,
             ccgOscPort: 5253,
             ccgDefaultLayer: 10,
-            outputLabels: [],
-            outputFolders: [],
+            outputLabels: ['', '', '', '', '', '', '', ''],
+            outputFolders: ['', '', '', '', '', '', '', ''],
         },
     },
 ]

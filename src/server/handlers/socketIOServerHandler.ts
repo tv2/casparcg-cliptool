@@ -77,4 +77,7 @@ export function socketIoHandlers(socket: any) {
             saveSettings()
             socketServer.emit(IO.SETTINGS_UPDATE, reduxState.settings[0])
         })
+        .on(IO.RESTART_SERVER, () => {
+            process.exit(0)
+        })
 }

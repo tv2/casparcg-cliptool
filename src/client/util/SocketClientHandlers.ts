@@ -12,7 +12,11 @@ import {
     updateThumbFileList,
 } from '../../model/reducers/mediaActions'
 import { IMediaFile, IThumbFile } from '../../model/reducers/mediaReducer'
-import { setTabData, updateSettings } from '../../model/reducers/settingsAction'
+import {
+    setGenerics,
+    setTabData,
+    updateSettings,
+} from '../../model/reducers/settingsAction'
 import { ISettings } from '../../model/reducers/settingsReducer'
 
 export const socket = io()
@@ -77,6 +81,7 @@ socket.on(IO.MANUAL_START_STATE_UPDATE, (manualstart: boolean[]) => {
 })
 
 socket.on(IO.SETTINGS_UPDATE, (payload: ISettings) => {
+    reduxStore.dispatch(setGenerics(payload.generics))
     reduxStore.dispatch(updateSettings(payload.ccgConfig.channels))
-    reduxStore.dispatch(setTabData(payload.tabData))
+    reduxStore.dispatch(setTabData(payload.tabData.length))
 })

@@ -5,6 +5,7 @@ import { reduxState, reduxStore } from '../../model/reducers/store'
 import { setGenerics } from '../../model/reducers/settingsAction'
 import { socket } from '../util/SocketClientHandlers'
 import * as IO from '../../model/SocketIoConstants'
+import { TOGGLE_SHOW_SETTINGS } from '../../model/reducers/appNavAction'
 
 //Set style for Select dropdown component:
 const selectorColorStyles = {
@@ -24,69 +25,23 @@ const selectorColorStyles = {
 }
 
 export const SettingsPage = () => {
+    const handleSettingsPage = () => {
+        reduxStore.dispatch({
+            type: TOGGLE_SHOW_SETTINGS,
+        })
+    }
+
     const handleChange = (event) => {
         let generics = { ...reduxState.settings[0].generics }
         generics[event.target.name] = event.target.value
         reduxStore.dispatch(setGenerics(generics))
     }
 
-    const handleTabTitle = (event) => {
-        var settingsCopy = Object.assign({})
-        settingsCopy.tabData[event.target.name].title = event.target.value
-    }
-
-    const handleTabMediaFolder = (index, event) => {}
     const handleSave = () => {
         socket.emit(IO.SET_GENERICS, reduxState.settings[0].generics)
     }
 
-    const RenderOutputSettings = () => {
-        console.log('Settings for Output initialized')
-        return (
-            <div>
-                {reduxState.settings[0].ccgConfig.channels.map(
-                    (item, index) => {
-                        return (
-                            <div className="Settings-channel-form">
-                                <label className="Settings-input-field">
-                                    OUTPUT {index + 1} NAME :
-                                    <br />
-                                    <input
-                                        name={String(index)}
-                                        type="text"
-                                        value={
-                                            reduxState.settings[0].generics
-                                                .outputLabels[index]
-                                        }
-                                        onChange={(event) =>
-                                            handleChange(event)
-                                        }
-                                    />
-                                </label>
-                                <label className="Settings-input-field">
-                                    MEDIAFOLDER :
-                                    <Select
-                                        styles={selectorColorStyles}
-                                        className="Settings-input-selector"
-                                        value={{
-                                            label: 'item.subFolder',
-                                            value: 'item.subFolder',
-                                        }}
-                                        onChange={(event) =>
-                                            handleTabMediaFolder(index, event)
-                                        }
-                                        options={[
-                                            { value: 'VALUE', label: 'LABEL' },
-                                        ]}
-                                    />
-                                </label>
-                            </div>
-                        )
-                    }
-                )}
-            </div>
-        )
-    }
+
 
     return (
         <div className="Settings-body">
@@ -149,14 +104,74 @@ export const SettingsPage = () => {
                     </label>
                 </div>
                 <hr />
-                <div>
-                    <RenderOutputSettings />
-                </div>
             </form>
+            <RenderOutputSettings />
             <hr />
-            <button onClick={()=>{handleSave()} }
-            >SAVE SETTINGS</button>
-            <button>RESTART SERVER</button>
+            <button
+                onClick={() => {
+                    handleSave()
+                }}
+            >
+                UPDATE SERVER SETTINGS
+            </button>
+            <button onClick={() => socket.emit(IO.RESTART_SERVER)}>
+                RESTART SERVER
+            </button>
+            <button onClick={() => handleSettingsPage()}>EXIT</button>
+        </div>
+    )
+}
+
+const RenderOutputSettings = () => {
+    const handleOutputLabel = (event) => {
+        let generics = { ...reduxState.settings[0].generics }
+        generics.outputLabels[parseInt(event.target.name)] = event.target.value
+        reduxStore.dispatch(setGenerics(generics))
+    }
+
+    const handleTabMediaFolder = (index, event) => {}
+
+
+    return (
+        <div>
+            {reduxState.settings[0].ccgConfig.channels.map(
+                (item, index) => {
+                    return (
+                        <form className="Settings-channel-form" key={index}>
+                            <label className="Settings-input-field">
+                                OUTPUT {index + 1} LABEL :
+                                <br />
+                                <input
+                                    name={String(index)}
+                                    type="text"
+                                    value={
+                                        reduxState.settings[0].generics
+                                            .outputLabels[index]
+                                    }
+                                    onChange={handleOutputLabel}
+                                />
+                            </label>
+                            <label className="Settings-input-field">
+                                MEDIAFOLDER :
+                                <Select
+                                    styles={selectorColorStyles}
+                                    className="Settings-input-selector"
+                                    value={{
+                                        label: 'item.subFolder',
+                                        value: 'item.subFolder',
+                                    }}
+                                    onChange={(event) =>
+                                        handleTabMediaFolder(index, event)
+                                    }
+                                    options={[
+                                        { value: 'VALUE', label: 'LABEL' },
+                                    ]}
+                                />
+                            </label>
+                        </form>
+                    )
+                }
+            )}
         </div>
     )
 }
