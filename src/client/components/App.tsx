@@ -20,7 +20,7 @@ import '../css/App-control-view-header.css'
 import '../css/App-text-view-header.css'
 import { socket } from '../util/SocketClientHandlers'
 import { secondsToTimeCode } from '../util/TimeCodeToString'
-import { SET_ACTIVE_TAB, TOGGLE_SHOW_SETTINGS } from '../../model/reducers/appNavAction'
+import { setActiveTab, SET_ACTIVE_TAB, TOGGLE_SHOW_SETTINGS } from '../../model/reducers/appNavAction'
 
 const MIX_DURATION = 6
 
@@ -61,17 +61,14 @@ export const App = () => {
         )
     }
 
-    const setActiveTab = (tab) => {
-        reduxStore.dispatch({
-            type: SET_ACTIVE_TAB,
-            data: tab,
-        })
+    const setOutput = (tab: number) => {
+        reduxStore.dispatch(setActiveTab(tab))
     }
 
     const RenderTime = () => {
         return (
             <button className="App-header-pgm-counter">
-                {secondsToTimeCode(reduxState.media[0].time[0])}
+                {secondsToTimeCode(reduxState.media[0].time[reduxState.appNav[0].activeTab])}
             </button>
         )
     }
@@ -106,7 +103,7 @@ export const App = () => {
                     <img src={''} className="App-header-pvw-thumbnail-image" />
                     <RenderTime />
                     <img
-                        src={getThumb(reduxState.media[0].tallyFile[0])}
+                        src={getThumb(reduxState.media[0].tallyFile[reduxState.appNav[0].activeTab])}
                         className="App-header-pgm-thumbnail-image"
                     />
                 </div>
@@ -169,7 +166,7 @@ export const App = () => {
                         onClick={() =>
                             socket.emit(
                                 IO.PGM_PLAY,
-                                reduxState.appNav[0].activeTab + 1
+                                reduxState.appNav[0].activeTab
                             )
                         }
                     >
@@ -210,7 +207,7 @@ export const App = () => {
                     <button
                         className="App-text-view-start-button"
                         onClick={() =>
-                            socket.emit(IO.PGM_PLAY, appNav[0].activeTab + 1)
+                            socket.emit(IO.PGM_PLAY, appNav[0].activeTab)
                         }
                     >
                         START
@@ -229,6 +226,7 @@ export const App = () => {
             )
         })
     }
+
     return (
         <div className="App">
             {reduxState.appNav[0].selectView === 0 ? <RenderFullHeader /> : ''}
@@ -241,7 +239,7 @@ export const App = () => {
             <div className="App-body">
                 <Tabs
                     tabs={reduxState.settings[0].tabData}
-                    onChange={(tab, index) => setActiveTab(index)}
+                    onChange={(tab, index) => setOutput(index)}
                 >
                     {renderTabData()}
                 </Tabs>

@@ -68,17 +68,6 @@ const setupOscServer = () => {
                         ])
                     )
                 }
-                /*
-                if (message.address.includes('loop')) {
-                    ccgChannel[channelIndex].layer[layerIndex].foreground.loop =
-                        message.args[0]
-                }
-                if (message.address.includes('/paused')) {
-                    ccgChannel[channelIndex].layer[
-                        layerIndex
-                    ].foreground.paused = message.args[0]
-                }
-                */
             }
         })
         .on('error', (error: any) => {

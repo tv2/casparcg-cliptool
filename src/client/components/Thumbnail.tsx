@@ -37,7 +37,7 @@ export const Thumbnail = () => {
                         className="thumbnailImage"
                         style={Object.assign(
                             {},
-                            reduxState.media[0].tallyFile[0] === item.name
+                            reduxState.media[0].tallyFile[reduxState.appNav[0].activeTab] === item.name
                                 ? { borderWidth: '4px' }
                                 : { borderWidth: '0px' }
                         )}
@@ -49,8 +49,8 @@ export const Thumbnail = () => {
                         }}
                     ></button>
                     <a className="thumbnail-timecode">
-                        {reduxState.media[0].tallyFile[0] === item.name
-                            ? secondsToTimeCode(reduxState.media[0].time[0])
+                        {reduxState.media[0].tallyFile[reduxState.appNav[0].activeTab] === item.name
+                            ? secondsToTimeCode(reduxState.media[0].time[reduxState.appNav[0].activeTab])
                             : ''}
                     </a>
                     <p className="text">

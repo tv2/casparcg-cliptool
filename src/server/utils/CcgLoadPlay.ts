@@ -9,7 +9,7 @@ export const playMedia = (
     fileName: string
 ) => {
     ccgConnection.play(
-        channelIndex,
+        channelIndex + 1,
         layerIndex + 1,
         fileName,
         reduxState.media[0].loopState[channelIndex] || false
@@ -22,7 +22,7 @@ export const mixMedia = (
     fileName: string
 ) => {
     ccgConnection.play(
-        channelIndex,
+        channelIndex + 1,
         layerIndex + 1,
         fileName,
         reduxState.media[0].loopState[channelIndex] || false,
@@ -37,7 +37,7 @@ export const loadMedia = (
     fileName: string
 ) => {
     ccgConnection.load(
-        channelIndex,
+        channelIndex + 1,
         layerIndex + 1,
         fileName,
         reduxState.media[0].loopState[channelIndex] || false
