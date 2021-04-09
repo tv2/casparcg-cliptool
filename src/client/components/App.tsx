@@ -7,7 +7,7 @@ import * as IO from '../../model/SocketIoConstants'
 
 // Components:
 import { Thumbnail, getThumb } from './Thumbnail'
-import SettingsPage from './Settings'
+import { SettingsPage } from './Settings'
 
 //Utils:
 import HandleShortcuts from '../util/HandleShortcuts'
@@ -20,7 +20,7 @@ import '../css/App-control-view-header.css'
 import '../css/App-text-view-header.css'
 import { socket } from '../util/SocketClientHandlers'
 import { secondsToTimeCode } from '../util/TimeCodeToString'
-import { SET_ACTIVE_TAB } from '../../model/reducers/appNavAction'
+import { SET_ACTIVE_TAB, TOGGLE_SHOW_SETTINGS } from '../../model/reducers/appNavAction'
 
 const MIX_DURATION = 6
 
@@ -31,7 +31,7 @@ export const App = () => {
     //Handler functions:
     const handleSettingsPage = () => {
         reduxStore.dispatch({
-            type: 'TOGGLE_SHOW_SETTINGS',
+            type: TOGGLE_SHOW_SETTINGS,
         })
     }
 

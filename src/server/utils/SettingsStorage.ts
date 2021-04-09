@@ -1,7 +1,6 @@
 const fs = require('fs')
 
 export const loadSettings = (storeRedux) => {
-    //const folder = electron.remote.app.getPath('userData');
     var settingsInterface = storeRedux.settings[0]
     try {
         const settingsFromFile = JSON.parse(fs.readFileSync('/settings.json'))

@@ -77,6 +77,6 @@ socket.on(IO.MANUAL_START_STATE_UPDATE, (manualstart: boolean[]) => {
 })
 
 socket.on(IO.SETTINGS_UPDATE, (payload: ISettings) => {
-    reduxStore.dispatch(updateSettings(payload.ccgSettings.channels))
+    reduxStore.dispatch(updateSettings(payload.ccgConfig.channels))
     reduxStore.dispatch(setTabData(payload.tabData))
 })

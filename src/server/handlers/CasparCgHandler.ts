@@ -2,14 +2,10 @@
 import os from 'os' // Used to display (log) network addresses on local machine
 import osc from 'osc' //Using OSC fork from PieceMeta/osc.js as it has excluded hardware serialport support and thereby is crossplatform
 
-//Types:
-import * as DEFAULTS from '../utils/CONSTANTS'
-
 //Modules:
 import { CasparCG } from 'casparcg-connection'
 import { reduxState, reduxStore } from '../../model/reducers/store'
 import {
-    setLoop,
     setTallyFileName,
     setTime,
     updateMediaFiles,
@@ -24,8 +20,8 @@ import { setTabData, updateSettings } from '../../model/reducers/settingsAction'
 
 //Setup AMCP Connection:
 export const ccgConnection = new CasparCG({
-    host: DEFAULTS.CCG_HOST,
-    port: DEFAULTS.CCG_AMCP_PORT,
+    host: reduxState.settings[0].generic.ccgIp,
+    port: reduxState.settings[0].generic.ccgAmcpPort,
     autoConnect: true,
 })
 
@@ -33,7 +29,7 @@ const setupOscServer = () => {
     let _this2 = this
     const oscConnection = new osc.UDPPort({
         localAddress: '0.0.0.0',
-        localPort: DEFAULTS.DEFAULT_OSC_PORT,
+        localPort: reduxState.settings[0].generic.ccgOscPort,
     })
 
     oscConnection
@@ -128,9 +124,9 @@ const casparCGconnection = () => {
         .then((response) => {
             console.log(
                 'AMCP connection established to: ',
-                DEFAULTS.CCG_HOST,
+                reduxState.settings[0].generic.ccgIp,
                 ':',
-                DEFAULTS.CCG_AMCP_PORT
+                reduxState.settings[0].generic.ccgAmcpPort
             )
             console.log('CasparCG Server Version :', response.response.data)
         })
@@ -151,7 +147,6 @@ const casparCGconnection = () => {
         reduxStore.dispatch(setTabData(tabData))
         socketServer.emit(IO.TAB_DATA_UPDATE, reduxState.settings[0].tabData)
     })
-
     startTimerControlledServices()
 }
 

@@ -1,12 +1,7 @@
-import React, { Component } from 'react';
+import React from 'react';
 import '../css/Settings.css';
 import Select from 'react-select';
 import { reduxState } from '../../model/reducers/store'
-
-
-
-//Redux:
-import { connect } from "react-redux";
 
 
 //Set style for Select dropdown component:
@@ -22,203 +17,79 @@ const selectorColorStyles = {
 };
 
 
-class SettingsPage extends Component {
-    localState: any
-    constructor(props) {
-        super(props);
-        this.localState = {
-            settings: reduxState.settings[0],
-        };
-        this.handleChange = this.handleChange.bind(this);
-        this.handleDisableDragNDrop = this.handleDisableDragNDrop.bind(this);
-        this.handleDisableOverlay = this.handleDisableOverlay.bind(this);
-        this.handleTabTitle = this.handleTabTitle.bind(this);
-        this.handleTabMediaFolder = this.handleTabMediaFolder.bind(this);
-        this.handleTabDataFolder = this.handleTabDataFolder.bind(this);
-        this.handleTabOverlayFolder = this.handleTabOverlayFolder.bind(this);
-        this.handleTabWipe = this.handleTabWipe.bind(this);
-        this.handleTabWipeOffset = this.handleTabWipeOffset.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
-        this.renderChannelSettings = this.renderChannelSettings.bind(this);
+export const SettingsPage = () => {
+
+
+    const handleChange = (event) => {
     }
 
-    componentDidMount() {
-    }
 
-    handleChange(event) {
-        var settingsCopy= Object.assign({}, this.localState.settings);
-        settingsCopy[event.target.name] = event.target.value;
-        this.setState(
-            {settings: settingsCopy}
-        );
-    }
-
-    handleDisableDragNDrop(event) {
-        var settingsCopy= Object.assign({}, this.localState.settings);
-        settingsCopy.disableDragNDrop = event.target.checked;
-        this.setState(
-            {settings: settingsCopy}
-        );
-    }
-
-    handleDisableOverlay(event) {
-        var settingsCopy= Object.assign({}, this.localState.settings);
-        settingsCopy.disableOverlay = event.target.checked;
-        this.setState(
-            {settings: settingsCopy}
-        );
-    }
-
-    handleTabTitle(event) {
-        var settingsCopy= Object.assign({}, this.localState.settings);
+    const handleTabTitle = (event) => {
+        var settingsCopy= Object.assign({});
         settingsCopy.tabData[event.target.name].title = event.target.value;
-        this.setState(
-            {settings: settingsCopy}
-        );
     }
 
-    handleTabMediaFolder(index, event) {
-        var settingsCopy= Object.assign({}, this.localState.settings);
-        settingsCopy.tabData[index].subFolder = event.value + "/";
-        this.setState(
-            {settings: settingsCopy}
-        );
+    const handleTabMediaFolder = (index, event) => {
     }
 
 
-    handleTabDataFolder(index, event) {
-        var settingsCopy= Object.assign({}, this.localState.settings);
-        settingsCopy.tabData[index].dataFolder = event.value  + "/";
-        this.setState(
-            {settings: settingsCopy}
-        );
-    }
-
-    handleTabOverlayFolder(index, event) {
-        var settingsCopy= Object.assign({}, this.localState.settings);
-        settingsCopy.tabData[index].overlayFolder = event.value  + "/";
-        this.setState(
-            {settings: settingsCopy}
-        );
-    }
-
-    handleTabWipe(event) {
-        var settingsCopy= Object.assign({}, this.localState.settings);
-        settingsCopy.tabData[event.target.name].wipe = event.target.value;
-        this.setState(
-            {settings: settingsCopy}
-        );
-    }
-
-
-    handleTabWipeOffset(event) {
-        var settingsCopy= Object.assign({}, this.localState.settings);
-        settingsCopy.tabData[event.target.name].wipeOffset = event.target.value;
-        this.setState(
-            {settings: settingsCopy}
-        );
-    }
-
-    handleSubmit(event) {
-    }
-
-    renderChannelSettings(item, index) {
+    const RenderOutputSettings = (index) => {
         return (
-            <div className="Settings-channel-form" onSubmit={this.handleSubmit}>
+            <div className="Settings-channel-form">
                 <label className="Settings-input-field">
-                    OUT {index+1} NAME :
+                    OUTPUT {index+1} NAME :
                     <br/>
-                    <input name={index} type="text" value={item.title} onChange={this.handleTabTitle} />
+                    <input name={index} type="text" value={reduxState.settings[0].generic.outputLabels[index]} onChange={(event) => handleChange(event)} />
                 </label>
                 <label className="Settings-input-field">
                     MEDIAFOLDER :
                     <Select
                         styles={selectorColorStyles}
                         className="Settings-input-selector"
-                        value={{label: item.subFolder, value: item.subFolder}}
-                        onChange={(event) => this.handleTabMediaFolder(index, event)}
+                        value={{label: 'item.subFolder', value: 'item.subFolder'}}
+                        onChange={(event) => handleTabMediaFolder(index, event)}
                         options={[{value: 'VALUE', label: 'LABEL'}]}
                     />
-                </label>
-                <label className="Settings-input-field">
-                    DATAFOLDER :
-                    <Select
-                        styles={selectorColorStyles}
-                        className="Settings-input-selector"
-                        value={{label: item.dataFolder, value: item.dataFolder}}
-                        onChange={(event) => this.handleTabDataFolder(index, event)}
-                        options={[{value: 'VALUE', label: 'LABEL'}]}
-                    />
-                </label>
-                <label className="Settings-input-field">
-                    TEMPLATEFOLDER :
-                    <Select
-                        styles={selectorColorStyles}
-                        className="Settings-input-selector"
-                        value={{label: item.overlayFolder, value: item.overlayFolder}}
-                        onChange={(event) => this.handleTabOverlayFolder(index, event)}
-                        options={[{value: 'VALUE', label: 'LABEL'}]}
-                    />
-                </label>
-                <label className="Settings-input-field">
-                    WIPE :
-                    <br/>
-                    <input name={index} type="text" value={item.wipe} onChange={this.handleTabWipe} />
-                </label>
-                <label className="Settings-input-field">
-                    WIPE OFFSET :
-                    <br/>
-                    <input name={index} type="text" value={item.wipeOffset} onChange={this.handleTabWipeOffset} />
                 </label>
             </div>
         )
     }
 
-    render() {
         return (
             <div className="Settings-body">
             <p className="Settings-header">SETTINGS :</p>
-            <form className="Settings-form" onSubmit={this.handleSubmit}>
+            <form className="Settings-form">
                 <div className="Settings-channel-form">
                     <label className="Settings-input-field">
                         IP ADDRESS :
                         <br/>
-                        <input name="ipAddress" type="text" value={this.localState.settings.ipAddress} onChange={this.handleChange} />
+                        <input name="ipAddress" type="text" value={''} onChange={handleChange} />
                     </label>
                     <label className="Settings-input-field">
-                        PORT :
+                        AMCP PORT :
                         <br/>
-                        <input name="port" type="text" value={this.localState.settings.port} onChange={this.handleChange} />
+                        <input name="port" type="text" value={''} onChange={handleChange} />
                     </label>
                     <label className="Settings-input-field">
-                        DISABLE DRAG´N´DROP :
+                        OSC PORT (into ClipTool) :
                         <br/>
-                        <input type="checkbox" checked={this.localState.settings.disableDragNDrop} onChange={this.handleDisableDragNDrop} />
+                        <input name="port" type="text" value={''} onChange={handleChange} />
                     </label>
                     <label className="Settings-input-field">
-                    CLIPTOOL ONLY :
-                    <br/>
-                    <input type="checkbox" checked={this.localState.settings.disableOverlay} onChange={this.handleDisableOverlay} />
-                </label>
+                        DEFAULT LAYER :
+                        <br/>
+                        <input name="port" type="text" value={''} onChange={handleChange} />
+                    </label>
                 </div>
-
-                <br/>
-                {this.renderChannelSettings(this.localState.settings.tabData[0], 0)}
-                {this.renderChannelSettings(this.localState.settings.tabData[1], 1)}
-                {this.renderChannelSettings(this.localState.settings.tabData[2], 2)}
-                {this.renderChannelSettings(this.localState.settings.tabData[3], 3)}
-                <input className="Save-button" type="submit" value="SAVE SETTINGS" />
+                <hr/>
+                <div>
+                    {reduxState.settings[0].ccgConfig.channels.map((index) => {
+                        <RenderOutputSettings />
+                    })}
+                </div>
             </form>
             </div>
         );
-    }
+
 }
 
-
-const mapStateToProps = (state) => {
-    return {
-        store: state
-    }
-}
-
-export default connect(mapStateToProps)(SettingsPage);
