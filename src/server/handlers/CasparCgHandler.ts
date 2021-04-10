@@ -193,9 +193,8 @@ const startTimerControlledServices = () => {
                             let outputMedia = thumbNailList.filter(
                                 (thumnbail: IThumbFile) => {
                                     return thumnbail.name.includes(
-                                        reduxState.media[0].folderList[
-                                            channelIndex
-                                        ]
+                                        reduxState.settings[0].generics
+                                            .outputFolders[channelIndex]
                                     )
                                 }
                             )
@@ -237,7 +236,8 @@ const startTimerControlledServices = () => {
                             let outputMedia = payload.response.data.filter(
                                 (file) => {
                                     return file.name.includes(
-                                        folders[channelIndex]
+                                        reduxState.settings[0].generics
+                                            .outputFolders[channelIndex]
                                     )
                                 }
                             )
