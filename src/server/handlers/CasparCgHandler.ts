@@ -8,6 +8,7 @@ import { reduxState, reduxStore } from '../../model/reducers/store'
 import {
     setTallyFileName,
     setTime,
+    updateFolderList,
     updateMediaFiles,
     updateThumbFileList,
 } from '../../model/reducers/mediaActions'
@@ -193,6 +194,23 @@ const startTimerControlledServices = () => {
                         IO.MEDIA_UPDATE,
                         reduxState.media[0].mediaFiles
                     )
+                    let folders: string[] = []
+                    reduxState.media[0].mediaFiles.forEach((media) => {
+                        let path =
+                            media.name.substring(
+                                0,
+                                media.name.lastIndexOf('/')
+                            ) || ''
+                        folders.push(path)
+                    })
+                    folders = [...new Set(folders)]
+                    console.log(folders)
+                    reduxStore.dispatch(updateFolderList(folders))
+                    socketServer.emit(
+                        IO.FOLDERS_UPDATE,
+                        reduxState.media[0].folderList
+                    )
+
                     waitingForResponse = false
                 })
                 .catch((error) => {

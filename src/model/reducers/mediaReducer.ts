@@ -21,6 +21,7 @@ export interface IThumbFile {
 export interface IMedia {
     mediaFiles: IMediaFile[]
     thumbnailList: IThumbFile[]
+    folderList: string[]
     tallyFile: string[]
     loopState: boolean[]
     mixState: boolean[]
@@ -33,6 +34,7 @@ const defaultMediaState = (): Array<IMedia> => {
         {
             mediaFiles: [],
             thumbnailList: [],
+            folderList: [],
             tallyFile: [],
             loopState: [],
             mixState: [],
@@ -51,6 +53,9 @@ export const media = (state: Array<IMedia> = defaultMediaState(), action) => {
             return nextState
         case IO.UPDATE_THUMB_IST:
             nextState[0].thumbnailList = action.fileList
+            return nextState
+        case IO.UPDATE_FOLDER_LIST:
+            nextState[0].folderList = action.folderList
             return nextState
         case IO.SET_TALLY_FILE_NAME:
             nextState[0].tallyFile[action.channelIndex] = action.filename

@@ -10,6 +10,7 @@ import {
     setTime,
     updateMediaFiles,
     updateThumbFileList,
+    updateFolderList,
 } from '../../model/reducers/mediaActions'
 import { IMediaFile, IThumbFile } from '../../model/reducers/mediaReducer'
 import {
@@ -26,6 +27,10 @@ console.log('Initialising SocketClient')
 socket.on(IO.MEDIA_UPDATE, (payload: IMediaFile[]) => {
     reduxStore.dispatch(updateMediaFiles(payload))
     console.log('Client state :', reduxState)
+})
+
+socket.on(IO.FOLDERS_UPDATE, (payload: string[]) => {
+    reduxStore.dispatch(updateFolderList(payload))
 })
 
 socket.on(IO.THUMB_UPDATE, (payload: IThumbFile[]) => {

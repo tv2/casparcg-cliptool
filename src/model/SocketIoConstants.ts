@@ -2,6 +2,7 @@
 export const TIME_UPDATE = 'timeUpdate'
 export const MEDIA_UPDATE = 'mediaUpdate'
 export const THUMB_UPDATE = 'thumbUpdate'
+export const FOLDERS_UPDATE = 'foldersUpdate'
 export const TALLY_UPDATE = 'tallyUpdate'
 export const TAB_DATA_UPDATE = 'tabDataUpdate'
 export const SETTINGS_UPDATE = 'settingsUpdate'
