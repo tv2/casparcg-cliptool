@@ -4,14 +4,19 @@ export const UPDATE_MEDIA_FILES = 'updateMediaFiles'
 export const UPDATE_THUMB_IST = 'updateThumbList'
 export const UPDATE_FOLDER_LIST = 'updateFolderList'
 export const SET_TALLY_FILE_NAME = 'setTallyFileName'
+export const SET_NUMBER_OF_OUTPUTS = 'setNumberOfOutputs'
 export const SET_LOOP = 'setLoop'
 export const SET_MIX = 'setMix'
 export const SET_MANUAL_START = 'setManualStart'
 export const SET_TIME = 'setTime'
 
-export const updateMediaFiles = (fileList: IMediaFile[]) => {
+export const updateMediaFiles = (
+    channelIndex: number,
+    fileList: IMediaFile[]
+) => {
     return {
         type: UPDATE_MEDIA_FILES,
+        channelIndex: channelIndex,
         files: fileList,
     }
 }
@@ -23,10 +28,21 @@ export const updateFolderList = (folderList: string[]) => {
     }
 }
 
-export const updateThumbFileList = (fileList: IThumbFile[]) => {
+export const updateThumbFileList = (
+    channelIndex: number,
+    fileList: IThumbFile[]
+) => {
     return {
         type: UPDATE_THUMB_IST,
+        channelIndex: channelIndex,
         fileList: fileList,
+    }
+}
+
+export const setNumberOfOutputs = (amount: number) => {
+    return {
+        type: SET_NUMBER_OF_OUTPUTS,
+        amount: amount,
     }
 }
 

@@ -12,7 +12,7 @@ export const playMedia = (
         channelIndex + 1,
         layerIndex + 1,
         fileName,
-        reduxState.media[0].loopState[channelIndex] || false
+        reduxState.media[0].output[channelIndex].loopState || false
     )
 }
 
@@ -25,7 +25,7 @@ export const mixMedia = (
         channelIndex + 1,
         layerIndex + 1,
         fileName,
-        reduxState.media[0].loopState[channelIndex] || false,
+        reduxState.media[0].output[channelIndex].loopState || false,
         CcgEnum.Transition.MIX,
         MIX_DURATION
     )
@@ -40,6 +40,6 @@ export const loadMedia = (
         channelIndex + 1,
         layerIndex + 1,
         fileName,
-        reduxState.media[0].loopState[channelIndex] || false
+        reduxState.media[0].output[channelIndex].loopState || false
     )
 }

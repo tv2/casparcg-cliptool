@@ -7,6 +7,7 @@ import { CasparCG } from 'casparcg-connection'
 import { reduxState, reduxStore } from '../../model/reducers/store'
 import {
     setTallyFileName,
+    setNumberOfOutputs,
     setTime,
     updateFolderList,
     updateMediaFiles,
@@ -15,7 +16,7 @@ import {
 
 import { socketServer } from './expressHandler'
 import * as IO from '../../model/SocketIoConstants'
-import { IThumbFile } from '../../model/reducers/mediaReducer'
+import { IOutput, IThumbFile } from '../../model/reducers/mediaReducer'
 import { ITabData } from '../../model/reducers/settingsReducer'
 import { setTabData, updateSettings } from '../../model/reducers/settingsAction'
 
@@ -72,7 +73,7 @@ const setupOscServer = () => {
             }
         })
         .on('error', (error: any) => {
-            console.log('OSC error :', error)
+            console.log('error in OSC receive :', error)
         })
 
     oscConnection.open()
@@ -125,30 +126,41 @@ const casparCGconnection = () => {
         })
     ccgConnection.getCasparCGConfig().then((response) => {
         console.log('CasparCG Config :', response)
+        reduxStore.dispatch(setNumberOfOutputs(response.channels.length))
         reduxStore.dispatch(updateSettings(response.channels))
         reduxStore.dispatch(setTabData(response.channels.length))
         socketServer.emit(IO.TAB_DATA_UPDATE, reduxState.settings[0].tabData)
+
+        reduxState.media[0].output.forEach(
+            (output: IOutput, channelIndex: number) => {
+                socketServer.emit(
+                    IO.LOOP_STATEUPDATE,
+                    channelIndex,
+                    output.loopState
+                )
+                socketServer.emit(
+                    IO.MIX_STATE_UPDATE,
+                    channelIndex,
+                    output.mixState
+                )
+                socketServer.emit(
+                    IO.MANUAL_START_STATE_UPDATE,
+                    channelIndex,
+                    output.manualstartState
+                )
+            }
+        )
     })
     startTimerControlledServices()
 }
 
 const startTimerControlledServices = () => {
     //Update of timeleft is set to a default 40ms (same as 25FPS)
-    let tallyFilesUpdate: string[] = []
     setInterval(() => {
-        reduxState.media[0].time.forEach(
-            (time: [number, number], index: number) => {
-                socketServer.emit(IO.TIME_UPDATE, index, time)
-            }
-        )
-        reduxState.media[0].tallyFile.forEach(
-            (tallyFile: string, index: number) => {
-                if (tallyFilesUpdate[index] !== tallyFile) {
-                    socketServer.emit(IO.TALLY_UPDATE, index, tallyFile)
-                }
-            }
-        )
-        tallyFilesUpdate = [...reduxState.media[0].tallyFile]
+        reduxState.media[0].output.forEach((output: IOutput, index: number) => {
+            socketServer.emit(IO.TIME_UPDATE, index, output.time)
+            socketServer.emit(IO.TALLY_UPDATE, index, output.tallyFile)
+        })
     }, 40)
 
     //Check media files on server:
@@ -156,10 +168,7 @@ const startTimerControlledServices = () => {
     setInterval(() => {
         if (!waitingForResponse) {
             waitingForResponse = true
-            socketServer.emit(
-                IO.LOOP_STATEUPDATE,
-                reduxState.media[0].loopState
-            )
+
             ccgConnection.thumbnailList().then((thumbFile) => {
                 let thumbNails: IThumbFile[] = thumbFile.response.data.map(
                     (element: IThumbFile) => {
@@ -179,23 +188,35 @@ const startTimerControlledServices = () => {
                     }
                 )
                 Promise.all(thumbNails).then((thumbNailList: IThumbFile[]) => {
-                    reduxStore.dispatch(updateThumbFileList(thumbNailList))
-                    socketServer.emit(
-                        IO.THUMB_UPDATE,
-                        reduxState.media[0].thumbnailList
+                    reduxState.media[0].output.forEach(
+                        (output: IOutput, channelIndex: number) => {
+                            let outputMedia = thumbNailList.filter(
+                                (thumnbail: IThumbFile) => {
+                                    return thumnbail.name.includes(
+                                        reduxState.media[0].folderList[
+                                            channelIndex
+                                        ]
+                                    )
+                                }
+                            )
+                            socketServer.emit(
+                                IO.THUMB_UPDATE,
+                                channelIndex,
+                                outputMedia
+                            )
+                            reduxStore.dispatch(
+                                updateThumbFileList(channelIndex, thumbNailList)
+                            )
+                        }
                     )
                 })
             })
+
             ccgConnection
                 .cls()
                 .then((payload) => {
-                    reduxStore.dispatch(updateMediaFiles(payload.response.data))
-                    socketServer.emit(
-                        IO.MEDIA_UPDATE,
-                        reduxState.media[0].mediaFiles
-                    )
                     let folders: string[] = []
-                    reduxState.media[0].mediaFiles.forEach((media) => {
+                    payload.response.data.forEach((media) => {
                         let path =
                             media.name.substring(
                                 0,
@@ -211,6 +232,26 @@ const startTimerControlledServices = () => {
                         reduxState.media[0].folderList
                     )
 
+                    reduxState.media[0].output.forEach(
+                        (output: IOutput, channelIndex: number) => {
+                            let outputMedia = payload.response.data.filter(
+                                (file) => {
+                                    return file.name.includes(
+                                        folders[channelIndex]
+                                    )
+                                }
+                            )
+                            reduxStore.dispatch(
+                                updateMediaFiles(channelIndex, outputMedia)
+                            )
+                            socketServer.emit(
+                                IO.MEDIA_UPDATE,
+                                channelIndex,
+                                reduxState.media[0].output[channelIndex]
+                                    .mediaFiles
+                            )
+                        }
+                    )
                     waitingForResponse = false
                 })
                 .catch((error) => {

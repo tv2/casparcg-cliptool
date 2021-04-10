@@ -12,16 +12,16 @@ import { IMediaFile, IThumbFile } from '../../model/reducers/mediaReducer'
 import { socket } from '../util/SocketClientHandlers'
 import { PGM_LOAD, PGM_PLAY } from '../../model/SocketIoConstants'
 
-export const getThumb = (fileName: string) => {
-    let thumb = reduxState.media[0].thumbnailList.filter((item: IThumbFile) => {
+export const getThumb = (fileName: string, channelIndex: number) => {
+    let thumb = reduxState.media[0].output[channelIndex]?.thumbnailList.filter((item: IThumbFile) => {
         return item.name === fileName
-    })
+    }) || []
     return thumb[0]?.thumbnail || ''
 }
 
 export const Thumbnail = () => {
     const handleClickMedia = (fileName: string) => {
-        if (!reduxState.media[0].manualstartState[reduxState.appNav[0].activeTab]){
+        if (!reduxState.media[0].output[reduxState.appNav[0].activeTab]?.manualstartState){
             socket.emit(PGM_PLAY, reduxState.appNav[0].activeTab, fileName)
         } else {
             socket.emit(PGM_LOAD, reduxState.appNav[0].activeTab, fileName)
@@ -33,11 +33,11 @@ export const Thumbnail = () => {
             return (
                 <div>
                     <img
-                        src={getThumb(item.name)}
+                        src={getThumb( item.name, reduxState.appNav[0].activeTab || 0)}
                         className="thumbnailImage"
                         style={Object.assign(
                             {},
-                            reduxState.media[0].tallyFile[reduxState.appNav[0].activeTab] === item.name
+                            reduxState.media[0].output[reduxState.appNav[0].activeTab]?.tallyFile === item.name
                                 ? { borderWidth: '4px' }
                                 : { borderWidth: '0px' }
                         )}
@@ -49,8 +49,8 @@ export const Thumbnail = () => {
                         }}
                     ></button>
                     <a className="thumbnail-timecode">
-                        {reduxState.media[0].tallyFile[reduxState.appNav[0].activeTab] === item.name
-                            ? secondsToTimeCode(reduxState.media[0].time[reduxState.appNav[0].activeTab])
+                        {reduxState.media[0].output[reduxState.appNav[0].activeTab].tallyFile === item.name
+                            ? secondsToTimeCode(reduxState.media[0].output[reduxState.appNav[0].activeTab]?.time)
                             : ''}
                     </a>
                     <p className="text">
@@ -66,7 +66,7 @@ export const Thumbnail = () => {
                     className="thumbnail-text-view"
                     style={Object.assign(
                         {},
-                        reduxState.media[0].tallyFile[0] === item.name
+                        reduxState.media[0].output[reduxState.appNav[0].activeTab]?.tallyFile === item.name
                             ? { borderWidth: '4px' }
                             : { borderWidth: '0px' }
                     )}
@@ -84,7 +84,7 @@ export const Thumbnail = () => {
 
     return (
         <div className="flexBoxes">
-            {reduxState.media[0].mediaFiles.map(
+            {reduxState.media[0].output[reduxState.appNav[0].activeTab]?.mediaFiles.map(
                 (item: IMediaFile, index: number) => (
                     <div className="boxComponent" key={'item' + index}>
                         {renderThumb(item, index)}

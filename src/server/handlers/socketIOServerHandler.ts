@@ -12,6 +12,7 @@ import {
 import { setGenerics } from '../../model/reducers/settingsAction'
 import { IGenericSettings } from '../../model/reducers/settingsReducer'
 import { saveSettings } from '../utils/SettingsStorage'
+import { IOutput } from '../../model/reducers/mediaReducer'
 
 export function socketIoHandlers(socket: any) {
     logger.info('SETTING UP SOCKET IO MAIN HANDLERS', {})
@@ -28,14 +29,14 @@ export function socketIoHandlers(socket: any) {
         })
         .on(IO.GET_SETTINGS, () => {
             socketServer.emit(IO.SETTINGS_UPDATE, reduxState.settings[0])
-            reduxState.media[0].tallyFile.forEach(
-                (tallyFile: string, index: number) => {
-                    socketServer.emit(IO.TALLY_UPDATE, index, tallyFile)
+            reduxState.media[0].output.forEach(
+                (output: IOutput, index: number) => {
+                    socketServer.emit(IO.TALLY_UPDATE, index, output.tallyFile)
                 }
             )
         })
         .on(IO.PGM_PLAY, (channelIndex: number, fileName: string) => {
-            if (!reduxState.media[0].mixState[channelIndex]) {
+            if (!reduxState.media[0].output[channelIndex].mixState) {
                 playMedia(channelIndex, 9, fileName)
             } else {
                 mixMedia(channelIndex, 9, fileName)
@@ -54,7 +55,7 @@ export function socketIoHandlers(socket: any) {
             reduxStore.dispatch(setLoop(channelIndex, state))
             socketServer.emit(
                 IO.LOOP_STATEUPDATE,
-                reduxState.media[0].loopState
+                reduxState.media[0].output[channelIndex].loopState
             )
         })
         .on(
@@ -63,13 +64,16 @@ export function socketIoHandlers(socket: any) {
                 reduxStore.dispatch(setManualStart(channelIndex, state))
                 socketServer.emit(
                     IO.MANUAL_START_STATE_UPDATE,
-                    reduxState.media[0].manualstartState
+                    reduxState.media[0].output[channelIndex].manualstartState
                 )
             }
         )
         .on(IO.SET_MIX_STATE, (channelIndex: number, state: boolean) => {
             reduxStore.dispatch(setMix(channelIndex, state))
-            socketServer.emit(IO.MIX_STATE_UPDATE, reduxState.media[0].mixState)
+            socketServer.emit(
+                IO.MIX_STATE_UPDATE,
+                reduxState.media[0].output[channelIndex].mixState
+            )
         })
         .on(IO.SET_GENERICS, (generics: IGenericSettings) => {
             console.log('Updating and storing Generic Settings Serverside')

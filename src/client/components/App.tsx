@@ -20,7 +20,11 @@ import '../css/App-control-view-header.css'
 import '../css/App-text-view-header.css'
 import { socket } from '../util/SocketClientHandlers'
 import { secondsToTimeCode } from '../util/TimeCodeToString'
-import { setActiveTab, SET_ACTIVE_TAB, TOGGLE_SHOW_SETTINGS } from '../../model/reducers/appNavAction'
+import {
+    setActiveTab,
+    SET_ACTIVE_TAB,
+    TOGGLE_SHOW_SETTINGS,
+} from '../../model/reducers/appNavAction'
 
 const MIX_DURATION = 6
 
@@ -39,7 +43,8 @@ export const App = () => {
         socket.emit(
             IO.SET_LOOP_STATE,
             reduxState.appNav[0].activeTab,
-            !reduxState.media[0].loopState[reduxState.appNav[0].activeTab]
+            !reduxState.media[0].output[reduxState.appNav[0].activeTab]
+                .loopState
         )
     }
 
@@ -47,7 +52,7 @@ export const App = () => {
         socket.emit(
             IO.SET_MIX_STATE,
             reduxState.appNav[0].activeTab,
-            !reduxState.media[0].mixState[reduxState.appNav[0].activeTab]
+            !reduxState.media[0].output[reduxState.appNav[0].activeTab].mixState
         )
     }
 
@@ -55,9 +60,8 @@ export const App = () => {
         socket.emit(
             IO.SET_MANUAL_START_STATE,
             reduxState.appNav[0].activeTab,
-            !reduxState.media[0].manualstartState[
-                reduxState.appNav[0].activeTab
-            ]
+            !reduxState.media[0].output[reduxState.appNav[0].activeTab]
+                .manualstartState
         )
     }
 
@@ -68,7 +72,9 @@ export const App = () => {
     const RenderTime = () => {
         return (
             <button className="App-header-pgm-counter">
-                {secondsToTimeCode(reduxState.media[0].time[reduxState.appNav[0].activeTab])}
+                {secondsToTimeCode(
+                    reduxState.media[0].output[reduxState.appNav[0].activeTab]?.time
+                )}
             </button>
         )
     }
@@ -103,7 +109,12 @@ export const App = () => {
                     <img src={''} className="App-header-pvw-thumbnail-image" />
                     <RenderTime />
                     <img
-                        src={getThumb(reduxState.media[0].tallyFile[reduxState.appNav[0].activeTab])}
+                        src={getThumb(
+                            reduxState.media[0].output[
+                                reduxState.appNav[0].activeTab
+                            ]?.tallyFile,
+                            reduxState.appNav[0].activeTab
+                        )}
                         className="App-header-pgm-thumbnail-image"
                     />
                 </div>
@@ -115,9 +126,9 @@ export const App = () => {
                             handleLoopStatus()
                         }}
                         style={
-                            reduxState.media[0].loopState[
+                            reduxState.media[0].output[
                                 reduxState.appNav[0].activeTab
-                            ]
+                            ]?.loopState
                                 ? { backgroundColor: 'rgb(28, 115, 165)' }
                                 : { backgroundColor: 'grey' }
                         }
@@ -131,9 +142,9 @@ export const App = () => {
                         className="App-switch-button"
                         onClick={() => handleMixStatus()}
                         style={
-                            reduxState.media[0].mixState[
+                            reduxState.media[0].output[
                                 reduxState.appNav[0].activeTab
-                            ]
+                            ]?.mixState
                                 ? { backgroundColor: 'rgb(28, 115, 165)' }
                                 : { backgroundColor: 'grey' }
                         }
@@ -146,9 +157,9 @@ export const App = () => {
                         className="App-switch-button"
                         onClick={() => handleManualStartStatus()}
                         style={
-                            reduxState.media[0].manualstartState[
+                            reduxState.media[0].output[
                                 reduxState.appNav[0].activeTab
-                            ]
+                            ]?.manualstartState
                                 ? { backgroundColor: 'rgb(28, 115, 165)' }
                                 : { backgroundColor: 'grey' }
                         }
@@ -158,9 +169,9 @@ export const App = () => {
 
                     <button
                         hidden={
-                            !reduxState.media[0].manualstartState[
+                            !reduxState.media[0].output[
                                 reduxState.appNav[0].activeTab
-                            ]
+                            ]?.manualstartState
                         }
                         className="App-start-button"
                         onClick={() =>
