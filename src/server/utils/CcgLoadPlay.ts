@@ -8,6 +8,7 @@ export const playMedia = (
     layerIndex: number,
     fileName: string
 ) => {
+    scale(channelIndex, layerIndex)
     ccgConnection.play(
         channelIndex + 1,
         layerIndex + 1,
@@ -21,6 +22,8 @@ export const mixMedia = (
     layerIndex: number,
     fileName: string
 ) => {
+    scale(channelIndex, layerIndex)
+
     ccgConnection.play(
         channelIndex + 1,
         layerIndex + 1,
@@ -36,10 +39,24 @@ export const loadMedia = (
     layerIndex: number,
     fileName: string
 ) => {
+    scale(channelIndex, layerIndex)
+
     ccgConnection.load(
         channelIndex + 1,
         layerIndex + 1,
         fileName,
         reduxState.media[0].output[channelIndex].loopState || false
+    )
+}
+
+const scale = (channelIndex: number, layerIndex: number) => {
+    ccgConnection.mixerFill(
+        channelIndex + 1,
+        layerIndex + 1,
+        0,
+        0,
+        reduxState.settings[0].generics.scaleX[channelIndex] / 100,
+        reduxState.settings[0].generics.scaleY[channelIndex] / 100,
+        1
     )
 }

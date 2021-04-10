@@ -126,6 +126,17 @@ const RenderOutputSettings = () => {
         reduxStore.dispatch(setGenerics(generics))
     }
 
+    const handleScaleX = (event) => {
+        let generics = { ...reduxState.settings[0].generics }
+        generics.scaleX[parseInt(event.target.name)] = event.target.value
+        reduxStore.dispatch(setGenerics(generics))
+    }
+    const handleScaleY = (event) => {
+        let generics = { ...reduxState.settings[0].generics }
+        generics.scaleY[parseInt(event.target.name)] = event.target.value
+        reduxStore.dispatch(setGenerics(generics))
+    }
+
     const handleTabMediaFolder = (
         event: React.ChangeEvent<HTMLSelectElement>
     ) => {
@@ -171,6 +182,32 @@ const RenderOutputSettings = () => {
                                     }
                                 )}
                             </select>
+                        </label>
+                        <label className="Settings-input-field">
+                            SCALE X :
+                            <br />
+                            <input
+                                name={String(index)}
+                                type="number"
+                                value={
+                                    reduxState.settings[0].generics
+                                        .scaleX[index]
+                                }
+                                onChange={handleScaleX}
+                            />%
+                        </label>
+                        <label className="Settings-input-field">
+                            SCALE Y :
+                            <br />
+                            <input
+                                name={String(index)}
+                                type="number"
+                                value={
+                                    reduxState.settings[0].generics
+                                        .scaleY[index]
+                                }
+                                onChange={handleScaleY}
+                            />%
                         </label>
                     </form>
                 )

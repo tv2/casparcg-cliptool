@@ -4,6 +4,7 @@ import { reduxState } from './store'
 export const UPDATE_SETTINGS = 'updateSettings'
 export const SET_TAB_DATA = 'setTabData'
 export const SET_GENERICS = 'setGenerics'
+export const SET_SCALING = 'setScaling'
 
 export const updateSettings = (settings) => {
     return {
@@ -32,5 +33,13 @@ export const setGenerics = (generics: IGenericSettings) => {
     return {
         type: SET_GENERICS,
         generics: generics,
+    }
+}
+
+export const setScaling = (scaleX: number, scaleY: number) => {
+    return {
+        type: SET_SCALING,
+        scaleX: scaleX,
+        scaleY: scaleY,
     }
 }
