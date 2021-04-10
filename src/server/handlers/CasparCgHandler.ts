@@ -224,7 +224,6 @@ const startTimerControlledServices = () => {
                         folders.push(path)
                     })
                     folders = [...new Set(folders)]
-                    console.log(folders)
                     reduxStore.dispatch(updateFolderList(folders))
                     socketServer.emit(
                         IO.FOLDERS_UPDATE,

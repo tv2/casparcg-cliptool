@@ -170,12 +170,18 @@ const RenderOutputSettings = () => {
                                 onChange={(event) =>
                                     handleTabMediaFolder(event)
                                 }
-                                value={reduxState.settings[0].generics.outputFolders[index]}
+                                value={
+                                    reduxState.settings[0].generics
+                                        .outputFolders[index]
+                                }
                             >
                                 {reduxState.media[0].folderList.map(
                                     (path: string, folderIndex: number) => {
                                         return (
-                                            <option key={folderIndex} value={path}>
+                                            <option
+                                                key={folderIndex}
+                                                value={path}
+                                            >
                                                 {path}
                                             </option>
                                         )
@@ -184,17 +190,27 @@ const RenderOutputSettings = () => {
                             </select>
                         </label>
                         <label className="Settings-input-field">
+                            FORMAT :
+                            <br />
+                            {
+                                reduxState.settings[0].ccgConfig.channels[index]
+                                    .videoMode
+                            }
+                        </label>
+                        <label className="Settings-input-field">
                             SCALE X :
                             <br />
                             <input
                                 name={String(index)}
                                 type="number"
                                 value={
-                                    reduxState.settings[0].generics
-                                        .scaleX[index]
+                                    reduxState.settings[0].generics.scaleX[
+                                        index
+                                    ]
                                 }
                                 onChange={handleScaleX}
-                            />%
+                            />
+                            px
                         </label>
                         <label className="Settings-input-field">
                             SCALE Y :
@@ -203,11 +219,13 @@ const RenderOutputSettings = () => {
                                 name={String(index)}
                                 type="number"
                                 value={
-                                    reduxState.settings[0].generics
-                                        .scaleY[index]
+                                    reduxState.settings[0].generics.scaleY[
+                                        index
+                                    ]
                                 }
                                 onChange={handleScaleY}
-                            />%
+                            />
+                            px
                         </label>
                     </form>
                 )

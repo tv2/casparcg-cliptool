@@ -55,6 +55,7 @@ export function socketIoHandlers(socket: any) {
             reduxStore.dispatch(setLoop(channelIndex, state))
             socketServer.emit(
                 IO.LOOP_STATEUPDATE,
+                channelIndex,
                 reduxState.media[0].output[channelIndex].loopState
             )
         })
@@ -64,6 +65,7 @@ export function socketIoHandlers(socket: any) {
                 reduxStore.dispatch(setManualStart(channelIndex, state))
                 socketServer.emit(
                     IO.MANUAL_START_STATE_UPDATE,
+                    channelIndex,
                     reduxState.media[0].output[channelIndex].manualstartState
                 )
             }
@@ -72,6 +74,7 @@ export function socketIoHandlers(socket: any) {
             reduxStore.dispatch(setMix(channelIndex, state))
             socketServer.emit(
                 IO.MIX_STATE_UPDATE,
+                channelIndex,
                 reduxState.media[0].output[channelIndex].mixState
             )
         })
