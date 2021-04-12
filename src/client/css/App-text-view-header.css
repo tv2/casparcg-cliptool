@@ -1,0 +1,135 @@
+.App-text-view-header {
+    position: sticky;
+    z-index: 10;
+    top: 0px;
+    width: 100%;
+    background-color: rgb(53, 53, 53);
+    height: 130px;
+    color: rgb(28, 115, 165);
+    box-shadow: 2px 2px 2px #555;
+}
+
+.App-text-view-title-background {
+    position: relative;
+    top: 5px;
+    left: 17%;
+    width: 800px;
+    height: 115px;
+    background-color: rgb(22, 22, 22);
+    border-width: 0px;
+    border-style: solid;
+    border-color: rgb(63, 63, 63);
+    box-shadow: 6px 6px 6px rgb(34, 34, 34);
+}
+
+.App-text-view-header-title {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    margin: 5px;
+    text-align: left;
+    color: white;
+    font-size: 1.4em;
+}
+
+.App-text-view-header-pgm-counter {
+    position: absolute;
+    top: 10px;
+    left: 30px;
+    text-align: left;
+    background-color: #aa0101;
+    width: 450px;
+    height: 95px;
+    border-width: 0px;
+    color: rgb(255, 255, 255);
+    font-size: 5em;
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+.App-text-view-header-pgm-thumbnail-image {
+    position: absolute;
+    top: 2px;
+    right: 30px;
+    border-width: 2px;
+    border-style: solid;
+    border-color: #aa0101;
+    width: 170px;
+    height: 96px;
+    margin-top: 6px;
+    margin-bottom: 4px;
+    margin-left: 8px;
+    background-image: repeating-linear-gradient(
+        -45deg,
+        #2f2c43,
+        #2e2b41 3%,
+        #2a1938 4%
+    );
+}
+
+.App-text-view-reload-setup-background {
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    width: 170px;
+    height: 115px;
+    background-color: rgb(22, 22, 22);
+    border-width: 0px;
+    border-style: solid;
+    border-color: rgb(63, 63, 63);
+    box-shadow: 6px 6px 6px rgb(34, 34, 34);
+}
+
+.App-text-view-connection-status {
+    font-size: 0.9em;
+    width: 118px;
+    line-height: 55px;
+    margin-top: 10px;
+    color: white;
+    font-family: 'Roboto Condensed', sans-serif;
+    border-radius: 5px;
+    border-width: 0;
+    outline: 0;
+}
+
+.App-text-view-reload-button {
+    font-size: 0.9em;
+    width: 118px;
+    line-height: 35px;
+    margin-top: 5px;
+    background: rgb(46, 19, 19);
+    color: white;
+    font-family: 'Roboto Condensed', sans-serif;
+    border-radius: 5px;
+    border-width: 1px;
+    border-color: rgba(170, 170, 170, 0.315);
+    outline: 0;
+}
+
+/* Buttons for all thumbs, places at the bottom of the page */
+.App-text-view-mix-button-background {
+    position: absolute;
+    top: 5px;
+    right: 15px;
+    width: 180px;
+    height: 115px;
+    background-color: rgb(22, 22, 22);
+    border-width: 0px;
+    border-style: solid;
+    border-color: rgb(63, 63, 63);
+    box-shadow: 6px 6px 6px rgb(34, 34, 34);
+}
+
+.App-text-view-start-button {
+    margin-top: 5px;
+    font-size: 1.2em;
+    width: 90%;
+    line-height: 95px;
+    background: rgb(122, 0, 0);
+    color: white;
+    font-family: 'Roboto Condensed', sans-serif;
+    border-radius: 16px;
+    border-width: 1px;
+    border-color: rgba(85, 85, 85, 0.507);
+    outline: 1px;
+}
