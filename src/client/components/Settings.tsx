@@ -104,17 +104,29 @@ export const SettingsPage = () => {
             </form>
             <RenderOutputSettings />
             <hr />
+            <div className="Settings-channel-form">
+
             <button
+                className="save-button"
                 onClick={() => {
                     handleSave()
                 }}
             >
                 UPDATE SERVER SETTINGS
             </button>
-            <button onClick={() => socket.emit(IO.RESTART_SERVER)}>
+            <button
+                className="save-button"
+                onClick={() => socket.emit(IO.RESTART_SERVER)}
+            >
                 RESTART SERVER
             </button>
-            <button onClick={() => handleSettingsPage()}>EXIT</button>
+            <button
+                className="save-button"
+                onClick={() => handleSettingsPage()}
+            >
+                EXIT
+            </button>
+        </div>
         </div>
     )
 }
@@ -150,8 +162,11 @@ const RenderOutputSettings = () => {
             {reduxState.settings[0].ccgConfig.channels.map((item, index) => {
                 return (
                     <form className="Settings-channel-form" key={index}>
+                        <label className="settings-channel-header">
+                            OUTPUT {index + 1} :
+                        </label>
                         <label className="Settings-input-field">
-                            OUTPUT {index + 1} LABEL :
+                            LABEL :
                             <br />
                             <input
                                 name={String(index)}
@@ -165,7 +180,9 @@ const RenderOutputSettings = () => {
                         </label>
                         <label className="Settings-input-field">
                             MEDIAFOLDER :
+                            <br />
                             <select
+                                className="settings-select"
                                 name={String(index)}
                                 onChange={(event) =>
                                     handleTabMediaFolder(event)

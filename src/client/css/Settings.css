@@ -36,6 +36,18 @@
     border-color: rgba(230, 230, 230, 0.63);
 }
 
+.settings-channel-header {
+    font-size: 1.3em;
+    white-space: nowrap;
+    margin: 5px;
+    width: 160px;
+    color: rgb(255, 255, 255);
+    background-color: rgb(49, 49, 49);
+    border-width: 1px;
+    border-style: solid;
+    border-color: rgb(34, 34, 34);
+}
+
 .Settings-input-field {
     white-space: nowrap;
     margin: 5px;
@@ -63,16 +75,34 @@ input[type='text'] {
     -webkit-appearance: none;
 }
 
-.Save-button {
-    bottom: 10px;
-    left: calc(50% - 90px);
+input[type='number'] {
+    text-align: right;
+    width: 120px;
+    margin: 5px;
     font-size: 1.1em;
-    width: 180px;
+    border: 1px solid rgb(104, 104, 104);
+    background-color: rgb(87, 86, 86);
+    color: white;
+    border-radius: 0;
+    -webkit-appearance: none;
+}
+.settings-select {
+    text-align: left;
+    width: 120px;
+    margin: 5px;
+    font-size: 1.1em;
+    background-color: rgb(87, 86, 86);
+    color: white;
+}
+
+.save-button {
+    margin: 20px;
+    font-size: 1.1em;
     line-height: 300%;
-    background: rgb(43, 4, 4);
+    background: rgb(41, 41, 41);
     color: white;
     font-family: 'Roboto Condensed', sans-serif;
-    border-radius: 16px;
-    border-width: 0;
+    border-radius: 8px;
+    border-width: 2px;
     outline: 0;
 }

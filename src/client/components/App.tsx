@@ -19,8 +19,6 @@ import {
 } from '../../model/reducers/appNavAction'
 import { RenderFullHeader, RenderTextViewHeader } from './Header'
 
-const MIX_DURATION = 6
-
 export const App = () => {
     // Redux hook:
     const store = useSelector((storeUpdate) => storeUpdate, shallowEqual)
