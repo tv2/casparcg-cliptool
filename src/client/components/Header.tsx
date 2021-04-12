@@ -76,18 +76,6 @@ export const RenderFullHeader = () => {
     return (
         <header className="App-header">
             <div className="App-reload-setup-background">
-                <label
-                    className="App-connection-status"
-                    style={
-                        reduxState.appNav[0].connectionStatus
-                            ? { backgroundColor: 'rgb(0, 128, 4)' }
-                            : { backgroundColor: 'red' }
-                    }
-                >
-                    {reduxState.appNav[0].connectionStatus
-                        ? 'VIEW'
-                        : 'CONNECTING'}
-                </label>
                 <button
                     className="App-settings-button"
                     onClick={() => handleSettingsPage()}

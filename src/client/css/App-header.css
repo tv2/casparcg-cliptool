@@ -66,23 +66,12 @@
     box-shadow: 6px 6px 6px rgb(34, 34, 34);
 }
 
-.App-connection-status {
-    font-size: 0.9em;
-    width: 118px;
-    line-height: 40px;
-    margin-top: 5px;
-    color: white;
-    font-family: 'Roboto Condensed', sans-serif;
-    border-radius: 5px;
-    border-width: 0;
-    outline: 0;
-}
-
 .App-settings-button {
-    font-size: 0.9em;
+    font-size: 1.1em;
     width: 120px;
+    height: 60px;
     line-height: 25px;
-    margin-top: 2px;
+    margin-top: 20px;
     background: rgb(11, 12, 11);
     color: white;
     font-family: 'Roboto Condensed', sans-serif;
