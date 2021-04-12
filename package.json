@@ -28,12 +28,23 @@
         "start": "node ./build/server/index.js",
         "start-dev": "node --inspect ./build/server/index.js",
         "start-break": "node --inspect-brk ./build/server/index.js",
-        "package-linux": "yarn pkg -t node12-linux-x64 ./build/server/index.js --output ./package/CasparCG-state-scanner",
-        "package-win": "yarn pkg -t node12-win ./build/server/index.js --output ./package/CasparCG-state-scanner.exe",
+        "package": "yarn pkg .",
         "release": "standard-version",
         "prepareChangelog": "standard-version --prerelease",
         "validate:dependencies": "yarn audit && yarn license-validate",
         "license-validate": "node-license-validator -p -d --allow-licenses MIT MIT/X11 BSD BSD-3-Clause BSD-2-Clause ISC Apache Apache-2.0 WTFPL CC-BY-3.0 CC-BY-4.0 CC0-1.0 Unlicense --allow-packages cycle"
+    },
+    "bin": {
+        "server": "./build/server/index.js"
+    },
+    "pkg": {
+        "scripts": "./build/server/index.js",
+        "assets": "./build/client/**/*",
+        "targets": [
+            "node12-linux-x64",
+            "node12-win"
+        ],
+        "outputPath": "package"
     },
     "simple-git-hooks": {
         "pre-commit": "yarn lint-staged"
