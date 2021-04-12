@@ -22,6 +22,12 @@ CasparCG ClipTool is a playout tool with a thumbnail based GUI.
 
 -   "MANUAL" is ON: When clicking on a thumb it will be loaded on CasparCG, pressing "START" to play the clip
 
+### Settings:
+
+<img src="docs/images/settings.png">
+
+-   On each output you can set Label, Folder (CasparCG Media subfolders) and Scaling
+
 ## Install and run:
 
 ### Prebuild versions:
