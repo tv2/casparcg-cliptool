@@ -11,6 +11,7 @@ const FPS = 25
 import { IMediaFile, IThumbFile } from '../../model/reducers/mediaReducer'
 import { socket } from '../util/SocketClientHandlers'
 import { PGM_LOAD, PGM_PLAY } from '../../model/SocketIoConstants'
+import { shallowEqual, useSelector } from 'react-redux'
 
 export const getThumb = (fileName: string, channelIndex: number) => {
     let thumb = reduxState.media[0].output[channelIndex]?.thumbnailList.filter((item: IThumbFile) => {
@@ -20,6 +21,9 @@ export const getThumb = (fileName: string, channelIndex: number) => {
 }
 
 export const Thumbnail = () => {
+        // Redux hook:
+        const store = useSelector((store) => store, shallowEqual)
+
     const handleClickMedia = (fileName: string) => {
         if (!reduxState.media[0].output[reduxState.appNav[0].activeTab]?.manualstartState){
             socket.emit(PGM_PLAY, reduxState.appNav[0].activeTab, fileName)
