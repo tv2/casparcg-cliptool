@@ -45,6 +45,8 @@ yarn start
 yarn start
 ```
 
+Open GUI in browser: http://localhost:5555
+
 ### Build the app
 
 ```
