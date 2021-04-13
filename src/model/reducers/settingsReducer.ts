@@ -47,8 +47,8 @@ const defaultSettingsReducerState: ISettings[] = [
             ccgDefaultLayer: 10,
             outputLabels: ['', '', '', '', '', '', '', ''],
             outputFolders: ['', '', '', '', '', '', '', ''],
-            scaleX: [100, 100, 100, 100, 100, 100, 100, 100],
-            scaleY: [100, 100, 100, 100, 100, 100, 100, 100],
+            scaleX: [1920, 1920, 1920, 1920, 1920, 1920, 1920, 1920],
+            scaleY: [1080, 1080, 1080, 1080, 1080, 1080, 1080, 1080],
         },
     },
 ]
