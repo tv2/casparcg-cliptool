@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.2.0](https://github.com/olzzon/CasparCG-ClipTool/compare/v2.1.0...v2.2.0) (2021-04-14)
+
+### Features
+
+-   Settings - enable/disable scaling (disable will scale to outputformat) ([b706693](https://github.com/olzzon/CasparCG-ClipTool/commit/b7066939b90d6a9bcba1b60a66744168e775b330))
+
+### Bug Fixes
+
+-   Scaling - set default store to 1920x1080 ([25771dd](https://github.com/olzzon/CasparCG-ClipTool/commit/25771ddc9251c77d4d97613ad1ee749c87b5b0a7))
+
 ## 2.1.0 (2021-04-12)
 
 ### Features
