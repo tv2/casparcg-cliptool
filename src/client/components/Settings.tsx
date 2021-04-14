@@ -105,28 +105,27 @@ export const SettingsPage = () => {
             <RenderOutputSettings />
             <hr />
             <div className="Settings-channel-form">
-
-            <button
-                className="save-button"
-                onClick={() => {
-                    handleSave()
-                }}
-            >
-                UPDATE SERVER SETTINGS
-            </button>
-            <button
-                className="save-button"
-                onClick={() => socket.emit(IO.RESTART_SERVER)}
-            >
-                RESTART SERVER
-            </button>
-            <button
-                className="save-button"
-                onClick={() => handleSettingsPage()}
-            >
-                EXIT
-            </button>
-        </div>
+                <button
+                    className="save-button"
+                    onClick={() => {
+                        handleSave()
+                    }}
+                >
+                    UPDATE SERVER SETTINGS
+                </button>
+                <button
+                    className="save-button"
+                    onClick={() => socket.emit(IO.RESTART_SERVER)}
+                >
+                    RESTART SERVER
+                </button>
+                <button
+                    className="save-button"
+                    onClick={() => handleSettingsPage()}
+                >
+                    EXIT
+                </button>
+            </div>
         </div>
     )
 }
@@ -135,6 +134,12 @@ const RenderOutputSettings = () => {
     const handleOutputLabel = (event) => {
         let generics = { ...reduxState.settings[0].generics }
         generics.outputLabels[parseInt(event.target.name)] = event.target.value
+        reduxStore.dispatch(setGenerics(generics))
+    }
+
+    const handleScale = (event) => {
+        let generics = { ...reduxState.settings[0].generics }
+        generics.scale[parseInt(event.target.name)] = event.target.checked
         reduxStore.dispatch(setGenerics(generics))
     }
 
@@ -215,35 +220,51 @@ const RenderOutputSettings = () => {
                             }
                         </label>
                         <label className="Settings-input-field">
-                            SCALE X :
+                            SCALE :
                             <br />
                             <input
                                 name={String(index)}
-                                type="number"
-                                value={
-                                    reduxState.settings[0].generics.scaleX[
-                                        index
-                                    ]
+                                type="checkbox"
+                                checked={
+                                    reduxState.settings[0].generics.scale[index]
                                 }
-                                onChange={handleScaleX}
+                                onChange={handleScale}
                             />
-                            px
                         </label>
-                        <label className="Settings-input-field">
-                            SCALE Y :
-                            <br />
-                            <input
-                                name={String(index)}
-                                type="number"
-                                value={
-                                    reduxState.settings[0].generics.scaleY[
-                                        index
-                                    ]
-                                }
-                                onChange={handleScaleY}
-                            />
-                            px
-                        </label>
+                        {reduxState.settings[0].generics.scale[index] ? (
+                            <React.Fragment>
+                                <label className="Settings-input-field">
+                                    SCALE X :
+                                    <br />
+                                    <input
+                                        name={String(index)}
+                                        type="number"
+                                        value={
+                                            reduxState.settings[0].generics
+                                                .scaleX[index]
+                                        }
+                                        onChange={handleScaleX}
+                                    />
+                                    px
+                                </label>
+                                <label className="Settings-input-field">
+                                    SCALE Y :
+                                    <br />
+                                    <input
+                                        name={String(index)}
+                                        type="number"
+                                        value={
+                                            reduxState.settings[0].generics
+                                                .scaleY[index]
+                                        }
+                                        onChange={handleScaleY}
+                                    />
+                                    px
+                                </label>
+                            </React.Fragment>
+                        ) : (
+                            <React.Fragment></React.Fragment>
+                        )}
                     </form>
                 )
             })}

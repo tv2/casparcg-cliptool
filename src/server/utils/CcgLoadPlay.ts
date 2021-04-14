@@ -50,18 +50,22 @@ export const loadMedia = (
 }
 
 const scale = (channelIndex: number, layerIndex: number) => {
-    let resolutionX =
-        reduxState.settings[0].generics.scaleX[channelIndex] / 1920
-    let resolutionY =
-        reduxState.settings[0].generics.scaleY[channelIndex] / 1080
-    if (
-        reduxState.settings[0].ccgConfig.channels[
-            channelIndex
-        ].videoMode.includes('720')
-    ) {
-        resolutionX =
-            reduxState.settings[0].generics.scaleX[channelIndex] / 1280
-        resolutionY = reduxState.settings[0].generics.scaleY[channelIndex] / 720
+    let resX = reduxState.settings[0].ccgConfig.channels[
+        channelIndex
+    ].videoMode.includes('720')
+        ? 1280
+        : 1920
+    let resY = reduxState.settings[0].ccgConfig.channels[
+        channelIndex
+    ].videoMode.includes('720')
+        ? 720
+        : 12800
+
+    let scaleOutX = 1
+    let scaleOutY = 1
+    if (reduxState.settings[0].generics.scale[channelIndex]) {
+        scaleOutX = reduxState.settings[0].generics.scaleX[channelIndex] / resX
+        scaleOutY = reduxState.settings[0].generics.scaleY[channelIndex] / resY
     }
 
     ccgConnection.mixerFill(
@@ -69,8 +73,8 @@ const scale = (channelIndex: number, layerIndex: number) => {
         layerIndex + 1,
         0,
         0,
-        resolutionX,
-        resolutionY,
+        scaleOutX,
+        scaleOutY,
         1
     )
 }

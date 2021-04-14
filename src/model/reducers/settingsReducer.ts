@@ -29,6 +29,7 @@ export interface IGenericSettings {
     ccgOscPort: number
     outputLabels: string[]
     outputFolders: string[]
+    scale: boolean[]
     scaleX: number[]
     scaleY: number[]
 }
@@ -47,6 +48,7 @@ const defaultSettingsReducerState: ISettings[] = [
             ccgDefaultLayer: 10,
             outputLabels: ['', '', '', '', '', '', '', ''],
             outputFolders: ['', '', '', '', '', '', '', ''],
+            scale: [false, false, false, false, false, false, false, false],
             scaleX: [1920, 1920, 1920, 1920, 1920, 1920, 1920, 1920],
             scaleY: [1080, 1080, 1080, 1080, 1080, 1080, 1080, 1080],
         },

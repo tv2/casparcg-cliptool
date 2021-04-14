@@ -1,9 +1,12 @@
 {
     "transistionTime": 16,
-    "ccgIp": "192.168.0.7",
+    "ccgIp": "0.0.0.0",
     "ccgAmcpPort": 5250,
     "ccgOscPort": 5253,
     "ccgDefaultLayer": 10,
-    "outputLabels": [],
-    "outputFolders": []
+    "outputLabels": ["SKÆRM 1", "BORD", "", "", "", "", "", ""],
+    "outputFolders": ["", "BADMINTON", "", "", "", "", "", ""],
+    "scale": [false, false, false, false, false, false, false, false],
+    "scaleX": [1920, 1920, 1920, 1920, 1920, 1920, 1920, 1920],
+    "scaleY": [1080, 1080, 1080, 1080, 1080, 1080, 1080, 1080]
 }
