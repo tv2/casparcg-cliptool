@@ -17,8 +17,12 @@ import {
 import { socketServer } from './expressHandler'
 import * as IO from '../../model/SocketIoConstants'
 import { IOutput, IThumbFile } from '../../model/reducers/mediaReducer'
-import { ITabData } from '../../model/reducers/settingsReducer'
+import {
+    ICcgConfigChannel,
+    ITabData,
+} from '../../model/reducers/settingsReducer'
 import { setTabData, updateSettings } from '../../model/reducers/settingsAction'
+import { initializeClient } from './socketIOServerHandler'
 
 //Setup AMCP Connection:
 export const ccgConnection = new CasparCG({
@@ -125,31 +129,11 @@ const casparCGconnection = () => {
             console.log('No connection to CasparCG', error)
         })
     ccgConnection.getCasparCGConfig().then((response) => {
-        console.log('CasparCG Config :', response)
+        console.log('CasparCG Config :', response.channels)
         reduxStore.dispatch(setNumberOfOutputs(response.channels.length))
         reduxStore.dispatch(updateSettings(response.channels))
         reduxStore.dispatch(setTabData(response.channels.length))
-        socketServer.emit(IO.TAB_DATA_UPDATE, reduxState.settings[0].tabData)
-
-        reduxState.media[0].output.forEach(
-            (output: IOutput, channelIndex: number) => {
-                socketServer.emit(
-                    IO.LOOP_STATEUPDATE,
-                    channelIndex,
-                    output.loopState
-                )
-                socketServer.emit(
-                    IO.MIX_STATE_UPDATE,
-                    channelIndex,
-                    output.mixState
-                )
-                socketServer.emit(
-                    IO.MANUAL_START_STATE_UPDATE,
-                    channelIndex,
-                    output.manualstartState
-                )
-            }
-        )
+        initializeClient()
     })
     startTimerControlledServices()
 }
@@ -168,96 +152,99 @@ const startTimerControlledServices = () => {
     setInterval(() => {
         if (!waitingForResponse) {
             waitingForResponse = true
-
-            ccgConnection.thumbnailList().then((thumbFile) => {
-                let thumbNails: IThumbFile[] = thumbFile.response.data.map(
-                    (element: IThumbFile) => {
-                        return ccgConnection
-                            .thumbnailRetrieve(element.name)
-                            .then(
-                                (thumb: any): IThumbFile => {
-                                    return {
-                                        name: element.name,
-                                        changed: element.changed,
-                                        size: element.size,
-                                        type: element.type,
-                                        thumbnail: thumb.response.data,
-                                    }
-                                }
-                            )
-                    }
-                )
-                Promise.all(thumbNails).then((thumbNailList: IThumbFile[]) => {
-                    reduxState.media[0].output.forEach(
-                        (output: IOutput, channelIndex: number) => {
-                            let outputMedia = thumbNailList.filter(
-                                (thumnbail: IThumbFile) => {
-                                    return thumnbail.name.includes(
-                                        reduxState.settings[0].generics
-                                            .outputFolders[channelIndex]
-                                    )
-                                }
-                            )
-                            socketServer.emit(
-                                IO.THUMB_UPDATE,
-                                channelIndex,
-                                outputMedia
-                            )
-                            reduxStore.dispatch(
-                                updateThumbFileList(channelIndex, thumbNailList)
-                            )
-                        }
-                    )
-                })
+            loadCcgMedia().then(() => {
+                waitingForResponse = false
             })
-
-            ccgConnection
-                .cls()
-                .then((payload) => {
-                    let folders: string[] = []
-                    payload.response.data.forEach((media) => {
-                        let path =
-                            media.name.substring(
-                                0,
-                                media.name.lastIndexOf('/')
-                            ) || ''
-                        folders.push(path)
-                    })
-                    folders = [...new Set(folders)]
-                    reduxStore.dispatch(updateFolderList(folders))
-                    socketServer.emit(
-                        IO.FOLDERS_UPDATE,
-                        reduxState.media[0].folderList
-                    )
-
-                    reduxState.media[0].output.forEach(
-                        (output: IOutput, channelIndex: number) => {
-                            let outputMedia = payload.response.data.filter(
-                                (file) => {
-                                    return file.name.includes(
-                                        reduxState.settings[0].generics
-                                            .outputFolders[channelIndex]
-                                    )
-                                }
-                            )
-                            reduxStore.dispatch(
-                                updateMediaFiles(channelIndex, outputMedia)
-                            )
-                            socketServer.emit(
-                                IO.MEDIA_UPDATE,
-                                channelIndex,
-                                reduxState.media[0].output[channelIndex]
-                                    .mediaFiles
-                            )
-                        }
-                    )
-                    waitingForResponse = false
-                })
-                .catch((error) => {
-                    console.log('Server not connected :', error)
-                })
         }
     }, 3000)
+}
+
+const loadCcgMedia = (): Promise<boolean> => {
+    return new Promise((resolve) => {
+        ccgConnection.thumbnailList().then((thumbFile) => {
+            let thumbNails: IThumbFile[] = thumbFile.response.data.map(
+                (element: IThumbFile) => {
+                    return ccgConnection.thumbnailRetrieve(element.name).then(
+                        (thumb: any): IThumbFile => {
+                            return {
+                                name: element.name,
+                                changed: element.changed,
+                                size: element.size,
+                                type: element.type,
+                                thumbnail: thumb.response.data,
+                            }
+                        }
+                    )
+                }
+            )
+            Promise.all(thumbNails).then((thumbNailList: IThumbFile[]) => {
+                reduxState.media[0].output.forEach(
+                    (output: IOutput, channelIndex: number) => {
+                        let outputMedia = thumbNailList.filter(
+                            (thumnbail: IThumbFile) => {
+                                return thumnbail.name.includes(
+                                    reduxState.settings[0].generics
+                                        .outputFolders[channelIndex]
+                                )
+                            }
+                        )
+                        reduxStore.dispatch(
+                            updateThumbFileList(channelIndex, outputMedia)
+                        )
+                        socketServer.emit(
+                            IO.THUMB_UPDATE,
+                            channelIndex,
+                            reduxState.media[0].output[channelIndex]
+                                .thumbnailList
+                        )
+                    }
+                )
+            })
+            resolve(true)
+        })
+
+        ccgConnection
+            .cls()
+            .then((payload) => {
+                let folders: string[] = []
+                payload.response.data.forEach((media) => {
+                    let path =
+                        media.name.substring(0, media.name.lastIndexOf('/')) ||
+                        ''
+                    folders.push(path)
+                })
+                folders = [...new Set(folders)]
+                reduxStore.dispatch(updateFolderList(folders))
+                socketServer.emit(
+                    IO.FOLDERS_UPDATE,
+                    reduxState.media[0].folderList
+                )
+
+                reduxState.media[0].output.forEach(
+                    (output: IOutput, channelIndex: number) => {
+                        let outputMedia = payload.response.data.filter(
+                            (file) => {
+                                return file.name.includes(
+                                    reduxState.settings[0].generics
+                                        .outputFolders[channelIndex]
+                                )
+                            }
+                        )
+                        reduxStore.dispatch(
+                            updateMediaFiles(channelIndex, outputMedia)
+                        )
+                        socketServer.emit(
+                            IO.MEDIA_UPDATE,
+                            channelIndex,
+                            reduxState.media[0].output[channelIndex].mediaFiles
+                        )
+                    }
+                )
+            })
+            .catch((error) => {
+                console.log('Server not connected :', error)
+            })
+    })
 }
 
 export const casparCgClient = () => {

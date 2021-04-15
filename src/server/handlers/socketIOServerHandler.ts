@@ -17,23 +17,12 @@ import { IOutput } from '../../model/reducers/mediaReducer'
 export function socketIoHandlers(socket: any) {
     logger.info('SETTING UP SOCKET IO MAIN HANDLERS', {})
 
-    // get-store get-settings and get-mixerprotocol will be replaces with
-    // serverside Redux middleware emitter when moved to Socket IO:
+    socketServer.emit(IO.SETTINGS_UPDATE, reduxState.settings[0])
+    initializeClient()
+
     socket
-        .on('GET_STORE', () => {
-            logger.info(
-                'Settings initial store on :' + String(socket.client.id),
-                {}
-            )
-            socketServer.emit('SEND_STORE', reduxState)
-        })
         .on(IO.GET_SETTINGS, () => {
             socketServer.emit(IO.SETTINGS_UPDATE, reduxState.settings[0])
-            reduxState.media[0].output.forEach(
-                (output: IOutput, index: number) => {
-                    socketServer.emit(IO.TALLY_UPDATE, index, output.tallyFile)
-                }
-            )
         })
         .on(IO.PGM_PLAY, (channelIndex: number, fileName: string) => {
             if (!reduxState.media[0].output[channelIndex].mixState) {
@@ -87,4 +76,39 @@ export function socketIoHandlers(socket: any) {
         .on(IO.RESTART_SERVER, () => {
             process.exit(0)
         })
+}
+
+export const initializeClient = () => {
+    socketServer.emit(IO.TAB_DATA_UPDATE, reduxState.settings[0].tabData)
+
+    reduxState.media[0].output.forEach(
+        (output: IOutput, channelIndex: number) => {
+            socketServer.emit(IO.TALLY_UPDATE, channelIndex, output.tallyFile)
+            socketServer.emit(
+                IO.LOOP_STATEUPDATE,
+                channelIndex,
+                output.loopState
+            )
+            socketServer.emit(
+                IO.MIX_STATE_UPDATE,
+                channelIndex,
+                output.mixState
+            )
+            socketServer.emit(
+                IO.MANUAL_START_STATE_UPDATE,
+                channelIndex,
+                output.manualstartState
+            )
+            socketServer.emit(
+                IO.THUMB_UPDATE,
+                channelIndex,
+                reduxState.media[0].output[channelIndex].thumbnailList
+            )
+            socketServer.emit(
+                IO.MEDIA_UPDATE,
+                channelIndex,
+                reduxState.media[0].output[channelIndex].mediaFiles
+            )
+        }
+    )
 }
