@@ -7,12 +7,14 @@
     top: 0px;
     width: 100%;
     background-color: rgb(53, 53, 53);
-    height: 130px;
+    min-height: 130px;
     color: rgb(28, 115, 165);
     box-shadow: 2px 2px 2px #555;
 }
 
 .App-timer-background {
+    margin-top: 10px;
+    margin-bottom: 10px;
     margin-left: 20px;
     height: 115px;
     background-color: rgb(22, 22, 22);
@@ -55,8 +57,8 @@
 }
 
 .App-reload-setup-background {
-    top: 5px;
-    left: 5px;
+    margin-top: 10px;
+    margin-bottom: 10px;
     width: 170px;
     height: 115px;
     background-color: rgb(22, 22, 22);
@@ -97,6 +99,8 @@
 
 /* Switch buttons: */
 .App-button-background {
+    margin-top: 10px;
+    margin-bottom: 10px;
     margin-left: 20px;
     height: 115px;
     background-color: rgb(22, 22, 22);
