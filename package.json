@@ -33,6 +33,7 @@
         "start-gateway": "node ./build/gateway/index.js",
         "start-gateway-dev": "node --inspect ./build/gateway/index.js",
         "package": "yarn pkg .",
+        "package-gateway": "yarn pkg ./build/gateway/index.js -t node12-win-x64 -o ./package/cliptool-gateway.exe",
         "release": "standard-version",
         "prepareChangelog": "standard-version --prerelease",
         "validate:dependencies": "yarn audit && yarn license-validate",
@@ -45,8 +46,7 @@
         "scripts": "./build/server/index.js",
         "assets": "./build/client/**/*",
         "targets": [
-            "node12-linux-x64",
-            "node12-win"
+            "node12-win-x64"
         ],
         "outputPath": "package"
     },
