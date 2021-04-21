@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.3.0](https://github.com/olzzon/CasparCG-ClipTool/compare/v2.2.0...v2.3.0) (2021-04-21)
+
+### Features
+
+-   controlgateway - select gateway type as cli args ([bab2271](https://github.com/olzzon/CasparCG-ClipTool/commit/bab22718f4072a5bbfa2ac5344672d78aeb0d306))
+-   gateway - cli args handling - OSC controller, play,load working ([ca0a276](https://github.com/olzzon/CasparCG-ClipTool/commit/ca0a276f19ec6284f6ca1146c392f4636fd0447e))
+-   Gateway - OSC server initial setup ([7e018f9](https://github.com/olzzon/CasparCG-ClipTool/commit/7e018f9d4c5573431138c258f1381bdaf76f9ce6))
+-   package .exe files of ClipTool AND Gateway ([7c9b074](https://github.com/olzzon/CasparCG-ClipTool/commit/7c9b07467472d4346702fc3579f75912f7b64350))
+
+### Bug Fixes
+
+-   GUI - css thumbs was scrolling over settings. Scaling on small screen ([09a1dff](https://github.com/olzzon/CasparCG-ClipTool/commit/09a1dffa7a8812350f78da4e7366628e5b827dab))
+-   Order of initial loading of webpage, settings are now passed upon connection. And pages loaded imidiately ([651249c](https://github.com/olzzon/CasparCG-ClipTool/commit/651249cc69103fd74d6b3feca020c56d84b80534))
+
 ## [2.2.0](https://github.com/olzzon/CasparCG-ClipTool/compare/v2.1.0...v2.2.0) (2021-04-14)
 
 ### Features
