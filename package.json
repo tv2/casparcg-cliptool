@@ -21,14 +21,19 @@
     "main": "dist/server/index.js",
     "scripts": {
         "watch-server": "tsc -p src/server -watch",
+        "watch-gateway": "tsc -p src/gateway -watch",
         "watch-client": "cross-env NODE_ENV=development TS_NODE_PROJECT=\"src/client/tsconfig.json\" webpack --watch",
         "build": "yarn build-client && yarn build-server",
         "build-server": "tsc -p ./src/server",
+        "build-gateway": "tsc -p ./src/gateway",
         "build-client": "cross-env NODE_ENV=production TS_NODE_PROJECT=\"./src/client/tsconfig.json\" webpack && cp ./src/client/index.html ./build/client/index.html",
         "start": "node ./build/server/index.js",
         "start-dev": "node --inspect ./build/server/index.js",
         "start-break": "node --inspect-brk ./build/server/index.js",
+        "start-gateway": "node ./build/gateway/index.js",
+        "start-gateway-dev": "node --inspect ./build/gateway/index.js",
         "package": "yarn pkg .",
+        "package-gateway": "yarn pkg ./build/gateway/index.js -t node12-win-x64 -o ./package/cliptool-gateway.exe",
         "release": "standard-version",
         "prepareChangelog": "standard-version --prerelease",
         "validate:dependencies": "yarn audit && yarn license-validate",
@@ -41,8 +46,7 @@
         "scripts": "./build/server/index.js",
         "assets": "./build/client/**/*",
         "targets": [
-            "node12-linux-x64",
-            "node12-win"
+            "node12-win-x64"
         ],
         "outputPath": "package"
     },

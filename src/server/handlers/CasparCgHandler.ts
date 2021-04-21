@@ -17,10 +17,7 @@ import {
 import { socketServer } from './expressHandler'
 import * as IO from '../../model/SocketIoConstants'
 import { IOutput, IThumbFile } from '../../model/reducers/mediaReducer'
-import {
-    ICcgConfigChannel,
-    ITabData,
-} from '../../model/reducers/settingsReducer'
+
 import { setTabData, updateSettings } from '../../model/reducers/settingsAction'
 import { initializeClient } from './socketIOServerHandler'
 
@@ -32,7 +29,6 @@ export const ccgConnection = new CasparCG({
 })
 
 const setupOscServer = () => {
-    let _this2 = this
     const oscConnection = new osc.UDPPort({
         localAddress: '0.0.0.0',
         localPort: reduxState.settings[0].generics.ccgOscPort,

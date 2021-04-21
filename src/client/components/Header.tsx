@@ -14,6 +14,7 @@ import { TOGGLE_SHOW_SETTINGS } from '../../model/reducers/appNavAction'
 
 import * as IO from '../../model/SocketIoConstants'
 import { getThumb } from './Thumbnail'
+import { SettingsPage } from './Settings'
 
 const RenderTime = () => {
     return (
@@ -148,6 +149,7 @@ export const RenderFullHeader = () => {
                     START
                 </button>
             </div>
+            {reduxState.appNav[0].showSettingsActive ? <SettingsPage /> : null}
         </header>
     )
 }

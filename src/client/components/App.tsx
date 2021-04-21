@@ -6,7 +6,6 @@ import { shallowEqual, useSelector } from 'react-redux'
 
 // Components:
 import { Thumbnail } from './Thumbnail'
-import { SettingsPage } from './Settings'
 
 //Utils:
 import HandleShortcuts from '../util/HandleShortcuts'
@@ -49,7 +48,6 @@ export const App = () => {
             ) : (
                 ''
             )}
-            {reduxState.appNav[0].showSettingsActive ? <SettingsPage /> : null}
             <div className="App-body">
                 <Tabs
                     tabs={reduxState.settings[0].tabData}
