@@ -30,14 +30,29 @@ export const oscServerGateway = () => {
             console.log(
                 `Received Command : ${message.address} ${message.args[0]} `
             )
+            let channel = message.address.split('/')[2]
             if (checkOscCommand(message.address, OSC.PGM_PLAY)) {
-                let channel = message.address.split('/')[2]
                 console.log(`PLAY ${message.address} ${message.args[0]}`)
                 socket.emit(IO.PGM_PLAY, channel - 1, message.args[0])
             } else if (checkOscCommand(message.address, OSC.PGM_CUE)) {
-                let channel = message.address.split('/')[2]
                 console.log(`LOAD ${message.address} ${message.args[0]}`)
                 socket.emit(IO.PGM_LOAD, channel - 1, message.args[0])
+            } else if (checkOscCommand(message.address, OSC.MEDIA)) {
+                console.log(
+                    `GET MEDIA OUTPUT: ${channel}  Command : ${message.address} `
+                )
+                oscConnection.send({
+                    address: message.address,
+                    args: [
+                        {
+                            type: 's',
+                            value: JSON.stringify(
+                                reduxState.media[0].output[channel - 1]
+                                    .mediaFiles
+                            ),
+                        },
+                    ],
+                })
             }
         })
         .on('error', (error: any) => {
