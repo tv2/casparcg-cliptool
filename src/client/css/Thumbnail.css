@@ -10,6 +10,19 @@
     padding-left: 0;
 }
 
+.flexBoxesText {
+    position: relative;
+    margin-top: 20px;
+    height: 140px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    list-style: none;
+    padding-left: 0;
+}
+
 .boxComponent {
     position: relative;
     background: #2e2b41;

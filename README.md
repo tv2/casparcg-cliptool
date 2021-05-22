@@ -32,9 +32,29 @@ CasparCG ClipTool is a playout tool with a thumbnail based GUI.
 
 ### Prebuild versions:
 
-CasparCG-ClipTool is prebuild for Linux and Windows. The Pre-builds are located in the /package folder on the repository
+CasparCG-ClipTool is prebuild for Windows. The Pre-build are located in the /package folder on the repository
 
-### Build:
+Download and run "casparcg-clip-tool.exe"
+
+Open GUI in browser: http://localhost:5555
+If you want to run in textview for small touchscreens use :http://localhost:5555/?textview=1
+
+Add following to casparcg.config (otherwise timer and preview window won´t work):
+
+```
+<osc>
+  <default-port>6250</default-port>
+  <disable-send-to-amcp-clients>false [true|false]</disable-send-to-amcp-clients>
+  <predefined-clients>
+    <predefined-client>
+      <address>127.0.0.1</address>
+      <port>5253</port>
+    </predefined-client>
+  </predefined-clients>
+</osc>
+```
+
+## Build for development (nodejs):
 
 ```
 git clone https://github.com/olzzon/CasparCG-ClipTool.git nameofyourproject
@@ -52,6 +72,7 @@ yarn start
 ```
 
 Open GUI in browser: http://localhost:5555
+If you want to run in textview for small touchscreens use :http://localhost:5555/?textview=1
 
 ### Build the app
 

@@ -37,42 +37,40 @@ const RenderTime = () => {
     )
 }
 
+//Handler functions:
+const handleSettingsPage = () => {
+    reduxStore.dispatch({
+        type: TOGGLE_SHOW_SETTINGS,
+    })
+}
+
+const handleLoopStatus = () => {
+    socket.emit(
+        IO.SET_LOOP_STATE,
+        reduxState.appNav[0].activeTab,
+        !reduxState.media[0].output[reduxState.appNav[0].activeTab].loopState
+    )
+}
+
+const handleMixStatus = () => {
+    socket.emit(
+        IO.SET_MIX_STATE,
+        reduxState.appNav[0].activeTab,
+        !reduxState.media[0].output[reduxState.appNav[0].activeTab].mixState
+    )
+}
+
+const handleManualStartStatus = () => {
+    socket.emit(
+        IO.SET_MANUAL_START_STATE,
+        reduxState.appNav[0].activeTab,
+        !reduxState.media[0].output[reduxState.appNav[0].activeTab]
+            .manualstartState
+    )
+}
 export const RenderFullHeader = () => {
     // Redux hook:
     const store = useSelector((storeUpdate) => storeUpdate, shallowEqual)
-
-    //Handler functions:
-    const handleSettingsPage = () => {
-        reduxStore.dispatch({
-            type: TOGGLE_SHOW_SETTINGS,
-        })
-    }
-
-    const handleLoopStatus = () => {
-        socket.emit(
-            IO.SET_LOOP_STATE,
-            reduxState.appNav[0].activeTab,
-            !reduxState.media[0].output[reduxState.appNav[0].activeTab]
-                .loopState
-        )
-    }
-
-    const handleMixStatus = () => {
-        socket.emit(
-            IO.SET_MIX_STATE,
-            reduxState.appNav[0].activeTab,
-            !reduxState.media[0].output[reduxState.appNav[0].activeTab].mixState
-        )
-    }
-
-    const handleManualStartStatus = () => {
-        socket.emit(
-            IO.SET_MANUAL_START_STATE,
-            reduxState.appNav[0].activeTab,
-            !reduxState.media[0].output[reduxState.appNav[0].activeTab]
-                .manualstartState
-        )
-    }
 
     return (
         <header className="App-header">
@@ -155,30 +153,34 @@ export const RenderFullHeader = () => {
 }
 
 export const RenderTextViewHeader = () => {
-    let { appNav } = reduxState
-
     return (
-        <header className="App-text-view-header">
+        <header className="App-header">
             <RenderTime />
 
-            <div className="App-text-view-reload-setup-background">
-                <label
-                    className="App-text-view-connection-status"
+            <div className="App-button-background">
+                <button
+                    className="App-switch-button"
+                    onClick={() => handleManualStartStatus()}
                     style={
-                        appNav[0].connectionStatus
-                            ? { backgroundColor: 'rgb(0, 128, 4)' }
-                            : { backgroundColor: 'red' }
+                        reduxState.media[0].output[
+                            reduxState.appNav[0].activeTab
+                        ]?.manualstartState
+                            ? { backgroundColor: 'rgb(28, 115, 165)' }
+                            : { backgroundColor: 'grey' }
                     }
                 >
-                    {appNav[0].connectionStatus ? 'VIEW' : 'CONNECTING'}
-                </label>
-            </div>
+                    MANUAL
+                </button>
 
-            <div className="App-text-view-mix-button-background">
                 <button
-                    className="App-text-view-start-button"
+                    hidden={
+                        !reduxState.media[0].output[
+                            reduxState.appNav[0].activeTab
+                        ]?.manualstartState
+                    }
+                    className="App-start-button"
                     onClick={() =>
-                        socket.emit(IO.PGM_PLAY, appNav[0].activeTab)
+                        socket.emit(IO.PGM_PLAY, reduxState.appNav[0].activeTab)
                     }
                 >
                     START
