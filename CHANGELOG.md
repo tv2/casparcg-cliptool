@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.4.1](https://github.com/olzzon/CasparCG-ClipTool/compare/v2.4.0...v2.4.1) (2021-05-22)
+
+### Bug Fixes
+
+-   in prebuild .exe settings was not stores as storage folder was not created ([0cc20e1](https://github.com/olzzon/CasparCG-ClipTool/commit/0cc20e1b445cd02c4e1b07336e04530065979da9))
+-   prebuild casparcg-clip-tool.exe was not build correctly ([3c16109](https://github.com/olzzon/CasparCG-ClipTool/commit/3c16109b4c9eda9c6bef66012a474c2e81476ab6))
+
 ## [2.4.0](https://github.com/olzzon/CasparCG-ClipTool/compare/v2.3.0...v2.4.0) (2021-05-22)
 
 ### Features
