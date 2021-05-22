@@ -1,7 +1,7 @@
 {
     "name": "casparcg-clip-tool",
     "productName": "CasparCGClipTool",
-    "version": "2.3.0",
+    "version": "2.4.0",
     "description": "CasparCG ClipTool",
     "license": "MIT",
     "private": false,
@@ -72,6 +72,7 @@
         "react-sortablejs": "^6.0.0",
         "redux": "^4.0.5",
         "rmc-tabs": "^1.2.29",
+        "serialport": "^9.0.7",
         "socket.io": "^4.0.0",
         "socket.io-client": "^4.0.0",
         "sortablejs": "^1.13.0",

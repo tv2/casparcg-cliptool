@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.4.0](https://github.com/olzzon/CasparCG-ClipTool/compare/v2.3.0...v2.4.0) (2021-05-22)
+
+### Features
+
+-   textview /?textview=1 for quing on small screens e.q. a small raspberry pi ([70f19a4](https://github.com/olzzon/CasparCG-ClipTool/commit/70f19a48bf3a4e21f61969503b6e87f7bd1095be))
+
 ## [2.3.0](https://github.com/olzzon/CasparCG-ClipTool/compare/v2.2.0...v2.3.0) (2021-04-21)
 
 ### Features
