@@ -19,6 +19,10 @@ export const loadSettings = () => {
 
 export const saveSettings = () => {
     var json = JSON.stringify(reduxState.settings[0].generics)
+    if (!fs.existsSync('storage')) {
+        fs.mkdirSync('storage')
+    }
+
     fs.writeFile(
         path.resolve('storage', 'settings.json'),
         json,

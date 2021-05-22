@@ -32,7 +32,7 @@
         "start-break": "node --inspect-brk ./build/server/index.js",
         "start-gateway": "node ./build/gateway/index.js",
         "start-gateway-dev": "node --inspect ./build/gateway/index.js",
-        "package": "yarn pkg ./build/server/index.js -t node12-win-x64 -o ./package/casparcg-clip-tool.exe",
+        "package": "yarn pkg .",
         "package-gateway": "yarn pkg ./build/gateway/index.js -t node12-win-x64 -o ./package/cliptool-gateway.exe",
         "release": "standard-version",
         "prepareChangelog": "standard-version --prerelease",
