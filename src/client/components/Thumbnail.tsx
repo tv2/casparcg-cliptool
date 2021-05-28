@@ -123,11 +123,11 @@ export const Thumbnail = () => {
         )
     } else {
         return (
-            <div className="flexBoxesText">
+            <div className="flexBoxes">
                 {reduxState.media[0].output[
                     reduxState.appNav[0].activeTab
                 ]?.mediaFiles.map((item: IMediaFile, index: number) => (
-                    <div className="boxComponent" key={'item' + index}>
+                    <div className="boxComponentText" key={'item' + index}>
                         {renderThumbText(item, index)}
                     </div>
                 ))}
