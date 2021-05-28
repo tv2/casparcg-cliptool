@@ -1,4 +1,4 @@
-import { info } from 'winston'
+import { logger } from './loggerGateway'
 
 const extractArg = (argName: string): string | undefined => {
     let extracted = process.argv.find((arg) => {
@@ -21,24 +21,24 @@ export const ARG_CONSTANTS: IArgConstants = {
 }
 
 export const argHelp = () => {
-    console.log(`Runtime arguments are : `)
-    console.log(
+    logger.info(`Runtime arguments are : `)
+    logger.info(
         `----------------------------------------------------------------`
     )
-    console.log(`cliptool='hostname:port' - adress of the clipttol server `)
-    console.log(
+    logger.info(`cliptool='hostname:port' - adress of the clipttol server `)
+    logger.info(
         `----------------------------------------------------------------`
     )
-    console.log(`type='osc' for OSC gateway`)
-    console.log(`oscport='5256' - port when running gateway as OSC server`)
-    console.log(
+    logger.info(`type='osc' for OSC gateway`)
+    logger.info(`oscport='5256' - port when running gateway as OSC server`)
+    logger.info(
         `----------------------------------------------------------------`
     )
-    console.log(`type='amp' for AMP gateway`)
-    console.log(`Creates an AMP server at port 3811`)
-    console.log(
+    logger.info(`type='amp' for AMP gateway`)
+    logger.info(`Creates an AMP server at port 3811`)
+    logger.info(
         `----------------------------------------------------------------`
     )
-    console.log(``)
-    console.log(``)
+    logger.info(``)
+    logger.info(``)
 }
