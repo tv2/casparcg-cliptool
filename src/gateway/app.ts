@@ -1,5 +1,6 @@
+import { ampServerGateway } from './gateways/AmpServerGateway'
 import { oscServerGateway } from './gateways/OscServerGateway'
-import { argHelper, ARG_CONSTANTS } from './util/extractArgs'
+import { argHelp, ARG_CONSTANTS } from './util/extractArgs'
 import { logger } from './util/loggerGateway'
 
 export const app = () => {
@@ -10,10 +11,10 @@ export const app = () => {
             oscServerGateway()
             break
         case 'amp':
-            logger.info('AMP Protocol, not yet implemented')
+            ampServerGateway()
             break
         default:
-            argHelper()
+            argHelp()
             process.exit(0)
     }
 }
