@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.5.0](https://github.com/olzzon/CasparCG-ClipTool/compare/v2.4.1...v2.5.0) (2021-05-28)
+
+### Features
+
+-   AMP control from Ross ([0c5daa2](https://github.com/olzzon/CasparCG-ClipTool/commit/0c5daa227433a76f6bc2d732c7c8f4b82c5f3923))
+-   AMP protocol control - Vrt1 - 8 . Play command implemented ([574ee2f](https://github.com/olzzon/CasparCG-ClipTool/commit/574ee2faae33e9bad613f81c51fe9c9e33ca3858))
+
+### Bug Fixes
+
+-   textview was limited to only one line of thumbs ([70e5b78](https://github.com/olzzon/CasparCG-ClipTool/commit/70e5b78358961bffb595b6efa4d2cf9b4567d2ab))
+
 ### [2.4.1](https://github.com/olzzon/CasparCG-ClipTool/compare/v2.4.0...v2.4.1) (2021-05-22)
 
 ### Bug Fixes
