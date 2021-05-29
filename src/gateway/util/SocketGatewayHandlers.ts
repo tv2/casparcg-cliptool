@@ -50,35 +50,33 @@ socket.on('Socker Client reconnect_attempt', () => {
 
 socket.on(IO.MEDIA_UPDATE, (channelIndex: number, payload: IMediaFile[]) => {
     reduxStore.dispatch(updateMediaFiles(channelIndex, payload))
-    /*
+
     logger.debug(
         `Media list updated Channel : ${channelIndex} Payload : ${payload}`
     )
-    */
 })
 
 socket.on(IO.FOLDERS_UPDATE, (payload: string[]) => {
     reduxStore.dispatch(updateFolderList(payload))
-    /*
+
     logger.debug(`Folderlist updated Payload : ${payload}`)
-    */
 })
 
 socket.on(IO.THUMB_UPDATE, (channelIndex: number, payload: IThumbFile[]) => {
     reduxStore.dispatch(updateThumbFileList(channelIndex, payload))
-    /*
+
     logger.debug(
         `Thumbs updated Channel : ${channelIndex} Payload : ${payload}`
     )
-    */
 })
 
-socket.on(IO.TIME_UPDATE, (index: number, time: [number, number]) => {
-    reduxStore.dispatch(setTime(index, time))
-})
-
-socket.on(IO.TALLY_UPDATE, (index: number, payload: string) => {
-    reduxStore.dispatch(setTallyFileName(index, payload))
+socket.on(IO.TIME_TALLY_UPDATE, (data: IO.ITimeTallyPayload[]) => {
+    data.forEach((channel, index) => {
+        reduxStore.dispatch(setTime(index, channel.time))
+        if (reduxState.media[0].output[index].tallyFile !== channel.tally) {
+            reduxStore.dispatch(setTallyFileName(index, channel.tally))
+        }
+    })
 })
 
 socket.on(IO.LOOP_STATEUPDATE, (channelIndex: number, loop: boolean) => {
