@@ -185,15 +185,22 @@ const loadCcgMedia = (): Promise<boolean> => {
                                 )
                             }
                         )
-                        reduxStore.dispatch(
-                            updateThumbFileList(channelIndex, outputMedia)
-                        )
-                        socketServer.emit(
-                            IO.THUMB_UPDATE,
-                            channelIndex,
-                            reduxState.media[0].output[channelIndex]
-                                .thumbnailList
-                        )
+                        if (
+                            JSON.stringify(
+                                reduxState.media[0].output[channelIndex]
+                                    .thumbnailList
+                            ) !== JSON.stringify(outputMedia)
+                        ) {
+                            reduxStore.dispatch(
+                                updateThumbFileList(channelIndex, outputMedia)
+                            )
+                            socketServer.emit(
+                                IO.THUMB_UPDATE,
+                                channelIndex,
+                                reduxState.media[0].output[channelIndex]
+                                    .thumbnailList
+                            )
+                        }
                     }
                 )
             })
@@ -227,14 +234,22 @@ const loadCcgMedia = (): Promise<boolean> => {
                                 )
                             }
                         )
-                        reduxStore.dispatch(
-                            updateMediaFiles(channelIndex, outputMedia)
-                        )
-                        socketServer.emit(
-                            IO.MEDIA_UPDATE,
-                            channelIndex,
-                            reduxState.media[0].output[channelIndex].mediaFiles
-                        )
+                        if (
+                            JSON.stringify(
+                                reduxState.media[0].output[channelIndex]
+                                    .mediaFiles
+                            ) !== JSON.stringify(outputMedia)
+                        ) {
+                            reduxStore.dispatch(
+                                updateMediaFiles(channelIndex, outputMedia)
+                            )
+                            socketServer.emit(
+                                IO.MEDIA_UPDATE,
+                                channelIndex,
+                                reduxState.media[0].output[channelIndex]
+                                    .mediaFiles
+                            )
+                        }
                     }
                 )
             })

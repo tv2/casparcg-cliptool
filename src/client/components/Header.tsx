@@ -153,6 +153,9 @@ export const RenderFullHeader = () => {
 }
 
 export const RenderTextViewHeader = () => {
+    // Redux hook:
+    useSelector((storeUpdate) => storeUpdate, shallowEqual)
+
     return (
         <header className="App-header">
             <RenderTime />
