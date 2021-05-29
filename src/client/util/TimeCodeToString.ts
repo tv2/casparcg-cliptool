@@ -3,7 +3,7 @@ const FPS = 25
 export const secondsToTimeCode = (timer: [number, number] = [0, 0]) => {
     let time = timer[1] - timer[0]
     if (time <= 0) {
-        time = timer[1]
+        time = 0
     }
     if (time) {
         var hour = ('0' + Math.round(time / (60 * 60))).slice(-2)
@@ -15,6 +15,6 @@ export const secondsToTimeCode = (timer: [number, number] = [0, 0]) => {
         ).slice(-2)
         return ' ' + hour + '.' + minute + '.' + sec + '.' + frm + ' '
     } else {
-        return ' 00.00.00.00 '
+        return ' NOT  CUED '
     }
 }
