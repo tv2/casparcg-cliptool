@@ -80,10 +80,15 @@ export function socketIoHandlers(socket: any) {
 
 export const initializeClient = () => {
     socketServer.emit(IO.TAB_DATA_UPDATE, reduxState.settings[0].tabData)
-
+    let timeTallyData: IO.ITimeTallyPayload[] = []
     reduxState.media[0].output.forEach(
         (output: IOutput, channelIndex: number) => {
-            socketServer.emit(IO.TALLY_UPDATE, channelIndex, output.tallyFile)
+            timeTallyData[channelIndex] = {
+                time: output.time,
+                tally: output.tallyFile,
+            }
+
+            socketServer.emit(IO.TIME_TALLY_UPDATE, timeTallyData)
             socketServer.emit(
                 IO.LOOP_STATEUPDATE,
                 channelIndex,
@@ -111,4 +116,5 @@ export const initializeClient = () => {
             )
         }
     )
+    socketServer.emit(IO.TIME_TALLY_UPDATE, timeTallyData)
 }

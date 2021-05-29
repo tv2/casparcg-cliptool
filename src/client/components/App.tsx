@@ -3,7 +3,6 @@ import { Tabs } from 'rmc-tabs'
 import { reduxStore, reduxState } from '../../model/reducers/store'
 import { shallowEqual, useSelector } from 'react-redux'
 
-
 // Components:
 import { Thumbnail } from './Thumbnail'
 
@@ -13,31 +12,12 @@ import HandleShortcuts from '../util/HandleShortcuts'
 //CSS files:
 import '../css/Rmc-tabs.css'
 import '../css/App.css'
-import {
-    setActiveTab,
-} from '../../model/reducers/appNavAction'
+import { setActiveTab } from '../../model/reducers/appNavAction'
 import { RenderFullHeader, RenderTextViewHeader } from './Header'
 
 export const App = () => {
-    // Redux hook:
-    const store = useSelector((storeUpdate) => storeUpdate, shallowEqual)
-
-
     const setOutput = (tab: number) => {
         reduxStore.dispatch(setActiveTab(tab))
-    }
-
-    //Rendering functions:
-
-
-    const renderTabData = () => {
-        return reduxState.settings[0].tabData.map((item) => {
-            return (
-                <div className="App-intro" key={item.key}>
-                    <Thumbnail />
-                </div>
-            )
-        })
     }
 
     return (
@@ -53,9 +33,28 @@ export const App = () => {
                     tabs={reduxState.settings[0].tabData}
                     onChange={(tab, index) => setOutput(index)}
                 >
-                    {renderTabData()}
+                    {RenderTabData()}
                 </Tabs>
             </div>
+        </div>
+    )
+}
+
+const RenderTabData = () => {
+    // Redux hook:
+    useSelector(
+        (storeUpdate: any) => storeUpdate.settings[0].tabData
+    )
+
+    return (
+        <div>
+            {reduxState.settings[0].tabData.map((item) => {
+                return (
+                    <div className="App-intro" key={item.key}>
+                        <Thumbnail />
+                    </div>
+                )
+            })}
         </div>
     )
 }

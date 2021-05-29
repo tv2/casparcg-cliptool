@@ -1,9 +1,8 @@
 // Server to Clients:
-export const TIME_UPDATE = 'timeUpdate'
+export const TIME_TALLY_UPDATE = 'timeTallyUpdate'
 export const MEDIA_UPDATE = 'mediaUpdate'
 export const THUMB_UPDATE = 'thumbUpdate'
 export const FOLDERS_UPDATE = 'foldersUpdate'
-export const TALLY_UPDATE = 'tallyUpdate'
 export const TAB_DATA_UPDATE = 'tabDataUpdate'
 export const SETTINGS_UPDATE = 'settingsUpdate'
 export const LOOP_STATEUPDATE = 'loopStateUpdate'
@@ -21,3 +20,9 @@ export const SET_MANUAL_START_STATE = 'setManualStartState'
 export const SET_MIX_STATE = 'setMixState'
 export const SET_GENERICS = 'setGenerics'
 export const RESTART_SERVER = 'restartServer'
+
+// Payload types:
+export interface ITimeTallyPayload {
+    time: [number, number]
+    tally: string
+}

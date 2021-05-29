@@ -70,7 +70,7 @@ const handleManualStartStatus = () => {
 }
 export const RenderFullHeader = () => {
     // Redux hook:
-    const store = useSelector((storeUpdate) => storeUpdate, shallowEqual)
+    useSelector((storeUpdate) => storeUpdate, shallowEqual)
 
     return (
         <header className="App-header">
