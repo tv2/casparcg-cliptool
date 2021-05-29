@@ -120,17 +120,19 @@ const casparCGconnection = () => {
                 reduxState.settings[0].generics.ccgAmcpPort
             )
             console.log('CasparCG Server Version :', response.response.data)
+            ccgConnection.getCasparCGConfig().then((config) => {
+                console.log('CasparCG Config :', config.channels)
+                reduxStore.dispatch(setNumberOfOutputs(config.channels.length))
+                reduxStore.dispatch(updateSettings(config.channels))
+                reduxStore.dispatch(setTabData(config.channels.length))
+                console.log('Number of Channels :', config.channels.length)
+                socketServer.emit(IO.SETTINGS_UPDATE, reduxState.settings[0])
+                initializeClient()
+            })
         })
         .catch((error) => {
             console.log('No connection to CasparCG', error)
         })
-    ccgConnection.getCasparCGConfig().then((response) => {
-        console.log('CasparCG Config :', response.channels)
-        reduxStore.dispatch(setNumberOfOutputs(response.channels.length))
-        reduxStore.dispatch(updateSettings(response.channels))
-        reduxStore.dispatch(setTabData(response.channels.length))
-        initializeClient()
-    })
     startTimerControlledServices()
 }
 
