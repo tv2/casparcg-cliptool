@@ -8,6 +8,8 @@ import {
     setLoop,
     setMix,
     setManualStart,
+    updateMediaFiles,
+    updateThumbFileList,
 } from '../../model/reducers/mediaActions'
 import { setGenerics } from '../../model/reducers/settingsAction'
 import { IGenericSettings } from '../../model/reducers/settingsReducer'
@@ -72,6 +74,7 @@ export function socketIoHandlers(socket: any) {
             reduxStore.dispatch(setGenerics(generics))
             saveSettings()
             socketServer.emit(IO.SETTINGS_UPDATE, reduxState.settings[0])
+            cleanUpMediaFiles()
         })
         .on(IO.RESTART_SERVER, () => {
             process.exit(0)
@@ -117,4 +120,13 @@ export const initializeClient = () => {
         }
     )
     socketServer.emit(IO.TIME_TALLY_UPDATE, timeTallyData)
+}
+
+const cleanUpMediaFiles = () => {
+    reduxState.media[0].output.forEach(
+        (output: IOutput, channelIndex: number) => {
+            reduxStore.dispatch(updateMediaFiles(channelIndex, []))
+            reduxStore.dispatch(updateThumbFileList(channelIndex, []))
+        }
+    )
 }
