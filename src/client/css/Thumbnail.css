@@ -25,8 +25,8 @@
     background: #2e2b41;
     color: white;
     box-shadow: 6px 6px 6px #555;
-    width: 300px;
-    height: 100px;
+    width: 270px;
+    height: 150px;
     margin: 5px;
     font-size: 0.9em;
 }
@@ -82,10 +82,23 @@
     border-radius: 16px;
 }
 
+/* on-screen timecode in textmode*/
+.thumbnail-timecode-text {
+    position: absolute;
+    width: 200px;
+    left: 35px;
+    top: 80px;
+    text-align: left;
+    font-size: 2.3em;
+    color: red;
+    background: #ffffff8c;
+    border-radius: 16px;
+}
+
 /* thumbnail textView */
 
 .thumbnail-text-view {
-    height: 100px;
+    height: 130px;
     border-width: 2px;
     border-style: solid;
     border-color: red;
@@ -95,7 +108,7 @@
 
 .thumbnail-text-view-ClickPgm {
     position: absolute;
-    height: 120px;
+    height: 130px;
     top: 10px;
     z-index: 2;
     background-color: transparent;

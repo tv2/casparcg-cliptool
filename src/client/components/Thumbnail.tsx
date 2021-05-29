@@ -114,6 +114,25 @@ const RenderThumb = (props) => {
     )
 }
 
+const RenderThumbTimeCode = (props) => {
+    // Redux hook:
+    useSelector(
+        (storeUpdate: any) =>
+            storeUpdate.media[0].output[reduxState.appNav[0].activeTab].time
+    )
+    return (
+        <a className="thumbnail-timecode">
+            {reduxState.media[0].output[reduxState.appNav[0].activeTab]
+                .tallyFile === props.item.name
+                ? secondsToTimeCode(
+                      reduxState.media[0].output[reduxState.appNav[0].activeTab]
+                          ?.time
+                  )
+                : ''}
+        </a>
+    )
+}
+
 
 const RenderThumbText = (props) => {
         // Redux hook:
@@ -139,6 +158,12 @@ const RenderThumbText = (props) => {
                     handleClickMedia(props.item.name)
                 }}
             ></button>
+            {reduxState.media[0].output[reduxState.appNav[0].activeTab]
+                .tallyFile === props.item.name ? (
+                <RenderThumbTextTimeCode item={props.item} />
+            ) : (
+                ''
+            )}
             <p className="text-text-view">
                 {props.item.name
                     .substring(props.item.name.lastIndexOf('/') + 1)
@@ -148,14 +173,14 @@ const RenderThumbText = (props) => {
     )
 }
 
-const RenderThumbTimeCode = (props) => {
+const RenderThumbTextTimeCode = (props) => {
     // Redux hook:
     useSelector(
         (storeUpdate: any) =>
             storeUpdate.media[0].output[reduxState.appNav[0].activeTab].time
     )
     return (
-        <a className="thumbnail-timecode">
+        <a className="thumbnail-timecode-text">
             {reduxState.media[0].output[reduxState.appNav[0].activeTab]
                 .tallyFile === props.item.name
                 ? secondsToTimeCode(

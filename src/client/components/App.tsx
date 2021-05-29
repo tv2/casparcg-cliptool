@@ -13,7 +13,7 @@ import HandleShortcuts from '../util/HandleShortcuts'
 import '../css/Rmc-tabs.css'
 import '../css/App.css'
 import { setActiveTab } from '../../model/reducers/appNavAction'
-import { RenderFullHeader, RenderTextViewHeader } from './Header'
+import { RenderFullHeader } from './Header'
 
 export const App = () => {
     const setOutput = (tab: number) => {
@@ -22,12 +22,7 @@ export const App = () => {
 
     return (
         <div className="App">
-            {reduxState.appNav[0].selectView === 0 ? <RenderFullHeader /> : ''}
-            {reduxState.appNav[0].selectView === 1 ? (
-                <RenderTextViewHeader />
-            ) : (
-                ''
-            )}
+             <RenderFullHeader />
             <div className="App-body">
                 <Tabs
                     tabs={reduxState.settings[0].tabData}
