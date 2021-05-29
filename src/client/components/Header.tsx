@@ -52,12 +52,24 @@ const handleLoopStatus = () => {
     )
 }
 
+const loopStateStyle = () => {
+    return reduxState.media[0].output[reduxState.appNav[0].activeTab]?.loopState
+        ? { backgroundColor: 'rgb(28, 115, 165)' }
+        : { backgroundColor: 'grey' }
+}
+
 const handleMixStatus = () => {
     socket.emit(
         IO.SET_MIX_STATE,
         reduxState.appNav[0].activeTab,
         !reduxState.media[0].output[reduxState.appNav[0].activeTab].mixState
     )
+}
+
+const mixStateStyle = () => {
+    return reduxState.media[0].output[reduxState.appNav[0].activeTab]?.mixState
+        ? { backgroundColor: 'rgb(28, 115, 165)' }
+        : { backgroundColor: 'grey' }
 }
 
 const handleManualStartStatus = () => {
@@ -74,50 +86,48 @@ export const RenderFullHeader = () => {
 
     return (
         <header className="App-header">
-            <div className="App-reload-setup-background">
-                <button
-                    className="App-settings-button"
-                    onClick={() => handleSettingsPage()}
-                >
-                    SETTINGS
-                </button>
-            </div>
+            {reduxState.appNav[0].selectView === 0 ? (
+                <div className="App-reload-setup-background">
+                    <button
+                        className="App-settings-button"
+                        onClick={() => handleSettingsPage()}
+                    >
+                        SETTINGS
+                    </button>
+                </div>
+            ) : (
+                ''
+            )}
 
             <RenderTime />
+            {reduxState.appNav[0].selectView === 0 ? (
+                <React.Fragment>
+                    <div className="App-button-background">
+                        <button
+                            className="App-switch-button"
+                            onClick={() => {
+                                handleLoopStatus()
+                            }}
+                            style={loopStateStyle()}
+                        >
+                            LOOP
+                        </button>
+                    </div>
+                    )
+                    <div className="App-button-background">
+                        <button
+                            className="App-switch-button"
+                            onClick={() => handleMixStatus()}
+                            style={mixStateStyle()}
+                        >
+                            MIX
+                        </button>
+                    </div>
+                </React.Fragment>
+            ) : (
+                ''
+            )}
 
-            <div className="App-button-background">
-                <button
-                    className="App-switch-button"
-                    onClick={() => {
-                        handleLoopStatus()
-                    }}
-                    style={
-                        reduxState.media[0].output[
-                            reduxState.appNav[0].activeTab
-                        ]?.loopState
-                            ? { backgroundColor: 'rgb(28, 115, 165)' }
-                            : { backgroundColor: 'grey' }
-                    }
-                >
-                    LOOP
-                </button>
-            </div>
-
-            <div className="App-button-background">
-                <button
-                    className="App-switch-button"
-                    onClick={() => handleMixStatus()}
-                    style={
-                        reduxState.media[0].output[
-                            reduxState.appNav[0].activeTab
-                        ]?.mixState
-                            ? { backgroundColor: 'rgb(28, 115, 165)' }
-                            : { backgroundColor: 'grey' }
-                    }
-                >
-                    MIX
-                </button>
-            </div>
             <div className="App-button-background">
                 <button
                     className="App-switch-button"
