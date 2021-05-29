@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.6.0](https://github.com/olzzon/CasparCG-ClipTool/compare/v2.5.0...v2.6.0) (2021-05-29)
+
+### Features
+
+-   Indicatwe when the clip has played and no longer are cured. ([6c70832](https://github.com/olzzon/CasparCG-ClipTool/commit/6c70832a887a9067c09f4a809650b4ed47aa5842))
+-   speedoptimization, only rerender when needed, goal is to run client on Rpi 2. ([cdfc405](https://github.com/olzzon/CasparCG-ClipTool/commit/cdfc405952db2497099fa96b927716b82b64d64c))
+-   textview - simple header for small screens (E.G. Rpi with touch) ([c47455b](https://github.com/olzzon/CasparCG-ClipTool/commit/c47455b84f7482eae879e6347d965915c9ee8d52))
+-   textview larger thumbs, settings and timecode ([b48b943](https://github.com/olzzon/CasparCG-ClipTool/commit/b48b943adac526827e45344029d5ab6efc5fc89f))
+
+### Bug Fixes
+
+-   cleanup mediafiles for reloading after changing settings (e.g. folders) ([4be38a5](https://github.com/olzzon/CasparCG-ClipTool/commit/4be38a57a6e869e36b6f733848e7be4d15b60f68))
+-   gateway was not updated with new TimeTally handling ([3e9e743](https://github.com/olzzon/CasparCG-ClipTool/commit/3e9e7431788cf4718183b97a46b55d30b4401547))
+-   logger levels should be 0 to 3 not 3 to 0 ([06e3c3b](https://github.com/olzzon/CasparCG-ClipTool/commit/06e3c3b9d99ca1f3436026b0eb89c171cdee82b7))
+-   only update and emit store when changes in files and thumbs ([f09bb19](https://github.com/olzzon/CasparCG-ClipTool/commit/f09bb193853d18d6832036b71d0bc71c29f0127c))
+-   renderTabdata should return an array for tabs ([b54479b](https://github.com/olzzon/CasparCG-ClipTool/commit/b54479b9ae3571fa5c51a58ecbf643acc37ca377))
+-   update number of channels on clients when connecting to CasparCG (if ClipTool are started prior to CCG) ([08f35e0](https://github.com/olzzon/CasparCG-ClipTool/commit/08f35e0324fd3997a4e0936c506ca23694c7565c))
+
 ## [2.5.0](https://github.com/olzzon/CasparCG-ClipTool/compare/v2.4.1...v2.5.0) (2021-05-28)
 
 ### Features
