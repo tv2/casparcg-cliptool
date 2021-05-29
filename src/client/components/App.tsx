@@ -1,13 +1,10 @@
 import React from 'react'
 import { Tabs } from 'rmc-tabs'
 import { reduxStore, reduxState } from '../../model/reducers/store'
-import { shallowEqual, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 
 // Components:
 import { Thumbnail } from './Thumbnail'
-
-//Utils:
-import HandleShortcuts from '../util/HandleShortcuts'
 
 //CSS files:
 import '../css/Rmc-tabs.css'
@@ -28,28 +25,25 @@ export const App = () => {
                     tabs={reduxState.settings[0].tabData}
                     onChange={(tab, index) => setOutput(index)}
                 >
-                    {RenderTabData()}
+                    {renderTabData()}
                 </Tabs>
             </div>
         </div>
     )
 }
 
-const RenderTabData = () => {
+const renderTabData = () => {
     // Redux hook:
     useSelector(
         (storeUpdate: any) => storeUpdate.settings[0].tabData
     )
-
     return (
-        <div>
-            {reduxState.settings[0].tabData.map((item) => {
+            reduxState.settings[0].tabData.map((item, index) => {
                 return (
-                    <div className="App-intro" key={item.key}>
+                    <div className="App-intro" key={index}>
                         <Thumbnail />
                     </div>
                 )
-            })}
-        </div>
+            })
     )
 }
