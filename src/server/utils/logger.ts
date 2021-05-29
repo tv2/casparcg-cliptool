@@ -4,10 +4,10 @@ const logLevel: string = process.env.LOG_LEVEL || 'info'
 
 const logLevelSetup: any = {
     levels: {
-        error: 0,
-        warn: 1,
-        debug: 2,
-        info: 3,
+        error: 3,
+        warn: 2,
+        debug: 1,
+        info: 0,
     },
     colors: {
         error: 'red',
