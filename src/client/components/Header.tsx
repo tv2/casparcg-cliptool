@@ -13,7 +13,7 @@ import { secondsToTimeCode } from '../util/TimeCodeToString'
 import { TOGGLE_SHOW_SETTINGS } from '../../model/reducers/appNavAction'
 
 import * as IO from '../../model/SocketIoConstants'
-import { getThumb } from './Thumbnail'
+import { findThumbPix } from './Thumbnail'
 import { SettingsPage } from './Settings'
 
 const RenderTime = () => {
@@ -26,7 +26,7 @@ const RenderTime = () => {
                 )}
             </button>
             <img
-                src={getThumb(
+                src={findThumbPix(
                     reduxState.media[0].output[reduxState.appNav[0].activeTab]
                         ?.tallyFile,
                     reduxState.appNav[0].activeTab

@@ -13,7 +13,7 @@ import { socket } from '../util/SocketClientHandlers'
 import { PGM_LOAD, PGM_PLAY } from '../../model/SocketIoConstants'
 import { useSelector } from 'react-redux'
 
-export const getThumb = (fileName: string, channelIndex: number) => {
+export const findThumbPix = (fileName: string, channelIndex: number) => {
     let thumb =
         reduxState.media[0].output[channelIndex]?.thumbnailList.filter(
             (item: IThumbFile) => {
@@ -79,20 +79,8 @@ const RenderThumb = (props) => {
     )
     return (
         <div>
-            <img
-                src={getThumb(
-                    props.item.name,
-                    reduxState.appNav[0].activeTab || 0
-                )}
-                className="thumbnailImage"
-                style={Object.assign(
-                    {},
-                    reduxState.media[0].output[reduxState.appNav[0].activeTab]
-                        ?.tallyFile === props.item.name
-                        ? { borderWidth: '4px' }
-                        : { borderWidth: '0px' }
-                )}
-            />
+            <RenderThumbPix item={props.item} />
+
             <button
                 className="thumbnailImageClickPgm"
                 onClick={() => {
@@ -133,14 +121,38 @@ const RenderThumbTimeCode = (props) => {
     )
 }
 
+const RenderThumbPix = (props) => {
+    // Redux hook:
+    useSelector(
+        (storeUpdate: any) =>
+            storeUpdate.media[0].output[reduxState.appNav[0].activeTab]
+                .thumbnailList
+    )
+    return (
+        <img
+            src={findThumbPix(
+                props.item.name,
+                reduxState.appNav[0].activeTab || 0
+            )}
+            className="thumbnailImage"
+            style={Object.assign(
+                {},
+                reduxState.media[0].output[reduxState.appNav[0].activeTab]
+                    ?.tallyFile === props.item.name
+                    ? { borderWidth: '4px' }
+                    : { borderWidth: '0px' }
+            )}
+        />
+    )
+}
 
 const RenderThumbText = (props) => {
-        // Redux hook:
-        useSelector(
-            (storeUpdate: any) =>
-                storeUpdate.media[0].output[reduxState.appNav[0].activeTab]
-                    .tallyFile
-        )
+    // Redux hook:
+    useSelector(
+        (storeUpdate: any) =>
+            storeUpdate.media[0].output[reduxState.appNav[0].activeTab]
+                .tallyFile
+    )
     return (
         <div
             className="thumbnail-text-view"
