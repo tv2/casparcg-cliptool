@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.6.1](https://github.com/olzzon/CasparCG-ClipTool/compare/v2.6.0...v2.6.1) (2021-05-30)
+
+### Bug Fixes
+
+-   Re-render thumbnails if thumbs are updated (if received later than filelist) ([2e608c9](https://github.com/olzzon/CasparCG-ClipTool/commit/2e608c92e050be71cebc927973faf360b18521b8))
+
 ## [2.6.0](https://github.com/olzzon/CasparCG-ClipTool/compare/v2.5.0...v2.6.0) (2021-05-29)
 
 ### Features
