@@ -26,7 +26,7 @@ export const ampServerGateway = () => {
                 let channel = 1 // message.address.split('/')[2]
                 if (message.includes('CMDS00042001')) {
                     console.log(`PLAY on channel ${ccgCh}`)
-                    socketio.emit(IO.PGM_PLAY, channel - 1)
+                    socketio.emit(IO.PGM_PLAY, channel - 1, '')
                 }
             })
             .on('end', () => {
