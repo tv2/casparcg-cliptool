@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.6.3](https://github.com/olzzon/CasparCG-ClipTool/compare/v2.6.2...v2.6.3) (2021-06-08)
+
+### Bug Fixes
+
+-   AMP Gateway always played on output 1 because of missing empty string in emit ([c439867](https://github.com/olzzon/CasparCG-ClipTool/commit/c439867cbfac097a06e34dc27e1b6326f185bc68))
+
 ### [2.6.2](https://github.com/olzzon/CasparCG-ClipTool/compare/v2.6.1...v2.6.2) (2021-06-07)
 
 ### [2.6.1](https://github.com/olzzon/CasparCG-ClipTool/compare/v2.6.0...v2.6.1) (2021-05-30)
