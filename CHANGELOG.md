@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.7.0](https://github.com/olzzon/CasparCG-ClipTool/compare/v2.6.3...v2.7.0) (2021-09-04)
+
+### Features
+
+-   only view one channel output (e.g. for a client only controlling a screen localhost:555/?channel=2) ([30bb477](https://github.com/olzzon/CasparCG-ClipTool/commit/30bb477f573b0eab6af542bbdefd6191d35c7dc7))
+
 ### [2.6.3](https://github.com/olzzon/CasparCG-ClipTool/compare/v2.6.2...v2.6.3) (2021-06-08)
 
 ### Bug Fixes
