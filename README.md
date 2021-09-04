@@ -74,6 +74,8 @@ yarn start
 Open GUI in browser: http://localhost:5555
 If you want to run in textview for small touchscreens use :http://localhost:5555/?textview=1
 
+Only view one Output channel: http://localhost:5555/?channel=2
+
 ### Build the app
 
 ```
