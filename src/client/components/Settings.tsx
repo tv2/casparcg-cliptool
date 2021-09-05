@@ -6,6 +6,10 @@ import { socket } from '../util/SocketClientHandlers'
 import * as IO from '../../model/SocketIoConstants'
 import { TOGGLE_SHOW_SETTINGS } from '../../model/reducers/appNavAction'
 
+// Check if URL has specifiet a channel:
+const channel = new URLSearchParams(window.location.search).get('channel')
+const specificChannel = parseInt(channel) || 0
+
 //Set style for Select dropdown component:
 const selectorColorStyles = {
     control: (styles) => ({
@@ -43,65 +47,75 @@ export const SettingsPage = () => {
     return (
         <div className="Settings-body">
             <p className="Settings-header">SETTINGS :</p>
-            <form className="Settings-form">
-                <div className="Settings-channel-form">
-                    <label className="Settings-input-field">
-                        IP ADDRESS :
-                        <br />
-                        <input
-                            name="ccgIp"
-                            type="text"
-                            value={reduxState.settings[0].generics.ccgIp}
-                            onChange={handleChange}
-                        />
-                    </label>
-                    <label className="Settings-input-field">
-                        AMCP PORT :
-                        <br />
-                        <input
-                            name="ccgAmcpPort"
-                            type="number"
-                            value={reduxState.settings[0].generics.ccgAmcpPort}
-                            onChange={handleChange}
-                        />
-                    </label>
-                    <label className="Settings-input-field">
-                        OSC PORT (into ClipTool) :
-                        <br />
-                        <input
-                            name="ccgOscPort"
-                            type="number"
-                            value={reduxState.settings[0].generics.ccgOscPort}
-                            onChange={handleChange}
-                        />
-                    </label>
-                    <label className="Settings-input-field">
-                        DEFAULT LAYER :
-                        <br />
-                        <input
-                            name="ccgDefaultLayer"
-                            type="number"
-                            value={
-                                reduxState.settings[0].generics.ccgDefaultLayer
-                            }
-                            onChange={handleChange}
-                        />
-                    </label>
-                    <label className="Settings-input-field">
-                        TRANSITION TIME :
-                        <br />
-                        <input
-                            name="transistionTime"
-                            type="number"
-                            value={
-                                reduxState.settings[0].generics.transistionTime
-                            }
-                            onChange={handleChange}
-                        />
-                    </label>
-                </div>
-                <hr />
-            </form>
+            {!specificChannel ? (
+                <form className="Settings-form">
+                    <div className="Settings-channel-form">
+                        <label className="Settings-input-field">
+                            IP ADDRESS :
+                            <br />
+                            <input
+                                name="ccgIp"
+                                type="text"
+                                value={reduxState.settings[0].generics.ccgIp}
+                                onChange={handleChange}
+                            />
+                        </label>
+                        <label className="Settings-input-field">
+                            AMCP PORT :
+                            <br />
+                            <input
+                                name="ccgAmcpPort"
+                                type="number"
+                                value={
+                                    reduxState.settings[0].generics.ccgAmcpPort
+                                }
+                                onChange={handleChange}
+                            />
+                        </label>
+                        <label className="Settings-input-field">
+                            OSC PORT (into ClipTool) :
+                            <br />
+                            <input
+                                name="ccgOscPort"
+                                type="number"
+                                value={
+                                    reduxState.settings[0].generics.ccgOscPort
+                                }
+                                onChange={handleChange}
+                            />
+                        </label>
+                        <label className="Settings-input-field">
+                            DEFAULT LAYER :
+                            <br />
+                            <input
+                                name="ccgDefaultLayer"
+                                type="number"
+                                value={
+                                    reduxState.settings[0].generics
+                                        .ccgDefaultLayer
+                                }
+                                onChange={handleChange}
+                            />
+                        </label>
+                        <label className="Settings-input-field">
+                            TRANSITION TIME :
+                            <br />
+                            <input
+                                name="transistionTime"
+                                type="number"
+                                value={
+                                    reduxState.settings[0].generics
+                                        .transistionTime
+                                }
+                                onChange={handleChange}
+                            />
+                        </label>
+                    </div>
+                    <hr />
+                </form>
+            ) : (
+                <React.Fragment />
+            )}
             <RenderOutputSettings />
             <hr />
             <div className="Settings-channel-form">
@@ -162,112 +176,110 @@ const RenderOutputSettings = () => {
         reduxStore.dispatch(setGenerics(generics))
     }
 
+    const renderSingleOutput = (index: number) => {
+        return (
+            <form className="Settings-channel-form" key={index}>
+                <label className="settings-channel-header">
+                    OUTPUT {index + 1} :
+                </label>
+                <label className="Settings-input-field">
+                    LABEL :
+                    <br />
+                    <input
+                        name={String(index)}
+                        type="text"
+                        value={
+                            reduxState.settings[0].generics.outputLabels[index]
+                        }
+                        onChange={handleOutputLabel}
+                    />
+                </label>
+                <label className="Settings-input-field">
+                    MEDIAFOLDER :
+                    <br />
+                    <select
+                        className="settings-select"
+                        name={String(index)}
+                        onChange={(event) => handleTabMediaFolder(event)}
+                        value={
+                            reduxState.settings[0].generics.outputFolders[index]
+                        }
+                    >
+                        {reduxState.media[0].folderList.map(
+                            (path: string, folderIndex: number) => {
+                                return (
+                                    <option key={folderIndex} value={path}>
+                                        {path}
+                                    </option>
+                                )
+                            }
+                        )}
+                    </select>
+                </label>
+                <label className="Settings-input-field">
+                    FORMAT :
+                    <br />
+                    {reduxState.settings[0].ccgConfig.channels[index].videoMode}
+                </label>
+                <label className="Settings-input-field">
+                    SCALE :
+                    <br />
+                    <input
+                        name={String(index)}
+                        type="checkbox"
+                        checked={reduxState.settings[0].generics.scale[index]}
+                        onChange={handleScale}
+                    />
+                </label>
+                {reduxState.settings[0].generics.scale[index] ? (
+                    <React.Fragment>
+                        <label className="Settings-input-field">
+                            SCALE X :
+                            <br />
+                            <input
+                                name={String(index)}
+                                type="number"
+                                value={
+                                    reduxState.settings[0].generics.scaleX[
+                                        index
+                                    ]
+                                }
+                                onChange={handleScaleX}
+                            />
+                            px
+                        </label>
+                        <label className="Settings-input-field">
+                            SCALE Y :
+                            <br />
+                            <input
+                                name={String(index)}
+                                type="number"
+                                value={
+                                    reduxState.settings[0].generics.scaleY[
+                                        index
+                                    ]
+                                }
+                                onChange={handleScaleY}
+                            />
+                            px
+                        </label>
+                    </React.Fragment>
+                ) : (
+                    <React.Fragment></React.Fragment>
+                )}
+            </form>
+        )
+    }
+
     return (
         <div>
-            {reduxState.settings[0].ccgConfig.channels.map((item, index) => {
-                return (
-                    <form className="Settings-channel-form" key={index}>
-                        <label className="settings-channel-header">
-                            OUTPUT {index + 1} :
-                        </label>
-                        <label className="Settings-input-field">
-                            LABEL :
-                            <br />
-                            <input
-                                name={String(index)}
-                                type="text"
-                                value={
-                                    reduxState.settings[0].generics
-                                        .outputLabels[index]
-                                }
-                                onChange={handleOutputLabel}
-                            />
-                        </label>
-                        <label className="Settings-input-field">
-                            MEDIAFOLDER :
-                            <br />
-                            <select
-                                className="settings-select"
-                                name={String(index)}
-                                onChange={(event) =>
-                                    handleTabMediaFolder(event)
-                                }
-                                value={
-                                    reduxState.settings[0].generics
-                                        .outputFolders[index]
-                                }
-                            >
-                                {reduxState.media[0].folderList.map(
-                                    (path: string, folderIndex: number) => {
-                                        return (
-                                            <option
-                                                key={folderIndex}
-                                                value={path}
-                                            >
-                                                {path}
-                                            </option>
-                                        )
-                                    }
-                                )}
-                            </select>
-                        </label>
-                        <label className="Settings-input-field">
-                            FORMAT :
-                            <br />
-                            {
-                                reduxState.settings[0].ccgConfig.channels[index]
-                                    .videoMode
-                            }
-                        </label>
-                        <label className="Settings-input-field">
-                            SCALE :
-                            <br />
-                            <input
-                                name={String(index)}
-                                type="checkbox"
-                                checked={
-                                    reduxState.settings[0].generics.scale[index]
-                                }
-                                onChange={handleScale}
-                            />
-                        </label>
-                        {reduxState.settings[0].generics.scale[index] ? (
-                            <React.Fragment>
-                                <label className="Settings-input-field">
-                                    SCALE X :
-                                    <br />
-                                    <input
-                                        name={String(index)}
-                                        type="number"
-                                        value={
-                                            reduxState.settings[0].generics
-                                                .scaleX[index]
-                                        }
-                                        onChange={handleScaleX}
-                                    />
-                                    px
-                                </label>
-                                <label className="Settings-input-field">
-                                    SCALE Y :
-                                    <br />
-                                    <input
-                                        name={String(index)}
-                                        type="number"
-                                        value={
-                                            reduxState.settings[0].generics
-                                                .scaleY[index]
-                                        }
-                                        onChange={handleScaleY}
-                                    />
-                                    px
-                                </label>
-                            </React.Fragment>
-                        ) : (
-                            <React.Fragment></React.Fragment>
-                        )}
-                    </form>
-                )
-            })}
+            {specificChannel
+                ? renderSingleOutput(specificChannel - 1)
+                : reduxState.settings[0].ccgConfig.channels.map(
+                      (item, index) => {
+                          return renderSingleOutput(index)
+                      }
+                  )}
         </div>
     )
 }
