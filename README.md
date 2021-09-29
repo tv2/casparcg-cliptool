@@ -43,7 +43,7 @@ If you want to run in textview for small touchscreens use :http://localhost:5555
 
 ### otherwise timer and preview window won´t work
 
-_Be aware that the last part of the default casparcg.config file is outcommented, so you should move this part into the <configuration> part of the file_
+_Be aware that the last part of the default casparcg.config file is an commented part, so you should move the OSC part into the "configuration" part of the file_
 
 ```
 <osc>
