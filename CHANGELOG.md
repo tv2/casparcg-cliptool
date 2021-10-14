@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.8.0](https://github.com/olzzon/CasparCG-ClipTool/compare/v2.7.0...v2.8.0) (2021-10-14)
+
+### Features
+
+-   Only show specified channel in settings when using /?channel=xx ([839899a](https://github.com/olzzon/CasparCG-ClipTool/commit/839899a4204dee3e09b967f0f7d134877d2e718b))
+
+### Bug Fixes
+
+-   Scaling 1920x1080 typo ([5db9920](https://github.com/olzzon/CasparCG-ClipTool/commit/5db99204e0ae74a89a2e8101c2f026ceef44eb5d))
+
 ## [2.7.0](https://github.com/olzzon/CasparCG-ClipTool/compare/v2.6.3...v2.7.0) (2021-09-04)
 
 ### Features
