@@ -59,7 +59,7 @@ const scale = (channelIndex: number, layerIndex: number) => {
         channelIndex
     ].videoMode.includes('720')
         ? 720
-        : 12800
+        : 1080
 
     let scaleOutX = 1
     let scaleOutY = 1
