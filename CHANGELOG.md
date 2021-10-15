@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.8.1](https://github.com/olzzon/CasparCG-ClipTool/compare/v2.8.0...v2.8.1) (2021-10-15)
+
+### Bug Fixes
+
+-   Stills we're not shown as selected in preview window and old timing was still shown ([d0cf903](https://github.com/olzzon/CasparCG-ClipTool/commit/d0cf903a38699ddb5ccba85e47dd4ad37ae74fc7))
+
 ## [2.8.0](https://github.com/olzzon/CasparCG-ClipTool/compare/v2.7.0...v2.8.0) (2021-10-14)
 
 ### Features
