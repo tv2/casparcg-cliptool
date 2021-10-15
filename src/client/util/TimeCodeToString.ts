@@ -15,6 +15,6 @@ export const secondsToTimeCode = (timer: [number, number] = [0, 0]) => {
         ).slice(-2)
         return ' ' + hour + '.' + minute + '.' + sec + '.' + frm + ' '
     } else {
-        return ' NOT  CUED '
+        return ' SELECTED '
     }
 }

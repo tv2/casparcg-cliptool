@@ -21,6 +21,8 @@ import { IOutput, IThumbFile } from '../../model/reducers/mediaReducer'
 import { setTabData, updateSettings } from '../../model/reducers/settingsAction'
 import { initializeClient } from './socketIOServerHandler'
 
+import path from 'path'
+
 //Setup AMCP Connection:
 export const ccgConnection = new CasparCG({
     host: reduxState.settings[0].generics.ccgIp,
@@ -50,16 +52,22 @@ const setupOscServer = () => {
         .on('message', (message: any) => {
             let channelIndex = findChannelNumber(message.address) - 1
             let layerIndex = findLayerNumber(message.address) - 1
-
             if (message.address.includes('/stage/layer')) {
-                if (message.address.includes('file/name')) {
+                if (message.address.includes('file/path')) {
                     if (layerIndex === 9) {
-                        reduxStore.dispatch(
-                            setTallyFileName(
-                                channelIndex,
-                                message.args[0].split('.')[0]
+                        let fileName = path.posix
+                            .basename(message.args[0])
+                            .toUpperCase()
+                            .split('.')[0]
+                        if (
+                            reduxState.media[0].output[channelIndex]
+                                .tallyFile !== fileName
+                        ) {
+                            reduxStore.dispatch(
+                                setTallyFileName(channelIndex, fileName)
                             )
-                        )
+                            reduxStore.dispatch(setTime(channelIndex, [0, 0]))
+                        }
                     }
                 }
                 if (message.address.includes('file/time')) {
