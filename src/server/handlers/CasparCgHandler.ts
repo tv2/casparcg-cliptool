@@ -23,6 +23,8 @@ import { initializeClient } from './socketIOServerHandler'
 
 import path from 'path'
 
+let waitingForCCGResponse: boolean = false
+
 //Setup AMCP Connection:
 export const ccgConnection = new CasparCG({
     host: reduxState.settings[0].generics.ccgIp,
@@ -128,15 +130,26 @@ const casparCGconnection = () => {
                 reduxState.settings[0].generics.ccgAmcpPort
             )
             console.log('CasparCG Server Version :', response.response.data)
-            ccgConnection.getCasparCGConfig().then((config) => {
-                console.log('CasparCG Config :', config.channels)
-                reduxStore.dispatch(setNumberOfOutputs(config.channels.length))
-                reduxStore.dispatch(updateSettings(config.channels))
-                reduxStore.dispatch(setTabData(config.channels.length))
-                console.log('Number of Channels :', config.channels.length)
-                socketServer.emit(IO.SETTINGS_UPDATE, reduxState.settings[0])
-                initializeClient()
-            })
+            ccgConnection
+                .getCasparCGConfig()
+                .then((config) => {
+                    console.log('CasparCG Config :', config.channels)
+                    reduxStore.dispatch(
+                        setNumberOfOutputs(config.channels.length)
+                    )
+                    reduxStore.dispatch(updateSettings(config.channels))
+                    reduxStore.dispatch(setTabData(config.channels.length))
+                    console.log('Number of Channels :', config.channels.length)
+                    socketServer.emit(
+                        IO.SETTINGS_UPDATE,
+                        reduxState.settings[0]
+                    )
+                    waitingForCCGResponse = false
+                    initializeClient()
+                })
+                .catch((error) => {
+                    console.log('Error receiving CCG Config', error)
+                })
         })
         .catch((error) => {
             console.log('No connection to CasparCG', error)
@@ -155,12 +168,11 @@ const startTimerControlledServices = () => {
     }, 40)
 
     //Check media files on server:
-    let waitingForResponse: boolean = false
     setInterval(() => {
-        if (!waitingForResponse) {
-            waitingForResponse = true
+        if (!waitingForCCGResponse) {
+            waitingForCCGResponse = true
             loadCcgMedia().then(() => {
-                waitingForResponse = false
+                waitingForCCGResponse = false
             })
         }
     }, 3000)
