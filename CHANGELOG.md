@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.8.3](https://github.com/olzzon/CasparCG-ClipTool/compare/v2.8.2...v2.8.3) (2021-10-27)
+
+### Bug Fixes
+
+-   media clips was not indicated as selected if it was from a sub folder (because of using name instead of path) ([c0721cc](https://github.com/olzzon/CasparCG-ClipTool/commit/c0721cc17e8a6268071ed2ad5f50e158387ca0e9))
+
 ### [2.8.2](https://github.com/olzzon/CasparCG-ClipTool/compare/v2.8.1...v2.8.2) (2021-10-18)
 
 ### Bug Fixes
