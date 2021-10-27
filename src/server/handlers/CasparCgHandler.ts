@@ -57,10 +57,7 @@ const setupOscServer = () => {
             if (message.address.includes('/stage/layer')) {
                 if (message.address.includes('file/path')) {
                     if (layerIndex === 9) {
-                        let fileName = path.posix
-                            .basename(message.args[0])
-                            .toUpperCase()
-                            .split('.')[0]
+                        let fileName = message.args[0]
                         if (
                             reduxState.media[0].output[channelIndex]
                                 .tallyFile !== fileName
@@ -200,8 +197,8 @@ const loadCcgMedia = (): Promise<boolean> => {
                 reduxState.media[0].output.forEach(
                     (output: IOutput, channelIndex: number) => {
                         let outputMedia = thumbNailList.filter(
-                            (thumnbail: IThumbFile) => {
-                                return thumnbail.name.includes(
+                            (thumbnail: IThumbFile) => {
+                                return thumbnail.name.includes(
                                     reduxState.settings[0].generics
                                         .outputFolders[channelIndex]
                                 )
@@ -234,10 +231,10 @@ const loadCcgMedia = (): Promise<boolean> => {
             .then((payload) => {
                 let folders: string[] = []
                 payload.response.data.forEach((media) => {
-                    let path =
+                    let pathName =
                         media.name.substring(0, media.name.lastIndexOf('/')) ||
                         ''
-                    folders.push(path)
+                    folders.push(pathName)
                 })
                 folders = [...new Set(folders)]
                 reduxStore.dispatch(updateFolderList(folders))
