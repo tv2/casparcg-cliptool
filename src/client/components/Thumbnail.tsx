@@ -17,7 +17,7 @@ export const findThumbPix = (fileName: string, channelIndex: number) => {
     let thumb =
         reduxState.media[0].output[channelIndex]?.thumbnailList.filter(
             (item: IThumbFile) => {
-                return item.name === fileName
+                return fileName.toUpperCase().includes(item.name)
             }
         ) || []
     return thumb[0]?.thumbnail || ''
