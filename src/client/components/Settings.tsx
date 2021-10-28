@@ -125,13 +125,13 @@ export const SettingsPage = () => {
                         handleSave()
                     }}
                 >
-                    UPDATE SERVER SETTINGS
+                    UPDATE CLIPTOOL SETTINGS
                 </button>
                 <button
                     className="save-button"
                     onClick={() => socket.emit(IO.RESTART_SERVER)}
                 >
-                    RESTART SERVER
+                    RESTART CLIPTOOL
                 </button>
                 <button
                     className="save-button"
