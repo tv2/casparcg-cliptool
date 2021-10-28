@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.9.0](https://github.com/olzzon/CasparCG-ClipTool/compare/v2.8.3...v2.9.0) (2021-10-28)
+
+### Features
+
+-   Rename Restart and Save buttons in Settings from "SERVER" to "CLIPTOOL" ([3bc98c4](https://github.com/olzzon/CasparCG-ClipTool/commit/3bc98c445f5774263cb292be5eb6d397c5720120))
+
+### Bug Fixes
+
+-   Header PVW thumbnail was not shown ([7f90563](https://github.com/olzzon/CasparCG-ClipTool/commit/7f905632183dad3b5be9ca89ad486cc6769a5f47))
+
 ### [2.8.3](https://github.com/olzzon/CasparCG-ClipTool/compare/v2.8.2...v2.8.3) (2021-10-27)
 
 ### Bug Fixes
