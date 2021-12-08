@@ -34,9 +34,9 @@ CasparCG ClipTool is a playout tool with a thumbnail based GUI.
 
 CasparCG-ClipTool is prebuild for Windows. The Pre-build are located in the /package folder on the repository
 
-Download and run "casparcg-clip-tool.exe"
+Download and place "casparcg-clip-tool.exe" in your CasparCG folder.
 
-Open GUI in browser: http://localhost:5555
+Run the file and open GUI in browser: http://localhost:5555
 If you want to run in textview for small touchscreens use :http://localhost:5555/?textview=1
 
 ## Important -- Add following to casparcg.config
@@ -57,6 +57,28 @@ _Be aware that the last part of the default casparcg.config file is an commented
   </predefined-clients>
 </osc>
 ```
+
+## ClipTool Gateway:
+
+_OSC and AMP remote control protocols_
+
+The "cliptool-gateway.exe" file is used for remote controlling ClipTool from e.g. a video mixer.
+
+Place it in the CasparCG server folder.
+
+### To run with AMP protocol use:
+
+cliptool-gateway.exe -type='amp'
+(this will create an AMP gateway at port 3811)
+
+### To run with OSC protocol use:
+
+cliptool-gateway.exe -type='osc'
+(this will create an OSC gateway at port 5256)
+
+The OSC protocol has the following commands:
+/channel/{output}/play
+/channel/{output}/load
 
 ## Build for development (nodejs):
 
