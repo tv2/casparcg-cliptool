@@ -23,6 +23,12 @@ export const findThumbPix = (fileName: string, channelIndex: number) => {
     return thumb[0]?.thumbnail || ''
 }
 
+export const isThumbWithTally = (thumbName): boolean => {
+    return reduxState.media[0].output[reduxState.appNav[0].activeTab].tallyFile
+        .toUpperCase()
+        .includes(thumbName + '.') // adding '.' to avoid shorter filnames with the same start of file
+}
+
 export const Thumbnail = () => {
     // Redux hook:
     useSelector(
@@ -87,8 +93,7 @@ const RenderThumb = (props) => {
                     handleClickMedia(props.item.name)
                 }}
             ></button>
-            {reduxState.media[0].output[reduxState.appNav[0].activeTab]
-                .tallyFile.toUpperCase().includes(props.item.name) ? (
+            {isThumbWithTally(props.item.name) ? (
                 <RenderThumbTimeCode item={props.item} />
             ) : (
                 ''
@@ -110,8 +115,7 @@ const RenderThumbTimeCode = (props) => {
     )
     return (
         <a className="thumbnail-timecode">
-            {reduxState.media[0].output[reduxState.appNav[0].activeTab]
-                .tallyFile.toUpperCase().includes(props.item.name)
+            {isThumbWithTally(props.item.name)
                 ? secondsToTimeCode(
                       reduxState.media[0].output[reduxState.appNav[0].activeTab]
                           ?.time
@@ -137,8 +141,7 @@ const RenderThumbPix = (props) => {
             className="thumbnailImage"
             style={Object.assign(
                 {},
-                reduxState.media[0].output[reduxState.appNav[0].activeTab]
-                ?.tallyFile.toUpperCase().includes(props.item.name)
+                isThumbWithTally(props.item.name)
                     ? { borderWidth: '4px' }
                     : { borderWidth: '0px' }
             )}
@@ -158,8 +161,7 @@ const RenderThumbText = (props) => {
             className="thumbnail-text-view"
             style={Object.assign(
                 {},
-                reduxState.media[0].output[reduxState.appNav[0].activeTab]
-                ?.tallyFile.toUpperCase().includes(props.item.name)
+                isThumbWithTally(props.item.name)
                     ? { borderWidth: '4px' }
                     : { borderWidth: '0px' }
             )}
@@ -170,8 +172,7 @@ const RenderThumbText = (props) => {
                     handleClickMedia(props.item.name)
                 }}
             ></button>
-            {reduxState.media[0].output[reduxState.appNav[0].activeTab]
-                ?.tallyFile.toUpperCase().includes(props.item.name) ? (
+            {isThumbWithTally(props.item.name) ? (
                 <RenderThumbTextTimeCode item={props.item} />
             ) : (
                 ''
@@ -193,8 +194,7 @@ const RenderThumbTextTimeCode = (props) => {
     )
     return (
         <a className="thumbnail-timecode-text">
-            {reduxState.media[0].output[reduxState.appNav[0].activeTab]
-                ?.tallyFile.toUpperCase().includes(props.item.name)
+            {isThumbWithTally(props.item.name)
                 ? secondsToTimeCode(
                       reduxState.media[0].output[reduxState.appNav[0].activeTab]
                           ?.time
