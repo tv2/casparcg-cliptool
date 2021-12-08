@@ -164,6 +164,7 @@ const startTimerControlledServices = () => {
     }, 40)
 
     //Check media files on server:
+    loadFileList()
     setInterval(() => {
         if (!waitingForCCGResponse) {
             waitingForCCGResponse = true
@@ -219,8 +220,11 @@ const loadCcgMedia = async () => {
                 }
             }
         )
+        await loadFileList()
     }
+}
 
+async function loadFileList() {
     ccgConnection
         .cls()
         .then((payload) => {
