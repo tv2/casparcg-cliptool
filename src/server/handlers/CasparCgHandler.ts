@@ -172,6 +172,7 @@ const startTimerControlledServices = () => {
                 waitingForCCGResponse = false
             })
         }
+        loadFileList()
     }, 3000)
 }
 
