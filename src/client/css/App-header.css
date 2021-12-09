@@ -24,6 +24,13 @@
     box-shadow: 6px 6px 6px rgb(34, 34, 34);
 }
 
+.App-header-server-offline {
+    position: absolute;
+    top: 50vh;
+    left: 35vw;
+    font-size: 5vh;
+}
+
 .App-header-pgm-counter {
     vertical-align: top;
     margin-top: 30px;

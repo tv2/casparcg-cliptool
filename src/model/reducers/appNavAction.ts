@@ -17,7 +17,7 @@ export const setSelectView = (selectView: number) => {
     }
 }
 
-export const setConnectionStatus = (connectionStatus: number) => {
+export const setConnectionStatus = (connectionStatus: boolean) => {
     return {
         type: SET_CONNECTION_STATUS,
         connectionStatus: connectionStatus,
