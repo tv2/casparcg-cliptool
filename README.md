@@ -39,7 +39,17 @@ Download and place "casparcg-clip-tool.exe" in your CasparCG folder.
 Run the file and open GUI in browser: http://localhost:5555
 If you want to run in textview for small touchscreens use :http://localhost:5555/?textview=1
 
-## Important -- Add following to casparcg.config
+### Using CasparCG Launcher:
+
+ClipTool works great with CasparCG Launcher, just add "casparcg-clip-tool.exe" as a process under settings.
+
+You can grab CasparCG Launcher here:
+
+```
+https://github.com/nrkno/tv-automation-casparcg-launcher/releases
+```
+
+## Important -- Add OSC support to casparcg.config:
 
 ### otherwise timer and preview window won´t work
 
