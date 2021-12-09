@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.10.1](https://github.com/olzzon/CasparCG-ClipTool/compare/v2.10.0...v2.10.1) (2021-12-09)
+
+### Bug Fixes
+
+-   After changing folders on outputs the Thumbnails didn't reload. ([0fe86c4](https://github.com/olzzon/CasparCG-ClipTool/commit/0fe86c41b05cecdfcd4e98cf0bb309ad292a0447))
+
 ## [2.10.0](https://github.com/olzzon/CasparCG-ClipTool/compare/v2.9.0...v2.10.0) (2021-12-09)
 
 ### Features
