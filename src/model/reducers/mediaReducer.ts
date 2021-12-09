@@ -68,7 +68,7 @@ export const media = (state: Array<IMedia> = defaultMediaState(), action) => {
         case IO.UPDATE_MEDIA_FILES:
             nextState[0].output[action.channelIndex].mediaFiles = action.files
             return nextState
-        case IO.UPDATE_THUMB_IST:
+        case IO.UPDATE_THUMB_LIST:
             nextState[0].output[action.channelIndex].thumbnailList =
                 action.fileList
             return nextState

@@ -1,7 +1,7 @@
 import { IMediaFile, IThumbFile } from './mediaReducer'
 
 export const UPDATE_MEDIA_FILES = 'updateMediaFiles'
-export const UPDATE_THUMB_IST = 'updateThumbList'
+export const UPDATE_THUMB_LIST = 'updateThumbList'
 export const UPDATE_FOLDER_LIST = 'updateFolderList'
 export const SET_TALLY_FILE_NAME = 'setTallyFileName'
 export const SET_NUMBER_OF_OUTPUTS = 'setNumberOfOutputs'
@@ -33,7 +33,7 @@ export const updateThumbFileList = (
     fileList: IThumbFile[]
 ) => {
     return {
-        type: UPDATE_THUMB_IST,
+        type: UPDATE_THUMB_LIST,
         channelIndex: channelIndex,
         fileList: fileList,
     }

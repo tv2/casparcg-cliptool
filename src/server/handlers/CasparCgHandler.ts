@@ -23,6 +23,7 @@ import { initializeClient } from './socketIOServerHandler'
 
 let waitingForCCGResponse: boolean = false
 let previousThumbFiles = []
+let thumbNailList: IThumbFile[] = []
 
 //Setup AMCP Connection:
 export const ccgConnection = new CasparCG({
@@ -187,40 +188,15 @@ const loadCcgMedia = async () => {
         }
     })
     if (thumbNailsUpdated) {
-        let thumbNailList: IThumbFile[] = []
+        thumbNailList = []
         for (let index = 0; index < thumbFile.response.data.length; index++) {
             let response = await loadThumbNailImage(
                 thumbFile.response.data[index]
             )
             thumbNailList.push(response)
         }
-        reduxState.media[0].output.forEach(
-            (output: IOutput, channelIndex: number) => {
-                let outputMedia = thumbNailList.filter(
-                    (thumbnail: IThumbFile) => {
-                        return thumbnail?.name.includes(
-                            reduxState.settings[0].generics.outputFolders[
-                                channelIndex
-                            ]
-                        )
-                    }
-                )
-                if (
-                    JSON.stringify(
-                        reduxState.media[0].output[channelIndex].thumbnailList
-                    ) !== JSON.stringify(outputMedia)
-                ) {
-                    reduxStore.dispatch(
-                        updateThumbFileList(channelIndex, outputMedia)
-                    )
-                    socketServer.emit(
-                        IO.THUMB_UPDATE,
-                        channelIndex,
-                        reduxState.media[0].output[channelIndex].thumbnailList
-                    )
-                }
-            }
-        )
+        assignThumbNailListToOutputs()
+
         await loadFileList()
     }
 }
@@ -280,6 +256,36 @@ async function loadThumbNailImage(element: IThumbFile) {
         thumbnail: thumb.response.data,
     }
     return receivedThumb
+}
+
+export const reAssignCcgThumbs = () => {
+    assignThumbNailListToOutputs()
+}
+
+const assignThumbNailListToOutputs = () => {
+    reduxState.media[0].output.forEach(
+        (output: IOutput, channelIndex: number) => {
+            let outputMedia = thumbNailList.filter((thumbnail: IThumbFile) => {
+                return thumbnail?.name.includes(
+                    reduxState.settings[0].generics.outputFolders[channelIndex]
+                )
+            })
+            if (
+                JSON.stringify(
+                    reduxState.media[0].output[channelIndex].thumbnailList
+                ) !== JSON.stringify(outputMedia)
+            ) {
+                reduxStore.dispatch(
+                    updateThumbFileList(channelIndex, outputMedia)
+                )
+                socketServer.emit(
+                    IO.THUMB_UPDATE,
+                    channelIndex,
+                    reduxState.media[0].output[channelIndex].thumbnailList
+                )
+            }
+        }
+    )
 }
 
 export const casparCgClient = () => {

@@ -15,6 +15,7 @@ import { setGenerics } from '../../model/reducers/settingsAction'
 import { IGenericSettings } from '../../model/reducers/settingsReducer'
 import { saveSettings } from '../utils/SettingsStorage'
 import { IOutput } from '../../model/reducers/mediaReducer'
+import { reAssignCcgThumbs } from './CasparCgHandler'
 
 export function socketIoHandlers(socket: any) {
     logger.info('SETTING UP SOCKET IO MAIN HANDLERS', {})
@@ -127,6 +128,7 @@ const cleanUpMediaFiles = () => {
         (output: IOutput, channelIndex: number) => {
             reduxStore.dispatch(updateMediaFiles(channelIndex, []))
             reduxStore.dispatch(updateThumbFileList(channelIndex, []))
+            reAssignCcgThumbs()
         }
     )
 }
