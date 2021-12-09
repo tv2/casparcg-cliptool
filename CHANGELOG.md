@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.10.0](https://github.com/olzzon/CasparCG-ClipTool/compare/v2.9.0...v2.10.0) (2021-12-09)
+
+### Features
+
+-   Different label (SELECTED or END) depended on whether it's a video clip or a still pix ([e4cf798](https://github.com/olzzon/CasparCG-ClipTool/commit/e4cf798583263e11f264ff91775dee1fc162a8af))
+-   Indicate when connection form client to server is not established ([d3f0fac](https://github.com/olzzon/CasparCG-ClipTool/commit/d3f0fac470ff3c8ef290a969cb5d8487aeae4809))
+-   preload filelist before thumbnails are loaded ([5cd85db](https://github.com/olzzon/CasparCG-ClipTool/commit/5cd85db83c43e41097a1e2f2cef92b3e5550eeb2))
+
+### Bug Fixes
+
+-   handle more than 100 media files - Queue CCG thumbnail commands and only reload if thumbnail list has changed ([7a76626](https://github.com/olzzon/CasparCG-ClipTool/commit/7a76626673574b43df162a97dda89f1b0a3cc0c2))
+-   Loading folders did not happen until all thumbnails was loaded. With +600 media files this took to much time ([db33500](https://github.com/olzzon/CasparCG-ClipTool/commit/db33500a3711b71a56a453927874761ecaf50bc3))
+-   media files with dublicate start of filename was all shown as having tally. ([5604431](https://github.com/olzzon/CasparCG-ClipTool/commit/56044317c1e610a97684cec7e0d23f2cc2a3171e))
+
 ## [2.9.0](https://github.com/olzzon/CasparCG-ClipTool/compare/v2.8.3...v2.9.0) (2021-10-28)
 
 ### Features
