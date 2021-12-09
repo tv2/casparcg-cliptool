@@ -113,7 +113,6 @@ export const RenderFullHeader = () => {
                             LOOP
                         </button>
                     </div>
-                    )
                     <div className="App-button-background">
                         <button
                             className="App-switch-button"
@@ -158,6 +157,9 @@ export const RenderFullHeader = () => {
                 </button>
             </div>
             {reduxState.appNav[0].showSettingsActive ? <SettingsPage /> : null}
+            {!reduxState.appNav[0].connectionStatus ? (
+                <div className="App-header-server-offline">CONNECTING TO SERVER...</div>
+            ) : null}
         </header>
     )
 }

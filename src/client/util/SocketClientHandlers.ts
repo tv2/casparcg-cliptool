@@ -20,15 +20,28 @@ import {
     updateSettings,
 } from '../../model/reducers/settingsAction'
 import { ISettings } from '../../model/reducers/settingsReducer'
+import {
+    setConnectionStatus,
+    SET_CONNECTION_STATUS,
+} from '../../model/reducers/appNavAction'
 
 export const socket = io()
 
 console.log('Initialising SocketClient')
 
-socket.on(IO.MEDIA_UPDATE, (channelIndex: number, payload: IMediaFile[]) => {
-    reduxStore.dispatch(updateMediaFiles(channelIndex, payload))
-    console.log('Client state :', reduxState)
-})
+socket
+    .on('connect', () => {
+        reduxStore.dispatch(setConnectionStatus(true))
+        console.log('CONNECTED TO CLIPTOOL SERVER')
+    })
+    .on('disconnect', () => {
+        reduxStore.dispatch(setConnectionStatus(false))
+        console.log('LOST CONNECTION TO CLIPTOOL SERVER')
+    })
+    .on(IO.MEDIA_UPDATE, (channelIndex: number, payload: IMediaFile[]) => {
+        reduxStore.dispatch(updateMediaFiles(channelIndex, payload))
+        console.log('Client state :', reduxState)
+    })
 
 socket.on(IO.FOLDERS_UPDATE, (payload: string[]) => {
     reduxStore.dispatch(updateFolderList(payload))
