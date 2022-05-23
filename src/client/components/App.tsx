@@ -36,6 +36,7 @@ export const App = () => {
             <div className="App">
                 <RenderFullHeader />
                 <div className="App-body">
+                    { /* @ts-ignore */}
                     <Tabs
                         tabs={reduxState.settings[0].tabData}
                         onChange={(tab, index) => setOutput(index)}
