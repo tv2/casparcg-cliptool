@@ -249,7 +249,7 @@ async function loadFileList() {
 }
 
 function isAlphaFile(filename: string): boolean {
-    return /_a(\.[a-zæøå0-9]+)?$/i.test(filename)
+    return /_a(\.[^.]+)?$/i.test(filename)
 }
 
 async function loadThumbNailImage(element: IThumbFile) {
