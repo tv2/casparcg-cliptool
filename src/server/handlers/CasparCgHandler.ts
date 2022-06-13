@@ -218,10 +218,12 @@ async function loadFileList() {
             reduxState.media[0].output.forEach(
                 (output: IOutput, channelIndex: number) => {
                     let outputMedia = payload.response.data.filter((file) => {
-                        return file.name.includes(
-                            reduxState.settings[0].generics.outputFolders[
-                                channelIndex
-                            ]
+                        return (
+                            file.name.includes(
+                                reduxState.settings[0].generics.outputFolders[
+                                    channelIndex
+                                ]
+                            ) && !isAlphaFile(file.name)
                         )
                     })
                     if (
@@ -244,6 +246,10 @@ async function loadFileList() {
         .catch((error) => {
             console.log('Error receiving file list :', error)
         })
+}
+
+function isAlphaFile(filename: string): boolean {
+    return /_a(\.[^.]+)?$/i.test(filename)
 }
 
 async function loadThumbNailImage(element: IThumbFile) {
