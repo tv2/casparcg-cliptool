@@ -1,3 +1,4 @@
+import { getVideoFormat, VideoFormat } from '../videoFormat'
 import { SET_GENERICS, SET_TAB_DATA, UPDATE_SETTINGS } from './settingsAction'
 export interface ISettings {
     ccgConfig: ICcgConfig
@@ -16,6 +17,7 @@ export interface ICcgConfig {
 export interface ICcgConfigChannel {
     _type?: string
     videoMode?: string
+    videoFormat?: VideoFormat
     consumers?: any[]
     straightAlphaOutput?: boolean
     channelLayout?: string
@@ -63,7 +65,12 @@ export const settings = (
 
     switch (action.type) {
         case UPDATE_SETTINGS:
-            nextState[0].ccgConfig.channels = [...action.settings]
+            nextState[0].ccgConfig.channels = [
+                ...action.channels.map((channel) => ({
+                    ...channel,
+                    videoFormat: getVideoFormat(channel),
+                })),
+            ]
             return nextState
         case SET_TAB_DATA:
             nextState[0].tabData = [...action.tabData]

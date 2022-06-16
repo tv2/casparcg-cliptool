@@ -22,7 +22,8 @@ const RenderTime = () => {
             <button className="App-header-pgm-counter">
                 {secondsToTimeCode(
                     reduxState.media[0].output[reduxState.appNav[0].activeTab]
-                        ?.time
+                        ?.time,
+                    reduxState.settings[0].ccgConfig.channels[reduxState.appNav[0].activeTab]?.videoFormat?.frameRate
                 )}
             </button>
             <img
