@@ -68,7 +68,7 @@ export const settings = (
             nextState[0].ccgConfig.channels = [
                 ...action.channels.map((channel) => ({
                     ...channel,
-                    videoFormat: getVideoFormat(channel),
+                    videoFormat: getVideoFormat(channel.videoMode),
                 })),
             ]
             return nextState
