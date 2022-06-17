@@ -1,24 +1,27 @@
-export const secondsToTimeCode = (
+export function secondsToTimeCode(
     timer: [number, number] = [0, 0],
-    fps: number = 25
-) => {
-    if (timer[1] > 0) {
-        let time = timer[1] - timer[0]
-        if (time <= 0) {
-            time = 0
-        }
-        if (time) {
-            var hour = ('0' + Math.round(time / (60 * 60))).slice(-2)
-            var minute = ('0' + Math.round(time / 60)).slice(-2)
-            var sec = ('0' + Math.round(time % 60)).slice(-2)
-            var frm = (
-                '0' +
-                (100 * (time - parseInt(String(time))) * (fps / 100)).toFixed()
-            ).slice(-2)
-            return ' ' + hour + '.' + minute + '.' + sec + '.' + frm + ' '
-        } else {
-            return '****END****'
-        }
+    frameRate: number = 25
+): string {
+    if (timer[1] <= 0) {
+        return 'SELECTED'
     }
-    return 'SELECTED'
+
+    const time = Math.max(0, timer[1] - timer[0])
+    if (time === 0) {
+        return '****END****'
+    }
+
+    const hours = Math.floor(time / (60 * 60))
+    const minutes = Math.floor((time % (60 * 60)) / 60)
+    const seconds = Math.floor(time % 60)
+    const frames = Math.floor((time % 1) * frameRate)
+    return `${leadingZero(hours)}:${leadingZero(minutes)}:${leadingZero(
+        seconds
+    )}.${leadingZero(frames)}`
+}
+
+function leadingZero(num: number, length: number = 2): string {
+    const text = num.toString()
+    const zeros = '0'.repeat(Math.max(0, length - text.length))
+    return `${zeros}${text}`
 }
