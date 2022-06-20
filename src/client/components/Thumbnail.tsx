@@ -4,9 +4,6 @@ import './App'
 import { reduxState } from '../../model/reducers/store'
 import { secondsToTimeCode } from '../util/TimeCodeToString'
 
-//Global const:
-const FPS = 25
-
 //Redux:
 import { IMediaFile, IThumbFile } from '../../model/reducers/mediaReducer'
 import { socket } from '../util/SocketClientHandlers'
@@ -117,8 +114,9 @@ const RenderThumbTimeCode = (props) => {
         <a className="thumbnail-timecode">
             {isThumbWithTally(props.item.name)
                 ? secondsToTimeCode(
-                      reduxState.media[0].output[reduxState.appNav[0].activeTab]
-                          ?.time
+                    reduxState.media[0].output[reduxState.appNav[0].activeTab]
+                        ?.time,
+                        reduxState.settings[0].ccgConfig.channels[reduxState.appNav[0].activeTab]?.videoFormat?.frameRate
                   )
                 : ''}
         </a>
@@ -196,8 +194,9 @@ const RenderThumbTextTimeCode = (props) => {
         <a className="thumbnail-timecode-text">
             {isThumbWithTally(props.item.name)
                 ? secondsToTimeCode(
-                      reduxState.media[0].output[reduxState.appNav[0].activeTab]
-                          ?.time
+                    reduxState.media[0].output[reduxState.appNav[0].activeTab]
+                        ?.time,
+                        reduxState.settings[0].ccgConfig.channels[reduxState.appNav[0].activeTab]?.videoFormat?.frameRate
                   )
                 : ''}
         </a>
