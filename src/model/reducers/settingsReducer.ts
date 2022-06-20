@@ -57,6 +57,15 @@ const defaultSettingsReducerState: ISettings[] = [
     },
 ]
 
+function updateChannelConfigWithVideoFormat(
+    channelConfig: ICcgConfigChannel
+): ICcgConfigChannel {
+    return {
+        ...channelConfig,
+        videoFormat: getVideoFormat(channelConfig.videoMode),
+    }
+}
+
 export const settings = (
     state: ISettings[] = defaultSettingsReducerState,
     action
@@ -66,10 +75,7 @@ export const settings = (
     switch (action.type) {
         case UPDATE_SETTINGS:
             nextState[0].ccgConfig.channels = [
-                ...action.channels.map((channel) => ({
-                    ...channel,
-                    videoFormat: getVideoFormat(channel.videoMode),
-                })),
+                ...action.channels.map(updateChannelConfigWithVideoFormat),
             ]
             return nextState
         case SET_TAB_DATA:

@@ -15,12 +15,12 @@ export interface VideoFormat {
     frameRate: number
 }
 
-export function getVideoFormat(text?: string): VideoFormat | null {
+export function getVideoFormat(text?: string): VideoFormat | undefined {
     const videoModePattern =
         /^((?<formatText>PAL|NTSC)|(?<format>\d+)(?<mode>[ip])(?<frequency>\d+))$/i
     const matchedVideoMode = text?.match(videoModePattern)?.groups
     if (!matchedVideoMode) {
-        return null
+        return
     }
     const format =
         matchedVideoMode.formatText?.toUpperCase() ?? matchedVideoMode.format
