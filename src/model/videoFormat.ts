@@ -50,7 +50,6 @@ function getResolution(format: string): VideoResolution {
 function getMode(format: string, mode: string): VideoMode {
     switch (format) {
         case 'PAL':
-            return VideoMode.INTERLACED
         case 'NTSC':
             return VideoMode.INTERLACED
         default:
