@@ -55,7 +55,10 @@ const setupOscServer = () => {
             let channelIndex = findChannelNumber(message.address) - 1
             let layerIndex = findLayerNumber(message.address) - 1
             if (message.address.includes('/stage/layer')) {
-                if (message.address.includes('file/path')) {
+                if (
+                    message.address.includes('file/path') &&
+                    !message.address.includes('keyer')
+                ) {
                     if (layerIndex === 9) {
                         let fileName = message.args[0]
                         if (
