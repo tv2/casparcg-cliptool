@@ -59,14 +59,19 @@ function getMode(format: string, mode: string): VideoMode {
     }
 }
 
-function getFrequency(format: string, frequency: string | undefined): number {
+function getFrequency(format: string, frequency?: string): number {
     switch (format) {
         case 'PAL':
             return 5000
         case 'NTSC':
             return 5994
         default:
-            return parseInt(frequency as string, 10)
+            if (!frequency) {
+                throw new Error(
+                    `Expected a frequency for the format '${format}'.`
+                )
+            }
+            return parseInt(frequency, 10)
     }
 }
 
