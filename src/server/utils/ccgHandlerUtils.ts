@@ -50,7 +50,9 @@ export const isFolderNameEqual = (
     fileName: string,
     outputFolder: string
 ): boolean => {
-    // console.log("Comparing folder part: ", outputFolder.substring(0, folder.lastIndexOf('/')))
+    if (!outputFolder) {
+        return true
+    }
     return outputFolder === fileName.substring(0, fileName.lastIndexOf('/'))
 }
 
@@ -58,6 +60,9 @@ export const isThumbNameFolderEqual = (
     thumbnail: IThumbFile,
     outputFolder: string
 ): boolean => {
+    if (!outputFolder) {
+        return true
+    }
     return (
         outputFolder ===
         thumbnail?.name.substring(0, thumbnail?.name.lastIndexOf('/'))
