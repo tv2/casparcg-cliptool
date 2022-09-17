@@ -1,9 +1,9 @@
 import { IThumbFile } from '../../model/reducers/mediaReducer'
 import os from 'os' // Used to display (log) network addresses on local machine
 
-export const getThisMachineIpAddresses = () => {
+export const getThisMachineIpAddresses = (): string[] => {
     let interfaces = os.networkInterfaces()
-    let ipAddresses: Array<string> = []
+    let ipAddresses: string[] = []
     for (let deviceName in interfaces) {
         let addresses = interfaces[deviceName]
         for (const element of addresses) {
@@ -47,17 +47,21 @@ export const isDeepCompareEqual = (a: any, b: any): boolean => {
 }
 
 export const isFolderNameEqual = (
-    folder: string,
+    fileName: string,
     outputFolder: string
 ): boolean => {
-    return folder.includes(outputFolder)
+    // console.log("Comparing folder part: ", outputFolder.substring(0, folder.lastIndexOf('/')))
+    return outputFolder === fileName.substring(0, fileName.lastIndexOf('/'))
 }
 
 export const isThumbNameFolderEqual = (
     thumbnail: IThumbFile,
     outputFolder: string
 ): boolean => {
-    return thumbnail?.name.includes(outputFolder)
+    return (
+        outputFolder ===
+        thumbnail?.name.substring(0, thumbnail?.name.lastIndexOf('/'))
+    )
 }
 
 export const hasThumbListChanged = (

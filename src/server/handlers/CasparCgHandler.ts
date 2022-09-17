@@ -80,6 +80,7 @@ const ccgOSCServer = () => {
 const handleOscMessage = (message: any) => {
     let channelIndex = getChannelNumber(message.address) - 1
     let layerIndex = getLayerNumber(message.address) - 1
+
     if (message.address.includes('/stage/layer')) {
         if (
             message.address.includes('file/path') &&
@@ -88,7 +89,7 @@ const handleOscMessage = (message: any) => {
             if (layerIndex === 9) {
                 let fileName = message.args[0]
                 if (
-                    reduxState.media[0].output[channelIndex].tallyFile !==
+                    reduxState.media[0].output[channelIndex]?.tallyFile !==
                     fileName
                 ) {
                     reduxStore.dispatch(
@@ -116,7 +117,6 @@ const dispatchConfig = (config: any) => {
     reduxStore.dispatch(setTabData(config.channels.length))
     console.log('Number of Channels :', config.channels.length)
     socketServer.emit(IO.SETTINGS_UPDATE, reduxState.settings[0])
-    waitingForCCGResponse = false
     initializeClient()
 }
 
@@ -137,6 +137,7 @@ const ccgAMPHandler = () => {
                 .getCasparCGConfig()
                 .then((config) => {
                     dispatchConfig(config)
+                    waitingForCCGResponse = false
                 })
                 .catch((error) => {
                     console.log('Error receiving CCG Config', error)
@@ -148,7 +149,7 @@ const ccgAMPHandler = () => {
     startTimerControlledServices()
 }
 
-const startTimerControlledServices = () => {
+const startTimerControlledServices = async () => {
     //Update of timeleft is set to a default 40ms (same as 25FPS)
     let data: IO.ITimeTallyPayload[] = []
     let thumbNailList: IThumbFile[] = []
@@ -161,6 +162,7 @@ const startTimerControlledServices = () => {
     }, 40)
 
     //Check media files on server:
+    await loadCcgMedia()
     loadFileList()
     setInterval(() => {
         if (!waitingForCCGResponse) {
@@ -180,11 +182,11 @@ const loadCcgMedia = async (): Promise<IThumbFile[]> => {
     if (hasThumbListChanged(thumbFiles.response.data, previousThumbFileList)) {
         previousThumbFileList = thumbFiles.response.data
         thumbNailList = []
-        thumbFiles.response.data.forEach((thumbFile) => {
-            loadThumbNailImage(thumbFile).then((thumbImage: any) => {
+        for await (const thumbFile of thumbFiles.response.data) {
+            await loadThumbNailImage(thumbFile).then((thumbImage: any) => {
                 thumbNailList.push(thumbImage)
             })
-        })
+        }
         assignThumbNailListToOutputs()
 
         await loadFileList()
@@ -220,11 +222,12 @@ const outputExtractFiles = (allFiles: any, outputIndex: number) => {
         )
     })
     if (
-        isDeepCompareEqual(
+        !isDeepCompareEqual(
             reduxState.media[0].output[outputIndex].mediaFiles,
             outputMedia
         )
     ) {
+        console.log('Media files changed for output :', outputIndex)
         reduxStore.dispatch(updateMediaFiles(outputIndex, outputMedia))
         socketServer.emit(
             IO.MEDIA_UPDATE,
@@ -256,7 +259,7 @@ export const assignThumbNailListToOutputs = () => {
                 )
             })
             if (
-                isDeepCompareEqual(
+                !isDeepCompareEqual(
                     reduxState.media[0].output[channelIndex].thumbnailList,
                     outputMedia
                 )
