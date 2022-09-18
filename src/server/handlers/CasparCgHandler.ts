@@ -113,7 +113,7 @@ const handleOscMessage = (message: any) => {
 const dispatchConfig = (config: any) => {
     console.log('CasparCG Config :', config.channels)
     reduxStore.dispatch(setNumberOfOutputs(config.channels.length))
-    reduxStore.dispatch(updateSettings(config.channels))
+    reduxStore.dispatch(updateSettings(config.channels, config.paths.mediaPath))
     reduxStore.dispatch(setTabData(config.channels.length))
     console.log('Number of Channels :', config.channels.length)
     socketServer.emit(IO.SETTINGS_UPDATE, reduxState.settings[0])

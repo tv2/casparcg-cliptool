@@ -78,6 +78,8 @@ socket.on(
 socket.on(IO.SETTINGS_UPDATE, (payload: ISettings) => {
     reduxStore.dispatch(setNumberOfOutputs(payload.ccgConfig.channels.length))
     reduxStore.dispatch(setGenerics(payload.generics))
-    reduxStore.dispatch(updateSettings(payload.ccgConfig.channels))
+    reduxStore.dispatch(
+        updateSettings(payload.ccgConfig.channels, payload.ccgConfig.path)
+    )
     reduxStore.dispatch(setTabData(payload.tabData.length))
 })
