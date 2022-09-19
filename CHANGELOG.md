@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.11.0](https://github.com/olzzon/CasparCG-ClipTool/compare/v2.10.1...v2.11.0) (2022-09-19)
+
+### Features
+
+-   refactor - foldercomparison was double coded ([ac6fcc3](https://github.com/olzzon/CasparCG-ClipTool/commit/ac6fcc31a89f195ce293d2784b005a5e07b82bf5))
+-   refactor CasparCGHandler preparing better folder filename handling ([6b6aac3](https://github.com/olzzon/CasparCG-ClipTool/commit/6b6aac3f27f192415f545b6a24c3c25f2bb7c4ae))
+-   Use framerate from casparcg channel config. ([d964c86](https://github.com/olzzon/CasparCG-ClipTool/commit/d964c860c4c04940711ba0d5348efab2f88f7a80))
+
+### Bug Fixes
+
+-   compare full filename including path when setting Tally ([b09742e](https://github.com/olzzon/CasparCG-ClipTool/commit/b09742e4942e574073c0fb19fa593487ea11c0e4))
+-   compare full folder name ([3ce1cd5](https://github.com/olzzon/CasparCG-ClipTool/commit/3ce1cd58455f5d169e5b9ee855014884d5b0d9da))
+-   Filter out alpha files. ([50adabf](https://github.com/olzzon/CasparCG-ClipTool/commit/50adabfe6e91afd132c4ca87a19fd149f97ec29c))
+-   Gateway should handle Path in settings ([a0bb2f8](https://github.com/olzzon/CasparCG-ClipTool/commit/a0bb2f85bb69a5461275e745b115bf48b18a9299))
+-   Ignore broken typescript dependency. ([4c86131](https://github.com/olzzon/CasparCG-ClipTool/commit/4c86131bb6d697af63c14d0a5c4b3c90246a7932))
+-   Input of getVideoFormat is string instead of ICcgConfigChannel. ([12e7b1c](https://github.com/olzzon/CasparCG-ClipTool/commit/12e7b1c6d2ed224ee8009c8d189b4e581c02b82f))
+-   show all files when selected folder is empty (root) ([38deb7f](https://github.com/olzzon/CasparCG-ClipTool/commit/38deb7fba5de5cce30a3a2a117b511d7dbbd3bcb))
+-   Uses non-alpha/keyer file for marking tally. ([ebf7bbc](https://github.com/olzzon/CasparCG-ClipTool/commit/ebf7bbcea04ea35eb2fa4a160a42c210a907c06e))
+
 ### [2.10.1](https://github.com/olzzon/CasparCG-ClipTool/compare/v2.10.0...v2.10.1) (2021-12-09)
 
 ### Bug Fixes
