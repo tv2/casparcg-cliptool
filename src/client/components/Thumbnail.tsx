@@ -21,9 +21,23 @@ export const findThumbPix = (fileName: string, channelIndex: number) => {
 }
 
 export const isThumbWithTally = (thumbName): boolean => {
-    return reduxState.media[0].output[reduxState.appNav[0].activeTab].tallyFile
+    // convert to uppercase, handle windows double slash + backslash and remove file extension:
+    const tallyFileName = reduxState.media[0].output[
+        reduxState.appNav[0].activeTab
+    ].tallyFile
         .toUpperCase()
-        .includes(thumbName + '.') // adding '.' to avoid shorter filnames with the same start of file
+        .replace(/\\/g, '/')
+        .replace('//', '/')
+        .split('.')
+    // Remove system Path e.g.: D:\\media/:
+    const tallyNoMediaPath = tallyFileName[0].replace(
+        reduxState.settings[0].ccgConfig.path
+            ?.toUpperCase()
+            .replace(/\\/g, '/') + '/',
+        ''
+    )
+
+    return tallyNoMediaPath === thumbName
 }
 
 export const Thumbnail = () => {
@@ -114,9 +128,11 @@ const RenderThumbTimeCode = (props) => {
         <a className="thumbnail-timecode">
             {isThumbWithTally(props.item.name)
                 ? secondsToTimeCode(
-                    reduxState.media[0].output[reduxState.appNav[0].activeTab]
-                        ?.time,
-                        reduxState.settings[0].ccgConfig.channels[reduxState.appNav[0].activeTab]?.videoFormat?.frameRate
+                      reduxState.media[0].output[reduxState.appNav[0].activeTab]
+                          ?.time,
+                      reduxState.settings[0].ccgConfig.channels[
+                          reduxState.appNav[0].activeTab
+                      ]?.videoFormat?.frameRate
                   )
                 : ''}
         </a>
@@ -194,9 +210,11 @@ const RenderThumbTextTimeCode = (props) => {
         <a className="thumbnail-timecode-text">
             {isThumbWithTally(props.item.name)
                 ? secondsToTimeCode(
-                    reduxState.media[0].output[reduxState.appNav[0].activeTab]
-                        ?.time,
-                        reduxState.settings[0].ccgConfig.channels[reduxState.appNav[0].activeTab]?.videoFormat?.frameRate
+                      reduxState.media[0].output[reduxState.appNav[0].activeTab]
+                          ?.time,
+                      reduxState.settings[0].ccgConfig.channels[
+                          reduxState.appNav[0].activeTab
+                      ]?.videoFormat?.frameRate
                   )
                 : ''}
         </a>

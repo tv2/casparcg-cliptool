@@ -6,10 +6,11 @@ export const SET_TAB_DATA = 'setTabData'
 export const SET_GENERICS = 'setGenerics'
 export const SET_SCALING = 'setScaling'
 
-export const updateSettings = (channels) => {
+export const updateSettings = (channels, path: string) => {
     return {
         type: UPDATE_SETTINGS,
         channels,
+        path,
     }
 }
 

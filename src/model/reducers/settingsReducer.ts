@@ -12,6 +12,7 @@ export interface ITabData {
 
 export interface ICcgConfig {
     channels: ICcgConfigChannel[]
+    path: string
 }
 
 export interface ICcgConfigChannel {
@@ -40,6 +41,7 @@ const defaultSettingsReducerState: ISettings[] = [
     {
         ccgConfig: {
             channels: [],
+            path: '',
         },
         tabData: [],
         generics: {
@@ -77,6 +79,7 @@ export const settings = (
             nextState[0].ccgConfig.channels = [
                 ...action.channels.map(updateChannelConfigWithVideoFormat),
             ]
+            nextState[0].ccgConfig.path = action.path
             return nextState
         case SET_TAB_DATA:
             nextState[0].tabData = [...action.tabData]
