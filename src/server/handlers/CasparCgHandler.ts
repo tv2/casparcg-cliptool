@@ -28,7 +28,6 @@ import {
     isAlphaFile,
     isDeepCompareEqual,
     isFolderNameEqual,
-    isThumbNameFolderEqual,
 } from '../utils/ccgHandlerUtils'
 
 let waitingForCCGResponse: boolean = false
@@ -253,8 +252,8 @@ export const assignThumbNailListToOutputs = () => {
     reduxState.media[0].output.forEach(
         (output: IOutput, channelIndex: number) => {
             let outputMedia = thumbNailList.filter((thumbnail: IThumbFile) => {
-                return isThumbNameFolderEqual(
-                    thumbnail,
+                return isFolderNameEqual(
+                    thumbnail?.name,
                     reduxState.settings[0].generics.outputFolders[channelIndex]
                 )
             })

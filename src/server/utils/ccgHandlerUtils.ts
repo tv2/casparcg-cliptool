@@ -56,19 +56,6 @@ export const isFolderNameEqual = (
     return outputFolder === fileName.substring(0, fileName.lastIndexOf('/'))
 }
 
-export const isThumbNameFolderEqual = (
-    thumbnail: IThumbFile,
-    outputFolder: string
-): boolean => {
-    if (!outputFolder) {
-        return true
-    }
-    return (
-        outputFolder ===
-        thumbnail?.name.substring(0, thumbnail?.name.lastIndexOf('/'))
-    )
-}
-
 export const hasThumbListChanged = (
     newList: IThumbFile[],
     previousList: IThumbFile[]
