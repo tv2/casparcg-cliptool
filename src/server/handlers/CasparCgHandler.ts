@@ -11,6 +11,9 @@ import {
     updateFolderList,
     updateMediaFiles,
     updateThumbFileList,
+    setLoop,
+    setManualStart,
+    setMix,
 } from '../../model/reducers/mediaActions'
 
 import { socketServer } from './expressHandler'
@@ -114,6 +117,28 @@ const dispatchConfig = (config: any) => {
     reduxStore.dispatch(setNumberOfOutputs(config.channels.length))
     reduxStore.dispatch(updateSettings(config.channels, config.paths.mediaPath))
     reduxStore.dispatch(setTabData(config.channels.length))
+    config.channels.forEach(({}, index: number) => {
+        reduxStore.dispatch(
+            setLoop(
+                index,
+                reduxState.settings[0].generics.startupLoopState[index] ?? false
+            )
+        )
+        reduxStore.dispatch(
+            setManualStart(
+                index,
+                reduxState.settings[0].generics.startupManualstartState[
+                    index
+                ] ?? false
+            )
+        )
+        reduxStore.dispatch(
+            setMix(
+                index,
+                reduxState.settings[0].generics.startupMixState[index] ?? false
+            )
+        )
+    })
     console.log('Number of Channels :', config.channels.length)
     socketServer.emit(IO.SETTINGS_UPDATE, reduxState.settings[0])
     initializeClient()

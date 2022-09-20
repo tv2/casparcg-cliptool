@@ -35,6 +35,9 @@ export interface IGenericSettings {
     scale: boolean[]
     scaleX: number[]
     scaleY: number[]
+    startupLoopState: boolean[]
+    startupMixState: boolean[]
+    startupManualstartState: boolean[]
 }
 
 const defaultSettingsReducerState: ISettings[] = [
@@ -55,6 +58,36 @@ const defaultSettingsReducerState: ISettings[] = [
             scale: [false, false, false, false, false, false, false, false],
             scaleX: [1920, 1920, 1920, 1920, 1920, 1920, 1920, 1920],
             scaleY: [1080, 1080, 1080, 1080, 1080, 1080, 1080, 1080],
+            startupLoopState: [
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+            ],
+            startupMixState: [
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+            ],
+            startupManualstartState: [
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+            ],
         },
     },
 ]
@@ -86,6 +119,12 @@ export const settings = (
             return nextState
         case SET_GENERICS:
             nextState[0].generics = { ...action.generics }
+            nextState[0].generics.startupLoopState =
+                nextState[0].generics.startupLoopState ?? []
+            nextState[0].generics.startupMixState =
+                nextState[0].generics.startupMixState ?? []
+            nextState[0].generics.startupManualstartState =
+                nextState[0].generics.startupManualstartState ?? []
             return nextState
         default:
             return nextState
