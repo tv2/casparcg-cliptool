@@ -120,11 +120,11 @@ export const settings = (
         case SET_GENERICS:
             nextState[0].generics = { ...action.generics }
             nextState[0].generics.startupLoopState =
-                nextState[0].generics.startupLoopState || []
+                nextState[0].generics.startupLoopState ?? []
             nextState[0].generics.startupMixState =
-                nextState[0].generics.startupMixState || []
+                nextState[0].generics.startupMixState ?? []
             nextState[0].generics.startupManualstartState =
-                nextState[0].generics.startupManualstartState || []
+                nextState[0].generics.startupManualstartState ?? []
             return nextState
         default:
             return nextState

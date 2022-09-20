@@ -121,7 +121,7 @@ const dispatchConfig = (config: any) => {
         reduxStore.dispatch(
             setLoop(
                 index,
-                reduxState.settings[0].generics.startupLoopState[index] || false
+                reduxState.settings[0].generics.startupLoopState[index] ?? false
             )
         )
         reduxStore.dispatch(
@@ -129,13 +129,13 @@ const dispatchConfig = (config: any) => {
                 index,
                 reduxState.settings[0].generics.startupManualstartState[
                     index
-                ] || false
+                ] ?? false
             )
         )
         reduxStore.dispatch(
             setMix(
                 index,
-                reduxState.settings[0].generics.startupMixState[index] || false
+                reduxState.settings[0].generics.startupMixState[index] ?? false
             )
         )
     })
