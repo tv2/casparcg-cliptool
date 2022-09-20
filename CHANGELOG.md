@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.12.0](https://github.com/olzzon/CasparCG-ClipTool/compare/v2.11.0...v2.12.0) (2022-09-20)
+
+### Features
+
+-   Stettings startupstate of Loop, Mix and Manual ([38fd868](https://github.com/olzzon/CasparCG-ClipTool/commit/38fd86850d64ac9a53892f0bfcf4bc209599ca20))
+-   update prebuild .exe files ([6ebe5a8](https://github.com/olzzon/CasparCG-ClipTool/commit/6ebe5a81796cff96abc18bf3eaf7c6a76b1ee42a))
+-   use nullish coalescing (??) instead of || ([0485f40](https://github.com/olzzon/CasparCG-ClipTool/commit/0485f40b71dcaca572b0b17f7065c429a43f9ab5))
+
 ## [2.11.0](https://github.com/olzzon/CasparCG-ClipTool/compare/v2.10.1...v2.11.0) (2022-09-19)
 
 ### Features
