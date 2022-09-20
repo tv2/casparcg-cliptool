@@ -150,6 +150,21 @@ const RenderOutputSettings = () => {
         generics.outputLabels[parseInt(event.target.name)] = event.target.value
         reduxStore.dispatch(setGenerics(generics))
     }
+    const handleLoop = (event) => {
+        let generics = { ...reduxState.settings[0].generics }
+        generics.startupLoopState[parseInt(event.target.name)] = event.target.checked
+        reduxStore.dispatch(setGenerics(generics))
+    }
+    const handleMix = (event) => {
+        let generics = { ...reduxState.settings[0].generics }
+        generics.startupMixState[parseInt(event.target.name)] = event.target.checked
+        reduxStore.dispatch(setGenerics(generics))
+    }
+    const handleManual = (event) => {
+        let generics = { ...reduxState.settings[0].generics }
+        generics.startupManualstartState[parseInt(event.target.name)] = event.target.checked
+        reduxStore.dispatch(setGenerics(generics))
+    }
 
     const handleScale = (event) => {
         let generics = { ...reduxState.settings[0].generics }
@@ -220,6 +235,36 @@ const RenderOutputSettings = () => {
                     FORMAT :
                     <br />
                     {reduxState.settings[0].ccgConfig.channels[index].videoMode}
+                </label>
+                <label className="Settings-input-field">
+                    LOOP :
+                    <br />
+                    <input
+                        name={String(index)}
+                        type="checkbox"
+                        checked={reduxState.settings[0].generics.startupLoopState?.[index]}
+                        onChange={handleLoop}
+                    />
+                </label>
+                <label className="Settings-input-field">
+                    MIX :
+                    <br />
+                    <input
+                        name={String(index)}
+                        type="checkbox"
+                        checked={reduxState.settings[0].generics.startupMixState?.[index]}
+                        onChange={handleMix}
+                    />
+                </label>
+                <label className="Settings-input-field">
+                    MANUAL :
+                    <br />
+                    <input
+                        name={String(index)}
+                        type="checkbox"
+                        checked={reduxState.settings[0].generics.startupManualstartState?.[index]}
+                        onChange={handleManual}
+                    />
                 </label>
                 <label className="Settings-input-field">
                     SCALE :
