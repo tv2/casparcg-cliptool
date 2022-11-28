@@ -1,4 +1,5 @@
 import { setGenerics } from '../../model/reducers/settingsAction'
+import { defaultSettingsReducerState } from '../../model/reducers/settingsReducer'
 import { reduxState, reduxStore } from '../../model/reducers/store'
 import { logger } from './logger'
 
@@ -18,17 +19,23 @@ export const loadSettings = () => {
 }
 
 export const saveSettings = () => {
-    var json = JSON.stringify(reduxState.settings[0].generics)
+    let stringifiedSettings = JSON.stringify(reduxState.settings[0].generics)
     if (!fs.existsSync('storage')) {
         fs.mkdirSync('storage')
     }
-
-    fs.writeFile(
-        path.resolve('storage', 'settings.json'),
-        json,
-        'utf8',
-        (error) => {
-            console.log(error)
-        }
-    )
+    if (
+        stringifiedSettings !==
+        JSON.stringify(defaultSettingsReducerState()[0].generics)
+    ) {
+        fs.writeFile(
+            path.resolve('storage', 'settings.json'),
+            stringifiedSettings,
+            'utf8',
+            (error) => {
+                console.log(error)
+            }
+        )
+    } else {
+        console.log('Settings not saved, using defaults')
+    }
 }
