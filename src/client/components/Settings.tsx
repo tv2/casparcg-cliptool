@@ -44,6 +44,17 @@ export const SettingsPage = () => {
         socket.emit(IO.SET_GENERICS, reduxState.settings[0].generics)
     }
 
+    const handleRestart = () => {
+        if (
+            window.confirm(
+                'Restarting server will stop all outputs, are you sure?'
+            )
+        ) {
+            console.log('Restarting server...')
+            socket.emit(IO.RESTART_SERVER)
+        }
+    }
+
     return (
         <div className="Settings-body">
             <p className="Settings-header">SETTINGS :</p>
@@ -127,12 +138,16 @@ export const SettingsPage = () => {
                 >
                     UPDATE CLIPTOOL SETTINGS
                 </button>
-                <button
-                    className="save-button"
-                    onClick={() => socket.emit(IO.RESTART_SERVER)}
-                >
-                    RESTART CLIPTOOL
-                </button>
+                {!specificChannel ? (
+                    <button
+                        className="save-button"
+                        onClick={() => handleRestart()}
+                    >
+                        RESTART CLIPTOOL
+                    </button>
+                ) : (
+                    <React.Fragment />
+                )}
                 <button
                     className="save-button"
                     onClick={() => handleSettingsPage()}
@@ -152,17 +167,20 @@ const RenderOutputSettings = () => {
     }
     const handleLoop = (event) => {
         let generics = { ...reduxState.settings[0].generics }
-        generics.startupLoopState[parseInt(event.target.name)] = event.target.checked
+        generics.startupLoopState[parseInt(event.target.name)] =
+            event.target.checked
         reduxStore.dispatch(setGenerics(generics))
     }
     const handleMix = (event) => {
         let generics = { ...reduxState.settings[0].generics }
-        generics.startupMixState[parseInt(event.target.name)] = event.target.checked
+        generics.startupMixState[parseInt(event.target.name)] =
+            event.target.checked
         reduxStore.dispatch(setGenerics(generics))
     }
     const handleManual = (event) => {
         let generics = { ...reduxState.settings[0].generics }
-        generics.startupManualstartState[parseInt(event.target.name)] = event.target.checked
+        generics.startupManualstartState[parseInt(event.target.name)] =
+            event.target.checked
         reduxStore.dispatch(setGenerics(generics))
     }
 
@@ -242,7 +260,11 @@ const RenderOutputSettings = () => {
                     <input
                         name={String(index)}
                         type="checkbox"
-                        checked={reduxState.settings[0].generics.startupLoopState?.[index]}
+                        checked={
+                            reduxState.settings[0].generics.startupLoopState?.[
+                                index
+                            ]
+                        }
                         onChange={handleLoop}
                     />
                 </label>
@@ -252,7 +274,11 @@ const RenderOutputSettings = () => {
                     <input
                         name={String(index)}
                         type="checkbox"
-                        checked={reduxState.settings[0].generics.startupMixState?.[index]}
+                        checked={
+                            reduxState.settings[0].generics.startupMixState?.[
+                                index
+                            ]
+                        }
                         onChange={handleMix}
                     />
                 </label>
@@ -262,7 +288,10 @@ const RenderOutputSettings = () => {
                     <input
                         name={String(index)}
                         type="checkbox"
-                        checked={reduxState.settings[0].generics.startupManualstartState?.[index]}
+                        checked={
+                            reduxState.settings[0].generics
+                                .startupManualstartState?.[index]
+                        }
                         onChange={handleManual}
                     />
                 </label>
