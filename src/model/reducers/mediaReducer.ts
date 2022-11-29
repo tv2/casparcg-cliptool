@@ -66,31 +66,48 @@ export const media = (state: Array<IMedia> = defaultMediaState(), action) => {
             nextState[0].output = defaultOutputs(action.amount)
             return nextState
         case IO.UPDATE_MEDIA_FILES:
-            nextState[0].output[action.channelIndex].mediaFiles = action.files
+            if (nextState[0].output.length >= action.channelIndex) {
+                nextState[0].output[action.channelIndex].mediaFiles =
+                    action.files
+            }
             return nextState
         case IO.UPDATE_THUMB_LIST:
-            nextState[0].output[action.channelIndex].thumbnailList =
-                action.fileList
+            if (nextState[0].output.length >= action.channelIndex) {
+                nextState[0].output[action.channelIndex].thumbnailList =
+                    action.fileList
+            }
             return nextState
         case IO.UPDATE_FOLDER_LIST:
             nextState[0].folderList = action.folderList
             return nextState
         case IO.SET_TALLY_FILE_NAME:
-            nextState[0].output[action.channelIndex].tallyFile = action.filename
+            if (nextState[0].output.length >= action.channelIndex) {
+                nextState[0].output[action.channelIndex].tallyFile =
+                    action.filename
+            }
             return nextState
         case IO.SET_LOOP:
-            nextState[0].output[action.channelIndex].loopState =
-                action.loopState
+            if (nextState[0].output.length >= action.channelIndex) {
+                nextState[0].output[action.channelIndex].loopState =
+                    action.loopState
+            }
             return nextState
         case IO.SET_MIX:
-            nextState[0].output[action.channelIndex].mixState = action.mixState
+            if (nextState[0].output.length >= action.channelIndex) {
+                nextState[0].output[action.channelIndex].mixState =
+                    action.mixState
+            }
             return nextState
         case IO.SET_MANUAL_START:
-            nextState[0].output[action.channelIndex].manualstartState =
-                action.manualstartState
+            if (nextState[0].output.length >= action.channelIndex) {
+                nextState[0].output[action.channelIndex].manualstartState =
+                    action.manualstartState
+            }
             return nextState
         case IO.SET_TIME:
-            nextState[0].output[action.channelIndex].time = action.time
+            if (nextState[0].output.length >= action.channelIndex) {
+                nextState[0].output[action.channelIndex].time = action.time
+            }
             return nextState
         default:
             return nextState

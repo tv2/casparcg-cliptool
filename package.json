@@ -60,6 +60,7 @@
         ]
     },
     "dependencies": {
+        "@tv2media/logger": "^1.2.4",
         "casparcg-connection": "^5.1.0",
         "chokidar": "^3.5.1",
         "express": "^4.17.1",
@@ -76,7 +77,6 @@
         "socket.io": "^4.0.0",
         "socket.io-client": "^4.0.0",
         "sortablejs": "^1.13.0",
-        "winston": "^3.3.3",
         "xml-js": "^1.6.11"
     },
     "devDependencies": {

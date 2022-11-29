@@ -12,7 +12,7 @@ app.use('/', express.static(path.join(__dirname, '../../client')))
 
 server.on('connection', () => {
     app.get('/', (req: any, res: any) => {
-        console.log('Connected Client')
+        logger.info('Connected Client')
         res.sendFile('index.html')
     })
 })

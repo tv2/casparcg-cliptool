@@ -11,10 +11,10 @@ export const loadSettings = () => {
         const settingsFromFile = JSON.parse(
             fs.readFileSync(path.resolve('storage', 'settings.json'))
         )
-        console.log('File Loaded : ', settingsFromFile)
+        logger.data(settingsFromFile).info('File Loaded : ')
         reduxStore.dispatch(setGenerics(settingsFromFile))
     } catch (error) {
-        logger.error('Settings not yet stored, using defaults', error)
+        logger.data(error).error('Settings not yet stored, using defaults')
     }
 }
 
@@ -32,10 +32,10 @@ export const saveSettings = () => {
             stringifiedSettings,
             'utf8',
             (error) => {
-                console.log(error)
+                logger.data(error).error('Error writing file :')
             }
         )
     } else {
-        console.log('Settings not saved, using defaults')
+        logger.info('Settings not saved, using defaults')
     }
 }
