@@ -32,6 +32,7 @@ import {
     isDeepCompareEqual,
     isFolderNameEqual,
 } from '../utils/ccgHandlerUtils'
+import { logger } from '../utils/logger'
 
 let waitingForCCGResponse: boolean = false
 let previousThumbFileList = []
@@ -59,12 +60,13 @@ const ccgOSCServer = () => {
         .on('ready', () => {
             let ipAddresses = getThisMachineIpAddresses()
 
-            console.log('Listening for OSC over UDP.')
+            logger.info('Listening for OSC over UDP.')
             ipAddresses.forEach((address) => {
-                console.log(
-                    'OSC Host:',
-                    address + ', Port:',
-                    oscConnection.options.localPort
+                logger.info(
+                    'OSC Host: ' +
+                        address +
+                        ', Port: ' +
+                        oscConnection.options.localPort
                 )
             })
         })
@@ -72,11 +74,11 @@ const ccgOSCServer = () => {
             handleOscMessage(message)
         })
         .on('error', (error: any) => {
-            console.log('error in OSC receive :', error)
+            logger.data(error).info('error in OSC receive')
         })
 
     oscConnection.open()
-    console.log(`OSC listening on port 5253`)
+    logger.info(`OSC listening on port 5253`)
 }
 
 const handleOscMessage = (message: any) => {
@@ -113,7 +115,7 @@ const handleOscMessage = (message: any) => {
 }
 
 const dispatchConfig = (config: any) => {
-    console.log('CasparCG Config :', config.channels)
+    logger.data(config.channels).info('CasparCG Config : ')
     reduxStore.dispatch(setNumberOfOutputs(config.channels.length))
     reduxStore.dispatch(updateSettings(config.channels, config.paths.mediaPath))
     reduxStore.dispatch(setTabData(config.channels.length))
@@ -139,24 +141,24 @@ const dispatchConfig = (config: any) => {
             )
         )
     })
-    console.log('Number of Channels :', config.channels.length)
+    logger.info('Number of Channels : ' + config.channels.length)
     socketServer.emit(IO.SETTINGS_UPDATE, reduxState.settings[0])
     initializeClient()
 }
 
 const ccgAMPHandler = () => {
     //Check CCG Version and initialise OSC server:
-    console.log('Checking CasparCG connection')
+    logger.info('Checking CasparCG connection')
     ccgConnection
         .version()
         .then((response) => {
-            console.log(
-                'AMCP connection established to: ',
-                reduxState.settings[0].generics.ccgIp,
-                ':',
-                reduxState.settings[0].generics.ccgAmcpPort
+            logger.info(
+                'AMCP connection established to: ' +
+                    reduxState.settings[0].generics.ccgIp +
+                    ' : ' +
+                    reduxState.settings[0].generics.ccgAmcpPort
             )
-            console.log('CasparCG Server Version :', response.response.data)
+            logger.info('CasparCG Server Version :' + response.response.data)
             ccgConnection
                 .getCasparCGConfig()
                 .then((config) => {
@@ -164,11 +166,11 @@ const ccgAMPHandler = () => {
                     waitingForCCGResponse = false
                 })
                 .catch((error) => {
-                    console.log('Error receiving CCG Config', error)
+                    logger.data(error).error('Error receiving CCG Config :')
                 })
         })
         .catch((error) => {
-            console.log('No connection to CasparCG', error)
+            logger.data(error).error('No connection to CasparCG ')
         })
     startTimerControlledServices()
 }
@@ -232,7 +234,7 @@ const loadFileList = async () => {
             })
         })
         .catch((error) => {
-            console.log('Error receiving file list :', error)
+            logger.data(error).error('Error receiving file list :')
         })
 }
 
@@ -251,7 +253,7 @@ const outputExtractFiles = (allFiles: any, outputIndex: number) => {
             outputMedia
         )
     ) {
-        console.log('Media files changed for output :', outputIndex)
+        logger.info('Media files changed for output :' + outputIndex)
         reduxStore.dispatch(updateMediaFiles(outputIndex, outputMedia))
         socketServer.emit(
             IO.MEDIA_UPDATE,

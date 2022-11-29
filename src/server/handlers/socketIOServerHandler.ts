@@ -18,7 +18,7 @@ import { IOutput } from '../../model/reducers/mediaReducer'
 import { assignThumbNailListToOutputs } from './CasparCgHandler'
 
 export function socketIoHandlers(socket: any) {
-    logger.info('SETTING UP SOCKET IO MAIN HANDLERS', {})
+    logger.info('SETTING UP SOCKET IO MAIN HANDLERS')
 
     socketServer.emit(IO.SETTINGS_UPDATE, reduxState.settings[0])
     initializeClient()
@@ -71,7 +71,7 @@ export function socketIoHandlers(socket: any) {
             )
         })
         .on(IO.SET_GENERICS, (generics: IGenericSettings) => {
-            console.log('Updating and storing Generic Settings Serverside')
+            logger.info('Updating and storing Generic Settings Serverside')
             reduxStore.dispatch(setGenerics(generics))
             saveSettings()
             socketServer.emit(IO.SETTINGS_UPDATE, reduxState.settings[0])
