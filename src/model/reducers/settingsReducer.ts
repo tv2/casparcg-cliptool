@@ -40,57 +40,59 @@ export interface IGenericSettings {
     startupManualstartState: boolean[]
 }
 
-const defaultSettingsReducerState: ISettings[] = [
-    {
-        ccgConfig: {
-            channels: [],
-            path: '',
+export const defaultSettingsReducerState = (): ISettings[] => {
+    return [
+        {
+            ccgConfig: {
+                channels: [],
+                path: '',
+            },
+            tabData: [],
+            generics: {
+                transistionTime: 16,
+                ccgIp: '0.0.0.0',
+                ccgAmcpPort: 5250,
+                ccgOscPort: 5253,
+                ccgDefaultLayer: 10,
+                outputLabels: ['', '', '', '', '', '', '', ''],
+                outputFolders: ['', '', '', '', '', '', '', ''],
+                scale: [false, false, false, false, false, false, false, false],
+                scaleX: [1920, 1920, 1920, 1920, 1920, 1920, 1920, 1920],
+                scaleY: [1080, 1080, 1080, 1080, 1080, 1080, 1080, 1080],
+                startupLoopState: [
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                ],
+                startupMixState: [
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                ],
+                startupManualstartState: [
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                ],
+            },
         },
-        tabData: [],
-        generics: {
-            transistionTime: 16,
-            ccgIp: '0.0.0.0',
-            ccgAmcpPort: 5250,
-            ccgOscPort: 5253,
-            ccgDefaultLayer: 10,
-            outputLabels: ['', '', '', '', '', '', '', ''],
-            outputFolders: ['', '', '', '', '', '', '', ''],
-            scale: [false, false, false, false, false, false, false, false],
-            scaleX: [1920, 1920, 1920, 1920, 1920, 1920, 1920, 1920],
-            scaleY: [1080, 1080, 1080, 1080, 1080, 1080, 1080, 1080],
-            startupLoopState: [
-                false,
-                false,
-                false,
-                false,
-                false,
-                false,
-                false,
-                false,
-            ],
-            startupMixState: [
-                false,
-                false,
-                false,
-                false,
-                false,
-                false,
-                false,
-                false,
-            ],
-            startupManualstartState: [
-                false,
-                false,
-                false,
-                false,
-                false,
-                false,
-                false,
-                false,
-            ],
-        },
-    },
-]
+    ]
+}
 
 function updateChannelConfigWithVideoFormat(
     channelConfig: ICcgConfigChannel
@@ -102,7 +104,7 @@ function updateChannelConfigWithVideoFormat(
 }
 
 export const settings = (
-    state: ISettings[] = defaultSettingsReducerState,
+    state: ISettings[] = defaultSettingsReducerState(),
     action
 ) => {
     let nextState = { ...state }
