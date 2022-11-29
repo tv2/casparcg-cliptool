@@ -19,7 +19,7 @@ export const loadSettings = () => {
 }
 
 export const saveSettings = () => {
-    let stringifiedSettings = JSON.stringify(reduxState.settings[0].generics)
+    const stringifiedSettings = JSON.stringify(reduxState.settings[0].generics)
     if (!fs.existsSync('storage')) {
         fs.mkdirSync('storage')
     }
