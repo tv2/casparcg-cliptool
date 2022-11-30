@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.13.1](https://github.com/olzzon/CasparCG-ClipTool/compare/v2.13.0...v2.13.1) (2022-11-30)
+
+### Bug Fixes
+
+-   Checking folders should also show files from a subfolders subfolders ([1c43ed2](https://github.com/olzzon/CasparCG-ClipTool/commit/1c43ed26a39941abd9cb1590ae3e6be92571a19b))
+
 ## [2.13.0](https://github.com/olzzon/CasparCG-ClipTool/compare/v2.12.0...v2.13.0) (2022-11-30)
 
 ### Features
