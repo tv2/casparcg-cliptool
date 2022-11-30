@@ -50,10 +50,12 @@ export const isFolderNameEqual = (
     fileName: string,
     outputFolder: string
 ): boolean => {
-    if (!outputFolder) {
-        return true
-    }
-    return outputFolder === fileName.substring(0, fileName.lastIndexOf('/'))
+    return (
+        outputFolder ===
+        fileName
+            .substring(0, fileName.lastIndexOf('/'))
+            .substring(0, outputFolder.length)
+    )
 }
 
 export const hasThumbListChanged = (

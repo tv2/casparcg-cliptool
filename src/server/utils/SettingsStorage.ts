@@ -14,7 +14,9 @@ export const loadSettings = () => {
         logger.data(settingsFromFile).info('File Loaded : ')
         reduxStore.dispatch(setGenerics(settingsFromFile))
     } catch (error) {
-        logger.data(error).error('Settings not yet stored, using defaults')
+        logger
+            .data(error)
+            .error('Settings not found, or not yet stored, using defaults')
     }
 }
 
@@ -32,7 +34,11 @@ export const saveSettings = () => {
             stringifiedSettings,
             'utf8',
             (error) => {
-                logger.data(error).error('Error writing file :')
+                if (error) {
+                    logger.data(error).error('Error writing file :')
+                } else {
+                    logger.data(stringifiedSettings).info('Settings saved')
+                }
             }
         )
     } else {
