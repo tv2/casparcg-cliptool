@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.13.0](https://github.com/olzzon/CasparCG-ClipTool/compare/v2.12.0...v2.13.0) (2022-11-30)
+
+### Features
+
+-   Confirm restart from client, and hide restart when only showing a single output ([108012d](https://github.com/olzzon/CasparCG-ClipTool/commit/108012de263f0319bf6c84f00b2e2dabcbebd253))
+-   Implement MediaTech logger, log cleanup, removed Winston ([c79392f](https://github.com/olzzon/CasparCG-ClipTool/commit/c79392f4d1f43e4201f85ba03bf43c8b64ff511e))
+
+### Bug Fixes
+
+-   prevent overwriting settings with initial settings (e.g if a restart occours while a client stores an update.) ([5cb8a5a](https://github.com/olzzon/CasparCG-ClipTool/commit/5cb8a5ab7a56f0397be0186ad0b87ffd3208f324))
+
 ## [2.12.0](https://github.com/olzzon/CasparCG-ClipTool/compare/v2.11.0...v2.12.0) (2022-09-20)
 
 ### Features
