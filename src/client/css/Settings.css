@@ -59,6 +59,17 @@
     border-color: rgb(34, 34, 34);
 }
 
+.Settings-tick-field {
+    white-space: nowrap;
+    margin: 5px;
+    min-width: 60px;
+    color: rgb(255, 255, 255);
+    background-color: rgb(49, 49, 49);
+    border-width: 1px;
+    border-style: solid;
+    border-color: rgb(34, 34, 34);
+}
+
 .Settings-input-selector {
     color: rgb(13, 13, 66);
     margin: 5px;

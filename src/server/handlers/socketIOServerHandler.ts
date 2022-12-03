@@ -10,6 +10,7 @@ import {
     setManualStart,
     updateMediaFiles,
     updateThumbFileList,
+    setWeb,
 } from '../../model/reducers/mediaActions'
 import { setGenerics } from '../../model/reducers/settingsAction'
 import { IGenericSettings } from '../../model/reducers/settingsReducer'
@@ -68,6 +69,14 @@ export function socketIoHandlers(socket: any) {
                 IO.MIX_STATE_UPDATE,
                 channelIndex,
                 reduxState.media[0].output[channelIndex].mixState
+            )
+        })
+        .on(IO.SET_WEB_STATE, (channelIndex: number, state: boolean) => {
+            reduxStore.dispatch(setWeb(channelIndex, state))
+            socketServer.emit(
+                IO.WEB_STATE_UPDATE,
+                channelIndex,
+                reduxState.media[0].output[channelIndex].webState
             )
         })
         .on(IO.SET_GENERICS, (generics: IGenericSettings) => {
