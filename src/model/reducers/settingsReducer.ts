@@ -140,7 +140,8 @@ export const settings = (
                 nextState[0].generics.startupMixState ?? []
             nextState[0].generics.startupManualstartState =
                 nextState[0].generics.startupManualstartState ?? []
-            nextState[0].generics.webURL = nextState[0].generics.webURL ?? []
+            // Disable until - state of ClipTool is stored and loaded at startup
+            // nextState[0].generics.startupWebState = nextState[0].generics.startupWebState ?? []
             return nextState
         default:
             return nextState
