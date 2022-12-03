@@ -7,6 +7,7 @@ export const SET_TALLY_FILE_NAME = 'setTallyFileName'
 export const SET_NUMBER_OF_OUTPUTS = 'setNumberOfOutputs'
 export const SET_LOOP = 'setLoop'
 export const SET_MIX = 'setMix'
+export const SET_WEB = 'setWeb'
 export const SET_MANUAL_START = 'setManualStart'
 export const SET_TIME = 'setTime'
 
@@ -78,6 +79,14 @@ export const setManualStart = (
         type: SET_MANUAL_START,
         channelIndex: channelIndex,
         manualstartState: manualstartState,
+    }
+}
+
+export const setWeb = (channelIndex: number, webState: boolean) => {
+    return {
+        type: SET_WEB,
+        channelIndex: channelIndex,
+        webState: webState,
     }
 }
 

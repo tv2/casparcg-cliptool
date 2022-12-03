@@ -29,6 +29,7 @@ export interface IOutput {
     tallyFile: string
     loopState: boolean
     mixState: boolean
+    webState: boolean
     manualstartState: boolean
     time: [number, number]
 }
@@ -51,6 +52,7 @@ const defaultOutputs = (amount: number) => {
             tallyFile: '',
             loopState: false,
             mixState: false,
+            webState: false,
             manualstartState: false,
             time: [0, 0],
         })
@@ -96,6 +98,12 @@ export const media = (state: Array<IMedia> = defaultMediaState(), action) => {
             if (nextState[0].output.length >= action.channelIndex) {
                 nextState[0].output[action.channelIndex].mixState =
                     action.mixState
+            }
+            return nextState
+        case IO.SET_WEB:
+            if (nextState[0].output.length >= action.channelIndex) {
+                nextState[0].output[action.channelIndex].webState =
+                    action.webState
             }
             return nextState
         case IO.SET_MANUAL_START:
