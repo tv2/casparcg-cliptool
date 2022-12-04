@@ -33,6 +33,7 @@ import {
     isFolderNameEqual,
 } from '../utils/ccgHandlerUtils'
 import { logger } from '../utils/logger'
+import { playMedia, playOverlay } from '../utils/CcgLoadPlay'
 
 let waitingForCCGResponse: boolean = false
 let previousThumbFileList = []
@@ -74,7 +75,7 @@ const ccgOSCServer = () => {
             handleOscMessage(message)
         })
         .on('error', (error: any) => {
-            logger.data(error).info('error in OSC receive')
+            logger.data(error).error('error in OSC receive')
         })
 
     oscConnection.open()
@@ -168,6 +169,16 @@ const ccgAMPHandler = () => {
                 .catch((error) => {
                     logger.data(error).error('Error receiving CCG Config :')
                 })
+            reduxState.settings[0].ccgConfig.channels.forEach((ch, index) => {
+                if (reduxState.settings[0].generics.webURL[index]) {
+                    playOverlay(
+                        index,
+                        10,
+                        reduxState.settings[0].generics.webURL[index]
+                    )
+                    playMedia(index, 9, 'GREEN')
+                }
+            })
         })
         .catch((error) => {
             logger.data(error).error('No connection to CasparCG ')
