@@ -22,11 +22,19 @@ CasparCG ClipTool is a playout tool with a thumbnail based GUI.
 
 -   "MANUAL" is ON: When clicking on a thumb it will be loaded on CasparCG, pressing "START" to play the clip
 
+-   "OVERLAY" is ON: The source of overlayURL from settings will be played on top of the clip
+
 ### Settings:
 
-<img src="docs/images/settings.png">
+<img src="docs/images/cliptool-settings.png">
 
--   On each output you can set Label, Folder (CasparCG Media subfolders) and Scaling
+### On each output you can set:
+
+-   Label
+-   Folder (CasparCG Media subfolders)
+-   Startup state for loop, mix, manual and overlay
+-   URL for the Overlay (e.g. a static html or a web page)
+-   Scaling
 
 ## Install and run:
 
