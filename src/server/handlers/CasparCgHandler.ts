@@ -14,6 +14,7 @@ import {
     setLoop,
     setManualStart,
     setMix,
+    setWeb,
 } from '../../model/reducers/mediaActions'
 
 import { socketServer } from './expressHandler'
@@ -141,10 +142,28 @@ const dispatchConfig = (config: any) => {
                 reduxState.settings[0].generics.startupMixState[index] ?? false
             )
         )
+        reduxStore.dispatch(
+            setWeb(
+                index,
+                reduxState.settings[0].generics.startupWebState[index] ?? false
+            )
+        )
     })
     logger.info('Number of Channels : ' + config.channels.length)
     socketServer.emit(IO.SETTINGS_UPDATE, reduxState.settings[0])
     initializeClient()
+}
+
+const loadInitalOverlay = () => {
+    if (reduxState.settings[0].generics.startupWebState) {
+        reduxState.settings[0].ccgConfig.channels.forEach((ch, index) => {
+            playOverlay(
+                index,
+                10,
+                reduxState.settings[0].generics.webURL[index]
+            )
+        })
+    }
 }
 
 const ccgAMPHandler = () => {
@@ -165,20 +184,11 @@ const ccgAMPHandler = () => {
                 .then((config) => {
                     dispatchConfig(config)
                     waitingForCCGResponse = false
+                    loadInitalOverlay()
                 })
                 .catch((error) => {
                     logger.data(error).error('Error receiving CCG Config :')
                 })
-            reduxState.settings[0].ccgConfig.channels.forEach((ch, index) => {
-                if (reduxState.settings[0].generics.webURL[index]) {
-                    playOverlay(
-                        index,
-                        10,
-                        reduxState.settings[0].generics.webURL[index]
-                    )
-                    playMedia(index, 9, 'GREEN')
-                }
-            })
         })
         .catch((error) => {
             logger.data(error).error('No connection to CasparCG ')
