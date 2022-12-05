@@ -327,7 +327,7 @@ const RenderOutputSettings = () => {
                     <input
                         name={String(index)}
                         type="text"
-                        value={reduxState.settings[0].generics.webURL[index]}
+                        value={reduxState.settings[0].generics.webURL?.[index]}
                         onChange={handleWebURL}
                     />
                 </label>

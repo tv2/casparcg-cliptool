@@ -159,7 +159,7 @@ const loadInitalOverlay = () => {
         return
     }
     reduxState.settings[0].ccgConfig.channels.forEach((ch, index) => {
-        playOverlay(index, 10, reduxState.settings[0].generics.webURL[index])
+        playOverlay(index, 10, reduxState.settings[0].generics.webURL?.[index])
     })
 }
 
