@@ -1,7 +1,7 @@
 {
     "name": "casparcg-clip-tool",
     "productName": "CasparCGClipTool",
-    "version": "2.14.0",
+    "version": "2.14.1",
     "description": "CasparCG ClipTool",
     "license": "MIT",
     "private": false,
