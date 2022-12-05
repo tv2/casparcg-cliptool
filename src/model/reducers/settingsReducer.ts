@@ -142,6 +142,7 @@ export const settings = (
                 nextState[0].generics.startupManualstartState ?? []
             nextState[0].generics.startupWebState =
                 nextState[0].generics.startupWebState ?? []
+            nextState[0].generics.webURL = nextState[0].generics.webURL ?? []
             return nextState
         default:
             return nextState
