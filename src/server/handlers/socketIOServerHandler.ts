@@ -88,11 +88,11 @@ export function socketIoHandlers(socket: any) {
                 playOverlay(
                     channelIndex,
                     10,
-                    reduxState.settings[0].generics.webURL[channelIndex]
+                    reduxState.settings[0].generics.webURL?.[channelIndex]
                 )
                 logger.info(
                     'Playing Overlay :' +
-                        reduxState.settings[0].generics.webURL[channelIndex] +
+                        reduxState.settings[0].generics.webURL?.[channelIndex] +
                         ' On ChannelIndex : ' +
                         channelIndex
                 )
