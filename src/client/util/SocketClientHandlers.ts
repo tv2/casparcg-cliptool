@@ -12,6 +12,7 @@ import {
     updateThumbFileList,
     updateFolderList,
     setNumberOfOutputs,
+    setWeb,
 } from '../../model/reducers/mediaActions'
 import { IMediaFile, IThumbFile } from '../../model/reducers/mediaReducer'
 import {
@@ -66,6 +67,10 @@ socket.on(IO.LOOP_STATEUPDATE, (channelIndex: number, loop: boolean) => {
 
 socket.on(IO.MIX_STATE_UPDATE, (channelIndex: number, mix: boolean) => {
     reduxStore.dispatch(setMix(channelIndex, mix))
+})
+
+socket.on(IO.WEB_STATE_UPDATE, (channelIndex: number, web: boolean) => {
+    reduxStore.dispatch(setWeb(channelIndex, web))
 })
 
 socket.on(

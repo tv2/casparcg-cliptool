@@ -14,6 +14,7 @@ import {
     setLoop,
     setManualStart,
     setMix,
+    setWeb,
 } from '../../model/reducers/mediaActions'
 
 import { socketServer } from './expressHandler'
@@ -33,6 +34,7 @@ import {
     isFolderNameEqual,
 } from '../utils/ccgHandlerUtils'
 import { logger } from '../utils/logger'
+import { playMedia, playOverlay } from '../utils/CcgLoadPlay'
 
 let waitingForCCGResponse: boolean = false
 let previousThumbFileList = []
@@ -74,7 +76,7 @@ const ccgOSCServer = () => {
             handleOscMessage(message)
         })
         .on('error', (error: any) => {
-            logger.data(error).info('error in OSC receive')
+            logger.data(error).error('error in OSC receive')
         })
 
     oscConnection.open()
@@ -140,10 +142,25 @@ const dispatchConfig = (config: any) => {
                 reduxState.settings[0].generics.startupMixState[index] ?? false
             )
         )
+        reduxStore.dispatch(
+            setWeb(
+                index,
+                reduxState.settings[0].generics.startupWebState[index] ?? false
+            )
+        )
     })
     logger.info('Number of Channels : ' + config.channels.length)
     socketServer.emit(IO.SETTINGS_UPDATE, reduxState.settings[0])
     initializeClient()
+}
+
+const loadInitalOverlay = () => {
+    if (!reduxState.settings[0].generics.startupWebState) {
+        return
+    }
+    reduxState.settings[0].ccgConfig.channels.forEach((ch, index) => {
+        playOverlay(index, 10, reduxState.settings[0].generics.webURL[index])
+    })
 }
 
 const ccgAMPHandler = () => {
@@ -164,6 +181,7 @@ const ccgAMPHandler = () => {
                 .then((config) => {
                     dispatchConfig(config)
                     waitingForCCGResponse = false
+                    loadInitalOverlay()
                 })
                 .catch((error) => {
                     logger.data(error).error('Error receiving CCG Config :')

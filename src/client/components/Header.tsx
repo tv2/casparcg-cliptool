@@ -67,8 +67,22 @@ const handleMixStatus = () => {
     )
 }
 
+const handleWebState = () => {
+    socket.emit(
+        IO.SET_WEB_STATE,
+        reduxState.appNav[0].activeTab,
+        !reduxState.media[0].output[reduxState.appNav[0].activeTab].webState
+    )
+}
+
 const mixStateStyle = () => {
     return reduxState.media[0].output[reduxState.appNav[0].activeTab]?.mixState
+        ? { backgroundColor: 'rgb(28, 115, 165)' }
+        : { backgroundColor: 'grey' }
+}
+
+const webStateStyle = () => {
+    return reduxState.media[0].output[reduxState.appNav[0].activeTab]?.webState
         ? { backgroundColor: 'rgb(28, 115, 165)' }
         : { backgroundColor: 'grey' }
 }
@@ -121,6 +135,15 @@ export const RenderFullHeader = () => {
                             style={mixStateStyle()}
                         >
                             MIX
+                        </button>
+                    </div>
+                    <div className="App-button-background">
+                        <button
+                            className="App-switch-button"
+                            onClick={() => handleWebState()}
+                            style={webStateStyle()}
+                        >
+                            OVERLAY
                         </button>
                     </div>
                 </React.Fragment>

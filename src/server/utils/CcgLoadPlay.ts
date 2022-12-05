@@ -49,6 +49,25 @@ export const loadMedia = (
     )
 }
 
+export const playOverlay = (
+    channelIndex: number,
+    layerIndex: number,
+    fileName: string
+) => {
+    if (!fileName) {
+        return
+    }
+    scale(channelIndex, layerIndex)
+
+    ccgConnection.loadHtmlPage(channelIndex + 1, layerIndex + 1, fileName)
+
+    ccgConnection.playHtmlPage(channelIndex + 1, layerIndex + 1)
+}
+
+export const stopOverlay = (channelIndex: number, layerIndex: number) => {
+    ccgConnection.stop(channelIndex + 1, layerIndex + 1)
+}
+
 const scale = (channelIndex: number, layerIndex: number) => {
     let resX = reduxState.settings[0].ccgConfig.channels[
         channelIndex

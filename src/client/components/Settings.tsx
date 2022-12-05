@@ -201,6 +201,18 @@ const RenderOutputSettings = () => {
         reduxStore.dispatch(setGenerics(generics))
     }
 
+    const handleStartupWebState = (event) => {
+        let generics = { ...reduxState.settings[0].generics }
+        generics.startupWebState[parseInt(event.target.name)] =
+            event.target.checked
+        reduxStore.dispatch(setGenerics(generics))
+    }
+    const handleWebURL = (event) => {
+        let generics = { ...reduxState.settings[0].generics }
+        generics.webURL[parseInt(event.target.name)] = event.target.value
+        reduxStore.dispatch(setGenerics(generics))
+    }
+
     const handleTabMediaFolder = (
         event: React.ChangeEvent<HTMLSelectElement>
     ) => {
@@ -254,7 +266,7 @@ const RenderOutputSettings = () => {
                     <br />
                     {reduxState.settings[0].ccgConfig.channels[index].videoMode}
                 </label>
-                <label className="Settings-input-field">
+                <label className="Settings-tick-field">
                     LOOP :
                     <br />
                     <input
@@ -268,7 +280,7 @@ const RenderOutputSettings = () => {
                         onChange={handleLoop}
                     />
                 </label>
-                <label className="Settings-input-field">
+                <label className="Settings-tick-field">
                     MIX :
                     <br />
                     <input
@@ -282,7 +294,7 @@ const RenderOutputSettings = () => {
                         onChange={handleMix}
                     />
                 </label>
-                <label className="Settings-input-field">
+                <label className="Settings-tick-field">
                     MANUAL :
                     <br />
                     <input
@@ -295,7 +307,31 @@ const RenderOutputSettings = () => {
                         onChange={handleManual}
                     />
                 </label>
+                <label className="Settings-tick-field">
+                    OVERLAY :
+                    <br />
+                    <input
+                        name={String(index)}
+                        type="checkbox"
+                        checked={
+                            reduxState.settings[0].generics.startupWebState?.[
+                                index
+                            ]
+                        }
+                        onChange={handleStartupWebState}
+                    />
+                </label>
                 <label className="Settings-input-field">
+                    OVERLAY URL :
+                    <br />
+                    <input
+                        name={String(index)}
+                        type="text"
+                        value={reduxState.settings[0].generics.webURL[index]}
+                        onChange={handleWebURL}
+                    />
+                </label>
+                <label className="Settings-tick-field">
                     SCALE :
                     <br />
                     <input

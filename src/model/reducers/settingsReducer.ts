@@ -35,9 +35,11 @@ export interface IGenericSettings {
     scale: boolean[]
     scaleX: number[]
     scaleY: number[]
+    webURL: string[]
     startupLoopState: boolean[]
     startupMixState: boolean[]
     startupManualstartState: boolean[]
+    startupWebState: boolean[]
 }
 
 export const defaultSettingsReducerState = (): ISettings[] => {
@@ -59,6 +61,7 @@ export const defaultSettingsReducerState = (): ISettings[] => {
                 scale: [false, false, false, false, false, false, false, false],
                 scaleX: [1920, 1920, 1920, 1920, 1920, 1920, 1920, 1920],
                 scaleY: [1080, 1080, 1080, 1080, 1080, 1080, 1080, 1080],
+                webURL: ['', '', '', '', '', '', '', ''],
                 startupLoopState: [
                     false,
                     false,
@@ -80,6 +83,16 @@ export const defaultSettingsReducerState = (): ISettings[] => {
                     false,
                 ],
                 startupManualstartState: [
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                ],
+                startupWebState: [
                     false,
                     false,
                     false,
@@ -127,6 +140,8 @@ export const settings = (
                 nextState[0].generics.startupMixState ?? []
             nextState[0].generics.startupManualstartState =
                 nextState[0].generics.startupManualstartState ?? []
+            // Disable until - state of ClipTool is stored and loaded at startup
+            // nextState[0].generics.startupWebState = nextState[0].generics.startupWebState ?? []
             return nextState
         default:
             return nextState
