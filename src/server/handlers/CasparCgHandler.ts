@@ -155,15 +155,12 @@ const dispatchConfig = (config: any) => {
 }
 
 const loadInitalOverlay = () => {
-    if (reduxState.settings[0].generics.startupWebState) {
-        reduxState.settings[0].ccgConfig.channels.forEach((ch, index) => {
-            playOverlay(
-                index,
-                10,
-                reduxState.settings[0].generics.webURL[index]
-            )
-        })
+    if (!reduxState.settings[0].generics.startupWebState) {
+        return
     }
+    reduxState.settings[0].ccgConfig.channels.forEach((ch, index) => {
+        playOverlay(index, 10, reduxState.settings[0].generics.webURL[index])
+    })
 }
 
 const ccgAMPHandler = () => {
