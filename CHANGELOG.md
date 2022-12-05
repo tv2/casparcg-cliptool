@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.14.1](https://github.com/olzzon/CasparCG-ClipTool/compare/v2.14.0...v2.14.1) (2022-12-05)
+
+### Bug Fixes
+
+-   make webURL optional to avoid crash when loading settings from old version ([e38be54](https://github.com/olzzon/CasparCG-ClipTool/commit/e38be54a2bbe9f46381672ed0b610f398e4248c0))
+
 ## [2.14.0](https://github.com/olzzon/CasparCG-ClipTool/compare/v2.13.1...v2.14.0) (2022-12-05)
 
 ### Features
