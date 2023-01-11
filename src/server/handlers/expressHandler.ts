@@ -18,7 +18,7 @@ server.on('connection', () => {
 })
 
 socketServer.on('connection', (socket: any) => {
-    logger.info('Client connected :' + String(socket.client.id), {})
+    logger.info(`Client connected: ${socket.client.id}`)
     socketIoHandlers(socket)
 })
 

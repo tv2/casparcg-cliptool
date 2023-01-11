@@ -32,43 +32,46 @@ export const socket = require('socket.io-client')(
     }
 )
 
-socket.on('connect', () => {
-    console.log('Connected to ClipTool')
-})
+socket.on('connect', () => logger.info('Connected to ClipTool'))
 
-socket.on('connect_error', (err) => {
-    console.log(`Socket Client Error : ${err}`)
-})
+socket.on('connect_error', (error: unknown) =>
+    logger.data(error).error(`Socket Client Error:`)
+)
 
-socket.on('connect_timeout', () => {
-    console.log('Socket Client connect_timeout')
-})
+socket.on('connect_timeout', () =>
+    logger.warn('Socket Client connect_timeout.')
+)
 
-socket.on('Socker Client reconnect_attempt', () => {
-    console.log('reconnect_attempt')
-})
+socket.on('Socket Client reconnect_attempt', () =>
+    logger.debug('reconnect_attempt')
+)
 
-socket.on(IO.MEDIA_UPDATE, (channelIndex: number, payload: IMediaFile[]) => {
-    reduxStore.dispatch(updateMediaFiles(channelIndex, payload))
+socket.on(IO.MEDIA_UPDATE, (channelIndex: number, mediaFiles: IMediaFile[]) => {
+    reduxStore.dispatch(updateMediaFiles(channelIndex, mediaFiles))
 
-    logger.debug(
-        `Media list updated Channel : ${channelIndex} Payload : ${payload}`
-    )
+    logger
+        .data(mediaFiles)
+        .debug(
+            `Media list updated channel index ${channelIndex} with ${mediaFiles}.`
+        )
 })
 
 socket.on(IO.FOLDERS_UPDATE, (payload: string[]) => {
     reduxStore.dispatch(updateFolderList(payload))
 
-    logger.debug(`Folderlist updated Payload : ${payload}`)
+    logger.data(payload).debug(`Folderlist updated Payload:`)
 })
 
-socket.on(IO.THUMB_UPDATE, (channelIndex: number, payload: IThumbFile[]) => {
-    reduxStore.dispatch(updateThumbFileList(channelIndex, payload))
+socket.on(
+    IO.THUMB_UPDATE,
+    (channelIndex: number, thumbnailFiles: IThumbFile[]) => {
+        reduxStore.dispatch(updateThumbFileList(channelIndex, thumbnailFiles))
 
-    logger.debug(
-        `Thumbs updated Channel : ${channelIndex} Payload : ${payload}`
-    )
-})
+        logger
+            .data(thumbnailFiles)
+            .debug(`Thumbs updated channel index ${channelIndex} with:`)
+    }
+)
 
 socket.on(IO.TIME_TALLY_UPDATE, (data: IO.ITimeTallyPayload[]) => {
     data.forEach((channel, index) => {
@@ -97,11 +100,11 @@ socket.on(
     }
 )
 
-socket.on(IO.SETTINGS_UPDATE, (payload: ISettings) => {
-    reduxStore.dispatch(setNumberOfOutputs(payload.ccgConfig.channels.length))
-    reduxStore.dispatch(setGenerics(payload.generics))
+socket.on(IO.SETTINGS_UPDATE, (settings: ISettings) => {
+    reduxStore.dispatch(setNumberOfOutputs(settings.ccgConfig.channels.length))
+    reduxStore.dispatch(setGenerics(settings.generics))
     reduxStore.dispatch(
-        updateSettings(payload.ccgConfig.channels, payload.ccgConfig.path)
+        updateSettings(settings.ccgConfig.channels, settings.ccgConfig.path)
     )
-    reduxStore.dispatch(setTabData(payload.tabData.length))
+    reduxStore.dispatch(setTabData(settings.tabData.length))
 })

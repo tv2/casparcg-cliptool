@@ -3,11 +3,10 @@ import { logger } from './util/loggerGateway'
 
 import { reduxState } from '../model/reducers/store'
 import { app } from './app'
-import { socket } from './util/SocketGatewayHandlers'
 
-logger.info(' Runtime Arguments : %O', ARG_CONSTANTS)
+logger.data(ARG_CONSTANTS).info(' Runtime Arguments:')
 
-logger.info('Redux initialized : %O', reduxState.settings[0].generics)
+logger.data(reduxState.settings[0].generics).info('Redux initialized.')
 logger.info(`Socket Initialized`)
 
 app()

@@ -2,7 +2,6 @@ import os from 'os' // Used to display (log) network addresses on local machine
 
 import { createServer } from 'net'
 
-import { reduxState } from '../../model/reducers/store'
 import { socket as socketio } from '../util/SocketGatewayHandlers'
 
 import * as IO from '../../model/SocketIoConstants'
@@ -35,32 +34,8 @@ export const ampServerGateway = () => {
     }).listen(3811)
     let ipAddresses = getThisMachineIpAddresses()
     ipAddresses.forEach((address) => {
-        logger.info(`AMP Host Listening for TCP at: ${address}, Port: 3811`)
+        logger.info(`AMP Host Listening for TCP at ${address}:3811.`)
     })
-}
-
-const checkAmpCommand = (
-    message: string,
-    command: string | undefined
-): boolean => {
-    if (!command || !message) return false
-    if (message === command) return true
-    let messageArray: string[] = message.split('/')
-    let commandArray: string[] = command.split('/')
-    let status: boolean = true
-    if (messageArray.length !== commandArray.length) {
-        return false
-    }
-    commandArray.forEach((commandPart: string, index: number) => {
-        if (commandPart === '{output}') {
-            if (typeof parseFloat(messageArray[index]) !== 'number') {
-                status = false
-            }
-        } else if (commandPart !== messageArray[index]) {
-            status = false
-        }
-    })
-    return status
 }
 
 const getThisMachineIpAddresses = () => {

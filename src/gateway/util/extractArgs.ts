@@ -21,24 +21,18 @@ export const ARG_CONSTANTS: IArgConstants = {
 }
 
 export const argHelp = () => {
-    logger.info(`Runtime arguments are : `)
-    logger.info(
-        `----------------------------------------------------------------`
-    )
-    logger.info(`cliptool='hostname:port' - adress of the clipttol server `)
-    logger.info(
-        `----------------------------------------------------------------`
-    )
-    logger.info(`type='osc' for OSC gateway`)
-    logger.info(`oscport='5256' - port when running gateway as OSC server`)
-    logger.info(
-        `----------------------------------------------------------------`
-    )
-    logger.info(`type='amp' for AMP gateway`)
-    logger.info(`Creates an AMP server at port 3811`)
-    logger.info(
-        `----------------------------------------------------------------`
-    )
-    logger.info(``)
-    logger.info(``)
+    logger.info(`Runtime arguments are:
+----------------------------------------------------------------
+cliptool='hostname:port' - adress of the clipttol server
+
+----------------------------------------------------------------
+type='osc' for OSC gateway
+oscport='5256' - port when running gateway as OSC server
+
+----------------------------------------------------------------
+type='amp' for AMP gateway
+Creates an AMP server at port 3811
+
+----------------------------------------------------------------
+`)
 }
