@@ -38,6 +38,32 @@ export const ampServerGateway = () => {
     })
 }
 
+// This is preparation for handling other commands in the AMP protocol.
+// TODO: Make use of it.
+function checkAmpCommand(
+    message: string,
+    command: string | undefined
+): boolean {
+    if (!command || !message) return false
+    if (message === command) return true
+    let messageArray: string[] = message.split('/')
+    let commandArray: string[] = command.split('/')
+    let status: boolean = true
+    if (messageArray.length !== commandArray.length) {
+        return false
+    }
+    commandArray.forEach((commandPart: string, index: number) => {
+        if (commandPart === '{output}') {
+            if (typeof parseFloat(messageArray[index]) !== 'number') {
+                status = false
+            }
+        } else if (commandPart !== messageArray[index]) {
+            status = false
+        }
+    })
+    return status
+}
+
 const getThisMachineIpAddresses = () => {
     let interfaces = os.networkInterfaces()
     let ipAddresses: Array<string> = []
