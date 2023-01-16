@@ -1,7 +1,6 @@
 import { ampServerGateway } from './gateways/AmpServerGateway'
 import { oscServerGateway } from './gateways/OscServerGateway'
 import { argHelp, ARG_CONSTANTS } from './util/extractArgs'
-import { logger } from './util/loggerGateway'
 
 export const app = () => {
     console.log('ControlGateway started')

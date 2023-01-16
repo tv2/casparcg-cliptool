@@ -63,20 +63,17 @@ const ccgOSCServer = () => {
             let ipAddresses = getThisMachineIpAddresses()
 
             logger.info('Listening for OSC over UDP.')
-            ipAddresses.forEach((address) => {
+            ipAddresses.forEach((address) =>
                 logger.info(
-                    'OSC Host: ' +
-                        address +
-                        ', Port: ' +
-                        oscConnection.options.localPort
+                    `OSC Host: ${address}:${oscConnection.options.localPort}`
                 )
-            })
+            )
         })
         .on('message', (message: any) => {
             handleOscMessage(message)
         })
         .on('error', (error: any) => {
-            logger.data(error).error('error in OSC receive')
+            logger.data(error).error('Error in OSC receive')
         })
 
     oscConnection.open()
@@ -149,7 +146,7 @@ const dispatchConfig = (config: any) => {
             )
         )
     })
-    logger.info('Number of Channels : ' + config.channels.length)
+    logger.info(`Number of Channels: ${config.channels.length}`)
     socketServer.emit(IO.SETTINGS_UPDATE, reduxState.settings[0])
     initializeClient()
 }
@@ -165,17 +162,14 @@ const loadInitalOverlay = () => {
 
 const ccgAMPHandler = () => {
     //Check CCG Version and initialise OSC server:
-    logger.info('Checking CasparCG connection')
+    logger.debug('Checking CasparCG connection')
     ccgConnection
         .version()
         .then((response) => {
-            logger.info(
-                'AMCP connection established to: ' +
-                    reduxState.settings[0].generics.ccgIp +
-                    ' : ' +
-                    reduxState.settings[0].generics.ccgAmcpPort
-            )
-            logger.info('CasparCG Server Version :' + response.response.data)
+            const address = reduxState.settings[0].generics.ccgIp
+            const port = reduxState.settings[0].generics.ccgAmcpPort
+            logger.info(`AMCP connection established to: ${address}:${port}`)
+            logger.info(`CasparCG Server Version: ${response.response.data}`)
             ccgConnection
                 .getCasparCGConfig()
                 .then((config) => {
@@ -183,13 +177,13 @@ const ccgAMPHandler = () => {
                     waitingForCCGResponse = false
                     loadInitalOverlay()
                 })
-                .catch((error) => {
-                    logger.data(error).error('Error receiving CCG Config :')
-                })
+                .catch((error) =>
+                    logger.data(error).error('Error receiving CCG Config:')
+                )
         })
-        .catch((error) => {
+        .catch((error) =>
             logger.data(error).error('No connection to CasparCG ')
-        })
+        )
     startTimerControlledServices()
 }
 
@@ -271,7 +265,7 @@ const outputExtractFiles = (allFiles: any, outputIndex: number) => {
             outputMedia
         )
     ) {
-        logger.info('Media files changed for output :' + outputIndex)
+        logger.info(`Media files changed for output: ${outputIndex}`)
         reduxStore.dispatch(updateMediaFiles(outputIndex, outputMedia))
         socketServer.emit(
             IO.MEDIA_UPDATE,

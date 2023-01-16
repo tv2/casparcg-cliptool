@@ -40,15 +40,11 @@ export function socketIoHandlers(socket: any) {
             } else {
                 mixMedia(channelIndex, 9, fileName)
             }
-            logger.info(
-                'Play out :' + fileName + ' On ChannelIndex : ' + channelIndex
-            )
+            logger.info(`Playing ${fileName} on channel index ${channelIndex}.`)
         })
         .on(IO.PGM_LOAD, (channelIndex: number, fileName: string) => {
             loadMedia(channelIndex, 9, fileName)
-            logger.info(
-                'Load Media :' + fileName + ' On ChannelIndex : ' + channelIndex
-            )
+            logger.info(`Loading ${fileName} on channel index ${channelIndex}.`)
         })
         .on(IO.SET_LOOP_STATE, (channelIndex: number, state: boolean) => {
             reduxStore.dispatch(setLoop(channelIndex, state))
@@ -85,23 +81,18 @@ export function socketIoHandlers(socket: any) {
                 reduxState.media[0].output[channelIndex].webState
             )
             if (reduxState.media[0].output[channelIndex].webState) {
-                playOverlay(
-                    channelIndex,
-                    10,
+                const webUrl =
                     reduxState.settings[0].generics.webURL?.[channelIndex]
-                )
+                playOverlay(channelIndex, 10, webUrl)
                 logger.info(
-                    'Playing Overlay :' +
-                        reduxState.settings[0].generics.webURL?.[channelIndex] +
-                        ' On ChannelIndex : ' +
-                        channelIndex
+                    `Overlay playing ${webUrl} on channel index ${channelIndex}.`
                 )
             } else {
                 stopOverlay(channelIndex, 10)
             }
         })
         .on(IO.SET_GENERICS, (generics: IGenericSettings) => {
-            logger.info('Updating and storing Generic Settings Serverside')
+            logger.info('Updating and storing generic settings serverside.')
             reduxStore.dispatch(setGenerics(generics))
             saveSettings()
             socketServer.emit(IO.SETTINGS_UPDATE, reduxState.settings[0])
