@@ -14,7 +14,7 @@ export const findThumbPix = (fileName: string, channelIndex: number) => {
     let thumb =
         reduxState.media[0].output[channelIndex]?.thumbnailList.filter(
             (item: IThumbFile) => {
-                return fileName.toUpperCase().includes(item.name)
+                return item.name.toUpperCase().match(fileName.toUpperCase())
             }
         ) || []
     return thumb[0]?.thumbnail || ''
@@ -77,14 +77,9 @@ export const Thumbnail = () => {
 }
 
 const handleClickMedia = (fileName: string) => {
-    if (
-        !reduxState.media[0].output[reduxState.appNav[0].activeTab]
-            ?.manualstartState
-    ) {
-        socket.emit(PGM_PLAY, reduxState.appNav[0].activeTab, fileName)
-    } else {
-        socket.emit(PGM_LOAD, reduxState.appNav[0].activeTab, fileName)
-    }
+    const event = !reduxState.media[0].output[reduxState.appNav[0].activeTab]
+        ?.manualstartState ? PGM_PLAY : PGM_LOAD
+    socket.emit(event, reduxState.appNav[0].activeTab, fileName)    
 }
 
 const RenderThumb = (props) => {

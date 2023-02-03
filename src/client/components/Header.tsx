@@ -16,6 +16,9 @@ import * as IO from '../../model/SocketIoConstants'
 import { findThumbPix } from './Thumbnail'
 import { SettingsPage } from './Settings'
 
+const offColor = { backgroundColor: 'grey' }
+const onColor = { backgroundColor: 'rgb(28, 115, 165)' }
+
 const RenderTime = () => {
     return (
         <div className="App-timer-background">
@@ -55,8 +58,8 @@ const handleLoopStatus = () => {
 
 const loopStateStyle = () => {
     return reduxState.media[0].output[reduxState.appNav[0].activeTab]?.loopState
-        ? { backgroundColor: 'rgb(28, 115, 165)' }
-        : { backgroundColor: 'grey' }
+        ? onColor
+        : offColor
 }
 
 const handleMixStatus = () => {
@@ -77,14 +80,14 @@ const handleWebState = () => {
 
 const mixStateStyle = () => {
     return reduxState.media[0].output[reduxState.appNav[0].activeTab]?.mixState
-        ? { backgroundColor: 'rgb(28, 115, 165)' }
-        : { backgroundColor: 'grey' }
+        ? onColor
+        : offColor
 }
 
 const webStateStyle = () => {
     return reduxState.media[0].output[reduxState.appNav[0].activeTab]?.webState
-        ? { backgroundColor: 'rgb(28, 115, 165)' }
-        : { backgroundColor: 'grey' }
+        ? onColor
+        : offColor
 }
 
 const handleManualStartStatus = () => {
@@ -159,8 +162,8 @@ export const RenderFullHeader = () => {
                         reduxState.media[0].output[
                             reduxState.appNav[0].activeTab
                         ]?.manualstartState
-                            ? { backgroundColor: 'rgb(28, 115, 165)' }
-                            : { backgroundColor: 'grey' }
+                            ? onColor
+                            : offColor
                     }
                 >
                     MANUAL

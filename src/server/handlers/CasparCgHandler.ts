@@ -190,7 +190,6 @@ const ccgAMPHandler = () => {
 const startTimerControlledServices = async () => {
     //Update of timeleft is set to a default 40ms (same as 25FPS)
     let data: IO.ITimeTallyPayload[] = []
-    let thumbNailList: IThumbFile[] = []
 
     setInterval(() => {
         reduxState.media[0].output.forEach((output: IOutput, index: number) => {
