@@ -16,8 +16,8 @@ import * as IO from '../../model/SocketIoConstants'
 import { findThumbPix } from './Thumbnail'
 import { SettingsPage } from './Settings'
 
-const offColor = { backgroundColor: 'grey' }
-const onColor = { backgroundColor: 'rgb(28, 115, 165)' }
+const OFF_COLOR = { backgroundColor: 'grey' }
+const ON_COLOR = { backgroundColor: 'rgb(28, 115, 165)' }
 
 const RenderTime = () => {
     return (
@@ -58,8 +58,8 @@ const handleLoopStatus = () => {
 
 const loopStateStyle = () => {
     return reduxState.media[0].output[reduxState.appNav[0].activeTab]?.loopState
-        ? onColor
-        : offColor
+        ? ON_COLOR
+        : OFF_COLOR
 }
 
 const handleMixStatus = () => {
@@ -80,14 +80,14 @@ const handleWebState = () => {
 
 const mixStateStyle = () => {
     return reduxState.media[0].output[reduxState.appNav[0].activeTab]?.mixState
-        ? onColor
-        : offColor
+        ? ON_COLOR
+        : OFF_COLOR
 }
 
 const webStateStyle = () => {
     return reduxState.media[0].output[reduxState.appNav[0].activeTab]?.webState
-        ? onColor
-        : offColor
+        ? ON_COLOR
+        : OFF_COLOR
 }
 
 const handleManualStartStatus = () => {
@@ -162,8 +162,8 @@ export const RenderFullHeader = () => {
                         reduxState.media[0].output[
                             reduxState.appNav[0].activeTab
                         ]?.manualstartState
-                            ? onColor
-                            : offColor
+                            ? ON_COLOR
+                            : OFF_COLOR
                     }
                 >
                     MANUAL

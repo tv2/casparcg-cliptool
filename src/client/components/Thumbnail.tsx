@@ -77,8 +77,9 @@ export const Thumbnail = () => {
 }
 
 const handleClickMedia = (fileName: string) => {
-    const event = !reduxState.media[0].output[reduxState.appNav[0].activeTab]
-        ?.manualstartState ? PGM_PLAY : PGM_LOAD
+    const event = !reduxState.media[0].output[reduxState.appNav[0].activeTab]?.manualstartState 
+    ? PGM_PLAY 
+    : PGM_LOAD
     socket.emit(event, reduxState.appNav[0].activeTab, fileName)    
 }
 
