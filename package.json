@@ -26,7 +26,7 @@
         "build": "yarn build-client && yarn build-server",
         "build-server": "tsc -p ./src/server",
         "build-gateway": "tsc -p ./src/gateway",
-        "build-client": "cross-env NODE_ENV=production TS_NODE_PROJECT=\"./src/client/tsconfig.json\" webpack && copyfiles ./src/client/index.html ./build/client/",
+        "build-client": "cross-env NODE_ENV=production TS_NODE_PROJECT=\"./src/client/tsconfig.json\" webpack && copyfiles -f ./src/client/index.html ./build/client/",
         "start": "node ./build/server/index.js",
         "start-dev": "node --inspect ./build/server/index.js",
         "start-local": "cross-env LOG_LEVEL=trace node --inspect ./build/server/index.js",

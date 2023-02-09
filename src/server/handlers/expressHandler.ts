@@ -13,9 +13,7 @@ app.use('/', express.static(path.join(__dirname, '../../client')))
 server.on('connection', () => {
     app.get('/', (req: any, res: any) => {
         logger.info('Connected Client')
-        res.sendFile('index.html', {
-            root: path.join(__dirname, '../../client/src/client'),
-        })
+        res.sendFile('index.html')
     })
 })
 
