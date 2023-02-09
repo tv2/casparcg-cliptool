@@ -12,7 +12,6 @@ release-builds/
 build/
 node_modules/
 *.compiled.*
-yarn.lock
 
 # Folder config file #
 ######################
