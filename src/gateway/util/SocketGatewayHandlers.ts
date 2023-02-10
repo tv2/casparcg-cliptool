@@ -12,6 +12,7 @@ import {
     updateThumbFileList,
     updateFolderList,
     setNumberOfOutputs,
+    setIsHiding,
 } from '../../model/reducers/mediaActions'
 import { IMediaFile, IThumbFile } from '../../model/reducers/mediaReducer'
 import {
@@ -82,10 +83,18 @@ socket.on(IO.TIME_TALLY_UPDATE, (data: IO.ITimeTallyPayload[]) => {
     })
 })
 
-socket.on(IO.LOOP_STATEUPDATE, (channelIndex: number, loop: boolean) => {
+socket.on(IO.LOOP_STATE_UPDATE, (channelIndex: number, loop: boolean) => {
     reduxStore.dispatch(setLoop(channelIndex, loop))
     console.log('Loop State updated')
 })
+
+socket.on(
+    IO.IS_HIDING_STATE_UPDATE,
+    (channelIndex: number, isHiding: boolean) => {
+        reduxStore.dispatch(setIsHiding(channelIndex, isHiding))
+        console.log('IsHiding State updated')
+    }
+)
 
 socket.on(IO.MIX_STATE_UPDATE, (channelIndex: number, mix: boolean) => {
     reduxStore.dispatch(setMix(channelIndex, mix))

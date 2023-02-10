@@ -10,7 +10,7 @@ export const SET_MIX = 'setMix'
 export const SET_WEB = 'setWeb'
 export const SET_MANUAL_START = 'setManualStart'
 export const SET_TIME = 'setTime'
-export const SET_HIDING = 'setHiding'
+export const SET_IS_HIDING = 'setIsHiding'
 
 export const updateMediaFiles = (
     channelIndex: number,
@@ -99,10 +99,10 @@ export const setTime = (channelIndex: number, time: [number, number]) => {
     }
 }
 
-export const setHiding = (channelIndex: number, hiding: boolean) => {
+export const setIsHiding = (channelIndex: number, isHiding: boolean) => {
     return {
-        type: SET_HIDING,
+        type: SET_IS_HIDING,
         channelIndex: channelIndex,
-        hiding: hiding,
+        isHiding: isHiding,
     }
 }

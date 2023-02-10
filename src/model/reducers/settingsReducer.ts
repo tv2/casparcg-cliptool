@@ -40,6 +40,7 @@ export interface IGenericSettings {
     startupMixState: boolean[]
     startupManualstartState: boolean[]
     startupWebState: boolean[]
+    startupIsHidingState: boolean[]
 }
 
 export const defaultSettingsReducerState = (): ISettings[] => {
@@ -102,6 +103,16 @@ export const defaultSettingsReducerState = (): ISettings[] => {
                     false,
                     false,
                 ],
+                startupIsHidingState: [
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                ],
             },
         },
     ]
@@ -128,10 +139,10 @@ export const settings = (
                 ...action.channels.map(updateChannelConfigWithVideoFormat),
             ]
             nextState[0].ccgConfig.path = action.path
-            return nextState
+            break
         case SET_TAB_DATA:
             nextState[0].tabData = [...action.tabData]
-            return nextState
+            break
         case SET_GENERICS:
             nextState[0].generics = { ...action.generics }
             nextState[0].generics.startupLoopState =
@@ -142,9 +153,10 @@ export const settings = (
                 nextState[0].generics.startupManualstartState ?? []
             nextState[0].generics.startupWebState =
                 nextState[0].generics.startupWebState ?? []
+            nextState[0].generics.startupIsHidingState =
+                nextState[0].generics.startupIsHidingState ?? []
             nextState[0].generics.webURL = nextState[0].generics.webURL ?? []
-            return nextState
-        default:
-            return nextState
+            break
     }
+    return nextState
 }

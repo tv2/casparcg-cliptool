@@ -17,6 +17,7 @@ import {
     updateMediaFiles,
     updateThumbFileList,
     setWeb,
+    setIsHiding,
 } from '../../model/reducers/mediaActions'
 import { setGenerics } from '../../model/reducers/settingsAction'
 import { IGenericSettings } from '../../model/reducers/settingsReducer'
@@ -49,7 +50,15 @@ export function socketIoHandlers(socket: any) {
         .on(IO.SET_LOOP_STATE, (channelIndex: number, state: boolean) => {
             reduxStore.dispatch(setLoop(channelIndex, state))
             socketServer.emit(
-                IO.LOOP_STATEUPDATE,
+                IO.LOOP_STATE_UPDATE,
+                channelIndex,
+                reduxState.media[0].output[channelIndex].loopState
+            )
+        })
+        .on(IO.SET_IS_HIDING_STATE, (channelIndex: number, state: boolean) => {
+            reduxStore.dispatch(setIsHiding(channelIndex, state))
+            socketServer.emit(
+                IO.IS_HIDING_STATE_UPDATE,
                 channelIndex,
                 reduxState.media[0].output[channelIndex].loopState
             )
@@ -115,9 +124,14 @@ export const initializeClient = () => {
 
             socketServer.emit(IO.TIME_TALLY_UPDATE, timeTallyData)
             socketServer.emit(
-                IO.LOOP_STATEUPDATE,
+                IO.LOOP_STATE_UPDATE,
                 channelIndex,
                 output.loopState
+            )
+            socketServer.emit(
+                IO.IS_HIDING_STATE_UPDATE,
+                channelIndex,
+                output.isHidingState
             )
             socketServer.emit(
                 IO.MIX_STATE_UPDATE,

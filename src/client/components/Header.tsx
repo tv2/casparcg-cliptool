@@ -98,6 +98,21 @@ const handleManualStartStatus = () => {
             .manualstartState
     )
 }
+
+function handleIsHidingState() {
+    socket.emit(
+        IO.IS_HIDING_STATE_UPDATE, 
+        reduxState.appNav[0].activeTab, 
+        !reduxState.media[0].output[reduxState.appNav[0].activeTab]
+            .isHidingState
+    )
+}
+
+function isHidingStyle() {
+    return reduxState.media[0].output[reduxState.appNav[0].activeTab]?.isHidingState
+        ? ON_COLOR
+        : OFF_COLOR
+}
 export const RenderFullHeader = () => {
     // Redux hook:
     useSelector((storeUpdate) => storeUpdate, shallowEqual)
@@ -147,6 +162,15 @@ export const RenderFullHeader = () => {
                             style={webStateStyle()}
                         >
                             OVERLAY
+                        </button>
+                    </div>
+                    <div className="App-button-background">
+                        <button
+                            className="App-switch-button"
+                            onClick={() => handleIsHidingState()}
+                            style={isHidingStyle()}
+                        >
+                            HIDING
                         </button>
                     </div>
                 </React.Fragment>

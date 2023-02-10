@@ -15,6 +15,7 @@ import {
     setManualStart,
     setMix,
     setWeb,
+    setIsHiding,
 } from '../../model/reducers/mediaActions'
 
 import { socketServer } from './expressHandler'
@@ -143,6 +144,13 @@ const dispatchConfig = (config: any) => {
             setWeb(
                 index,
                 reduxState.settings[0].generics.startupWebState[index] ?? false
+            )
+        )
+        reduxStore.dispatch(
+            setIsHiding(
+                index,
+                reduxState.settings[0].generics.startupIsHidingState[index] ??
+                    false
             )
         )
     })
