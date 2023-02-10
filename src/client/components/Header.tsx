@@ -49,6 +49,7 @@ const handleSettingsPage = () => {
 }
 
 const handleLoopStatus = () => {
+    console.log(`Emitted ${IO.SET_LOOP_STATE} - In Header.tsx`)
     socket.emit(
         IO.SET_LOOP_STATE,
         reduxState.appNav[0].activeTab,
@@ -100,8 +101,9 @@ const handleManualStartStatus = () => {
 }
 
 function handleIsHidingState() {
+    console.log(`Emitted ${IO.SET_HIDE_STATE} - In Header.tsx`)
     socket.emit(
-        IO.IS_HIDING_STATE_UPDATE, 
+        IO.SET_HIDE_STATE, 
         reduxState.appNav[0].activeTab, 
         !reduxState.media[0].output[reduxState.appNav[0].activeTab]
             .isHidingState

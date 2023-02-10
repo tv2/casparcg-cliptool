@@ -12,7 +12,7 @@ import {
     updateThumbFileList,
     updateFolderList,
     setNumberOfOutputs,
-    setIsHiding,
+    setHide,
 } from '../../model/reducers/mediaActions'
 import { IMediaFile, IThumbFile } from '../../model/reducers/mediaReducer'
 import {
@@ -88,13 +88,13 @@ socket.on(IO.LOOP_STATE_UPDATE, (channelIndex: number, loop: boolean) => {
     console.log('Loop State updated')
 })
 
-socket.on(
-    IO.IS_HIDING_STATE_UPDATE,
-    (channelIndex: number, isHiding: boolean) => {
-        reduxStore.dispatch(setIsHiding(channelIndex, isHiding))
-        console.log('IsHiding State updated')
-    }
-)
+socket.on(IO.HIDE_STATE_UPDATE, (channelIndex: number, isHiding: boolean) => {
+    console.log(
+        `Received ${IO.HIDE_STATE_UPDATE} - In SocketGatewayHandlers.ts`
+    )
+    reduxStore.dispatch(setHide(channelIndex, isHiding))
+    console.log('IsHiding State updated')
+})
 
 socket.on(IO.MIX_STATE_UPDATE, (channelIndex: number, mix: boolean) => {
     reduxStore.dispatch(setMix(channelIndex, mix))

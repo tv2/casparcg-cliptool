@@ -13,7 +13,7 @@ import {
     updateFolderList,
     setNumberOfOutputs,
     setWeb,
-    setIsHiding,
+    setHide,
 } from '../../model/reducers/mediaActions'
 import { IMediaFile, IThumbFile } from '../../model/reducers/mediaReducer'
 import {
@@ -66,12 +66,10 @@ socket.on(IO.LOOP_STATE_UPDATE, (channelIndex: number, loop: boolean) => {
     reduxStore.dispatch(setLoop(channelIndex, loop))
 })
 
-socket.on(
-    IO.IS_HIDING_STATE_UPDATE,
-    (channelIndex: number, hiding: boolean) => {
-        reduxStore.dispatch(setIsHiding(channelIndex, hiding))
-    }
-)
+socket.on(IO.HIDE_STATE_UPDATE, (channelIndex: number, hide: boolean) => {
+    console.log(`Received ${IO.HIDE_STATE_UPDATE} - In SocketClientHandlers.ts`)
+    reduxStore.dispatch(setHide(channelIndex, hide))
+})
 
 socket.on(IO.MIX_STATE_UPDATE, (channelIndex: number, mix: boolean) => {
     reduxStore.dispatch(setMix(channelIndex, mix))

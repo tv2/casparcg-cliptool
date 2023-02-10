@@ -145,7 +145,7 @@ export const media = (state: Array<IMedia> = defaultMediaState(), action) => {
                         action.time)
             )
             break
-        case IO.SET_IS_HIDING:
+        case IO.SET_HIDE:
             conditionalApplyAction(
                 nextState,
                 action,

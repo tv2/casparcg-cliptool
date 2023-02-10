@@ -17,7 +17,7 @@ import {
     updateMediaFiles,
     updateThumbFileList,
     setWeb,
-    setIsHiding,
+    setHide,
 } from '../../model/reducers/mediaActions'
 import { setGenerics } from '../../model/reducers/settingsAction'
 import { IGenericSettings } from '../../model/reducers/settingsReducer'
@@ -49,16 +49,25 @@ export function socketIoHandlers(socket: any) {
         })
         .on(IO.SET_LOOP_STATE, (channelIndex: number, state: boolean) => {
             reduxStore.dispatch(setLoop(channelIndex, state))
+            console.log(
+                `Emitted ${IO.SET_LOOP_STATE} - In SocketIOServerHandler.ts/socketIoHandlers`
+            )
             socketServer.emit(
                 IO.LOOP_STATE_UPDATE,
                 channelIndex,
                 reduxState.media[0].output[channelIndex].loopState
             )
         })
-        .on(IO.SET_IS_HIDING_STATE, (channelIndex: number, state: boolean) => {
-            reduxStore.dispatch(setIsHiding(channelIndex, state))
+        .on(IO.SET_HIDE_STATE, (channelIndex: number, state: boolean) => {
+            reduxStore.dispatch(setHide(channelIndex, state))
+            console.log(
+                `Received ${IO.SET_HIDE_STATE} - In SocketIOServerHandler.ts/socketIoHandlers`
+            )
+            console.log(
+                `Emitted ${IO.HIDE_STATE_UPDATE} - In SocketIOServerHandler.ts/socketIoHandlers`
+            )
             socketServer.emit(
-                IO.IS_HIDING_STATE_UPDATE,
+                IO.HIDE_STATE_UPDATE,
                 channelIndex,
                 reduxState.media[0].output[channelIndex].loopState
             )
@@ -128,8 +137,11 @@ export const initializeClient = () => {
                 channelIndex,
                 output.loopState
             )
+            console.log(
+                `Emitted ${IO.HIDE_STATE_UPDATE} - In SocketIOServerHandler.ts/initializeClient`
+            )
             socketServer.emit(
-                IO.IS_HIDING_STATE_UPDATE,
+                IO.HIDE_STATE_UPDATE,
                 channelIndex,
                 output.isHidingState
             )
