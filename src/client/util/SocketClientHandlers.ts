@@ -13,6 +13,7 @@ import {
     updateFolderList,
     setNumberOfOutputs,
     setWeb,
+    setHiding,
 } from '../../model/reducers/mediaActions'
 import { IMediaFile, IThumbFile } from '../../model/reducers/mediaReducer'
 import {
@@ -61,8 +62,12 @@ socket.on(IO.TIME_TALLY_UPDATE, (data: IO.ITimeTallyPayload[]) => {
     })
 })
 
-socket.on(IO.LOOP_STATEUPDATE, (channelIndex: number, loop: boolean) => {
+socket.on(IO.LOOP_STATE_UPDATE, (channelIndex: number, loop: boolean) => {
     reduxStore.dispatch(setLoop(channelIndex, loop))
+})
+
+socket.on(IO.HIDING_STATE_UPDATE, (channelIndex: number, hiding: boolean) => {
+    reduxStore.dispatch(setHiding(channelIndex, hiding))
 })
 
 socket.on(IO.MIX_STATE_UPDATE, (channelIndex: number, mix: boolean) => {

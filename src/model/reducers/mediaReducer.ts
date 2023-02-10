@@ -17,6 +17,7 @@ export interface IThumbFile {
     changed: number
     size: number
     thumbnail?: any
+    isHidden: boolean
 }
 export interface IMedia {
     output: IOutput[]
@@ -30,6 +31,7 @@ export interface IOutput {
     loopState: boolean
     mixState: boolean
     webState: boolean
+    isHidingState: boolean
     manualstartState: boolean
     time: [number, number]
 }
@@ -50,6 +52,7 @@ const defaultOutputs = (amount: number) => {
             mediaFiles: [],
             thumbnailList: [],
             tallyFile: '',
+            isHidingState: false,
             loopState: false,
             mixState: false,
             webState: false,
@@ -66,58 +69,101 @@ export const media = (state: Array<IMedia> = defaultMediaState(), action) => {
     switch (action.type) {
         case IO.SET_NUMBER_OF_OUTPUTS:
             nextState[0].output = defaultOutputs(action.amount)
-            return nextState
+            break
         case IO.UPDATE_MEDIA_FILES:
-            if (nextState[0].output.length >= action.channelIndex) {
-                nextState[0].output[action.channelIndex].mediaFiles =
-                    action.files
-            }
-            return nextState
+            conditionalApplyAction(
+                nextState,
+                action,
+                () =>
+                    (nextState[0].output[action.channelIndex].mediaFiles =
+                        action.files)
+            )
+            break
         case IO.UPDATE_THUMB_LIST:
-            if (nextState[0].output.length >= action.channelIndex) {
-                nextState[0].output[action.channelIndex].thumbnailList =
-                    action.fileList
-            }
-            return nextState
+            conditionalApplyAction(
+                nextState,
+                action,
+                () =>
+                    (nextState[0].output[action.channelIndex].thumbnailList =
+                        action.fileList)
+            )
+            break
         case IO.UPDATE_FOLDER_LIST:
             nextState[0].folderList = action.folderList
-            return nextState
+            break
         case IO.SET_TALLY_FILE_NAME:
-            if (nextState[0].output.length >= action.channelIndex) {
-                nextState[0].output[action.channelIndex].tallyFile =
-                    action.filename
-            }
-            return nextState
+            conditionalApplyAction(
+                nextState,
+                action,
+                () =>
+                    (nextState[0].output[action.channelIndex].tallyFile =
+                        action.filename)
+            )
+            break
         case IO.SET_LOOP:
-            if (nextState[0].output.length >= action.channelIndex) {
-                nextState[0].output[action.channelIndex].loopState =
-                    action.loopState
-            }
-            return nextState
+            conditionalApplyAction(
+                nextState,
+                action,
+                () =>
+                    (nextState[0].output[action.channelIndex].loopState =
+                        action.loopState)
+            )
+            break
         case IO.SET_MIX:
-            if (nextState[0].output.length >= action.channelIndex) {
-                nextState[0].output[action.channelIndex].mixState =
-                    action.mixState
-            }
-            return nextState
+            conditionalApplyAction(
+                nextState,
+                action,
+                () =>
+                    (nextState[0].output[action.channelIndex].mixState =
+                        action.mixState)
+            )
+            break
         case IO.SET_WEB:
-            if (nextState[0].output.length >= action.channelIndex) {
-                nextState[0].output[action.channelIndex].webState =
-                    action.webState
-            }
-            return nextState
+            conditionalApplyAction(
+                nextState,
+                action,
+                () =>
+                    (nextState[0].output[action.channelIndex].webState =
+                        action.webState)
+            )
+            break
         case IO.SET_MANUAL_START:
-            if (nextState[0].output.length >= action.channelIndex) {
-                nextState[0].output[action.channelIndex].manualstartState =
-                    action.manualstartState
-            }
-            return nextState
+            conditionalApplyAction(
+                nextState,
+                action,
+                () =>
+                    (nextState[0].output[action.channelIndex].manualstartState =
+                        action.manualstartState)
+            )
+            break
         case IO.SET_TIME:
-            if (nextState[0].output.length >= action.channelIndex) {
-                nextState[0].output[action.channelIndex].time = action.time
-            }
-            return nextState
-        default:
-            return nextState
+            conditionalApplyAction(
+                nextState,
+                action,
+                () =>
+                    (nextState[0].output[action.channelIndex].time =
+                        action.time)
+            )
+            break
+        case IO.SET_HIDING:
+            conditionalApplyAction(
+                nextState,
+                action,
+                () =>
+                    (nextState[0].output[action.channelIndex].isHidingState =
+                        action.isHidingState)
+            )
+            break
     }
+
+    return nextState
+}
+
+function conditionalApplyAction(
+    nextState: any,
+    action: any,
+    actionToBeApplied: () => void
+): void {
+    const condition = nextState[0].output.length >= action.channelIndex
+    if (condition) actionToBeApplied()
 }

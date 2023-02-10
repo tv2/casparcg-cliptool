@@ -282,6 +282,7 @@ const loadThumbNailImage = async (element: IThumbFile) => {
         size: element.size,
         type: element.type,
         thumbnail: thumb.response.data,
+        isHidden: element.isHidden,
     }
     return receivedThumb
 }
