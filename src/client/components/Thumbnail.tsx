@@ -42,58 +42,47 @@ export const isThumbWithTally = (thumbName): boolean => {
 
 export const Thumbnail = () => {
     // Redux hook:
-    useSelector(
+    const files: IMediaFile[] = useSelector(
         (storeUpdate: any) =>
             storeUpdate.media[0].output[reduxState.appNav[0].activeTab]
                 ?.mediaFiles
     )
-
-    // Render:
-    if (reduxState.appNav[0].selectView === 0) {
+    // Render:    
         return (
             <div className="flexBoxes">
-                {reduxState.media[0].output[
-                    reduxState.appNav[0].activeTab
-                ]?.mediaFiles.map((item: IMediaFile, index: number) => (
+                {files.map((item: IMediaFile, index: number) => (
                     <div className="boxComponent" key={index}>
-                        <RenderThumb item={item} />
+                        {reduxState.appNav[0].selectView === 0 
+                            ? <RenderThumb item={item} /> 
+                            : <RenderThumbText item={item} />}
                     </div>
                 ))}
             </div>
-        )
-    } else {
-        return (
-            <div className="flexBoxes">
-                {reduxState.media[0].output[
-                    reduxState.appNav[0].activeTab
-                ]?.mediaFiles.map((item: IMediaFile, index: number) => (
-                    <div className="boxComponentText" key={index}>
-                        <RenderThumbText item={item} />
-                    </div>
-                ))}
-            </div>
-        )
-    }
+        )    
 }
 
 const handleClickMedia = (fileName: string) => {
+    const file = reduxState.media[0].output[reduxState.appNav[0].activeTab]?.mediaFiles.find(
+        predicate => predicate.name.toUpperCase().match(fileName.toUpperCase()))
+
     const event = !reduxState.media[0].output[reduxState.appNav[0].activeTab]?.manualstartState 
     ? PGM_PLAY 
     : PGM_LOAD
     socket.emit(event, reduxState.appNav[0].activeTab, fileName)    
 }
 
-const RenderThumb = (props) => {
+const RenderThumb = (props: {item: IMediaFile}) => {
+    
     // Redux hook:
     useSelector(
         (storeUpdate: any) =>
             storeUpdate.media[0].output[reduxState.appNav[0].activeTab]
                 .tallyFile
     )
+
     return (
         <div>
             <RenderThumbPix item={props.item} />
-
             <button
                 className="thumbnailImageClickPgm"
                 onClick={() => {
@@ -114,28 +103,26 @@ const RenderThumb = (props) => {
     )
 }
 
-const RenderThumbTimeCode = (props) => {
+const RenderThumbTimeCode = (props: {item: IMediaFile}) => {
     // Redux hook:
-    useSelector(
+    const time: [number, number] = useSelector(
         (storeUpdate: any) =>
             storeUpdate.media[0].output[reduxState.appNav[0].activeTab].time
     )
+    const frameRate: number = useSelector(
+        (storeUpdate: any) => storeUpdate.settings[0].ccgConfig
+            .channels[reduxState.appNav[0].activeTab]?.videoFormat.frameRate
+    )        
     return (
         <a className="thumbnail-timecode">
             {isThumbWithTally(props.item.name)
-                ? secondsToTimeCode(
-                      reduxState.media[0].output[reduxState.appNav[0].activeTab]
-                          ?.time,
-                      reduxState.settings[0].ccgConfig.channels[
-                          reduxState.appNav[0].activeTab
-                      ]?.videoFormat?.frameRate
-                  )
+                ? secondsToTimeCode(time, frameRate)
                 : ''}
         </a>
     )
 }
 
-const RenderThumbPix = (props) => {
+const RenderThumbPix = (props: {item: IMediaFile}) => {
     // Redux hook:
     useSelector(
         (storeUpdate: any) =>
@@ -149,13 +136,20 @@ const RenderThumbPix = (props) => {
                 reduxState.appNav[0].activeTab || 0
             )}
             className="thumbnailImage"
-            style={Object.assign(
-                {},
-                isThumbWithTally(props.item.name)
-                    ? { borderWidth: '4px' }
-                    : { borderWidth: '0px' }
-            )}
+            style={{
+                ...borderStyle(props.item.name),
+                filter: props.item.isVisible ? 'grayscale(0)' : 'grayscale(1)'
+            }}
         />
+    )
+}
+
+function borderStyle(filepath: string) {
+    return Object.assign(
+        {},
+        isThumbWithTally(filepath)
+            ? { borderWidth: '4px' }
+            : { borderWidth: '0px' }
     )
 }
 
@@ -169,12 +163,7 @@ const RenderThumbText = (props) => {
     return (
         <div
             className="thumbnail-text-view"
-            style={Object.assign(
-                {},
-                isThumbWithTally(props.item.name)
-                    ? { borderWidth: '4px' }
-                    : { borderWidth: '0px' }
-            )}
+            style={borderStyle(props.item.name)}
         >
             <button
                 className="thumbnail-text-view-ClickPgm"
@@ -198,20 +187,18 @@ const RenderThumbText = (props) => {
 
 const RenderThumbTextTimeCode = (props) => {
     // Redux hook:
-    useSelector(
+    const time: [number, number] = useSelector(
         (storeUpdate: any) =>
             storeUpdate.media[0].output[reduxState.appNav[0].activeTab].time
     )
+    const frameRate: number = useSelector(
+        (storeUpdate: any) => storeUpdate.settings[0].ccgConfig
+            .channels[reduxState.appNav[0].activeTab]?.videoFormat.frameRate)   
+    
     return (
         <a className="thumbnail-timecode-text">
             {isThumbWithTally(props.item.name)
-                ? secondsToTimeCode(
-                      reduxState.media[0].output[reduxState.appNav[0].activeTab]
-                          ?.time,
-                      reduxState.settings[0].ccgConfig.channels[
-                          reduxState.appNav[0].activeTab
-                      ]?.videoFormat?.frameRate
-                  )
+                ? secondsToTimeCode(time, frameRate)
                 : ''}
         </a>
     )

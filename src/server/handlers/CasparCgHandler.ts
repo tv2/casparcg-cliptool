@@ -15,7 +15,7 @@ import {
     setManualStart,
     setMix,
     setWeb,
-    setHide,
+    setVisibility,
 } from '../../model/reducers/mediaActions'
 
 import { socketServer } from './expressHandler'
@@ -147,7 +147,7 @@ const dispatchConfig = (config: any) => {
             )
         )
         reduxStore.dispatch(
-            setHide(
+            setVisibility(
                 index,
                 reduxState.settings[0].generics.startupIsHidingState[index] ??
                     false
@@ -290,7 +290,6 @@ const loadThumbNailImage = async (element: IThumbFile) => {
         size: element.size,
         type: element.type,
         thumbnail: thumb.response.data,
-        isHidden: element.isHidden,
     }
     return receivedThumb
 }

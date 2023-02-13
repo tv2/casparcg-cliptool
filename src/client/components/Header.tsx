@@ -99,17 +99,17 @@ const handleManualStartStatus = () => {
     )
 }
 
-function handleIsHidingState() {
+function handleVisibilityState() {
     socket.emit(
-        IO.SET_HIDE_STATE, 
+        IO.SET_VISIBILITY_STATE, 
         reduxState.appNav[0].activeTab, 
         !reduxState.media[0].output[reduxState.appNav[0].activeTab]
-            .hideState
+            .visibilityState
     )
 }
 
-function isHidingStyle() {
-    return reduxState.media[0].output[reduxState.appNav[0].activeTab]?.hideState
+function visibilityStyle(): { backgroundColor: string } {
+    return reduxState.media[0].output[reduxState.appNav[0].activeTab]?.visibilityState
         ? ON_COLOR
         : OFF_COLOR
 }
@@ -167,8 +167,8 @@ export const RenderFullHeader = () => {
                     <div className="App-button-background">
                         <button
                             className="App-switch-button"
-                            onClick={() => handleIsHidingState()}
-                            style={isHidingStyle()}
+                            onClick={() => handleVisibilityState()}
+                            style={visibilityStyle()}
                         >
                             HIDING
                         </button>

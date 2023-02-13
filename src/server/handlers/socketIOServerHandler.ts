@@ -17,7 +17,7 @@ import {
     updateMediaFiles,
     updateThumbFileList,
     setWeb,
-    setHide,
+    setVisibility,
 } from '../../model/reducers/mediaActions'
 import { setGenerics } from '../../model/reducers/settingsAction'
 import { IGenericSettings } from '../../model/reducers/settingsReducer'
@@ -55,12 +55,12 @@ export function socketIoHandlers(socket: any) {
                 reduxState.media[0].output[channelIndex].loopState
             )
         })
-        .on(IO.SET_HIDE_STATE, (channelIndex: number, state: boolean) => {
-            reduxStore.dispatch(setHide(channelIndex, state))
+        .on(IO.SET_VISIBILITY_STATE, (channelIndex: number, state: boolean) => {
+            reduxStore.dispatch(setVisibility(channelIndex, state))
             socketServer.emit(
-                IO.HIDE_STATE_UPDATE,
+                IO.VISIBILITY_STATE_UPDATE,
                 channelIndex,
-                reduxState.media[0].output[channelIndex].hideState
+                reduxState.media[0].output[channelIndex].visibilityState
             )
         })
         .on(
@@ -129,9 +129,9 @@ export const initializeClient = () => {
                 output.loopState
             )
             socketServer.emit(
-                IO.HIDE_STATE_UPDATE,
+                IO.VISIBILITY_STATE_UPDATE,
                 channelIndex,
-                output.hideState
+                output.visibilityState
             )
             socketServer.emit(
                 IO.MIX_STATE_UPDATE,

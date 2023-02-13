@@ -13,7 +13,7 @@ import {
     updateFolderList,
     setNumberOfOutputs,
     setWeb,
-    setHide,
+    setVisibility,
 } from '../../model/reducers/mediaActions'
 import { IMediaFile, IThumbFile } from '../../model/reducers/mediaReducer'
 import {
@@ -66,8 +66,8 @@ socket.on(IO.LOOP_STATE_UPDATE, (channelIndex: number, loop: boolean) => {
     reduxStore.dispatch(setLoop(channelIndex, loop))
 })
 
-socket.on(IO.HIDE_STATE_UPDATE, (channelIndex: number, hide: boolean) => {
-    reduxStore.dispatch(setHide(channelIndex, hide))
+socket.on(IO.VISIBILITY_STATE_UPDATE, (channelIndex: number, hide: boolean) => {
+    reduxStore.dispatch(setVisibility(channelIndex, hide))
 })
 
 socket.on(IO.MIX_STATE_UPDATE, (channelIndex: number, mix: boolean) => {
