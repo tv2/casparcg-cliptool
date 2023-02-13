@@ -49,9 +49,6 @@ export function socketIoHandlers(socket: any) {
         })
         .on(IO.SET_LOOP_STATE, (channelIndex: number, state: boolean) => {
             reduxStore.dispatch(setLoop(channelIndex, state))
-            console.log(
-                `Emitted ${IO.SET_LOOP_STATE} - In SocketIOServerHandler.ts/socketIoHandlers`
-            )
             socketServer.emit(
                 IO.LOOP_STATE_UPDATE,
                 channelIndex,
@@ -60,16 +57,10 @@ export function socketIoHandlers(socket: any) {
         })
         .on(IO.SET_HIDE_STATE, (channelIndex: number, state: boolean) => {
             reduxStore.dispatch(setHide(channelIndex, state))
-            console.log(
-                `Received ${IO.SET_HIDE_STATE} - In SocketIOServerHandler.ts/socketIoHandlers`
-            )
-            console.log(
-                `Emitted ${IO.HIDE_STATE_UPDATE} - In SocketIOServerHandler.ts/socketIoHandlers`
-            )
             socketServer.emit(
                 IO.HIDE_STATE_UPDATE,
                 channelIndex,
-                reduxState.media[0].output[channelIndex].loopState
+                reduxState.media[0].output[channelIndex].hideState
             )
         })
         .on(
@@ -137,13 +128,10 @@ export const initializeClient = () => {
                 channelIndex,
                 output.loopState
             )
-            console.log(
-                `Emitted ${IO.HIDE_STATE_UPDATE} - In SocketIOServerHandler.ts/initializeClient`
-            )
             socketServer.emit(
                 IO.HIDE_STATE_UPDATE,
                 channelIndex,
-                output.isHidingState
+                output.hideState
             )
             socketServer.emit(
                 IO.MIX_STATE_UPDATE,

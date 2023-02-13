@@ -49,7 +49,6 @@ const handleSettingsPage = () => {
 }
 
 const handleLoopStatus = () => {
-    console.log(`Emitted ${IO.SET_LOOP_STATE} - In Header.tsx`)
     socket.emit(
         IO.SET_LOOP_STATE,
         reduxState.appNav[0].activeTab,
@@ -101,17 +100,16 @@ const handleManualStartStatus = () => {
 }
 
 function handleIsHidingState() {
-    console.log(`Emitted ${IO.SET_HIDE_STATE} - In Header.tsx`)
     socket.emit(
         IO.SET_HIDE_STATE, 
         reduxState.appNav[0].activeTab, 
         !reduxState.media[0].output[reduxState.appNav[0].activeTab]
-            .isHidingState
+            .hideState
     )
 }
 
 function isHidingStyle() {
-    return reduxState.media[0].output[reduxState.appNav[0].activeTab]?.isHidingState
+    return reduxState.media[0].output[reduxState.appNav[0].activeTab]?.hideState
         ? ON_COLOR
         : OFF_COLOR
 }

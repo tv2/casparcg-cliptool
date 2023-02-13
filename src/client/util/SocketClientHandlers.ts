@@ -67,7 +67,6 @@ socket.on(IO.LOOP_STATE_UPDATE, (channelIndex: number, loop: boolean) => {
 })
 
 socket.on(IO.HIDE_STATE_UPDATE, (channelIndex: number, hide: boolean) => {
-    console.log(`Received ${IO.HIDE_STATE_UPDATE} - In SocketClientHandlers.ts`)
     reduxStore.dispatch(setHide(channelIndex, hide))
 })
 

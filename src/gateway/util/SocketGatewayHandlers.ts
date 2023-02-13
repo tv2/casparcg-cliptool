@@ -88,12 +88,9 @@ socket.on(IO.LOOP_STATE_UPDATE, (channelIndex: number, loop: boolean) => {
     console.log('Loop State updated')
 })
 
-socket.on(IO.HIDE_STATE_UPDATE, (channelIndex: number, isHiding: boolean) => {
-    console.log(
-        `Received ${IO.HIDE_STATE_UPDATE} - In SocketGatewayHandlers.ts`
-    )
-    reduxStore.dispatch(setHide(channelIndex, isHiding))
-    console.log('IsHiding State updated')
+socket.on(IO.HIDE_STATE_UPDATE, (channelIndex: number, hide: boolean) => {
+    reduxStore.dispatch(setHide(channelIndex, hide))
+    console.log('Hide State updated')
 })
 
 socket.on(IO.MIX_STATE_UPDATE, (channelIndex: number, mix: boolean) => {

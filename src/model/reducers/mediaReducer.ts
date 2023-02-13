@@ -31,7 +31,7 @@ export interface IOutput {
     loopState: boolean
     mixState: boolean
     webState: boolean
-    isHidingState: boolean
+    hideState: boolean
     manualstartState: boolean
     time: [number, number]
 }
@@ -52,7 +52,7 @@ const defaultOutputs = (amount: number) => {
             mediaFiles: [],
             thumbnailList: [],
             tallyFile: '',
-            isHidingState: false,
+            hideState: false,
             loopState: false,
             mixState: false,
             webState: false,
@@ -150,8 +150,8 @@ export const media = (state: Array<IMedia> = defaultMediaState(), action) => {
                 nextState,
                 action,
                 () =>
-                    (nextState[0].output[action.channelIndex].isHidingState =
-                        action.isHidingState)
+                    (nextState[0].output[action.channelIndex].hideState =
+                        action.hideState)
             )
             break
     }
