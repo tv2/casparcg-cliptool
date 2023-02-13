@@ -64,7 +64,8 @@ export const Thumbnail = () => {
 const handleClickMedia = (fileName: string) => {
     const file = reduxState.media[0].output[reduxState.appNav[0].activeTab]?.mediaFiles.find(
         predicate => predicate.name.toUpperCase().match(fileName.toUpperCase()))
-
+    
+        
     const event = !reduxState.media[0].output[reduxState.appNav[0].activeTab]?.manualstartState 
     ? PGM_PLAY 
     : PGM_LOAD
@@ -129,6 +130,8 @@ const RenderThumbPix = (props: {item: IMediaFile}) => {
             storeUpdate.media[0].output[reduxState.appNav[0].activeTab]
                 .thumbnailList
     )
+        console.log('test', props.item.isVisible)
+
     return (
         <img
             src={findThumbPix(
@@ -138,7 +141,9 @@ const RenderThumbPix = (props: {item: IMediaFile}) => {
             className="thumbnailImage"
             style={{
                 ...borderStyle(props.item.name),
-                filter: props.item.isVisible ? 'grayscale(0)' : 'grayscale(1)'
+                filter: props.item.isVisible 
+                    ? 'grayscale(0)' 
+                    : 'grayscale(1)'
             }}
         />
     )
