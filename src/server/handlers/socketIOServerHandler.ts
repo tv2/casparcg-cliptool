@@ -30,6 +30,7 @@ import {
     IOutput,
 } from '../../model/reducers/mediaReducer'
 import { assignThumbNailListToOutputs } from './CasparCgHandler'
+import { saveHiddenFiles } from '../utils/HiddenFilesStorage'
 
 export function socketIoHandlers(socket: any) {
     logger.info('SETTING UP SOCKET IO MAIN HANDLERS')
@@ -46,14 +47,18 @@ export function socketIoHandlers(socket: any) {
             (channelIndex: number, fileName: string) => {
                 const hiddenFiles = reduxState.media[0].hiddenFiles
                 try {
-                    toggleHiddenFile(fileName, channelIndex, hiddenFiles)
-                    reduxStore.dispatch(
-                        updateHiddenFiles(channelIndex, hiddenFiles)
+                    const updatedHiddenFiles = toggleHiddenFile(
+                        fileName,
+                        channelIndex,
+                        hiddenFiles
                     )
+                    reduxStore.dispatch(updateHiddenFiles(updatedHiddenFiles))
+                    saveHiddenFiles()
+
                     socketServer.emit(
                         IO.HIDDEN_FILES_UPDATE,
                         channelIndex,
-                        hiddenFiles
+                        updatedHiddenFiles
                     )
                 } catch {}
             }
@@ -138,11 +143,12 @@ export function socketIoHandlers(socket: any) {
 function toggleHiddenFile(
     fileName: string,
     channelIndex: number,
-    hiddenFiles: Record<string, IChangedInfo>
+    hiddenFilesOrig: Record<string, IChangedInfo>
 ) {
+    const hiddenFiles = { ...hiddenFilesOrig }
     if (fileName in hiddenFiles) {
         delete hiddenFiles[fileName]
-        return
+        return hiddenFiles
     }
 
     const hiddenFile = buildHiddenFileMetadataFromFileName(
@@ -150,6 +156,7 @@ function toggleHiddenFile(
         channelIndex
     )
     hiddenFiles[fileName] = hiddenFile
+    return hiddenFiles
 }
 
 function buildHiddenFileMetadataFromFileName(

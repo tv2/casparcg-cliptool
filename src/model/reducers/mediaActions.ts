@@ -42,13 +42,9 @@ export const updateThumbFileList = (
     }
 }
 
-export function updateHiddenFiles(
-    channelIndex: number,
-    hiddenFiles: Record<string, IChangedInfo>
-) {
+export function updateHiddenFiles(hiddenFiles: Record<string, IChangedInfo>) {
     return {
         type: UPDATE_HIDDEN_FILES,
-        channelIndex: channelIndex,
         hiddenFiles: hiddenFiles,
     }
 }

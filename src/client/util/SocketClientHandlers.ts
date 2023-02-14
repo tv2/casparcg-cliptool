@@ -61,7 +61,7 @@ socket.on(IO.THUMB_UPDATE, (channelIndex: number, payload: IThumbFile[]) => {
 socket.on(
     IO.HIDDEN_FILES_UPDATE,
     (channelIndex: number, hiddenFiles: Record<string, IChangedInfo>) => {
-        reduxStore.dispatch(updateHiddenFiles(channelIndex, hiddenFiles))
+        reduxStore.dispatch(updateHiddenFiles(hiddenFiles))
     }
 )
 
