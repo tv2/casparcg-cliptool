@@ -93,8 +93,6 @@ export const media = (state: Array<IMedia> = defaultMediaState(), action) => {
             break
         case IO.SET_TALLY_FILE_NAME:
             if (doesChannelExist(nextState, action)) {
-                console.log('Test2', nextState[0].output[action.channelIndex])
-                console.log('Test1', action)
                 nextState[0].output[action.channelIndex].tallyFile =
                     action.filename
             }
