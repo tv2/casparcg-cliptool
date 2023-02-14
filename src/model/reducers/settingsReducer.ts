@@ -40,7 +40,7 @@ export interface IGenericSettings {
     startupMixState: boolean[]
     startupManualstartState: boolean[]
     startupWebState: boolean[]
-    startupIsHidingState: boolean[]
+    startupVisibilityState: boolean[]
 }
 
 export const defaultSettingsReducerState = (): ISettings[] => {
@@ -103,7 +103,7 @@ export const defaultSettingsReducerState = (): ISettings[] => {
                     false,
                     false,
                 ],
-                startupIsHidingState: [
+                startupVisibilityState: [
                     false,
                     false,
                     false,
@@ -153,8 +153,8 @@ export const settings = (
                 nextState[0].generics.startupManualstartState ?? []
             nextState[0].generics.startupWebState =
                 nextState[0].generics.startupWebState ?? []
-            nextState[0].generics.startupIsHidingState =
-                nextState[0].generics.startupIsHidingState ?? []
+            nextState[0].generics.startupVisibilityState =
+                nextState[0].generics.startupVisibilityState ?? []
             nextState[0].generics.webURL = nextState[0].generics.webURL ?? []
             break
     }

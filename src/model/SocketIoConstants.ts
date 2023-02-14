@@ -2,6 +2,7 @@
 export const TIME_TALLY_UPDATE = 'timeTallyUpdate'
 export const MEDIA_UPDATE = 'mediaUpdate'
 export const THUMB_UPDATE = 'thumbUpdate'
+export const HIDDEN_FILES_UPDATE = 'hiddenUpdate'
 export const FOLDERS_UPDATE = 'foldersUpdate'
 export const TAB_DATA_UPDATE = 'tabDataUpdate'
 export const SETTINGS_UPDATE = 'settingsUpdate'
@@ -24,6 +25,7 @@ export const SET_MIX_STATE = 'setMixState'
 export const SET_WEB_STATE = 'setWebState'
 export const SET_GENERICS = 'setGenerics'
 export const RESTART_SERVER = 'restartServer'
+export const TOGGLE_THUMBNAIL_VISIBILITY = 'toggleThumbnailVisibility'
 
 // Payload types:
 export interface ITimeTallyPayload {

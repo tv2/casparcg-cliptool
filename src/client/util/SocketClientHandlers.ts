@@ -14,8 +14,13 @@ import {
     setNumberOfOutputs,
     setWeb,
     setVisibility,
+    updateHiddenFiles,
 } from '../../model/reducers/mediaActions'
-import { IMediaFile, IThumbFile } from '../../model/reducers/mediaReducer'
+import {
+    IChangedInfo,
+    IMediaFile,
+    IThumbFile,
+} from '../../model/reducers/mediaReducer'
 import {
     setGenerics,
     setTabData,
@@ -52,6 +57,13 @@ socket.on(IO.FOLDERS_UPDATE, (payload: string[]) => {
 socket.on(IO.THUMB_UPDATE, (channelIndex: number, payload: IThumbFile[]) => {
     reduxStore.dispatch(updateThumbFileList(channelIndex, payload))
 })
+
+socket.on(
+    IO.HIDDEN_FILES_UPDATE,
+    (channelIndex: number, hiddenFiles: Record<string, IChangedInfo>) => {
+        reduxStore.dispatch(updateHiddenFiles(channelIndex, hiddenFiles))
+    }
+)
 
 socket.on(IO.TIME_TALLY_UPDATE, (data: IO.ITimeTallyPayload[]) => {
     data.forEach((channel, index) => {

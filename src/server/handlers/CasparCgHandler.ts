@@ -149,7 +149,7 @@ const dispatchConfig = (config: any) => {
         reduxStore.dispatch(
             setVisibility(
                 index,
-                reduxState.settings[0].generics.startupIsHidingState[index] ??
+                reduxState.settings[0].generics.startupVisibilityState[index] ??
                     false
             )
         )

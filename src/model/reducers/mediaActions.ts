@@ -1,8 +1,9 @@
-import { IMediaFile, IThumbFile } from './mediaReducer'
+import { IChangedInfo, IMediaFile, IThumbFile } from './mediaReducer'
 
 export const UPDATE_MEDIA_FILES = 'updateMediaFiles'
 export const UPDATE_THUMB_LIST = 'updateThumbList'
 export const UPDATE_FOLDER_LIST = 'updateFolderList'
+export const UPDATE_HIDDEN_FILES = 'updateHiddenFiles'
 export const SET_TALLY_FILE_NAME = 'setTallyFileName'
 export const SET_NUMBER_OF_OUTPUTS = 'setNumberOfOutputs'
 export const SET_LOOP = 'setLoop'
@@ -38,6 +39,17 @@ export const updateThumbFileList = (
         type: UPDATE_THUMB_LIST,
         channelIndex: channelIndex,
         fileList: fileList,
+    }
+}
+
+export function updateHiddenFiles(
+    channelIndex: number,
+    hiddenFiles: Record<string, IChangedInfo>
+) {
+    return {
+        type: UPDATE_HIDDEN_FILES,
+        channelIndex: channelIndex,
+        hiddenFiles: hiddenFiles,
     }
 }
 

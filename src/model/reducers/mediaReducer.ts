@@ -1,27 +1,29 @@
 import * as IO from './mediaActions'
 
-export interface IMediaFile {
+export interface IChangedInfo {
+    changed: number
+}
+
+interface ICommonFile extends IChangedInfo {
     name: string
     type: string
     size: number
-    changed: number
+}
+
+export interface IMediaFile extends ICommonFile {
     frames: number
     frameTime: string
     frameRate: number
     duration: number
-    isVisible: boolean
 }
 
-export interface IThumbFile {
-    name: string
-    type: string
-    changed: number
-    size: number
+export interface IThumbFile extends ICommonFile {
     thumbnail?: any
 }
 export interface IMedia {
     output: IOutput[]
     folderList: string[]
+    hiddenFiles: Record<string, IChangedInfo>
 }
 
 export interface IOutput {
@@ -41,6 +43,7 @@ const defaultMediaState = (): Array<IMedia> => {
         {
             output: [],
             folderList: [],
+            hiddenFiles: {},
         },
     ]
 }
@@ -81,6 +84,9 @@ export const media = (state: Array<IMedia> = defaultMediaState(), action) => {
                 nextState[0].output[action.channelIndex].thumbnailList =
                     action.fileList
             }
+            break
+        case IO.UPDATE_HIDDEN_FILES:
+            nextState[0].hiddenFiles = action.hiddenFiles
             break
         case IO.UPDATE_FOLDER_LIST:
             nextState[0].folderList = action.folderList

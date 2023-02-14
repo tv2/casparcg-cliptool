@@ -18,11 +18,17 @@ import {
     updateThumbFileList,
     setWeb,
     setVisibility,
+    updateHiddenFiles,
 } from '../../model/reducers/mediaActions'
 import { setGenerics } from '../../model/reducers/settingsAction'
 import { IGenericSettings } from '../../model/reducers/settingsReducer'
 import { saveSettings } from '../utils/SettingsStorage'
-import { IOutput } from '../../model/reducers/mediaReducer'
+import {
+    IChangedInfo,
+    IMedia,
+    IMediaFile,
+    IOutput,
+} from '../../model/reducers/mediaReducer'
 import { assignThumbNailListToOutputs } from './CasparCgHandler'
 
 export function socketIoHandlers(socket: any) {
@@ -35,6 +41,23 @@ export function socketIoHandlers(socket: any) {
         .on(IO.GET_SETTINGS, () => {
             socketServer.emit(IO.SETTINGS_UPDATE, reduxState.settings[0])
         })
+        .on(
+            IO.TOGGLE_THUMBNAIL_VISIBILITY,
+            (channelIndex: number, fileName: string) => {
+                const hiddenFiles = reduxState.media[0].hiddenFiles
+                try {
+                    toggleHiddenFile(fileName, channelIndex, hiddenFiles)
+                    reduxStore.dispatch(
+                        updateHiddenFiles(channelIndex, hiddenFiles)
+                    )
+                    socketServer.emit(
+                        IO.HIDDEN_FILES_UPDATE,
+                        channelIndex,
+                        hiddenFiles
+                    )
+                } catch {}
+            }
+        )
         .on(IO.PGM_PLAY, (channelIndex: number, fileName: string) => {
             if (!reduxState.media[0].output[channelIndex].mixState) {
                 playMedia(channelIndex, 9, fileName)
@@ -112,6 +135,42 @@ export function socketIoHandlers(socket: any) {
         })
 }
 
+function toggleHiddenFile(
+    fileName: string,
+    channelIndex: number,
+    hiddenFiles: Record<string, IChangedInfo>
+) {
+    if (fileName in hiddenFiles) {
+        delete hiddenFiles[fileName]
+        return
+    }
+
+    const hiddenFile = buildHiddenFileMetadataFromFileName(
+        fileName,
+        channelIndex
+    )
+    hiddenFiles[fileName] = hiddenFile
+}
+
+function buildHiddenFileMetadataFromFileName(
+    fileName: string,
+    channelIndex: number
+): IChangedInfo {
+    const file = reduxState.media[0].output[channelIndex].mediaFiles.find(
+        (file) => file.name.toUpperCase() === fileName.toUpperCase()
+    )
+    if (!file) {
+        throw new Error(`No such file: ${fileName}`)
+    }
+    return buildHiddenFileMetadata(file)
+}
+
+function buildHiddenFileMetadata(file: IMediaFile): IChangedInfo {
+    return {
+        changed: file.changed,
+    }
+}
+
 export const initializeClient = () => {
     socketServer.emit(IO.TAB_DATA_UPDATE, reduxState.settings[0].tabData)
     let timeTallyData: IO.ITimeTallyPayload[] = []
@@ -152,6 +211,11 @@ export const initializeClient = () => {
                 IO.MEDIA_UPDATE,
                 channelIndex,
                 reduxState.media[0].output[channelIndex].mediaFiles
+            )
+            socketServer.emit(
+                IO.HIDDEN_FILES_UPDATE,
+                channelIndex,
+                reduxState.media[0].hiddenFiles
             )
         }
     )
