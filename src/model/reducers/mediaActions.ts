@@ -1,4 +1,9 @@
-import { IChangedInfo, IMediaFile, IThumbFile } from './mediaReducer'
+import {
+    IHiddenFileInfo,
+    IMediaFile,
+    IThumbFile,
+    OperationMode,
+} from './mediaReducer'
 
 export const UPDATE_MEDIA_FILES = 'updateMediaFiles'
 export const UPDATE_THUMB_LIST = 'updateThumbList'
@@ -11,7 +16,7 @@ export const SET_MIX = 'setMix'
 export const SET_WEB = 'setWeb'
 export const SET_MANUAL_START = 'setManualStart'
 export const SET_TIME = 'setTime'
-export const SET_VISIBILITY = 'setVisibility'
+export const SET_OPERATION_MODE = 'setVisibility'
 
 export const updateMediaFiles = (
     channelIndex: number,
@@ -42,7 +47,9 @@ export const updateThumbFileList = (
     }
 }
 
-export function updateHiddenFiles(hiddenFiles: Record<string, IChangedInfo>) {
+export function updateHiddenFiles(
+    hiddenFiles: Record<string, IHiddenFileInfo>
+) {
     return {
         type: UPDATE_HIDDEN_FILES,
         hiddenFiles: hiddenFiles,
@@ -107,10 +114,13 @@ export const setTime = (channelIndex: number, time: [number, number]) => {
     }
 }
 
-export const setVisibility = (channelIndex: number, isVisible: boolean) => {
+export const setOperationMode = (
+    channelIndex: number,
+    operationMode: OperationMode
+) => {
     return {
-        type: SET_VISIBILITY,
+        type: SET_OPERATION_MODE,
         channelIndex: channelIndex,
-        visibility: isVisible,
+        operationMode: operationMode,
     }
 }

@@ -13,13 +13,14 @@ import {
     updateFolderList,
     setNumberOfOutputs,
     setWeb,
-    setVisibility,
+    setOperationMode,
     updateHiddenFiles,
 } from '../../model/reducers/mediaActions'
 import {
-    IChangedInfo,
+    IHiddenFileInfo,
     IMediaFile,
     IThumbFile,
+    OperationMode,
 } from '../../model/reducers/mediaReducer'
 import {
     setGenerics,
@@ -60,7 +61,7 @@ socket.on(IO.THUMB_UPDATE, (channelIndex: number, payload: IThumbFile[]) => {
 
 socket.on(
     IO.HIDDEN_FILES_UPDATE,
-    (channelIndex: number, hiddenFiles: Record<string, IChangedInfo>) => {
+    (hiddenFiles: Record<string, IHiddenFileInfo>) => {
         reduxStore.dispatch(updateHiddenFiles(hiddenFiles))
     }
 )
@@ -78,9 +79,12 @@ socket.on(IO.LOOP_STATE_UPDATE, (channelIndex: number, loop: boolean) => {
     reduxStore.dispatch(setLoop(channelIndex, loop))
 })
 
-socket.on(IO.VISIBILITY_STATE_UPDATE, (channelIndex: number, hide: boolean) => {
-    reduxStore.dispatch(setVisibility(channelIndex, hide))
-})
+socket.on(
+    IO.OPERATION_MODE_UPDATE,
+    (channelIndex: number, mode: OperationMode) => {
+        reduxStore.dispatch(setOperationMode(channelIndex, mode))
+    }
+)
 
 socket.on(IO.MIX_STATE_UPDATE, (channelIndex: number, mix: boolean) => {
     reduxStore.dispatch(setMix(channelIndex, mix))

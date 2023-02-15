@@ -1,13 +1,18 @@
 import * as IO from './mediaActions'
 
-export interface IChangedInfo {
-    changed: number
+export enum OperationMode {
+    CONTROL = 'control',
+    EDIT_VISIBILITY = 'edit_visibility',
 }
 
-interface ICommonFile extends IChangedInfo {
+export interface IHiddenFileInfo {
+    changed: number
+    size: number
+}
+
+interface ICommonFile extends IHiddenFileInfo {
     name: string
     type: string
-    size: number
 }
 
 export interface IMediaFile extends ICommonFile {
@@ -18,12 +23,12 @@ export interface IMediaFile extends ICommonFile {
 }
 
 export interface IThumbFile extends ICommonFile {
-    thumbnail?: any
+    thumbnail?: string
 }
 export interface IMedia {
     output: IOutput[]
     folderList: string[]
-    hiddenFiles: Record<string, IChangedInfo>
+    hiddenFiles: Record<string, IHiddenFileInfo>
 }
 
 export interface IOutput {
@@ -33,7 +38,7 @@ export interface IOutput {
     loopState: boolean
     mixState: boolean
     webState: boolean
-    visibilityState: boolean
+    operationMode: OperationMode
     manualstartState: boolean
     time: [number, number]
 }
@@ -55,7 +60,7 @@ const defaultOutputs = (amount: number) => {
             mediaFiles: [],
             thumbnailList: [],
             tallyFile: '',
-            visibilityState: false,
+            operationMode: OperationMode.CONTROL,
             loopState: false,
             mixState: false,
             webState: false,
@@ -126,10 +131,10 @@ export const media = (state: Array<IMedia> = defaultMediaState(), action) => {
                 nextState[0].output[action.channelIndex].time = action.time
             }
             break
-        case IO.SET_VISIBILITY:
+        case IO.SET_OPERATION_MODE:
             if (doesChannelExist(nextState, action)) {
-                nextState[0].output[action.channelIndex].visibilityState =
-                    action.visibility
+                nextState[0].output[action.channelIndex].operationMode =
+                    action.operationMode
             }
             break
     }

@@ -15,12 +15,18 @@ import {
     setManualStart,
     setMix,
     setWeb,
-    setVisibility,
+    setOperationMode,
+    updateHiddenFiles,
 } from '../../model/reducers/mediaActions'
 
 import { socketServer } from './expressHandler'
 import * as IO from '../../model/SocketIoConstants'
-import { IOutput, IThumbFile } from '../../model/reducers/mediaReducer'
+import {
+    IMediaFile,
+    IOutput,
+    IThumbFile,
+    OperationMode,
+} from '../../model/reducers/mediaReducer'
 
 import { setTabData, updateSettings } from '../../model/reducers/settingsAction'
 import { initializeClient } from './socketIOServerHandler'
@@ -36,6 +42,7 @@ import {
 } from '../utils/ccgHandlerUtils'
 import { logger } from '../utils/logger'
 import { playMedia, playOverlay } from '../utils/CcgLoadPlay'
+import { saveHiddenFiles } from '../utils/hiddenFilesStorage'
 
 let waitingForCCGResponse: boolean = false
 let previousThumbFileList = []
@@ -147,10 +154,10 @@ const dispatchConfig = (config: any) => {
             )
         )
         reduxStore.dispatch(
-            setVisibility(
+            setOperationMode(
                 index,
-                reduxState.settings[0].generics.startupVisibilityState[index] ??
-                    false
+                reduxState.settings[0].generics.startupOperationMode[index] ??
+                    OperationMode.CONTROL
             )
         )
     })
@@ -223,7 +230,6 @@ const startTimerControlledServices = async () => {
 
 const loadCcgMedia = async (): Promise<IThumbFile[]> => {
     let thumbFiles = await ccgConnection.thumbnailList()
-
     if (hasThumbListChanged(thumbFiles.response.data, previousThumbFileList)) {
         previousThumbFileList = thumbFiles.response.data
         thumbNailList = []
@@ -257,7 +263,7 @@ const loadFileList = async () => {
         })
 }
 
-const outputExtractFiles = (allFiles: any, outputIndex: number) => {
+const outputExtractFiles = (allFiles: IMediaFile[], outputIndex: number) => {
     let outputMedia = allFiles.filter((file) => {
         return (
             isFolderNameEqual(
@@ -279,6 +285,32 @@ const outputExtractFiles = (allFiles: any, outputIndex: number) => {
             outputIndex,
             reduxState.media[0].output[outputIndex].mediaFiles
         )
+        checkHiddenFilesChanged(outputMedia)
+    }
+}
+
+function checkHiddenFilesChanged(files: IMediaFile[]) {
+    let needsUpdating = false
+    const hiddenFiles = reduxState.media[0].hiddenFiles
+    for (const key in hiddenFiles) {
+        const hidden = hiddenFiles[key]
+        const file = files.find((predicate) => predicate.name == key)
+        if (
+            !file ||
+            file.changed !== hidden.changed ||
+            file.size !== hidden.size
+        ) {
+            delete hiddenFiles[key]
+            needsUpdating = true
+        }
+    }
+    if (needsUpdating) {
+        logger
+            .data(hiddenFiles)
+            .debug('Hidden files was updated from external changes:')
+        reduxStore.dispatch(updateHiddenFiles(hiddenFiles))
+        socketServer.emit(IO.HIDDEN_FILES_UPDATE, hiddenFiles)
+        saveHiddenFiles()
     }
 }
 

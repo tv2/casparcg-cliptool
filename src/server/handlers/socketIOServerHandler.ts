@@ -17,20 +17,21 @@ import {
     updateMediaFiles,
     updateThumbFileList,
     setWeb,
-    setVisibility,
+    setOperationMode,
     updateHiddenFiles,
 } from '../../model/reducers/mediaActions'
 import { setGenerics } from '../../model/reducers/settingsAction'
 import { IGenericSettings } from '../../model/reducers/settingsReducer'
 import { saveSettings } from '../utils/SettingsStorage'
 import {
-    IChangedInfo,
+    IHiddenFileInfo,
     IMedia,
     IMediaFile,
     IOutput,
+    OperationMode,
 } from '../../model/reducers/mediaReducer'
 import { assignThumbNailListToOutputs } from './CasparCgHandler'
-import { saveHiddenFiles } from '../utils/HiddenFilesStorage'
+import { saveHiddenFiles } from '../utils/hiddenFilesStorage'
 
 export function socketIoHandlers(socket: any) {
     logger.info('SETTING UP SOCKET IO MAIN HANDLERS')
@@ -57,7 +58,6 @@ export function socketIoHandlers(socket: any) {
 
                     socketServer.emit(
                         IO.HIDDEN_FILES_UPDATE,
-                        channelIndex,
                         updatedHiddenFiles
                     )
                 } catch {}
@@ -83,14 +83,17 @@ export function socketIoHandlers(socket: any) {
                 reduxState.media[0].output[channelIndex].loopState
             )
         })
-        .on(IO.SET_VISIBILITY_STATE, (channelIndex: number, state: boolean) => {
-            reduxStore.dispatch(setVisibility(channelIndex, state))
-            socketServer.emit(
-                IO.VISIBILITY_STATE_UPDATE,
-                channelIndex,
-                reduxState.media[0].output[channelIndex].visibilityState
-            )
-        })
+        .on(
+            IO.SET_OPERATION_MODE,
+            (channelIndex: number, mode: OperationMode) => {
+                reduxStore.dispatch(setOperationMode(channelIndex, mode))
+                socketServer.emit(
+                    IO.OPERATION_MODE_UPDATE,
+                    channelIndex,
+                    reduxState.media[0].output[channelIndex].operationMode
+                )
+            }
+        )
         .on(
             IO.SET_MANUAL_START_STATE,
             (channelIndex: number, state: boolean) => {
@@ -143,7 +146,7 @@ export function socketIoHandlers(socket: any) {
 function toggleHiddenFile(
     fileName: string,
     channelIndex: number,
-    hiddenFilesOrig: Record<string, IChangedInfo>
+    hiddenFilesOrig: Record<string, IHiddenFileInfo>
 ) {
     const hiddenFiles = { ...hiddenFilesOrig }
     if (fileName in hiddenFiles) {
@@ -162,7 +165,7 @@ function toggleHiddenFile(
 function buildHiddenFileMetadataFromFileName(
     fileName: string,
     channelIndex: number
-): IChangedInfo {
+): IHiddenFileInfo {
     const file = reduxState.media[0].output[channelIndex].mediaFiles.find(
         (file) => file.name.toUpperCase() === fileName.toUpperCase()
     )
@@ -172,9 +175,10 @@ function buildHiddenFileMetadataFromFileName(
     return buildHiddenFileMetadata(file)
 }
 
-function buildHiddenFileMetadata(file: IMediaFile): IChangedInfo {
+function buildHiddenFileMetadata(file: IMediaFile): IHiddenFileInfo {
     return {
         changed: file.changed,
+        size: file.size,
     }
 }
 
@@ -195,9 +199,9 @@ export const initializeClient = () => {
                 output.loopState
             )
             socketServer.emit(
-                IO.VISIBILITY_STATE_UPDATE,
+                IO.OPERATION_MODE_UPDATE,
                 channelIndex,
-                output.visibilityState
+                output.operationMode
             )
             socketServer.emit(
                 IO.MIX_STATE_UPDATE,
@@ -221,7 +225,6 @@ export const initializeClient = () => {
             )
             socketServer.emit(
                 IO.HIDDEN_FILES_UPDATE,
-                channelIndex,
                 reduxState.media[0].hiddenFiles
             )
         }

@@ -64,11 +64,13 @@ export const hasThumbListChanged = (
 ): boolean => {
     if (newList.length !== previousList.length) {
         return true
-    } else {
-        for (let i = 0; i < newList.length; i++) {
-            if (newList[i].name !== previousList[i].name) {
-                return true
-            }
+    }
+    for (let i = 0; i < newList.length; i++) {
+        if (
+            newList[i].name !== previousList[i].name ||
+            newList[i].size !== previousList[i].size
+        ) {
+            return true
         }
     }
     return false

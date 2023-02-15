@@ -1,6 +1,8 @@
 import { updateHiddenFiles } from '../../model/reducers/mediaActions'
-import { IChangedInfo } from '../../model/reducers/mediaReducer'
+import { IHiddenFileInfo } from '../../model/reducers/mediaReducer'
 import { reduxState, reduxStore } from '../../model/reducers/store'
+import * as IO from '../../model/SocketIoConstants'
+import { socketServer } from '../handlers/expressHandler'
 import { logger } from './logger'
 
 const fs = require('fs')
@@ -8,11 +10,12 @@ const path = require('path')
 
 export function loadHiddenFiles() {
     try {
-        const hiddenFilesFromFile: Record<string, IChangedInfo> = JSON.parse(
+        const hiddenFilesFromFile: Record<string, IHiddenFileInfo> = JSON.parse(
             fs.readFileSync(path.resolve('storage', 'hiddenFiles.json'))
         )
         logger.data(hiddenFilesFromFile).info('File loaded with Hidden files:')
         reduxStore.dispatch(updateHiddenFiles(hiddenFilesFromFile))
+        socketServer.emit(IO.HIDDEN_FILES_UPDATE, hiddenFilesFromFile)
     } catch (error) {
         logger
             .data(error)
@@ -35,7 +38,7 @@ export function saveHiddenFiles() {
             if (error) {
                 logger.data(error).error('Error writing file:')
             } else {
-                logger.data(stringifiedHiddenFiles).debug('Hidden files saved')
+                logger.data(stringifiedHiddenFiles).trace('Hidden files saved')
             }
         }
     )
