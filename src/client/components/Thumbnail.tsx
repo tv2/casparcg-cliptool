@@ -106,8 +106,17 @@ const RenderThumb = (props: ThumbnailProps) => {
                 .tallyFile
     )
 
+    const hiddenFiles: Record<string, IHiddenFileInfo> = useSelector(
+        (storeUpdate: any) => 
+            storeUpdate.media[0].hiddenFiles)
+
+    const classNames = [
+        "thumb",
+        props.file.name in hiddenFiles ? 'hidden' : ''
+    ].join(' ')
+
     return (
-        <div>
+        <div className={classNames}>
             <RenderThumbPix file={props.file} />
             <button
                 className="thumbnailImageClickPgm"
@@ -164,26 +173,14 @@ const RenderThumbPix = (props: ThumbnailProps) => {
             storeUpdate.media[0].hiddenFiles
     )
     const url = findThumbPix(file.name, reduxState.appNav[0].activeTab || 0)
-    return (
-        <img
-            src={url}
-            className="thumbnailImage"
-            style={{
-                ...borderStyle(file.name),
-                filter: file.name in hiddenFiles
-                    ? 'grayscale(1)' 
-                    : 'grayscale(0)'
-            }}
-        />
-    )
-}
 
-function borderStyle(filepath: string) {
-    return Object.assign(
-        {},
-        isThumbWithTally(filepath)
-            ? { borderWidth: '4px' }
-            : { borderWidth: '0px' }
+    const classNames = [
+        "thumbnailImage",
+        isThumbWithTally(file.name) ? 'selected-thump' : ''
+    ].join(' ')
+
+    return (
+        <img src={url} className={classNames} />
     )
 }
 
@@ -194,11 +191,13 @@ const RenderThumbText = (props: ThumbnailProps) => {
             storeUpdate.media[0].output[reduxState.appNav[0].activeTab]
                 .tallyFile
     )
+    const classNames = [
+        "thumbnail-text-view",
+        isThumbWithTally(props.file.name) ? 'selected-thump' : ''
+    ].join(' ')
+
     return (
-        <div
-            className="thumbnail-text-view"
-            style={borderStyle(props.file.name)}
-        >
+        <div className={classNames} >
             <button
                 className="thumbnail-text-view-ClickPgm"
                 onClick={() => {

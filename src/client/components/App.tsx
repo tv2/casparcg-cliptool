@@ -11,6 +11,7 @@ import '../css/Rmc-tabs.css'
 import '../css/App.css'
 import { setActiveTab } from '../../model/reducers/appNavAction'
 import { RenderFullHeader } from './Header'
+import { Footer } from './Footer'
 
 const channel = new URLSearchParams(window.location.search).get('channel')
 const specificChannel = parseInt(channel) || 0
@@ -29,6 +30,7 @@ export const App = () => {
                         <Thumbnail />
                     </div>
                 </div>
+                <Footer />
             </div>
         )
     } else {
@@ -44,6 +46,7 @@ export const App = () => {
                         {renderTabData()}
                     </Tabs>
                 </div>
+                <Footer />
             </div>
         )
     }

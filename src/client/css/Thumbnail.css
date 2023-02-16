@@ -32,7 +32,7 @@
 }
 
 .thumbnailImage {
-    border-width: 2px;
+    border-width: 0px;
     border-style: solid;
     border-color: red;
     width: 90%;
@@ -44,6 +44,18 @@
         #94939411 3%,
         #2a1938 4%
     );
+}
+
+.selected-thump {
+    border-width: 4px;
+}
+
+.thumb.hidden {
+    scale: 0.8;
+}
+
+.thumb.hidden .thumbnailImage {
+    filter: grayscale(1);
 }
 
 /* Buttons on thumbnail invisible and visible */
