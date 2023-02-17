@@ -4,7 +4,19 @@
 }
 
 .Footer-text {
-    color: maroon;
+    color: orangered;
     font-size: 35px;
     text-align: center;
+}
+
+.Footer-button {
+    margin-left: 10px;
+    background-color: #808080;
+    top: 25%;
+}
+
+.Footer-flex {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }

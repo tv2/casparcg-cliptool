@@ -2,12 +2,26 @@ import React from 'react'
 import { useSelector } from 'react-redux'
 import { OperationMode } from '../../model/reducers/mediaReducer'
 import { reduxState } from '../../model/reducers/store'
+import * as IO from '../../model/SocketIoConstants'
 
 import '../css/Footer.css'
+import { socket } from '../util/SocketClientHandlers'
 
 const footerDescriptions = new Map<OperationMode, string>([
   [OperationMode.EDIT_VISIBILITY, 'You are currently editing visibility of files.'],
 ])
+
+const exitButtonText = new Map<OperationMode, string>([
+  [OperationMode.EDIT_VISIBILITY, 'Exit Edit Visibility']
+])
+
+function resetOperationMode(): void {
+  socket.emit(
+    IO.SET_OPERATION_MODE, 
+    reduxState.appNav[0].activeTab, 
+    OperationMode.CONTROL
+  )
+}
 
 export function Footer() {
   const operationMode: OperationMode = useSelector((storeUpdate: any) =>
@@ -16,10 +30,17 @@ export function Footer() {
   return (
     <footer className='Footer'>
       { operationMode !== OperationMode.CONTROL 
-      ? <div className='Footer-text'>
-        {footerDescriptions.has(operationMode) 
-        ? footerDescriptions.get(operationMode).toUpperCase()
-        : 'MISSING DESCRIPTION FOR SELECTED OPERATION MODE!'}
+      ? <div className='Footer-flex'>
+          <div className='Footer-text'>
+            {footerDescriptions.has(operationMode) 
+            ? footerDescriptions.get(operationMode).toUpperCase()
+            : 'MISSING DESCRIPTION FOR SELECTED OPERATION MODE!'}
+          </div>        
+          <button onClick={resetOperationMode} className='Footer-button'>
+            {exitButtonText.has(operationMode) 
+            ? exitButtonText.get(operationMode) 
+            : 'MISSING BUTTON TEXT!'}
+          </button>
       </div> 
       : ''}
     </footer>

@@ -15,7 +15,6 @@ import { TOGGLE_SHOW_SETTINGS } from '../../model/reducers/appNavAction'
 import * as IO from '../../model/SocketIoConstants'
 import { findThumbPix } from './Thumbnail'
 import { SettingsPage } from './Settings'
-import { OperationMode } from '../../model/reducers/mediaReducer'
 
 const OFF_COLOR = { backgroundColor: 'grey' }
 const ON_COLOR = { backgroundColor: 'rgb(28, 115, 165)' }
@@ -100,22 +99,6 @@ const handleManualStartStatus = () => {
     )
 }
 
-function handleToggleEditVisibilityMode() {
-    socket.emit(
-        IO.SET_OPERATION_MODE, 
-        reduxState.appNav[0].activeTab, 
-        reduxState.media[0].output[reduxState.appNav[0].activeTab]
-            .operationMode !== OperationMode.EDIT_VISIBILITY 
-            ? OperationMode.EDIT_VISIBILITY 
-            : OperationMode.CONTROL
-    )
-}
-
-function editVisibilityStyle(): { backgroundColor: string } {
-    return reduxState.media[0].output[reduxState.appNav[0].activeTab]?.operationMode === OperationMode.EDIT_VISIBILITY
-        ? ON_COLOR
-        : OFF_COLOR
-}
 export const RenderFullHeader = () => {
     // Redux hook:
     useSelector((storeUpdate) => storeUpdate, shallowEqual)
@@ -163,15 +146,6 @@ export const RenderFullHeader = () => {
                             style={webStateStyle()}
                         >
                             OVERLAY
-                        </button>
-                    </div>
-                    <div className="App-button-background">
-                        <button
-                            className="App-switch-button"
-                            onClick={handleToggleEditVisibilityMode}
-                            style={editVisibilityStyle()}
-                        >
-                            HIDING
                         </button>
                     </div>
                 </React.Fragment>

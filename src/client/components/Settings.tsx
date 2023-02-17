@@ -5,10 +5,14 @@ import { setGenerics } from '../../model/reducers/settingsAction'
 import { socket } from '../util/SocketClientHandlers'
 import * as IO from '../../model/SocketIoConstants'
 import { TOGGLE_SHOW_SETTINGS } from '../../model/reducers/appNavAction'
+import { OperationMode } from '../../model/reducers/mediaReducer'
 
 // Check if URL has specifiet a channel:
 const channel = new URLSearchParams(window.location.search).get('channel')
 const specificChannel = parseInt(channel) || 0
+
+const OFF_COLOR = { backgroundColor: 'rgb(41, 41, 41)' }
+const ON_COLOR = { backgroundColor: 'rgb(28, 115, 165)' }
 
 //Set style for Select dropdown component:
 const selectorColorStyles = {
@@ -25,6 +29,23 @@ const selectorColorStyles = {
         }
     },
     singleValue: (styles) => ({ ...styles, color: 'white' }),
+}
+
+function handleToggleEditVisibilityMode() {
+    socket.emit(
+        IO.SET_OPERATION_MODE, 
+        reduxState.appNav[0].activeTab, 
+        reduxState.media[0].output[reduxState.appNav[0].activeTab]
+            .operationMode !== OperationMode.EDIT_VISIBILITY 
+            ? OperationMode.EDIT_VISIBILITY 
+            : OperationMode.CONTROL
+    )
+}
+
+function editVisibilityStyle(): { backgroundColor: string } {
+    return reduxState.media[0].output[reduxState.appNav[0].activeTab]?.operationMode === OperationMode.EDIT_VISIBILITY
+        ? ON_COLOR
+        : OFF_COLOR
 }
 
 export const SettingsPage = () => {
@@ -132,16 +153,14 @@ export const SettingsPage = () => {
             <div className="Settings-channel-form">
                 <button
                     className="save-button"
-                    onClick={() => {
-                        handleSave()
-                    }}
+                    onClick={handleSave}
                 >
                     UPDATE CLIPTOOL SETTINGS
                 </button>
                 {!specificChannel ? (
                     <button
                         className="save-button"
-                        onClick={() => handleRestart()}
+                        onClick={handleRestart}
                     >
                         RESTART CLIPTOOL
                     </button>
@@ -150,9 +169,16 @@ export const SettingsPage = () => {
                 )}
                 <button
                     className="save-button"
-                    onClick={() => handleSettingsPage()}
+                    onClick={handleSettingsPage}
                 >
                     EXIT
+                </button>
+                <button
+                    className="save-button"
+                    onClick={handleToggleEditVisibilityMode}
+                    style={editVisibilityStyle()}
+                >
+                    HIDING
                 </button>
             </div>
         </div>
