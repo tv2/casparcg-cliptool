@@ -15,6 +15,23 @@ const exitButtonText = new Map<OperationMode, string>([
   [OperationMode.EDIT_VISIBILITY, 'Exit Edit Visibility']
 ])
 
+function FooterContent(props: {operationMode: OperationMode}): JSX.Element {
+  return (
+    <>
+      <div className='Footer-text'>
+        {footerDescriptions.has(props.operationMode) 
+        ? footerDescriptions.get(props.operationMode).toUpperCase()
+        : 'MISSING DESCRIPTION FOR SELECTED OPERATION MODE!'}
+      </div>        
+      <button onClick={resetOperationMode} className='Footer-button'>
+        {exitButtonText.has(props.operationMode) 
+        ? exitButtonText.get(props.operationMode) 
+        : 'MISSING BUTTON TEXT!'}
+      </button>
+    </>
+  )
+}
+
 function resetOperationMode(): void {
   socket.emit(
     IO.SET_OPERATION_MODE, 
@@ -31,16 +48,7 @@ export function Footer() {
     <footer className='Footer'>
       { operationMode !== OperationMode.CONTROL 
       ? <div className='Footer-flex'>
-          <div className='Footer-text'>
-            {footerDescriptions.has(operationMode) 
-            ? footerDescriptions.get(operationMode).toUpperCase()
-            : 'MISSING DESCRIPTION FOR SELECTED OPERATION MODE!'}
-          </div>        
-          <button onClick={resetOperationMode} className='Footer-button'>
-            {exitButtonText.has(operationMode) 
-            ? exitButtonText.get(operationMode) 
-            : 'MISSING BUTTON TEXT!'}
-          </button>
+          <FooterContent operationMode={operationMode}/>
       </div> 
       : ''}
     </footer>

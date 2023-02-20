@@ -65,13 +65,11 @@ export const hasThumbListChanged = (
     if (newList.length !== previousList.length) {
         return true
     }
-    for (let i = 0; i < newList.length; i++) {
-        if (
-            newList[i].name !== previousList[i].name ||
-            newList[i].size !== previousList[i].size
-        ) {
-            return true
-        }
-    }
-    return false
+
+    return newList.some((file, index) => {
+        return (
+            file.name !== previousList[index].name ||
+            file.size !== previousList[index].size
+        )
+    })
 }
