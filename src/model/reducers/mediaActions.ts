@@ -16,7 +16,7 @@ export const SET_MIX = 'setMix'
 export const SET_WEB = 'setWeb'
 export const SET_MANUAL_START = 'setManualStart'
 export const SET_TIME = 'setTime'
-export const SET_OPERATION_MODE = 'setVisibility'
+export const SET_OPERATION_MODE = 'setOperationMode'
 
 export const updateMediaFiles = (
     channelIndex: number,
