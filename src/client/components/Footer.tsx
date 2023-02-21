@@ -46,7 +46,7 @@ export function Footer() {
   
   return (
     <footer className='Footer'>
-      { operationMode !== OperationMode.CONTROL 
+      { operationMode && operationMode !== OperationMode.CONTROL 
       ? <div className='Footer-flex'>
           <FooterContent operationMode={operationMode}/>
       </div> 
