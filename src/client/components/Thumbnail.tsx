@@ -52,7 +52,7 @@ export const Thumbnail = () => {
     const hiddenFiles: Record<string, IHiddenFileInfo> = useSelector(
         (storeUpdate: any) => 
             storeUpdate.media[0].output[reduxState.appNav[0].activeTab]
-                .hiddenFiles
+                ?.hiddenFiles
     )
     const editVisibilityMode = useSelector(
         (storeUpdate: any) =>
