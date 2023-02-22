@@ -17,8 +17,8 @@ console.log('Socket Initialized', socket)
 
 ReactDom.render(
     <ReduxProvider store={reduxStore}>
-        {/* <App /> */}
-        <AppNew /> 
+        <App />
+        {/* <AppNew />  */}
     </ReduxProvider>,
     document.getElementById('root')
 )
