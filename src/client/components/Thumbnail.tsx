@@ -54,14 +54,14 @@ export const Thumbnail = () => {
     )
     const editVisibilityMode = useSelector(
         (storeUpdate: any) =>
-            storeUpdate.media[0].output[reduxState.appNav[0].activeTab].operationMode === OperationMode.EDIT_VISIBILITY
+            storeUpdate.media[0].output[reduxState.appNav[0].activeTab]?.operationMode === OperationMode.EDIT_VISIBILITY
     )
-    const shownFiles: IMediaFile[] = files.filter(({ name }) => !(name in hiddenFiles))
+    const shownFiles: IMediaFile[] = files?.filter(({ name }) => !(name in hiddenFiles))
     const usedFiles: IMediaFile[] = editVisibilityMode ? files : shownFiles
     // Render:    
         return (
             <div className="flexBoxes">
-                {usedFiles.map((file: IMediaFile, index: number) => (
+                {usedFiles?.map((file: IMediaFile, index: number) => (
                     <div className="boxComponent" key={index}>
                         {reduxState.appNav[0].selectView === 0 
                             ? <RenderThumb file={file} /> 
