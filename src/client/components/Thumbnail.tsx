@@ -50,7 +50,9 @@ export const Thumbnail = () => {
                 ?.mediaFiles
     )
     const hiddenFiles: Record<string, IHiddenFileInfo> = useSelector(
-        (storeUpdate: any) => storeUpdate.media[0].hiddenFiles
+        (storeUpdate: any) => 
+            storeUpdate.media[0].output[reduxState.appNav[0].activeTab]
+                .hiddenFiles
     )
     const editVisibilityMode = useSelector(
         (storeUpdate: any) =>
@@ -108,7 +110,9 @@ const RenderThumb = (props: ThumbnailProps) => {
 
     const hiddenFiles: Record<string, IHiddenFileInfo> = useSelector(
         (storeUpdate: any) => 
-            storeUpdate.media[0].hiddenFiles)
+            storeUpdate.media[0].output[reduxState.appNav[0].activeTab]
+                .hiddenFiles
+    )
 
     const classNames = [
         "thumb",
@@ -168,10 +172,6 @@ const RenderThumbPix = (props: ThumbnailProps) => {
     useSelector((storeUpdate: any) => storeUpdate.media[0].output[reduxState.appNav[0].activeTab]
         .thumbnailList)
 
-    const hiddenFiles: Record<string, IHiddenFileInfo> = useSelector(
-        (storeUpdate: any) => 
-            storeUpdate.media[0].hiddenFiles
-    )
     const url = findThumbPix(file.name, reduxState.appNav[0].activeTab || 0)
 
     const classNames = [

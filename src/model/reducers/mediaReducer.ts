@@ -28,11 +28,11 @@ export interface IThumbFile extends ICommonFile {
 export interface IMedia {
     output: IOutput[]
     folderList: string[]
-    hiddenFiles: Record<string, IHiddenFileInfo>
 }
 
 export interface IOutput {
     mediaFiles: IMediaFile[]
+    hiddenFiles: Record<string, IHiddenFileInfo>
     thumbnailList: IThumbFile[]
     tallyFile: string
     loopState: boolean
@@ -48,7 +48,6 @@ const defaultMediaState = (): Array<IMedia> => {
         {
             output: [],
             folderList: [],
-            hiddenFiles: {},
         },
     ]
 }
@@ -59,6 +58,7 @@ const defaultOutputs = (amount: number) => {
         outputs.push({
             mediaFiles: [],
             thumbnailList: [],
+            hiddenFiles: {},
             tallyFile: '',
             operationMode: OperationMode.CONTROL,
             loopState: false,
@@ -91,7 +91,10 @@ export const media = (state: Array<IMedia> = defaultMediaState(), action) => {
             }
             break
         case IO.UPDATE_HIDDEN_FILES:
-            nextState[0].hiddenFiles = action.hiddenFiles
+            if (doesChannelExist(nextState, action)) {
+                nextState[0].output[action.channelIndex].hiddenFiles =
+                    action.hiddenFiles
+            }
             break
         case IO.UPDATE_FOLDER_LIST:
             nextState[0].folderList = action.folderList
