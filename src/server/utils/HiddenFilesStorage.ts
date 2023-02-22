@@ -10,12 +10,17 @@ const path = require('path')
 
 export function loadHiddenFiles() {
     try {
-        const hiddenFilesFromFile: Record<string, IHiddenFileInfo> = JSON.parse(
-            fs.readFileSync(path.resolve('storage', 'hiddenFiles.json'))
-        )
+        const hiddenFilesFromFile: Record<string, IHiddenFileInfo>[] =
+            JSON.parse(
+                fs.readFileSync(path.resolve('storage', 'hiddenFiles.json'))
+            )
+        let channelIndex = 0
+        hiddenFilesFromFile.forEach((record) => {
+            reduxStore.dispatch(updateHiddenFiles(channelIndex, record))
+            socketServer.emit(IO.HIDDEN_FILES_UPDATE, channelIndex, record)
+            channelIndex++
+        })
         logger.data(hiddenFilesFromFile).info('File loaded with Hidden files:')
-        reduxStore.dispatch(updateHiddenFiles(hiddenFilesFromFile))
-        socketServer.emit(IO.HIDDEN_FILES_UPDATE, hiddenFilesFromFile)
     } catch (error) {
         logger
             .data(error)
@@ -25,7 +30,7 @@ export function loadHiddenFiles() {
 
 export function saveHiddenFiles() {
     const stringifiedHiddenFiles = JSON.stringify(
-        reduxState.media[0].hiddenFiles
+        reduxState.media[0].output.map((channel) => channel.hiddenFiles)
     )
     if (!fs.existsSync('storage')) {
         fs.mkdirSync('storage')
