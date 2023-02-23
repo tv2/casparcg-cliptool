@@ -257,6 +257,7 @@ const loadFileList = async () => {
             reduxState.media[0].output.forEach(({}, outputIndex: number) => {
                 outputExtractFiles(payload.response.data, outputIndex)
             })
+            checkHiddenFilesChanged(payload.response.data)
         })
         .catch((error) => {
             logger.data(error).error('Error receiving file list :')
@@ -285,7 +286,6 @@ const outputExtractFiles = (allFiles: IMediaFile[], outputIndex: number) => {
             outputIndex,
             reduxState.media[0].output[outputIndex].mediaFiles
         )
-        checkHiddenFilesChanged(outputMedia)
     }
 }
 
