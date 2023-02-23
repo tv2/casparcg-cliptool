@@ -290,17 +290,8 @@ const outputExtractFiles = (allFiles: IMediaFile[], outputIndex: number) => {
 }
 
 function checkHiddenFilesChanged(files: IMediaFile[]) {
-    const channelIndex = reduxState.media[0].output.findIndex(
-        (predicate) => predicate.mediaFiles === files
-    )
-    if (channelIndex < 0) {
-        logger.warn(
-            'Failed to locate output when checking if hidden files have changes.'
-        )
-        return
-    }
     let needsUpdating = false
-    const hiddenFiles = reduxState.media[0].output[channelIndex].hiddenFiles
+    const hiddenFiles = reduxState.media[0].hiddenFiles
     for (const key in hiddenFiles) {
         const hidden = hiddenFiles[key]
         const file = files.find((predicate) => predicate.name == key)
@@ -317,7 +308,7 @@ function checkHiddenFilesChanged(files: IMediaFile[]) {
         logger
             .data(hiddenFiles)
             .debug('Hidden files was updated from external changes:')
-        reduxStore.dispatch(updateHiddenFiles(channelIndex, hiddenFiles))
+        reduxStore.dispatch(updateHiddenFiles(hiddenFiles))
         socketServer.emit(IO.HIDDEN_FILES_UPDATE, hiddenFiles)
         saveHiddenFiles()
     }

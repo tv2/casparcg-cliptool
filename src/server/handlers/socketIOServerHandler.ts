@@ -31,13 +31,12 @@ import {
     OperationMode,
 } from '../../model/reducers/mediaReducer'
 import { assignThumbNailListToOutputs } from './CasparCgHandler'
-import { loadHiddenFiles, saveHiddenFiles } from '../utils/hiddenFilesStorage'
+import { saveHiddenFiles } from '../utils/hiddenFilesStorage'
 
 export function socketIoHandlers(socket: any) {
     logger.info('SETTING UP SOCKET IO MAIN HANDLERS')
 
     socketServer.emit(IO.SETTINGS_UPDATE, reduxState.settings[0])
-    loadHiddenFiles()
     initializeClient()
 
     socket
@@ -47,29 +46,21 @@ export function socketIoHandlers(socket: any) {
         .on(
             IO.TOGGLE_THUMBNAIL_VISIBILITY,
             (channelIndex: number, fileName: string) => {
-                const hiddenFiles =
-                    reduxState.media[0].output[channelIndex].hiddenFiles
+                const hiddenFiles = reduxState.media[0].hiddenFiles
                 try {
                     const updatedHiddenFiles = toggleHiddenFile(
                         fileName,
                         channelIndex,
                         hiddenFiles
                     )
-                    reduxStore.dispatch(
-                        updateHiddenFiles(channelIndex, updatedHiddenFiles)
-                    )
+                    reduxStore.dispatch(updateHiddenFiles(updatedHiddenFiles))
                     saveHiddenFiles()
 
                     socketServer.emit(
                         IO.HIDDEN_FILES_UPDATE,
-                        channelIndex,
                         updatedHiddenFiles
                     )
-                } catch {
-                    console.error(
-                        'Error thrown during "TOGGLE_THUMBNAIL_VISIBILITY"'
-                    )
-                }
+                } catch {}
             }
         )
         .on(IO.PGM_PLAY, (channelIndex: number, fileName: string) => {
@@ -156,7 +147,7 @@ function toggleHiddenFile(
     fileName: string,
     channelIndex: number,
     hiddenFilesOrig: Record<string, IHiddenFileInfo>
-): Record<string, IHiddenFileInfo> {
+) {
     const hiddenFiles = { ...hiddenFilesOrig }
     if (fileName in hiddenFiles) {
         delete hiddenFiles[fileName]
@@ -234,8 +225,7 @@ export const initializeClient = () => {
             )
             socketServer.emit(
                 IO.HIDDEN_FILES_UPDATE,
-                channelIndex,
-                output.hiddenFiles
+                reduxState.media[0].hiddenFiles
             )
         }
     )
