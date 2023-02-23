@@ -39,7 +39,7 @@ export default function TabBar(props: TabBarProps): JSX.Element {
           props.tabData.map((item, index) => {
             const isSelected = props.selectedTab === index
             const classNames = [ 
-              'tap',               
+              'tab',               
               isSelected ? 'active' : ''
             ].join(' ')
             

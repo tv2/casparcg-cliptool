@@ -17,7 +17,7 @@ export default function TabContent(props: TabBarProps) {
             const isSelected = props.selectedTab === index
 
             const classNames = [ 
-              'tap-content',               
+              'tab-content',               
               !isSelected ? 'hidden' : ''
             ].join(' ')
             return (

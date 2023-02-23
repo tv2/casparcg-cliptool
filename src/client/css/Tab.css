@@ -21,7 +21,7 @@
     will-change: transform;
 }
 
-.tap {
+.tab {
     background: #444;
     position: relative;
     display: flex;
@@ -69,14 +69,14 @@
     will-change: transform, left, top;
 }
 
-.tap-content {
+.tab-content {
     height: auto;
     width: 100%;
     flex-shrink: 0;
     overflow-y: auto;
 }
 
-.tap-content.hidden {
+.tab-content.hidden {
     height: 0;
     overflow: visible;
 }
