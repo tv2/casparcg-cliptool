@@ -32,9 +32,9 @@
 }
 
 .thumbnailImage {
-    border-width: 0px;
+    border-width: 4px;
     border-style: solid;
-    border-color: red;
+    border-color: transparent;
     width: 90%;
     height: auto;
     margin: 8px;
@@ -47,7 +47,7 @@
 }
 
 .selected-thump {
-    border-width: 4px;
+    border-color: red;
 }
 
 .thumb.hidden {

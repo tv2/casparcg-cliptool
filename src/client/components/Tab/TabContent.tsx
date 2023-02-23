@@ -11,7 +11,7 @@ interface TabBarProps {
 
 export default function TabContent(props: TabBarProps) {
   return (
-    <div className='tab-content-wrapper animation' >
+    <div className='tab-content-wrapper' >
         {
           props.tabData.map((item, index) => {
             const isSelected = props.selectedTab === index
