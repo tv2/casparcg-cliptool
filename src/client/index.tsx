@@ -4,8 +4,8 @@ import ReactDom from 'react-dom'
 import { Provider as ReduxProvider } from 'react-redux'
 import { reduxStore, reduxState } from '../model/reducers/store'
 import { socket } from './util/SocketClientHandlers'
-import { setSelectView } from '../model/reducers/appNavAction'
 import { App } from './components/App'
+import { setSelectView } from '../model/reducers/appNavAction'
 
 console.log('Redux initialized :', reduxState)
 if (new URLSearchParams(window.location.search).get('textview') === '1') {
@@ -16,7 +16,7 @@ console.log('Socket Initialized', socket)
 
 ReactDom.render(
     <ReduxProvider store={reduxStore}>
-        <App /> 
+        <App />
     </ReduxProvider>,
     document.getElementById('root')
 )

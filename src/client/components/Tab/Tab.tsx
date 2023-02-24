@@ -33,7 +33,7 @@ export function Tab(props: TabProps): JSX.Element {
   return (
     <div 
       className={classNames} 
-      role={'tab'}
+      role='tab'
       aria-selected={props.isSelected} 
       style={buildTabStyle(props.totalTabs)} 
       key={props.index}

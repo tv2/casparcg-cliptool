@@ -21,7 +21,7 @@ export default function TabContent(props: TabBarProps) {
               !isSelected ? 'hidden' : ''
             ].join(' ')
             return (
-              <div className={classNames} role={'tabpanel'} key={index}>
+              <div className={classNames} role='tabpanel' key={index}>
                 <TabItem data={item} index={index} key={index}/> 
               </div>
             )
