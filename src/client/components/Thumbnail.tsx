@@ -14,7 +14,7 @@ interface ThumbnailProps {
     file: IMediaFile
 }
 
-export const findThumbPix = (fileName: string, channelIndex: number) => {
+export function findThumbPix(fileName: string, channelIndex: number): string {
     const thumb =
         reduxState.media[0].output[channelIndex]?.thumbnailList.find(
             (item: IThumbFile) => item.name.toUpperCase() === (fileName.toUpperCase())
@@ -42,26 +42,27 @@ export const isThumbWithTally = (thumbName: string): boolean => {
     return tallyNoMediaPath === thumbName
 }
 
-export const Thumbnail = () => {
+export function Thumbnail(): JSX.Element {
     // Redux hook:
     const files: IMediaFile[] = useSelector(
         (storeUpdate: any) =>
             storeUpdate.media[0].output[reduxState.appNav[0].activeTab]
                 ?.mediaFiles
-    )
+    ) ?? []
     const hiddenFiles: Record<string, IHiddenFileInfo> = useSelector(
         (storeUpdate: any) => storeUpdate.media[0].hiddenFiles
-    )
-    const editVisibilityMode = useSelector(
+    ) ?? {}
+    const isInEditVisibilityMode = useSelector(
         (storeUpdate: any) =>
             storeUpdate.media[0].output[reduxState.appNav[0].activeTab]?.operationMode === OperationMode.EDIT_VISIBILITY
-    )
-    const shownFiles: IMediaFile[] = files?.filter(({ name }) => !(name in hiddenFiles))
-    const usedFiles: IMediaFile[] = editVisibilityMode ? files : shownFiles
+    ) ?? OperationMode.CONTROL
+    const shownFiles: IMediaFile[] = !isInEditVisibilityMode 
+        ? files.filter(({ name }) => !(name in hiddenFiles)) 
+        : files
     // Render:    
         return (
             <div className="flexBoxes">
-                {usedFiles?.map((file: IMediaFile, index: number) => (
+                {shownFiles?.map((file: IMediaFile, index: number) => (
                     <div className="boxComponent" key={index}>
                         {reduxState.appNav[0].selectView === 0 
                             ? <RenderThumb file={file} /> 
@@ -72,7 +73,7 @@ export const Thumbnail = () => {
         )    
 }
 
-const handleClickMedia = (fileName: string) => {    
+function handleClickMedia(fileName: string): void {    
     const operationMode = reduxState.media[0].output[reduxState.appNav[0].activeTab]?.operationMode
     switch (operationMode) {
         case OperationMode.EDIT_VISIBILITY: 
@@ -109,7 +110,7 @@ const RenderThumb = (props: ThumbnailProps) => {
     const hiddenFiles: Record<string, IHiddenFileInfo> = useSelector(
         (storeUpdate: any) => 
             storeUpdate.media[0].hiddenFiles
-    )
+    ) ?? {}
 
     const classNames = [
         "thumb",
@@ -148,7 +149,7 @@ const RenderThumbTimeCode = (props: ThumbnailProps) => {
     const frameRate: number = useSelector(
         (storeUpdate: any) => storeUpdate.settings[0].ccgConfig
             .channels[reduxState.appNav[0].activeTab]?.videoFormat.frameRate
-    )        
+    )
     return (
         <a className="thumbnail-timecode">
             {isThumbWithTally(props.file.name)
@@ -165,19 +166,10 @@ const RenderThumbPix = (props: ThumbnailProps) => {
             storeUpdate.media[0].output[reduxState.appNav[0].activeTab]
                 .mediaFiles.find((predicate: IMediaFile) => predicate.name === props.file.name)
     )
-
-    useSelector((storeUpdate: any) => storeUpdate.media[0].output[reduxState.appNav[0].activeTab]
-        .thumbnailList)
-
-const hiddenFiles: Record<string, IHiddenFileInfo> = useSelector(
-        (storeUpdate: any) => 
-            storeUpdate.media[0].hiddenFiles
-    )
     const url = findThumbPix(file.name, reduxState.appNav[0].activeTab || 0)
-
     const classNames = [
         "thumbnailImage",
-        isThumbWithTally(file.name) ? 'selected-thump' : ''
+        isThumbWithTally(file.name) ? 'selected-thumb' : ''
     ].join(' ')
 
     return (
@@ -194,7 +186,7 @@ const RenderThumbText = (props: ThumbnailProps) => {
     )
     const classNames = [
         "thumbnail-text-view",
-        isThumbWithTally(props.file.name) ? 'selected-thump' : ''
+        isThumbWithTally(props.file.name) ? 'selected-thumb' : ''
     ].join(' ')
 
     return (

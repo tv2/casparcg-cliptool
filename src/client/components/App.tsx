@@ -2,16 +2,16 @@ import React from 'react'
 import { Tabs } from 'rmc-tabs'
 import { reduxStore, reduxState } from '../../model/reducers/store'
 import { useSelector } from 'react-redux'
+import { setActiveTab } from '../../model/reducers/appNavAction'
 
 // Components:
 import { Thumbnail } from './Thumbnail'
+import { RenderFullHeader } from './Header'
+import { Footer } from './Footer/Footer'
 
 //CSS files:
 import '../css/Rmc-tabs.css'
 import '../css/App.css'
-import { setActiveTab } from '../../model/reducers/appNavAction'
-import { RenderFullHeader } from './Header'
-import { Footer } from './Footer/Footer'
 
 const channel = new URLSearchParams(window.location.search).get('channel')
 const specificChannel = parseInt(channel) || 0

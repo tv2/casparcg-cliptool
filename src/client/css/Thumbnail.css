@@ -32,9 +32,9 @@
 }
 
 .thumbnailImage {
-    border-width: 0px;
+    border-width: 4px;
     border-style: solid;
-    border-color: red;
+    border-color: #2e2b41;
     width: 90%;
     height: auto;
     margin: 8px;
@@ -46,8 +46,8 @@
     );
 }
 
-.selected-thump {
-    border-width: 4px;
+.selected-thumb {
+    border-color: red;
 }
 
 .thumb.hidden {
@@ -71,7 +71,7 @@
     border-style: dotted;
     border-width: 0px;
     border-left-width: 1px;
-    border-color: rgba(133, 133, 133, 0.371);
+    border-color: #2e2b41;
     outline: 0;
 }
 
