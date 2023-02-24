@@ -60,7 +60,13 @@ export function socketIoHandlers(socket: any) {
                         IO.HIDDEN_FILES_UPDATE,
                         updatedHiddenFiles
                     )
-                } catch {}
+                } catch (error) {
+                    logger
+                        .data(error)
+                        .error(
+                            'Error thrown during "TOGGLE_THUMBNAIL_VISIBILITY"'
+                        )
+                }
             }
         )
         .on(IO.PGM_PLAY, (channelIndex: number, fileName: string) => {
@@ -142,37 +148,57 @@ export function socketIoHandlers(socket: any) {
             process.exit(0)
         })
 }
-
+type IHiddenFiles = Record<string, IHiddenFileInfo>
 function toggleHiddenFile(
     fileName: string,
     channelIndex: number,
-    hiddenFilesOrig: Record<string, IHiddenFileInfo>
-) {
-    const hiddenFiles = { ...hiddenFilesOrig }
-    if (fileName in hiddenFiles) {
-        delete hiddenFiles[fileName]
-        return hiddenFiles
-    }
+    hiddenFiles: IHiddenFiles
+): IHiddenFiles {
+    return isFileHidden(fileName, hiddenFiles)
+        ? showFile(fileName, hiddenFiles)
+        : hideFile(fileName, channelIndex, hiddenFiles)
+}
 
+function isFileHidden(fileName: string, hiddenFiles: IHiddenFiles): boolean {
+    return fileName in hiddenFiles
+}
+
+function showFile(
+    fileName: string,
+    hiddenFilesOrig: IHiddenFiles
+): IHiddenFiles {
+    const newHiddenFiles = { ...hiddenFilesOrig }
+    delete newHiddenFiles[fileName]
+    return newHiddenFiles
+}
+
+function hideFile(
+    fileName: string,
+    channelIndex: number,
+    hiddenFiles: IHiddenFiles
+): IHiddenFiles {
     const hiddenFile = buildHiddenFileMetadataFromFileName(
         fileName,
         channelIndex
     )
-    hiddenFiles[fileName] = hiddenFile
-    return hiddenFiles
+    return { ...hiddenFiles, [fileName]: hiddenFile }
 }
 
 function buildHiddenFileMetadataFromFileName(
     fileName: string,
     channelIndex: number
 ): IHiddenFileInfo {
-    const file = reduxState.media[0].output[channelIndex].mediaFiles.find(
-        (file) => file.name.toUpperCase() === fileName.toUpperCase()
-    )
+    const file = findFile(fileName, channelIndex)
     if (!file) {
         throw new Error(`No such file: ${fileName}`)
     }
     return buildHiddenFileMetadata(file)
+}
+
+function findFile(fileName: string, channelIndex: number): IMediaFile {
+    return reduxState.media[0].output[channelIndex].mediaFiles.find(
+        (file) => file.name.toUpperCase() === fileName.toUpperCase()
+    )
 }
 
 function buildHiddenFileMetadata(file: IMediaFile): IHiddenFileInfo {

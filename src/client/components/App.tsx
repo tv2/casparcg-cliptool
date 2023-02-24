@@ -1,10 +1,10 @@
 import React from 'react'
-import { reduxStore, reduxState } from '../../model/reducers/store'
+import { reduxStore } from '../../model/reducers/store'
+import { setActiveTab } from '../../model/reducers/appNavAction'
 
 // Components:
-import { setActiveTab } from '../../model/reducers/appNavAction'
 import { RenderFullHeader } from './Header'
-import { Footer } from './Footer'
+import { Footer } from './Footer/Footer'
 import Tabs from './Tab/Tabs'
 import TabItem from './Tab/TabItem'
 

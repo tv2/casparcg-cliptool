@@ -5,7 +5,7 @@ import { reduxState } from '../../model/reducers/store'
 import { secondsToTimeCode } from '../util/TimeCodeToString'
 
 //Redux:
-import { IHiddenFileInfo, IMediaFile, IThumbFile, OperationMode } from '../../model/reducers/mediaReducer'
+import { IHiddenFileInfo, IMediaFile, IOutput, IThumbFile, OperationMode } from '../../model/reducers/mediaReducer'
 import { socket } from '../util/SocketClientHandlers'
 import { PGM_LOAD, PGM_PLAY, TOGGLE_THUMBNAIL_VISIBILITY } from '../../model/SocketIoConstants'
 import { useSelector } from 'react-redux'
@@ -14,9 +14,17 @@ interface ThumbnailProps {
     file: IMediaFile
 }
 
-export const findThumbPix = (fileName: string, channelIndex: number) => {
-    const thumb =
-        reduxState.media[0].output[channelIndex]?.thumbnailList.find(
+// TODO: during UT-210, figure out the correct type to apply instead of 'any'.
+function getActiveOutput(store: any, channelIndex: number = -1): IOutput {
+    const activeTab: number = channelIndex === -1 
+    ? reduxState.appNav[0].activeTab 
+    : channelIndex
+    return store.media[0].output[activeTab]
+}
+
+export function findThumbPix(fileName: string, channelIndex: number): string {
+    const thumb = getActiveOutput(reduxState, channelIndex)?.thumbnailList
+        .find(
             (item: IThumbFile) => item.name.toUpperCase() === (fileName.toUpperCase())
         )
     return thumb?.thumbnail ?? ''
@@ -24,9 +32,8 @@ export const findThumbPix = (fileName: string, channelIndex: number) => {
 
 export const isThumbWithTally = (thumbName: string): boolean => {
     // convert to uppercase, handle windows double slash + backslash and remove file extension:
-    const tallyFileName = reduxState.media[0].output[
-        reduxState.appNav[0].activeTab
-    ].tallyFile
+    const tallyFileName = getActiveOutput(reduxState)
+        .tallyFile
         .toUpperCase()
         .replace(/\\/g, '/')
         .replace('//', '/')
@@ -42,26 +49,24 @@ export const isThumbWithTally = (thumbName: string): boolean => {
     return tallyNoMediaPath === thumbName
 }
 
-export const Thumbnail = () => {
+export function Thumbnail(): JSX.Element {
     // Redux hook:
     const files: IMediaFile[] = useSelector(
-        (storeUpdate: any) =>
-            storeUpdate.media[0].output[reduxState.appNav[0].activeTab]
-                ?.mediaFiles
-    )
+        (storeUpdate: any) => getActiveOutput(storeUpdate)?.mediaFiles
+    ) ?? []
     const hiddenFiles: Record<string, IHiddenFileInfo> = useSelector(
         (storeUpdate: any) => storeUpdate.media[0].hiddenFiles
-    )
-    const editVisibilityMode = useSelector(
-        (storeUpdate: any) =>
-            storeUpdate.media[0].output[reduxState.appNav[0].activeTab]?.operationMode === OperationMode.EDIT_VISIBILITY
-    )
-    const shownFiles: IMediaFile[] = files?.filter(({ name }) => !(name in hiddenFiles))
-    const usedFiles: IMediaFile[] = editVisibilityMode ? files : shownFiles
+    ) ?? {}
+    const isInEditVisibilityMode = useSelector(
+        (storeUpdate: any) => getActiveOutput(storeUpdate)?.operationMode === OperationMode.EDIT_VISIBILITY
+    ) ?? OperationMode.CONTROL
+    const shownFiles: IMediaFile[] = !isInEditVisibilityMode 
+        ? files.filter(({ name }) => !(name in hiddenFiles)) 
+        : files
     // Render:    
         return (
             <div className="flexBoxes">
-                {usedFiles?.map((file: IMediaFile, index: number) => (
+                {shownFiles?.map((file: IMediaFile, index: number) => (
                     <div className="boxComponent" key={index}>
                         {reduxState.appNav[0].selectView === 0 
                             ? <RenderThumb file={file} /> 
@@ -72,8 +77,8 @@ export const Thumbnail = () => {
         )    
 }
 
-const handleClickMedia = (fileName: string) => {    
-    const operationMode = reduxState.media[0].output[reduxState.appNav[0].activeTab]?.operationMode
+function handleClickMedia(fileName: string): void {    
+    const operationMode = getActiveOutput(reduxState)?.operationMode
     switch (operationMode) {
         case OperationMode.EDIT_VISIBILITY: 
             toggleVisibility(fileName)
@@ -92,7 +97,7 @@ function toggleVisibility(fileName: string) {
 }
 
 function playFile(fileName: string ) {
-    const event = !reduxState.media[0].output[reduxState.appNav[0].activeTab]?.manualstartState 
+    const event = !getActiveOutput(reduxState)?.manualstartState 
         ? PGM_PLAY 
         : PGM_LOAD
     socket.emit(event, reduxState.appNav[0].activeTab, fileName)
@@ -101,15 +106,14 @@ function playFile(fileName: string ) {
 const RenderThumb = (props: ThumbnailProps) => {    
     // Redux hook:
     useSelector(
-        (storeUpdate: any) =>
-            storeUpdate.media[0].output[reduxState.appNav[0].activeTab]
+        (storeUpdate: any) => getActiveOutput(storeUpdate)
                 .tallyFile
     )
 
     const hiddenFiles: Record<string, IHiddenFileInfo> = useSelector(
         (storeUpdate: any) => 
             storeUpdate.media[0].hiddenFiles
-    )
+    ) ?? {}
 
     const classNames = [
         "thumb",
@@ -143,12 +147,12 @@ const RenderThumbTimeCode = (props: ThumbnailProps) => {
     // Redux hook:
     const time: [number, number] = useSelector(
         (storeUpdate: any) =>
-            storeUpdate.media[0].output[reduxState.appNav[0].activeTab].time
+            getActiveOutput(storeUpdate).time
     )
     const frameRate: number = useSelector(
         (storeUpdate: any) => storeUpdate.settings[0].ccgConfig
             .channels[reduxState.appNav[0].activeTab]?.videoFormat.frameRate
-    )        
+    )
     return (
         <a className="thumbnail-timecode">
             {isThumbWithTally(props.file.name)
@@ -161,23 +165,13 @@ const RenderThumbTimeCode = (props: ThumbnailProps) => {
 const RenderThumbPix = (props: ThumbnailProps) => {
     // Redux hook:
     const file: IMediaFile = useSelector(
-        (storeUpdate: any) =>
-            storeUpdate.media[0].output[reduxState.appNav[0].activeTab]
-                .mediaFiles.find((predicate: IMediaFile) => predicate.name === props.file.name)
-    )
-
-    useSelector((storeUpdate: any) => storeUpdate.media[0].output[reduxState.appNav[0].activeTab]
-        .thumbnailList)
-
-const hiddenFiles: Record<string, IHiddenFileInfo> = useSelector(
-        (storeUpdate: any) => 
-            storeUpdate.media[0].hiddenFiles
+        (storeUpdate: any) => getActiveOutput(storeUpdate)
+            .mediaFiles.find((predicate: IMediaFile) => predicate.name === props.file.name)
     )
     const url = findThumbPix(file.name, reduxState.appNav[0].activeTab || 0)
-
     const classNames = [
         "thumbnailImage",
-        isThumbWithTally(file.name) ? 'selected-thump' : ''
+        isThumbWithTally(file.name) ? 'selected-thumb' : ''
     ].join(' ')
 
     return (
@@ -188,13 +182,12 @@ const hiddenFiles: Record<string, IHiddenFileInfo> = useSelector(
 const RenderThumbText = (props: ThumbnailProps) => {
     // Redux hook:
     useSelector(
-        (storeUpdate: any) =>
-            storeUpdate.media[0].output[reduxState.appNav[0].activeTab]
-                .tallyFile
+        (storeUpdate: any) => getActiveOutput(storeUpdate)
+            .tallyFile
     )
     const classNames = [
         "thumbnail-text-view",
-        isThumbWithTally(props.file.name) ? 'selected-thump' : ''
+        isThumbWithTally(props.file.name) ? 'selected-thumb' : ''
     ].join(' ')
 
     return (
@@ -222,8 +215,7 @@ const RenderThumbText = (props: ThumbnailProps) => {
 const RenderThumbTextTimeCode = (props: ThumbnailProps) => {
     // Redux hook:
     const time: [number, number] = useSelector(
-        (storeUpdate: any) =>
-            storeUpdate.media[0].output[reduxState.appNav[0].activeTab].time
+        (storeUpdate: any) => getActiveOutput(storeUpdate).time
     )
     const frameRate: number = useSelector(
         (storeUpdate: any) => storeUpdate.settings[0].ccgConfig
