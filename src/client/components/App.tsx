@@ -11,7 +11,7 @@ import '../css/Rmc-tabs.css'
 import '../css/App.css'
 import { setActiveTab } from '../../model/reducers/appNavAction'
 import { RenderFullHeader } from './Header'
-import { Footer } from './Footer'
+import { Footer } from './Footer/Footer'
 
 const channel = new URLSearchParams(window.location.search).get('channel')
 const specificChannel = parseInt(channel) || 0
