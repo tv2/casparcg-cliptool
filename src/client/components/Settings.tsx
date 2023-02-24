@@ -178,7 +178,7 @@ export const SettingsPage = () => {
                     onClick={handleToggleEditVisibilityMode}
                     style={editVisibilityStyle()}
                 >
-                    HIDING
+                    EDIT VISIBILITY
                 </button>
             </div>
         </div>
