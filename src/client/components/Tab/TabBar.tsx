@@ -13,6 +13,7 @@ interface TabBarProps {
 export default function TabBar(props: TabBarProps): JSX.Element {
   return (
       <div className='tabs-bar' role='tablist'>
+        <div className="tabs-bar__tabs">
         {
           props.tabData.map((item, index) => {
             const isSelected = props.selectedTab === index    
@@ -26,6 +27,7 @@ export default function TabBar(props: TabBarProps): JSX.Element {
             )
           })
         }
+        </div>
         <TabUnderline selectedTab={props.selectedTab} totalTabs={props.tabData.length}/>
       </div>
   )

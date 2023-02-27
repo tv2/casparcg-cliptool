@@ -1,5 +1,5 @@
 import React from "react"
-import '../../css/Tab.css'
+import '../../css/Underline.css'
 
 interface TabUnderlineProps {
   selectedTab: number
@@ -18,8 +18,10 @@ function buildUnderlinedTabStyle(tabsCount: number, tabIndex: number): {width: s
 
 export function TabUnderline(props: TabUnderlineProps): JSX.Element {
   return (
-    <div 
-      className='tab-active-underline animation' 
-      style={buildUnderlinedTabStyle(props.totalTabs, props.selectedTab)}/>
+    <div className="underline">
+      <div 
+        className="indicator" 
+        style={buildUnderlinedTabStyle(props.totalTabs, props.selectedTab)} />
+    </div>
   )
 }

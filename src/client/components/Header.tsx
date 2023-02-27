@@ -3,7 +3,6 @@ import { reduxStore, reduxState } from '../../model/reducers/store'
 import { shallowEqual, useSelector } from 'react-redux'
 
 //CSS files:
-import '../css/Rmc-tabs.css'
 import '../css/App.css'
 import '../css/App-header.css'
 import '../css/App-control-view-header.css'

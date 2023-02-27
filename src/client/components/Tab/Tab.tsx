@@ -16,14 +16,6 @@ function setOutput(tab: number) {
   reduxStore.dispatch(setActiveTab(tab))
 }
 
-function buildTabStyle(tabsCount: number): {width: string} {
-  const width = 100 / tabsCount
-  
-  return {
-    width: `${width}%`
-  }
-}
-
 export function Tab(props: TabProps): JSX.Element {
   const classNames = [ 
     'tab',               
@@ -35,7 +27,6 @@ export function Tab(props: TabProps): JSX.Element {
       className={classNames} 
       role='tab'
       aria-selected={props.isSelected} 
-      style={buildTabStyle(props.totalTabs)} 
       key={props.index}
       onClick={() => {
         if (!props.isSelected)
