@@ -140,10 +140,10 @@ export const settings = (
                 ...action.channels.map(updateChannelConfigWithVideoFormat),
             ]
             nextState[0].ccgConfig.path = action.path
-            break
+            return nextState
         case SET_TAB_DATA:
             nextState[0].tabData = [...action.tabData]
-            break
+            return nextState
         case SET_GENERICS:
             nextState[0].generics = { ...action.generics }
             nextState[0].generics.startupLoopState =
@@ -157,7 +157,8 @@ export const settings = (
             nextState[0].generics.startupOperationMode =
                 nextState[0].generics.startupOperationMode ?? []
             nextState[0].generics.webURL = nextState[0].generics.webURL ?? []
-            break
+            return nextState
+        default:
+            return nextState
     }
-    return nextState
 }
