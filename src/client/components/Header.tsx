@@ -1,19 +1,19 @@
 import React from 'react'
 import { reduxStore, reduxState } from '../../model/reducers/store'
 import { shallowEqual, useSelector } from 'react-redux'
-
-//CSS files:
-import '../css/App.css'
-import '../css/App-header.css'
-import '../css/App-control-view-header.css'
-import '../css/App-text-view-header.css'
 import { socket } from '../util/SocketClientHandlers'
 import { secondsToTimeCode } from '../util/TimeCodeToString'
 import { TOGGLE_SHOW_SETTINGS } from '../../model/reducers/appNavAction'
 
 import * as IO from '../../model/SocketIoConstants'
 import { findThumbPix } from './Thumbnail'
-import { SettingsPage } from './Settings'
+
+//CSS files:
+import '../css/App.css'
+import '../css/App-header.css'
+import '../css/App-control-view-header.css'
+import '../css/App-text-view-header.css'
+
 
 const OFF_COLOR = { backgroundColor: 'grey' }
 const ON_COLOR = { backgroundColor: 'rgb(28, 115, 165)' }
@@ -104,84 +104,85 @@ export const RenderFullHeader = () => {
 
     return (
         <header className="App-header">
-            {reduxState.appNav[0].selectView === 0 ? (
-                <div className="App-reload-setup-background">
+            <div className="App-header__controls">
+                {reduxState.appNav[0].selectView === 0 ? (
+                    <div className="App-reload-setup-background">
+                        <button
+                            className="App-settings-button"
+                            onClick={() => handleSettingsPage()}
+                        >
+                            SETTINGS
+                        </button>
+                    </div>
+                ) : (
+                    ''
+                )}
+
+                <RenderTime />
+                {reduxState.appNav[0].selectView === 0 ? (
+                    <React.Fragment>
+                        <div className="App-button-background">
+                            <button
+                                className="App-switch-button"
+                                onClick={handleLoopStatus}
+                                style={loopStateStyle()}
+                            >
+                                LOOP
+                            </button>
+                        </div>
+                        <div className="App-button-background">
+                            <button
+                                className="App-switch-button"
+                                onClick={handleMixStatus}
+                                style={mixStateStyle()}
+                            >
+                                MIX
+                            </button>
+                        </div>
+                        <div className="App-button-background">
+                            <button
+                                className="App-switch-button"
+                                onClick={handleWebState}
+                                style={webStateStyle()}
+                            >
+                                OVERLAY
+                            </button>
+                        </div>
+                    </React.Fragment>
+                ) : (
+                    ''
+                )}
+
+                <div className="App-button-background">
                     <button
-                        className="App-settings-button"
-                        onClick={() => handleSettingsPage()}
+                        className="App-switch-button"
+                        onClick={handleManualStartStatus}
+                        style={
+                            reduxState.media[0].output[
+                                reduxState.appNav[0].activeTab
+                            ]?.manualstartState
+                                ? ON_COLOR
+                                : OFF_COLOR
+                        }
                     >
-                        SETTINGS
+                        MANUAL
+                    </button>
+
+                    <button
+                        hidden={
+                            !reduxState.media[0].output[
+                                reduxState.appNav[0].activeTab
+                            ]?.manualstartState
+                        }
+                        className="App-start-button"
+                        onClick={() =>
+                            socket.emit(IO.PGM_PLAY, reduxState.appNav[0].activeTab)
+                        }
+                    >
+                        START
                     </button>
                 </div>
-            ) : (
-                ''
-            )}
-
-            <RenderTime />
-            {reduxState.appNav[0].selectView === 0 ? (
-                <React.Fragment>
-                    <div className="App-button-background">
-                        <button
-                            className="App-switch-button"
-                            onClick={handleLoopStatus}
-                            style={loopStateStyle()}
-                        >
-                            LOOP
-                        </button>
-                    </div>
-                    <div className="App-button-background">
-                        <button
-                            className="App-switch-button"
-                            onClick={handleMixStatus}
-                            style={mixStateStyle()}
-                        >
-                            MIX
-                        </button>
-                    </div>
-                    <div className="App-button-background">
-                        <button
-                            className="App-switch-button"
-                            onClick={handleWebState}
-                            style={webStateStyle()}
-                        >
-                            OVERLAY
-                        </button>
-                    </div>
-                </React.Fragment>
-            ) : (
-                ''
-            )}
-
-            <div className="App-button-background">
-                <button
-                    className="App-switch-button"
-                    onClick={handleManualStartStatus}
-                    style={
-                        reduxState.media[0].output[
-                            reduxState.appNav[0].activeTab
-                        ]?.manualstartState
-                            ? ON_COLOR
-                            : OFF_COLOR
-                    }
-                >
-                    MANUAL
-                </button>
-
-                <button
-                    hidden={
-                        !reduxState.media[0].output[
-                            reduxState.appNav[0].activeTab
-                        ]?.manualstartState
-                    }
-                    className="App-start-button"
-                    onClick={() =>
-                        socket.emit(IO.PGM_PLAY, reduxState.appNav[0].activeTab)
-                    }
-                >
-                    START
-                </button>
-            </div>
-            {reduxState.appNav[0].showSettingsActive ? <SettingsPage /> : null}
+            </div>            
             {!reduxState.appNav[0].connectionStatus ? (
                 <div className="App-header-server-offline">CONNECTING TO SERVER...</div>
             ) : null}

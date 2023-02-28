@@ -2,7 +2,7 @@ import React from 'react'
 import { ITabData } from '../../../model/reducers/settingsReducer'
 
 import '../../css/Tab.css'
-import TabItem from './TabItem'
+import { Thumbnail } from '../Thumbnail'
 
 interface TabBarProps {
   tabData: ITabData[]
@@ -22,7 +22,7 @@ export default function TabContent(props: TabBarProps) {
             ].join(' ')
             return (
               <div className={classNames} role='tabpanel' key={index}>
-                <TabItem data={item} index={index} key={index}/> 
+                <Thumbnail/> 
               </div>
             )
         })

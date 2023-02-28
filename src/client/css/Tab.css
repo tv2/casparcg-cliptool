@@ -1,4 +1,6 @@
 .tabs {
+    display: flex;
+    flex-direction: column;
     box-sizing: border-box;
     position: relative;
     overflow: hidden;
@@ -7,31 +9,55 @@
 }
 
 .tabs-bar {
-    position: relative;
-    height: 50px;
-    touch-action: pan-y;
+    z-index: 10;
+    touch-action: pan-x;
+    background: #444;
 }
 
 .tabs-bar__tabs {
     display: flex;
     flex-direction: row;
+    overflow-x: auto;
+    padding: 6px;
+}
+
+.tabs-bar__tabs::-webkit-scrollbar {
+    height: 6px;
+    background-color: transparent;
+}
+
+.tabs-bar__tabs::-webkit-scrollbar-thumb {
+    height: 6px;
+    background-color: grey;
 }
 
 .tab {
-    width: 100%;
-    background: #444;
+    flex: 1 0 auto;
     color: white;
-    font-size: 1.75em;
-    padding: 8px 0;
+    font-weight: bold;
+    font-size: 1.5em;
+    padding: 12px 20px;
+    cursor: pointer;
+    border-radius: 8px;
+    background-color: rgba(255, 255, 255, 0);
+    border-bottom: 4px solid transparent;
+    transition: background-color 0.3s, border-color 0.3s;
+
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
 .tab.active {
-    color: #4175e6;
+    background-color: #4175e6;
+    /* border-bottom-color: #4175e6; */
 }
 
 .tab-content-wrapper {
     touch-action: pan-x pan-y;
     display: flex;
+    height: 100%;
+    overflow: auto;
 }
 
 .tab-content {
@@ -42,6 +68,5 @@
 }
 
 .tab-content.hidden {
-    height: 0;
-    overflow: visible;
+    display: none;
 }
