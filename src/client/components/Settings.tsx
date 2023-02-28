@@ -79,6 +79,38 @@ export const SettingsPage = () => {
     return (
         <div className="Settings-body">
             <p className="Settings-header">SETTINGS :</p>
+            <div className="Settings-channel-form">
+                <button
+                    className="save-button"
+                    onClick={handleSave}
+                >
+                    UPDATE CLIPTOOL SETTINGS
+                </button>
+                <button
+                    className="save-button"
+                    onClick={handleToggleEditVisibilityMode}
+                    style={editVisibilityStyle()}
+                >
+                    EDIT VISIBILITY
+                </button>
+                <button
+                    className="save-button"
+                    onClick={handleSettingsPage}
+                >
+                    CLOSE SETTINGS
+                </button>
+                {!specificChannel ? (
+                    <button
+                        className="save-button"
+                        onClick={handleRestart}
+                    >
+                        RESTART CLIPTOOL
+                    </button>
+                ) : (
+                    <React.Fragment />
+                )}
+            </div>
+            <hr/>
             {!specificChannel ? (
                 <form className="Settings-form">
                     <div className="Settings-channel-form">
@@ -149,38 +181,6 @@ export const SettingsPage = () => {
                 <React.Fragment />
             )}
             <RenderOutputSettings />
-            <hr />
-            <div className="Settings-channel-form">
-                <button
-                    className="save-button"
-                    onClick={handleSave}
-                >
-                    UPDATE CLIPTOOL SETTINGS
-                </button>
-                {!specificChannel ? (
-                    <button
-                        className="save-button"
-                        onClick={handleRestart}
-                    >
-                        RESTART CLIPTOOL
-                    </button>
-                ) : (
-                    <React.Fragment />
-                )}
-                <button
-                    className="save-button"
-                    onClick={handleSettingsPage}
-                >
-                    EXIT
-                </button>
-                <button
-                    className="save-button"
-                    onClick={handleToggleEditVisibilityMode}
-                    style={editVisibilityStyle()}
-                >
-                    EDIT VISIBILITY
-                </button>
-            </div>
         </div>
     )
 }

@@ -3,7 +3,6 @@ import { ITabData } from '../../../model/reducers/settingsReducer'
 
 import '../../css/Tab.css'
 import { Tab } from './Tab'
-import { TabUnderline } from './TabUnderline'
 
 interface TabBarProps {
   tabData: ITabData[]
@@ -28,7 +27,6 @@ export default function TabBar(props: TabBarProps): JSX.Element {
           })
         }
         </div>
-        <TabUnderline selectedTab={props.selectedTab} totalTabs={props.tabData.length}/>
       </div>
   )
 }
