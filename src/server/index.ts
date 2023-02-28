@@ -1,3 +1,6 @@
+import { loadBundledEnvironment } from './bundled-environment'
+loadBundledEnvironment()
+
 import { loadSettings } from './utils/SettingsStorage'
 loadSettings()
 
