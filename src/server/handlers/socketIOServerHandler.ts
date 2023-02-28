@@ -192,7 +192,7 @@ function buildHiddenFileMetadataFromFileName(
     if (!file) {
         throw new Error(`No such file: ${fileName}`)
     }
-    return buildHiddenFileMetadata(file)
+    return getMetadata(file)
 }
 
 function findFile(fileName: string, channelIndex: number): IMediaFile {
@@ -201,7 +201,7 @@ function findFile(fileName: string, channelIndex: number): IMediaFile {
     )
 }
 
-function buildHiddenFileMetadata(file: IMediaFile): IHiddenFileInfo {
+function getMetadata(file: IMediaFile): IHiddenFileInfo {
     return {
         changed: file.changed,
         size: file.size,

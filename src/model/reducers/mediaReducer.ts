@@ -142,6 +142,9 @@ export const media = (state: Array<IMedia> = defaultMediaState(), action) => {
     }
 }
 
-function doesChannelExist(nextState: any, action: any) {
+function doesChannelExist(
+    nextState: { output: IOutput[] }[],
+    action: { channelIndex: number }
+): boolean {
     return nextState[0].output.length > action.channelIndex
 }

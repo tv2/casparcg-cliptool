@@ -1,8 +1,8 @@
 import React from "react"
 import { FooterContent } from "./FooterContent"
 
-const buttonText = 'Exit Edit Visibility'
-const descriptionText = 'You are currently editing the visibility of files.'.toUpperCase()
+const BUTTON_TEXT = 'Exit Edit Visibility'
+const DESCRIPTION_TEXT = 'You are currently editing the visibility of files.'.toUpperCase()
 
 interface EditVisibilityFooterProps {
   onClick: () => void
@@ -11,8 +11,8 @@ interface EditVisibilityFooterProps {
 export function EditVisibilityFooter(props: EditVisibilityFooterProps): JSX.Element {
   return (        
       <FooterContent 
-        buttonText={buttonText} 
-        descriptionText={descriptionText}
+        buttonText={BUTTON_TEXT} 
+        descriptionText={DESCRIPTION_TEXT}
         onClick={props.onClick}/>
   )
 }

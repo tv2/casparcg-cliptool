@@ -116,7 +116,7 @@ const RenderThumb = (props: ThumbnailProps) => {
     ) ?? {}
 
     const classNames = [
-        "thumb",
+        'thumb',
         props.file.name in hiddenFiles ? 'hidden' : ''
     ].join(' ')
 
@@ -170,7 +170,7 @@ const RenderThumbPix = (props: ThumbnailProps) => {
     )
     const url = findThumbPix(file.name, reduxState.appNav[0].activeTab || 0)
     const classNames = [
-        "thumbnailImage",
+        'thumbnailImage',
         isThumbWithTally(file.name) ? 'selected-thumb' : ''
     ].join(' ')
 
@@ -186,7 +186,7 @@ const RenderThumbText = (props: ThumbnailProps) => {
             .tallyFile
     )
     const classNames = [
-        "thumbnail-text-view",
+        'thumbnail-text-view',
         isThumbWithTally(props.file.name) ? 'selected-thumb' : ''
     ].join(' ')
 
