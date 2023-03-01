@@ -5,7 +5,7 @@ import { reduxState } from '../../model/reducers/store'
 import { secondsToTimeCode } from '../util/TimeCodeToString'
 
 //Redux:
-import { IHiddenFileInfo, IMediaFile, IOutput, IThumbFile, OperationMode } from '../../model/reducers/mediaReducer'
+import { HiddenFileInfo, IMediaFile, IOutput, IThumbnailFile, OperationMode } from '../../model/reducers/mediaReducer'
 import { socket } from '../util/SocketClientHandlers'
 import { PGM_LOAD, PGM_PLAY, TOGGLE_THUMBNAIL_VISIBILITY } from '../../model/SocketIoConstants'
 import { useSelector } from 'react-redux'
@@ -22,10 +22,10 @@ function getActiveOutput(store: any, channelIndex: number = -1): IOutput {
     return store.media[0].output[activeTab]
 }
 
-export function findThumbPix(fileName: string, channelIndex: number): string {
+export function findThumbnail(fileName: string, channelIndex: number): string {
     const thumb = getActiveOutput(reduxState, channelIndex)?.thumbnailList
         .find(
-            (item: IThumbFile) => item.name.toUpperCase() === (fileName.toUpperCase())
+            (item: IThumbnailFile) => item.name.toUpperCase() === (fileName.toUpperCase())
         )
     return thumb?.thumbnail ?? ''
 }
@@ -58,8 +58,8 @@ function getCleanTallyFile(output: IOutput): string {
     return tallyNoMediaPath
 }
 
-export const isThumbWithTally = (thumbName: string, channelIndex: number = -1): boolean => {
-    const tallyNoMediaPath = getCleanTallyFile(getActiveOutput(reduxState, channelIndex))
+const isThumbWithTally = (thumbName: string): boolean => {
+    const tallyNoMediaPath = getCleanTallyFile(getActiveOutput(reduxState))
     return tallyNoMediaPath === thumbName
 }
 
@@ -68,7 +68,7 @@ export function Thumbnail(): JSX.Element {
     const files: IMediaFile[] = useSelector(
         (storeUpdate: any) => getActiveOutput(storeUpdate)?.mediaFiles
     ) ?? []
-    const hiddenFiles: Record<string, IHiddenFileInfo> = useSelector(
+    const hiddenFiles: Record<string, HiddenFileInfo> = useSelector(
         (storeUpdate: any) => storeUpdate.media[0].hiddenFiles
     ) ?? {}
     const isInEditVisibilityMode = useSelector(
@@ -127,7 +127,7 @@ const RenderThumb = (props: ThumbnailProps) => {
                 .tallyFile
     )
 
-    const hiddenFiles: Record<string, IHiddenFileInfo> = useSelector(
+    const hiddenFiles: Record<string, HiddenFileInfo> = useSelector(
         (storeUpdate: any) => 
             storeUpdate.media[0].hiddenFiles
     ) ?? {}
@@ -185,7 +185,7 @@ const RenderThumbPix = (props: ThumbnailProps) => {
         (storeUpdate: any) => getActiveOutput(storeUpdate)
             .mediaFiles.find((predicate: IMediaFile) => predicate.name === props.file.name)
     )
-    const url = findThumbPix(file.name, reduxState.appNav[0].activeTab || 0)
+    const url = findThumbnail(file.name, reduxState.appNav[0].activeTab || 0)
     const classNames = [
         'thumbnailImage',
         isThumbWithTally(file.name) ? 'selected-thumb' : ''

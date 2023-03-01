@@ -13,7 +13,7 @@ import { secondsToTimeCode } from '../util/TimeCodeToString'
 import { TOGGLE_SHOW_SETTINGS } from '../../model/reducers/appNavAction'
 
 import * as IO from '../../model/SocketIoConstants'
-import { findThumbPix } from './Thumbnail'
+import { findThumbnail } from './Thumbnail'
 import { SettingsPage } from './Settings'
 
 const OFF_COLOR = { backgroundColor: 'grey' }
@@ -30,7 +30,7 @@ const RenderTime = () => {
                 )}
             </button>
             <img
-                src={findThumbPix(
+                src={findThumbnail(
                     reduxState.media[0].output[reduxState.appNav[0].activeTab]
                         ?.tallyFile,
                     reduxState.appNav[0].activeTab
