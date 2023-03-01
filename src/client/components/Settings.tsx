@@ -6,6 +6,7 @@ import { socket } from '../util/SocketClientHandlers'
 import * as IO from '../../model/SocketIoConstants'
 import { TOGGLE_SHOW_SETTINGS } from '../../model/reducers/appNavAction'
 import { OperationMode } from '../../model/reducers/mediaReducer'
+import { useSelector } from 'react-redux'
 
 // Check if URL has specifiet a channel:
 const channel = new URLSearchParams(window.location.search).get('channel')
@@ -14,45 +15,41 @@ const specificChannel = parseInt(channel) || 0
 const OFF_COLOR = { backgroundColor: 'rgb(41, 41, 41)' }
 const ON_COLOR = { backgroundColor: 'rgb(28, 115, 165)' }
 
-//Set style for Select dropdown component:
-const selectorColorStyles = {
-    control: (styles) => ({
-        ...styles,
-        backgroundColor: '#676767',
-        color: 'white',
-        border: 0,
-    }),
-    option: (styles) => {
-        return {
-            backgroundColor: '#AAAAAA',
-            color: 'white',
-        }
-    },
-    singleValue: (styles) => ({ ...styles, color: 'white' }),
-}
-
-function handleToggleEditVisibilityMode() {
+function handleEditVisibilityMode(): void {
+    const output = reduxState.media[0].output[reduxState.appNav[0].activeTab]
+    if (output.operationMode !== OperationMode.EDIT_VISIBILITY) {
+        toggleSettingsPage()
+    }
     socket.emit(
         IO.SET_OPERATION_MODE, 
         reduxState.appNav[0].activeTab, 
-        reduxState.media[0].output[reduxState.appNav[0].activeTab]
+        output
             .operationMode !== OperationMode.EDIT_VISIBILITY 
             ? OperationMode.EDIT_VISIBILITY 
             : OperationMode.CONTROL
     )
 }
 
-function editVisibilityStyle(): { backgroundColor: string } {
-    return reduxState.media[0].output[reduxState.appNav[0].activeTab]?.operationMode === OperationMode.EDIT_VISIBILITY
+function toggleSettingsPage(): void {
+    reduxStore.dispatch({
+        type: TOGGLE_SHOW_SETTINGS,
+    })
+}
+
+function editVisibilityStyle(operationMode: OperationMode): { backgroundColor: string } {
+    return operationMode === OperationMode.EDIT_VISIBILITY
         ? ON_COLOR
         : OFF_COLOR
 }
 
-export const SettingsPage = () => {
+export const SettingsPage = () => {        
+    const operationMode = useSelector(
+        (storeUpdate: any) => 
+            storeUpdate.media[0].output[reduxState.appNav[0].activeTab]?.operationMode)
+    useSelector((storeUpdate: any) => storeUpdate.settings[0].generics)
+    
     const handleSettingsPage = () => {
-        reduxStore.dispatch({
-            type: TOGGLE_SHOW_SETTINGS,
-        })
+        toggleSettingsPage()
     }
 
     const handleChange = (event) => {
@@ -88,8 +85,8 @@ export const SettingsPage = () => {
                 </button>
                 <button
                     className="save-button"
-                    onClick={handleToggleEditVisibilityMode}
-                    style={editVisibilityStyle()}
+                    onClick={handleEditVisibilityMode}
+                    style={editVisibilityStyle(operationMode)}
                 >
                     EDIT VISIBILITY
                 </button>
