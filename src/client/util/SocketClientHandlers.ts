@@ -17,9 +17,9 @@ import {
     updateHiddenFiles,
 } from '../../model/reducers/mediaActions'
 import {
-    IHiddenFileInfo,
+    HiddenFileInfo,
     IMediaFile,
-    IThumbFile,
+    IThumbnailFile,
     OperationMode,
 } from '../../model/reducers/mediaReducer'
 import {
@@ -55,13 +55,16 @@ socket.on(IO.FOLDERS_UPDATE, (payload: string[]) => {
     reduxStore.dispatch(updateFolderList(payload))
 })
 
-socket.on(IO.THUMB_UPDATE, (channelIndex: number, payload: IThumbFile[]) => {
-    reduxStore.dispatch(updateThumbFileList(channelIndex, payload))
-})
+socket.on(
+    IO.THUMB_UPDATE,
+    (channelIndex: number, payload: IThumbnailFile[]) => {
+        reduxStore.dispatch(updateThumbFileList(channelIndex, payload))
+    }
+)
 
 socket.on(
     IO.HIDDEN_FILES_UPDATE,
-    (hiddenFiles: Record<string, IHiddenFileInfo>) => {
+    (hiddenFiles: Record<string, HiddenFileInfo>) => {
         reduxStore.dispatch(updateHiddenFiles(hiddenFiles))
     }
 )
