@@ -17,8 +17,8 @@ interface ThumbnailProps {
 // TODO: during UT-210, figure out the correct type to apply instead of 'any'.
 function getActiveOutput(store: any, channelIndex: number = -1): IOutput {
     const activeTab: number = channelIndex === -1 
-    ? reduxState.appNav[0].activeTab 
-    : channelIndex
+        ? reduxState.appNav[0].activeTab 
+        : channelIndex
     return store.media[0].output[activeTab]
 }
 
@@ -30,9 +30,19 @@ export function findThumbPix(fileName: string, channelIndex: number): string {
     return thumb?.thumbnail ?? ''
 }
 
-export const isThumbWithTally = (thumbName: string): boolean => {
-    // convert to uppercase, handle windows double slash + backslash and remove file extension:
-    const tallyFileName = getActiveOutput(reduxState)
+function isThumbnailWithTallyOnAnyOutput(thumbnailName: string): boolean {
+    const outputs = reduxState.media[0].output
+    for (const output of outputs) {
+        const tallyNoMediaPath = getCleanTallyFile(output)
+        if (tallyNoMediaPath === thumbnailName) {
+            return true
+        }
+    }
+    return false
+}
+
+function getCleanTallyFile(output: IOutput): string {
+    const tallyFileName = output
         .tallyFile
         .toUpperCase()
         .replace(/\\/g, '/')
@@ -45,7 +55,11 @@ export const isThumbWithTally = (thumbName: string): boolean => {
             .replace(/\\/g, '/') + '/',
         ''
     )
+    return tallyNoMediaPath
+}
 
+export const isThumbWithTally = (thumbName: string, channelIndex: number = -1): boolean => {
+    const tallyNoMediaPath = getCleanTallyFile(getActiveOutput(reduxState, channelIndex))
     return tallyNoMediaPath === thumbName
 }
 
@@ -91,8 +105,11 @@ function handleClickMedia(fileName: string): void {
 }
 
 function toggleVisibility(fileName: string) {
-    if (isThumbWithTally(fileName))
+    if (isThumbnailWithTallyOnAnyOutput(fileName)) {
+        alert('Unable to hide, as file is in use somewhere.')
         return
+    }
+        
     socket.emit(TOGGLE_THUMBNAIL_VISIBILITY, reduxState.appNav[0].activeTab, fileName)
 }
 
