@@ -16,13 +16,14 @@ const OFF_COLOR = { backgroundColor: 'rgb(41, 41, 41)' }
 const ON_COLOR = { backgroundColor: 'rgb(28, 115, 165)' }
 
 function handleEditVisibilityMode(): void {
-    const output = reduxState.media[0].output[reduxState.appNav[0].activeTab]
+    const activeTab: number = reduxState.appNav[0].activeTab
+    const output = reduxState.media[0].output[activeTab]
     if (output.operationMode !== OperationMode.EDIT_VISIBILITY) {
         toggleSettingsPage()
     }
     socket.emit(
         IO.SET_OPERATION_MODE, 
-        reduxState.appNav[0].activeTab, 
+        activeTab, 
         output
             .operationMode !== OperationMode.EDIT_VISIBILITY 
             ? OperationMode.EDIT_VISIBILITY 
