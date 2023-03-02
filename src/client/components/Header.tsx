@@ -7,34 +7,38 @@ import { TOGGLE_SHOW_SETTINGS } from '../../model/reducers/appNavAction'
 
 import * as IO from '../../model/SocketIoConstants'
 import { findThumbnail } from './Thumbnail'
-import { SettingsPage } from './Settings'
 
 //CSS files:
 import '../css/App.css'
 import '../css/App-header.css'
 import '../css/App-control-view-header.css'
 import '../css/App-text-view-header.css'
+import { IOutput } from '../../model/reducers/mediaReducer'
 
 
 const OFF_COLOR = { backgroundColor: 'grey' }
 const ON_COLOR = { backgroundColor: 'rgb(28, 115, 165)' }
 
-const RenderTime = () => {
+const RenderTime = () => {  
+    const activeTab: number = useSelector(
+        (storeUpdate: any) => storeUpdate.appNav[0].activeTab)
+    const output: IOutput = useSelector(
+        (storeUpdate: any) => storeUpdate.media[0].output[activeTab])
+    const tallyFile: string = useSelector(
+        (storeUpdate: any) => storeUpdate.media[0].output[activeTab]?.tallyFile)
+    const time = useSelector(
+        (storeUpdate: any) => storeUpdate.media[0].output[activeTab]?.time[0])
+
     return (
         <div className="App-timer-background">
             <button className="App-header-pgm-counter">
                 {secondsToTimeCode(
-                    reduxState.media[0].output[reduxState.appNav[0].activeTab]
-                        ?.time,
-                    reduxState.settings[0].ccgConfig.channels[reduxState.appNav[0].activeTab]?.videoFormat?.frameRate
+                    output?.time,
+                    reduxState.settings[0].ccgConfig.channels[activeTab]?.videoFormat?.frameRate
                 )}
             </button>
             <img
-                src={findThumbnail(
-                    reduxState.media[0].output[reduxState.appNav[0].activeTab]
-                        ?.tallyFile,
-                    reduxState.appNav[0].activeTab
-                )}
+                src={findThumbnail(tallyFile, activeTab)}
                 className="App-header-pgm-thumbnail-image"
             />
         </div>
@@ -56,8 +60,8 @@ const handleLoopStatus = () => {
     )
 }
 
-const loopStateStyle = () => {
-    return reduxState.media[0].output[reduxState.appNav[0].activeTab]?.loopState
+const loopStateStyle = (loopState: boolean) => {
+    return loopState
         ? ON_COLOR
         : OFF_COLOR
 }
@@ -78,14 +82,14 @@ const handleWebState = () => {
     )
 }
 
-const mixStateStyle = () => {
-    return reduxState.media[0].output[reduxState.appNav[0].activeTab]?.mixState
+const mixStateStyle = (mixState: boolean) => {
+    return mixState
         ? ON_COLOR
         : OFF_COLOR
 }
 
-const webStateStyle = () => {
-    return reduxState.media[0].output[reduxState.appNav[0].activeTab]?.webState
+const webStateStyle = (webState: boolean) => {
+    return webState
         ? ON_COLOR
         : OFF_COLOR
 }
@@ -101,7 +105,16 @@ const handleManualStartStatus = () => {
 
 export const RenderFullHeader = () => {
     // Redux hook:
-    useSelector((storeUpdate) => storeUpdate, shallowEqual)
+    const activeTab: number = useSelector(
+        (storeUpdate: any) => storeUpdate.appNav[0].activeTab)
+    const mixState: boolean = useSelector(
+        (storeUpdate: any) => storeUpdate.media[0].output[activeTab]?.mixState)
+    const webState: boolean = useSelector(
+        (storeUpdate: any) => storeUpdate.media[0].output[activeTab]?.webState)
+    const loopState: boolean = useSelector(
+        (storeUpdate: any) => storeUpdate.media[0].output[activeTab]?.loopState)
+    const manualstartState: boolean = useSelector(
+        (storeUpdate: any) => storeUpdate.media[0].output[activeTab]?.manualstartState)
 
     return (
         <header className="App-header">
@@ -126,7 +139,7 @@ export const RenderFullHeader = () => {
                             <button
                                 className="App-switch-button"
                                 onClick={handleLoopStatus}
-                                style={loopStateStyle()}
+                                style={loopStateStyle(loopState)}
                             >
                                 LOOP
                             </button>
@@ -135,7 +148,7 @@ export const RenderFullHeader = () => {
                             <button
                                 className="App-switch-button"
                                 onClick={handleMixStatus}
-                                style={mixStateStyle()}
+                                style={mixStateStyle(mixState)}
                             >
                                 MIX
                             </button>
@@ -144,7 +157,7 @@ export const RenderFullHeader = () => {
                             <button
                                 className="App-switch-button"
                                 onClick={handleWebState}
-                                style={webStateStyle()}
+                                style={webStateStyle(webState)}
                             >
                                 OVERLAY
                             </button>
@@ -159,9 +172,7 @@ export const RenderFullHeader = () => {
                         className="App-switch-button"
                         onClick={handleManualStartStatus}
                         style={
-                            reduxState.media[0].output[
-                                reduxState.appNav[0].activeTab
-                            ]?.manualstartState
+                            manualstartState
                                 ? ON_COLOR
                                 : OFF_COLOR
                         }
@@ -170,15 +181,9 @@ export const RenderFullHeader = () => {
                     </button>
 
                     <button
-                        hidden={
-                            !reduxState.media[0].output[
-                                reduxState.appNav[0].activeTab
-                            ]?.manualstartState
-                        }
+                        hidden={ !manualstartState }
                         className="App-start-button"
-                        onClick={() =>
-                            socket.emit(IO.PGM_PLAY, reduxState.appNav[0].activeTab)
-                        }
+                        onClick={() => socket.emit(IO.PGM_PLAY, activeTab) }
                     >
                         START
                     </button>
