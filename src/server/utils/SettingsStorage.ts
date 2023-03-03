@@ -13,17 +13,31 @@ const fs = require('fs')
 const path = require('path')
 
 export const loadSettings = () => {
+    const defaultGenerics: IGenericSettings =
+        defaultSettingsReducerState()[0].generics
     try {
-        const settingsFromFile = JSON.parse(
+        const settingsFromFile: IGenericSettings = JSON.parse(
             fs.readFileSync(path.resolve('storage', 'settings.json'))
         )
+        const isStructureCorrect: boolean = verifyStructure(
+            settingsFromFile,
+            defaultGenerics
+        )
+        const newGenerics: IGenericSettings = isStructureCorrect
+            ? settingsFromFile
+            : correctStructure(settingsFromFile, defaultGenerics)
         logger.data(settingsFromFile).info('File loaded with settings:')
-        reduxStore.dispatch(setGenerics(settingsFromFile))
-        //socketServer.emit(IO.SETTINGS_UPDATE, reduxState.settings[0])
+        reduxStore.dispatch(setGenerics(newGenerics))
+        if (!isStructureCorrect) {
+            logger.info('New Settings structure generated, saving Settings...')
+            saveSettings()
+        }
     } catch (error) {
-        logger
-            .data(error)
-            .error('Settings not found, or not yet stored, using defaults')
+        logger.warn(
+            'Settings not found, or not yet stored, dispatching defaults, and saving it.'
+        )
+        reduxStore.dispatch(setGenerics(defaultGenerics))
+        saveSettings()
     }
 }
 
@@ -31,39 +45,22 @@ export const saveSettings = () => {
     const generics: IGenericSettings = reduxState.settings[0].generics
     const defaultGenerics: IGenericSettings =
         defaultSettingsReducerState()[0].generics
-    const isStructureCorrect: boolean = verifyStructure(
-        generics,
-        defaultGenerics
-    )
-    const newGenerics: IGenericSettings = isStructureCorrect
-        ? generics
-        : correctStructure(generics, defaultGenerics)
-    const stringifiedSettings = JSON.stringify(newGenerics)
+    const stringifiedSettings = JSON.stringify(generics)
     if (!fs.existsSync('storage')) {
         fs.mkdirSync('storage')
     }
-    if (stringifiedSettings !== JSON.stringify(defaultGenerics)) {
-        fs.writeFile(
-            path.resolve('storage', 'settings.json'),
-            stringifiedSettings,
-            'utf8',
-            (error) => {
-                if (error) {
-                    logger.data(error).error('Error writing file:')
-                } else {
-                    logger.data(stringifiedSettings).info('Settings saved')
-                    if (!isStructureCorrect) {
-                        logger.info(
-                            'New Settings structure saved, reloading Settings...'
-                        )
-                        loadSettings()
-                    }
-                }
+    fs.writeFile(
+        path.resolve('storage', 'settings.json'),
+        stringifiedSettings,
+        'utf8',
+        (error) => {
+            if (error) {
+                logger.data(error).error('Error writing file:')
+            } else {
+                logger.data(stringifiedSettings).info('Settings saved')
             }
-        )
-    } else {
-        logger.info('Settings not saved, using defaults')
-    }
+        }
+    )
 }
 
 function verifyStructure(
@@ -102,117 +99,92 @@ function correctStructure(
 
     // It must be possible to do the following in a smaller way... Not sure how currently though.
     if (generics.outputLabels.length !== defaultGenerics.outputLabels.length) {
-        generics.outputLabels = [
-            ...generics.outputLabels,
-            ...defaultGenerics.outputLabels.slice(
-                generics.outputLabels.length -
-                    defaultGenerics.outputLabels.length
-            ),
-        ]
+        generics.outputLabels = getCombinedArray(
+            generics.outputLabels,
+            defaultGenerics.outputLabels
+        )
     }
     if (
         generics.outputFolders.length !== defaultGenerics.outputFolders.length
     ) {
-        generics.outputFolders = [
-            ...generics.outputFolders,
-            ...defaultGenerics.outputFolders.slice(
-                generics.outputFolders.length -
-                    defaultGenerics.outputFolders.length
-            ),
-        ]
+        generics.outputFolders = getCombinedArray(
+            generics.outputFolders,
+            defaultGenerics.outputFolders
+        )
     }
     if (generics.scale.length !== defaultGenerics.scale.length) {
-        generics.scale = [
-            ...generics.scale,
-            ...defaultGenerics.scale.slice(
-                generics.scale.length - defaultGenerics.scale.length
-            ),
-        ]
+        generics.scale = getCombinedArray(generics.scale, defaultGenerics.scale)
     }
     if (generics.scaleX.length !== defaultGenerics.scaleX.length) {
-        generics.scaleX = [
-            ...generics.scaleX,
-            ...defaultGenerics.scaleX.slice(
-                generics.scaleX.length - defaultGenerics.scaleX.length
-            ),
-        ]
+        generics.scaleX = getCombinedArray(
+            generics.scaleX,
+            defaultGenerics.scaleX
+        )
     }
     if (generics.scaleY.length !== defaultGenerics.scaleY.length) {
-        generics.scaleY = [
-            ...generics.scaleY,
-            ...defaultGenerics.scaleY.slice(
-                generics.scaleY.length - defaultGenerics.scaleY.length
-            ),
-        ]
+        generics.scaleY = getCombinedArray(
+            generics.scaleY,
+            defaultGenerics.scaleY
+        )
     }
     if (
         generics.startupLoopState.length !==
         defaultGenerics.startupLoopState.length
     ) {
-        generics.startupLoopState = [
-            ...generics.startupLoopState,
-            ...defaultGenerics.startupLoopState.slice(
-                generics.startupLoopState.length -
-                    defaultGenerics.startupLoopState.length
-            ),
-        ]
+        generics.startupLoopState = getCombinedArray(
+            generics.startupLoopState,
+            defaultGenerics.startupLoopState
+        )
     }
     if (
         generics.startupMixState.length !==
         defaultGenerics.startupMixState.length
     ) {
-        generics.startupMixState = [
-            ...generics.startupMixState,
-            ...defaultGenerics.startupMixState.slice(
-                generics.startupMixState.length -
-                    defaultGenerics.startupMixState.length
-            ),
-        ]
+        generics.startupMixState = getCombinedArray(
+            generics.startupMixState,
+            defaultGenerics.startupMixState
+        )
     }
     if (
         generics.startupManualstartState.length !==
         defaultGenerics.startupManualstartState.length
     ) {
-        generics.startupManualstartState = [
-            ...generics.startupManualstartState,
-            ...defaultGenerics.startupManualstartState.slice(
-                generics.startupManualstartState.length -
-                    defaultGenerics.startupManualstartState.length
-            ),
-        ]
+        generics.startupManualstartState = getCombinedArray(
+            generics.startupManualstartState,
+            defaultGenerics.startupManualstartState
+        )
     }
     if (
         generics.startupWebState.length !==
         defaultGenerics.startupWebState.length
     ) {
-        generics.startupWebState = [
-            ...generics.startupWebState,
-            ...defaultGenerics.startupWebState.slice(
-                generics.startupWebState.length -
-                    defaultGenerics.startupWebState.length
-            ),
-        ]
+        generics.startupWebState = getCombinedArray(
+            generics.startupWebState,
+            defaultGenerics.startupWebState
+        )
     }
     if (generics.webURL.length !== defaultGenerics.webURL.length) {
-        generics.webURL = [
-            ...generics.webURL,
-            ...defaultGenerics.webURL.slice(
-                generics.webURL.length - defaultGenerics.webURL.length
-            ),
-        ]
+        generics.webURL = getCombinedArray(
+            generics.webURL,
+            defaultGenerics.webURL
+        )
     }
     if (
         generics.startupOperationMode.length !==
         defaultGenerics.startupOperationMode.length
     ) {
-        generics.startupOperationMode = [
-            ...generics.startupOperationMode,
-            ...defaultGenerics.startupOperationMode.slice(
-                generics.startupOperationMode.length -
-                    defaultGenerics.startupOperationMode.length
-            ),
-        ]
+        generics.startupOperationMode = getCombinedArray(
+            generics.startupOperationMode,
+            defaultGenerics.startupOperationMode
+        )
     }
 
     return generics
+}
+
+function getCombinedArray<T>(originalArray: T[], defaultArray: T[]) {
+    return [
+        ...originalArray,
+        ...defaultArray.slice(originalArray.length - defaultArray.length),
+    ]
 }
