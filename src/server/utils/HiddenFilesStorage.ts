@@ -1,5 +1,5 @@
 import { updateHiddenFiles } from '../../model/reducers/mediaActions'
-import { HiddenFileInfo } from '../../model/reducers/mediaReducer'
+import { HiddenFileInfo, IOutput } from '../../model/reducers/mediaReducer'
 import { reduxState, reduxStore } from '../../model/reducers/store'
 import * as IO from '../../model/SocketIoConstants'
 import { socketServer } from '../handlers/expressHandler'
@@ -13,20 +13,40 @@ export function loadHiddenFiles() {
         const hiddenFilesFromFile: Record<string, HiddenFileInfo> = JSON.parse(
             fs.readFileSync(path.resolve('storage', 'hiddenFiles.json'))
         )
-        logger.data(hiddenFilesFromFile).info('File loaded with Hidden files:')
-        reduxStore.dispatch(updateHiddenFiles(hiddenFilesFromFile))
-        socketServer.emit(IO.HIDDEN_FILES_UPDATE, hiddenFilesFromFile)
-    } catch (error) {
+        const isInvalidHiddenFiles: boolean =
+            validateHiddenFilesContent(hiddenFilesFromFile)
+        const hiddenFiles = !isInvalidHiddenFiles
+            ? hiddenFilesFromFile
+            : clearInvalidHiddenFiles(hiddenFilesFromFile)
         logger
-            .data(error)
-            .error('Hidden files not found, or not yet stored, using defaults')
+            .data(hiddenFiles)
+            .info(
+                `File with Hidden files loaded${
+                    isInvalidHiddenFiles
+                        ? ' and cleaned. Saving the cleaned version'
+                        : ''
+                }:`
+            )
+        reduxStore.dispatch(updateHiddenFiles(hiddenFiles))
+        socketServer.emit(IO.HIDDEN_FILES_UPDATE, hiddenFiles)
+        if (isInvalidHiddenFiles) {
+            saveHiddenFiles()
+        }
+    } catch (error) {
+        logger.data(error).warn('Hidden files not found, or not yet stored.')
     }
 }
 
 export function saveHiddenFiles() {
-    const stringifiedHiddenFiles = JSON.stringify(
+    const hiddenFiles: Record<string, HiddenFileInfo> =
         reduxState.media[0].hiddenFiles
-    )
+    const isInvalidHiddenFiles: boolean =
+        validateHiddenFilesContent(hiddenFiles)
+    const cleanHiddenFiles: Record<string, HiddenFileInfo> =
+        !isInvalidHiddenFiles
+            ? hiddenFiles
+            : clearInvalidHiddenFiles(hiddenFiles)
+    const stringifiedHiddenFiles = JSON.stringify(cleanHiddenFiles)
     if (!fs.existsSync('storage')) {
         fs.mkdirSync('storage')
     }
@@ -42,4 +62,26 @@ export function saveHiddenFiles() {
             }
         }
     )
+}
+
+function validateHiddenFilesContent(
+    hiddenFiles: Record<string, HiddenFileInfo>
+): boolean {
+    const outputs: IOutput[] = reduxState.media[0].output
+    return outputs.some((output) => output.tallyFile in hiddenFiles)
+}
+
+function clearInvalidHiddenFiles(
+    originalHiddenFiles: Record<string, HiddenFileInfo>
+): Record<string, HiddenFileInfo> {
+    const hiddenFiles: Record<string, HiddenFileInfo> = {
+        ...originalHiddenFiles,
+    }
+    const outputs: IOutput[] = reduxState.media[0].output
+    outputs.forEach((output) => {
+        if (output.tallyFile in hiddenFiles) {
+            delete hiddenFiles[output.tallyFile]
+        }
+    })
+    return hiddenFiles
 }
