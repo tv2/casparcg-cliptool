@@ -37,7 +37,7 @@ function toggleSettingsPage(): void {
     })
 }
 
-function editVisibilityStyle(operationMode: OperationMode): { backgroundColor: string } {
+function getEditVisibilityStyle(operationMode: OperationMode): { backgroundColor: string } {
     return operationMode === OperationMode.EDIT_VISIBILITY
         ? ON_COLOR
         : OFF_COLOR
@@ -93,7 +93,7 @@ export const SettingsPage = () => {
                 <button
                     className="save-button"
                     onClick={handleEditVisibilityMode}
-                    style={editVisibilityStyle(operationMode)}
+                    style={getEditVisibilityStyle(operationMode)}
                 >
                     EDIT VISIBILITY
                 </button>

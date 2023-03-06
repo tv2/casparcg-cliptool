@@ -10,19 +10,19 @@ export interface HiddenFileInfo {
     size: number
 }
 
-interface IFile extends HiddenFileInfo {
+interface File extends HiddenFileInfo {
     name: string
     type: string
 }
 
-export interface IMediaFile extends IFile {
+export interface IMediaFile extends File {
     frames: number
     frameTime: string
     frameRate: number
     duration: number
 }
 
-export interface IThumbnailFile extends IFile {
+export interface IThumbnailFile extends File {
     thumbnail: string
 }
 export interface IMedia {

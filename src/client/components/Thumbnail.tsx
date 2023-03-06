@@ -31,14 +31,8 @@ export function findThumbnail(fileName: string, channelIndex: number): string {
 }
 
 function isThumbnailWithTallyOnAnyOutput(thumbnailName: string): boolean {
-    const outputs = reduxState.media[0].output
-    for (const output of outputs) {
-        const tallyNoMediaPath = getCleanTallyFile(output)
-        if (tallyNoMediaPath === thumbnailName) {
-            return true
-        }
-    }
-    return false
+    return reduxState.media[0].output.some(
+        output => getCleanTallyFile(output) === thumbnailName)
 }
 
 function getCleanTallyFile(output: IOutput): string {
@@ -106,7 +100,7 @@ function handleClickMedia(fileName: string): void {
 
 function toggleVisibility(fileName: string) {
     if (isThumbnailWithTallyOnAnyOutput(fileName)) {
-        alert('Unable to hide, as file is in use somewhere.')
+        alert('Unable to hide, as the file is in use somewhere.')
         return
     }
         
