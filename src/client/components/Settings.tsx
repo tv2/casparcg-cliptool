@@ -82,7 +82,13 @@ export const SettingsPage = () => {
                     className="save-button"
                     onClick={handleSave}
                 >
-                    UPDATE CLIPTOOL SETTINGS
+                    SAVE SETTINGS
+                </button>
+                <button
+                    className="save-button"
+                    onClick={handleSettingsPage}
+                >
+                    DISCARD CHANGES
                 </button>
                 <button
                     className="save-button"
@@ -90,12 +96,6 @@ export const SettingsPage = () => {
                     style={editVisibilityStyle(operationMode)}
                 >
                     EDIT VISIBILITY
-                </button>
-                <button
-                    className="save-button"
-                    onClick={handleSettingsPage}
-                >
-                    CLOSE SETTINGS
                 </button>
                 {!specificChannel ? (
                     <button
