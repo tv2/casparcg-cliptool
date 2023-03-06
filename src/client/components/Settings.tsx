@@ -31,7 +31,7 @@ const selectorColorStyles = {
     singleValue: (styles) => ({ ...styles, color: 'white' }),
 }
 
-function handleToggleEditVisibilityMode() {
+function emitSetOperationMode() {
     socket.emit(
         IO.SET_OPERATION_MODE, 
         reduxState.appNav[0].activeTab, 
@@ -42,7 +42,7 @@ function handleToggleEditVisibilityMode() {
     )
 }
 
-function editVisibilityStyle(): { backgroundColor: string } {
+function getEditVisibilityStyle(): { backgroundColor: string } {
     return reduxState.media[0].output[reduxState.appNav[0].activeTab]?.operationMode === OperationMode.EDIT_VISIBILITY
         ? ON_COLOR
         : OFF_COLOR
@@ -175,8 +175,8 @@ export const SettingsPage = () => {
                 </button>
                 <button
                     className="save-button"
-                    onClick={handleToggleEditVisibilityMode}
-                    style={editVisibilityStyle()}
+                    onClick={emitSetOperationMode}
+                    style={getEditVisibilityStyle()}
                 >
                     EDIT VISIBILITY
                 </button>
