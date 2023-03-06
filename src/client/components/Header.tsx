@@ -26,7 +26,7 @@ const RenderTime = () => {
         (storeUpdate: any) => storeUpdate.media[0].output[activeTab])
     const tallyFile: string = useSelector(
         (storeUpdate: any) => storeUpdate.media[0].output[activeTab]?.tallyFile)
-    const time = useSelector(
+    useSelector(
         (storeUpdate: any) => storeUpdate.media[0].output[activeTab]?.time[0])
 
     return (
