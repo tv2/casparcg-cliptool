@@ -11,7 +11,7 @@ import Tabs from './Tab/Tabs'
 import '../css/App.css'
 import { useSelector } from 'react-redux'
 import { SettingsPage } from './Settings'
-import { Thumbnail } from './Thumbnail'
+import { Thumbnail } from './Thumbnail/Thumbnail'
 
 const channel = new URLSearchParams(window.location.search).get('channel')
 const specificChannel = parseInt(channel) || 0

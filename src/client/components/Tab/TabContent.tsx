@@ -4,7 +4,7 @@ import { ITabData } from '../../../model/reducers/settingsReducer'
 import { reduxState, reduxStore } from '../../../model/reducers/store'
 
 import '../../css/Tab.css'
-import { Thumbnail } from '../Thumbnail'
+import { Thumbnail } from '../Thumbnail/Thumbnail'
 
 const MIN_SWIPE_DISTANCE = 50
 

@@ -1,12 +1,10 @@
 import React from 'react'
 import { reduxStore, reduxState } from '../../model/reducers/store'
-import { shallowEqual, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { socket } from '../util/SocketClientHandlers'
-import { secondsToTimeCode } from '../util/TimeCodeToString'
 import { TOGGLE_SHOW_SETTINGS } from '../../model/reducers/appNavAction'
 
 import * as IO from '../../model/SocketIoConstants'
-import { findThumbnail } from './Thumbnail'
 
 //CSS files:
 import '../css/App.css'
@@ -14,6 +12,7 @@ import '../css/App-header.css'
 import '../css/App-control-view-header.css'
 import '../css/App-text-view-header.css'
 import { IOutput } from '../../model/reducers/mediaReducer'
+import MediaService from "../services/mediaService";
 
 
 const OFF_COLOR = { backgroundColor: 'grey' }
@@ -32,13 +31,13 @@ const RenderTime = () => {
     return (
         <div className="App-timer-background">
             <button className="App-header-pgm-counter">
-                {secondsToTimeCode(
+                {MediaService.secondsToTimeCode(
                     output?.time,
                     reduxState.settings[0].ccgConfig.channels[activeTab]?.videoFormat?.frameRate
                 )}
             </button>
             <img
-                src={findThumbnail(tallyFile, activeTab)}
+                src={MediaService.findThumbnail(tallyFile, activeTab)}
                 className="App-header-pgm-thumbnail-image"
             />
         </div>

@@ -100,16 +100,12 @@
 }
 
 /* on-screen timecode in textmode*/
-.thumbnail-timecode-text {
-    position: absolute;
+.thumbnail-timecode.text {
     width: 200px;
     left: 35px;
     top: 80px;
-    text-align: left;
     font-size: 2.1em;
-    color: red;
-    background: #ffffff8c;
-    border-radius: 16px;
+    padding: 0;
 }
 
 /* thumbnail textView */
