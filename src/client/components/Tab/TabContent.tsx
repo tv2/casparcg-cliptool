@@ -43,9 +43,9 @@ export default function TabContent(props: TabBarProps) {
     }
     const activeTab = reduxState.appNav[0].activeTab
     const outputsCount = reduxState.media[0].output.length
-    const distance = touchStart - touchEnd
-    const isLeftSwipe = distance > MIN_SWIPE_DISTANCE
-    const isRightSwipe = distance < -MIN_SWIPE_DISTANCE 
+    const difference = touchStart - touchEnd
+    const isLeftSwipe = difference > MIN_SWIPE_DISTANCE
+    const isRightSwipe = difference < -MIN_SWIPE_DISTANCE 
 
     if (isRightSwipe && activeTab - 1 >= 0) {
       reduxStore.dispatch(setActiveTab(activeTab - 1))
