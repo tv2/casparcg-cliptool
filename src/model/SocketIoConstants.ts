@@ -8,7 +8,7 @@ export const TAB_DATA_UPDATE = 'tabDataUpdate'
 export const SETTINGS_UPDATE = 'settingsUpdate'
 export const LOOP_STATE_UPDATE = 'loopStateUpdate'
 export const OPERATION_MODE_UPDATE = 'OperationModeUpdate'
-export const MANUAL_START_STATE_UPDATE = 'manualstartStateUpdate'
+export const MANUAL_START_STATE_UPDATE = 'manualStartStateUpdate'
 export const MIX_STATE_UPDATE = 'mixStateUpdate'
 export const WEB_STATE_UPDATE = 'webStateUpdate'
 

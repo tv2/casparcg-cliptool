@@ -78,8 +78,8 @@ function verifyStructure(
             defaultGenerics.startupLoopState.length ||
         generics.startupMixState.length !==
             defaultGenerics.startupMixState.length ||
-        generics.startupManualstartState.length !==
-            defaultGenerics.startupManualstartState.length ||
+        generics.startupManualStartState.length !==
+            defaultGenerics.startupManualStartState.length ||
         generics.startupWebState.length !==
             defaultGenerics.startupWebState.length ||
         generics.webURL.length !== defaultGenerics.webURL.length ||
@@ -146,12 +146,12 @@ function correctStructure(
         )
     }
     if (
-        generics.startupManualstartState.length !==
-        defaultGenerics.startupManualstartState.length
+        generics.startupManualStartState.length !==
+        defaultGenerics.startupManualStartState.length
     ) {
-        generics.startupManualstartState = getCombinedArray(
-            generics.startupManualstartState,
-            defaultGenerics.startupManualstartState
+        generics.startupManualStartState = getCombinedArray(
+            generics.startupManualStartState,
+            defaultGenerics.startupManualStartState
         )
     }
     if (

@@ -10,10 +10,8 @@ class MediaService {
     }
 
     public findThumbnail(fileName: string, channelIndex: number): string {
-        const thumbnailFile = this.getOutput(
-            reduxState,
-            channelIndex
-        )?.thumbnailList.find(
+        const output = this.getOutput(reduxState, channelIndex)
+        const thumbnailFile = output?.thumbnailList.find(
             (item: IThumbnailFile) =>
                 item.name.toUpperCase() === fileName.toUpperCase()
         )
@@ -37,7 +35,7 @@ class MediaService {
         )
     }
 
-    getCleanTallyFile(output: IOutput): string {
+    public getCleanTallyFile(output: IOutput): string {
         const tallyFileName = output.tallyFile
             .toUpperCase()
             .replace(/\\/g, '/')

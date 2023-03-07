@@ -3,7 +3,6 @@ import { reduxStore } from '../../model/reducers/store'
 import { setActiveTab } from '../../model/reducers/appNavAction'
 
 // Components:
-import { RenderFullHeader } from './Header'
 import { OperationModeFooter } from './Footer/OperationModeFooter'
 import Tabs from './Tab/Tabs'
 
@@ -12,6 +11,7 @@ import '../css/App.css'
 import { useSelector } from 'react-redux'
 import { SettingsPage } from './Settings'
 import { Thumbnail } from './Thumbnail/Thumbnail'
+import Header from './Header/Header'
 
 const channel = new URLSearchParams(window.location.search).get('channel')
 const specificChannel = parseInt(channel) || 0
@@ -27,7 +27,7 @@ export const App = () => {
     }
     return (
         <div className="App">
-            <RenderFullHeader />
+            <Header />
             <div className="App-body">
                 {
                     isSettingsOpen 

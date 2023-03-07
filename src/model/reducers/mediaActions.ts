@@ -87,12 +87,12 @@ export const setMix = (channelIndex: number, mixState: boolean) => {
 
 export const setManualStart = (
     channelIndex: number,
-    manualstartState: boolean
+    manualStartState: boolean
 ) => {
     return {
         type: SET_MANUAL_START,
         channelIndex: channelIndex,
-        manualstartState: manualstartState,
+        manualStartState: manualStartState,
     }
 }
 

@@ -39,7 +39,7 @@ export interface IGenericSettings {
     webURL: string[]
     startupLoopState: boolean[]
     startupMixState: boolean[]
-    startupManualstartState: boolean[]
+    startupManualStartState: boolean[]
     startupWebState: boolean[]
     startupOperationMode: OperationMode[]
 }
@@ -84,7 +84,7 @@ export const defaultSettingsReducerState = (): ISettings[] => {
                     false,
                     false,
                 ],
-                startupManualstartState: [
+                startupManualStartState: [
                     false,
                     false,
                     false,
@@ -150,8 +150,8 @@ export const settings = (
                 nextState[0].generics.startupLoopState ?? []
             nextState[0].generics.startupMixState =
                 nextState[0].generics.startupMixState ?? []
-            nextState[0].generics.startupManualstartState =
-                nextState[0].generics.startupManualstartState ?? []
+            nextState[0].generics.startupManualStartState =
+                nextState[0].generics.startupManualStartState ?? []
             nextState[0].generics.startupWebState =
                 nextState[0].generics.startupWebState ?? []
             nextState[0].generics.startupOperationMode =

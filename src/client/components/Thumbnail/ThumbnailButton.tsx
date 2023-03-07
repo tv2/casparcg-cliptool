@@ -49,7 +49,7 @@ function emitToggleVisibility(fileName: string): void {
 }
 
 function emitPlayFile(fileName: string ): void {
-  const event = !MediaService.getOutput(reduxState)?.manualstartState 
+  const event = !MediaService.getOutput(reduxState)?.manualStartState 
       ? PGM_PLAY 
       : PGM_LOAD
   socket.emit(event, MediaService.getActiveTab(), fileName)

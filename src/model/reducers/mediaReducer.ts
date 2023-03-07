@@ -39,7 +39,7 @@ export interface IOutput {
     mixState: boolean
     webState: boolean
     operationMode: OperationMode
-    manualstartState: boolean
+    manualStartState: boolean
     time: [number, number]
 }
 
@@ -64,7 +64,7 @@ const defaultOutputs = (amount: number) => {
             loopState: false,
             mixState: false,
             webState: false,
-            manualstartState: false,
+            manualStartState: false,
             time: [0, 0],
         })
     }
@@ -122,8 +122,8 @@ export const media = (state: Array<IMedia> = defaultMediaState(), action) => {
             return nextState
         case IO.SET_MANUAL_START:
             if (doesChannelExist(nextState, action)) {
-                nextState[0].output[action.channelIndex].manualstartState =
-                    action.manualstartState
+                nextState[0].output[action.channelIndex].manualStartState =
+                    action.manualStartState
             }
             return nextState
         case IO.SET_TIME:

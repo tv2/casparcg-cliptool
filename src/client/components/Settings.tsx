@@ -203,7 +203,7 @@ const RenderOutputSettings = () => {
     }
     const handleManual = (event) => {
         let generics = { ...reduxState.settings[0].generics }
-        generics.startupManualstartState[parseInt(event.target.name)] =
+        generics.startupManualStartState[parseInt(event.target.name)] =
             event.target.checked
         reduxStore.dispatch(setGenerics(generics))
     }
@@ -326,7 +326,7 @@ const RenderOutputSettings = () => {
                         type="checkbox"
                         checked={
                             reduxState.settings[0].generics
-                                .startupManualstartState?.[index]
+                                .startupManualStartState?.[index]
                         }
                         onChange={handleManual}
                     />

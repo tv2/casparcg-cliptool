@@ -115,7 +115,7 @@ export function socketIoHandlers(socket: any) {
                 socketServer.emit(
                     IO.MANUAL_START_STATE_UPDATE,
                     channelIndex,
-                    reduxState.media[0].output[channelIndex].manualstartState
+                    reduxState.media[0].output[channelIndex].manualStartState
                 )
             }
         )
@@ -242,7 +242,7 @@ export const initializeClient = () => {
             socketServer.emit(
                 IO.MANUAL_START_STATE_UPDATE,
                 channelIndex,
-                output.manualstartState
+                output.manualStartState
             )
             socketServer.emit(
                 IO.THUMB_UPDATE,
