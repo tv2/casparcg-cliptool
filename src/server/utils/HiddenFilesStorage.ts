@@ -14,12 +14,11 @@ export function loadHiddenFiles() {
             fs.readFileSync(path.resolve('storage', 'hiddenFiles.json'))
         )
         const isInvalidHiddenFiles: boolean =
-            validateHiddenFilesContent(hiddenFilesFromFile)
-        const hiddenFiles = !isInvalidHiddenFiles
-            ? hiddenFilesFromFile
-            : clearInvalidHiddenFiles(hiddenFilesFromFile)
+            validateHiddenFiles(hiddenFilesFromFile)
+        const cleanHiddenFiles: Record<string, HiddenFileInfo> =
+            getCleanHiddenFiles(hiddenFilesFromFile)
         logger
-            .data(hiddenFiles)
+            .data(cleanHiddenFiles)
             .info(
                 `File with Hidden files loaded${
                     isInvalidHiddenFiles
@@ -27,8 +26,8 @@ export function loadHiddenFiles() {
                         : ''
                 }:`
             )
-        reduxStore.dispatch(updateHiddenFiles(hiddenFiles))
-        socketServer.emit(IO.HIDDEN_FILES_UPDATE, hiddenFiles)
+        reduxStore.dispatch(updateHiddenFiles(cleanHiddenFiles))
+        socketServer.emit(IO.HIDDEN_FILES_UPDATE, cleanHiddenFiles)
         if (isInvalidHiddenFiles) {
             saveHiddenFiles()
         }
@@ -40,12 +39,8 @@ export function loadHiddenFiles() {
 export function saveHiddenFiles() {
     const hiddenFiles: Record<string, HiddenFileInfo> =
         reduxState.media[0].hiddenFiles
-    const isInvalidHiddenFiles: boolean =
-        validateHiddenFilesContent(hiddenFiles)
     const cleanHiddenFiles: Record<string, HiddenFileInfo> =
-        !isInvalidHiddenFiles
-            ? hiddenFiles
-            : clearInvalidHiddenFiles(hiddenFiles)
+        getCleanHiddenFiles(hiddenFiles)
     const stringifiedHiddenFiles = JSON.stringify(cleanHiddenFiles)
     if (!fs.existsSync('storage')) {
         fs.mkdirSync('storage')
@@ -64,7 +59,19 @@ export function saveHiddenFiles() {
     )
 }
 
-function validateHiddenFilesContent(
+function getCleanHiddenFiles(
+    originalHiddenFiles: Record<string, HiddenFileInfo>
+): Record<string, HiddenFileInfo> {
+    const isInvalidHiddenFiles: boolean =
+        validateHiddenFiles(originalHiddenFiles)
+    const cleanHiddenFiles: Record<string, HiddenFileInfo> =
+        isInvalidHiddenFiles
+            ? clearInvalidHiddenFiles(originalHiddenFiles)
+            : originalHiddenFiles
+    return cleanHiddenFiles
+}
+
+function validateHiddenFiles(
     hiddenFiles: Record<string, HiddenFileInfo>
 ): boolean {
     const outputs: IOutput[] = reduxState.media[0].output

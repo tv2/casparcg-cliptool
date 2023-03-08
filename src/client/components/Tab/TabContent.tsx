@@ -1,57 +1,51 @@
 import React, { useState } from 'react'
 import { setActiveTab } from '../../../model/reducers/appNavAction'
 import { ITabData } from '../../../model/reducers/settingsReducer'
-import { reduxState, reduxStore } from '../../../model/reducers/store'
+import { reduxStore } from '../../../model/reducers/store'
 
 import '../../css/Tab.css'
+import swipeService, { Point } from '../../services/swipeService'
 import { Thumbnail } from '../Thumbnail/Thumbnail'
 
-const MIN_SWIPE_DISTANCE = 50
-
-// Check if URL has a specific channel:
-const channel = new URLSearchParams(window.location.search).get('channel')
-const specificChannel = parseInt(channel) || 0
+const isSpecificChannel = new URLSearchParams(window.location.search).has('channel')
 
 interface TabBarProps {
   tabData: ITabData[]
   selectedTab: number
 }
 
-
 export default function TabContent(props: TabBarProps) {
-  const [touchStart, setTouchStart] = useState<number | null>(null)
-  const [touchEnd, setTouchEnd] = useState<number | null>(null)
+  const [touchStart, setTouchStart] = useState<Point | null>(null)
+  const [touchEnd, setTouchEnd] = useState<Point | null>(null)
 
   function handleTouchStart(event: React.TouchEvent<HTMLDivElement>) {
-    if (specificChannel) {
+    if (isSpecificChannel) {
       return
     }
     setTouchEnd(null)
-    setTouchStart(event.targetTouches[0].clientX)
+    setTouchStart(swipeService.getEventPoint(event))
   }
 
   function handleTouchMove(event: React.TouchEvent<HTMLDivElement>){
-    if (specificChannel) {
+    if (isSpecificChannel) {
       return
     }
-    setTouchEnd(event.targetTouches[0].clientX)
+    setTouchEnd(swipeService.getEventPoint(event))
   }
 
   function handleTouchEnd() {
-    if (!touchStart || !touchEnd || specificChannel){
+    if (!touchStart || !touchEnd || isSpecificChannel){
       return
     }
-    const activeTab = reduxState.appNav[0].activeTab
-    const outputsCount = reduxState.media[0].output.length
-    const distance = touchStart - touchEnd
-    const isLeftSwipe = distance > MIN_SWIPE_DISTANCE
-    const isRightSwipe = distance < -MIN_SWIPE_DISTANCE 
-
-    if (isRightSwipe && activeTab - 1 >= 0) {
-      reduxStore.dispatch(setActiveTab(activeTab - 1))
-    } else if (isLeftSwipe && activeTab + 1 < outputsCount) {
-      reduxStore.dispatch(setActiveTab(activeTab + 1))
+    if (!swipeService.isValidSwipe(touchStart, touchEnd)) {
+      return
     }
+    const direction = swipeService.getSwipeDirection(touchStart, touchEnd)
+    const nextTab = swipeService.getNextTab(props.selectedTab, direction)
+    if (!swipeService.isValidTab(nextTab, props.tabData.length)) {
+      return
+    }
+    reduxStore.dispatch(setActiveTab(nextTab))
   }
 
   return (

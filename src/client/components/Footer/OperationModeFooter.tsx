@@ -10,9 +10,7 @@ export function OperationModeFooter(): JSX.Element {
 
   switch (operationMode) {
     case OperationMode.EDIT_VISIBILITY: {
-      return (        
-          <OperationModeEditVisibilityFooter />
-      )
+      return <OperationModeEditVisibilityFooter />
     }
     case OperationMode.CONTROL:
     default: {
