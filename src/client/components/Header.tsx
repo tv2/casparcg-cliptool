@@ -13,7 +13,7 @@ import { secondsToTimeCode } from '../util/TimeCodeToString'
 import { TOGGLE_SHOW_SETTINGS } from '../../model/reducers/appNavAction'
 
 import * as IO from '../../model/SocketIoConstants'
-import { findThumbPix } from './Thumbnail'
+import { findThumbnail } from './Thumbnail'
 import { SettingsPage } from './Settings'
 
 const OFF_COLOR = { backgroundColor: 'grey' }
@@ -30,7 +30,7 @@ const RenderTime = () => {
                 )}
             </button>
             <img
-                src={findThumbPix(
+                src={findThumbnail(
                     reduxState.media[0].output[reduxState.appNav[0].activeTab]
                         ?.tallyFile,
                     reduxState.appNav[0].activeTab
@@ -98,6 +98,7 @@ const handleManualStartStatus = () => {
             .manualstartState
     )
 }
+
 export const RenderFullHeader = () => {
     // Redux hook:
     useSelector((storeUpdate) => storeUpdate, shallowEqual)
@@ -123,9 +124,7 @@ export const RenderFullHeader = () => {
                     <div className="App-button-background">
                         <button
                             className="App-switch-button"
-                            onClick={() => {
-                                handleLoopStatus()
-                            }}
+                            onClick={handleLoopStatus}
                             style={loopStateStyle()}
                         >
                             LOOP
@@ -134,7 +133,7 @@ export const RenderFullHeader = () => {
                     <div className="App-button-background">
                         <button
                             className="App-switch-button"
-                            onClick={() => handleMixStatus()}
+                            onClick={handleMixStatus}
                             style={mixStateStyle()}
                         >
                             MIX
@@ -143,7 +142,7 @@ export const RenderFullHeader = () => {
                     <div className="App-button-background">
                         <button
                             className="App-switch-button"
-                            onClick={() => handleWebState()}
+                            onClick={handleWebState}
                             style={webStateStyle()}
                         >
                             OVERLAY
@@ -157,7 +156,7 @@ export const RenderFullHeader = () => {
             <div className="App-button-background">
                 <button
                     className="App-switch-button"
-                    onClick={() => handleManualStartStatus()}
+                    onClick={handleManualStartStatus}
                     style={
                         reduxState.media[0].output[
                             reduxState.appNav[0].activeTab

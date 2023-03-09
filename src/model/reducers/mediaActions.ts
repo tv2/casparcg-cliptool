@@ -1,8 +1,14 @@
-import { IMediaFile, IThumbFile } from './mediaReducer'
+import {
+    HiddenFileInfo,
+    IMediaFile,
+    IThumbnailFile,
+    OperationMode,
+} from './mediaReducer'
 
 export const UPDATE_MEDIA_FILES = 'updateMediaFiles'
 export const UPDATE_THUMB_LIST = 'updateThumbList'
 export const UPDATE_FOLDER_LIST = 'updateFolderList'
+export const UPDATE_HIDDEN_FILES = 'updateHiddenFiles'
 export const SET_TALLY_FILE_NAME = 'setTallyFileName'
 export const SET_NUMBER_OF_OUTPUTS = 'setNumberOfOutputs'
 export const SET_LOOP = 'setLoop'
@@ -10,6 +16,7 @@ export const SET_MIX = 'setMix'
 export const SET_WEB = 'setWeb'
 export const SET_MANUAL_START = 'setManualStart'
 export const SET_TIME = 'setTime'
+export const SET_OPERATION_MODE = 'setOperationMode'
 
 export const updateMediaFiles = (
     channelIndex: number,
@@ -31,12 +38,19 @@ export const updateFolderList = (folderList: string[]) => {
 
 export const updateThumbFileList = (
     channelIndex: number,
-    fileList: IThumbFile[]
+    fileList: IThumbnailFile[]
 ) => {
     return {
         type: UPDATE_THUMB_LIST,
         channelIndex: channelIndex,
         fileList: fileList,
+    }
+}
+
+export function updateHiddenFiles(hiddenFiles: Record<string, HiddenFileInfo>) {
+    return {
+        type: UPDATE_HIDDEN_FILES,
+        hiddenFiles: hiddenFiles,
     }
 }
 
@@ -95,5 +109,16 @@ export const setTime = (channelIndex: number, time: [number, number]) => {
         type: SET_TIME,
         channelIndex: channelIndex,
         time: time,
+    }
+}
+
+export const setOperationMode = (
+    channelIndex: number,
+    operationMode: OperationMode
+) => {
+    return {
+        type: SET_OPERATION_MODE,
+        channelIndex: channelIndex,
+        operationMode: operationMode,
     }
 }

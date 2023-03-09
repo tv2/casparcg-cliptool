@@ -13,8 +13,15 @@ import {
     updateFolderList,
     setNumberOfOutputs,
     setWeb,
+    setOperationMode,
+    updateHiddenFiles,
 } from '../../model/reducers/mediaActions'
-import { IMediaFile, IThumbFile } from '../../model/reducers/mediaReducer'
+import {
+    HiddenFileInfo,
+    IMediaFile,
+    IThumbnailFile,
+    OperationMode,
+} from '../../model/reducers/mediaReducer'
 import {
     setGenerics,
     setTabData,
@@ -48,9 +55,19 @@ socket.on(IO.FOLDERS_UPDATE, (payload: string[]) => {
     reduxStore.dispatch(updateFolderList(payload))
 })
 
-socket.on(IO.THUMB_UPDATE, (channelIndex: number, payload: IThumbFile[]) => {
-    reduxStore.dispatch(updateThumbFileList(channelIndex, payload))
-})
+socket.on(
+    IO.THUMB_UPDATE,
+    (channelIndex: number, payload: IThumbnailFile[]) => {
+        reduxStore.dispatch(updateThumbFileList(channelIndex, payload))
+    }
+)
+
+socket.on(
+    IO.HIDDEN_FILES_UPDATE,
+    (hiddenFiles: Record<string, HiddenFileInfo>) => {
+        reduxStore.dispatch(updateHiddenFiles(hiddenFiles))
+    }
+)
 
 socket.on(IO.TIME_TALLY_UPDATE, (data: IO.ITimeTallyPayload[]) => {
     data.forEach((channel, index) => {
@@ -61,9 +78,16 @@ socket.on(IO.TIME_TALLY_UPDATE, (data: IO.ITimeTallyPayload[]) => {
     })
 })
 
-socket.on(IO.LOOP_STATEUPDATE, (channelIndex: number, loop: boolean) => {
+socket.on(IO.LOOP_STATE_UPDATE, (channelIndex: number, loop: boolean) => {
     reduxStore.dispatch(setLoop(channelIndex, loop))
 })
+
+socket.on(
+    IO.OPERATION_MODE_UPDATE,
+    (channelIndex: number, mode: OperationMode) => {
+        reduxStore.dispatch(setOperationMode(channelIndex, mode))
+    }
+)
 
 socket.on(IO.MIX_STATE_UPDATE, (channelIndex: number, mix: boolean) => {
     reduxStore.dispatch(setMix(channelIndex, mix))

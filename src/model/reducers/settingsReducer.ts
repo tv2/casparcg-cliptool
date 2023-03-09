@@ -1,4 +1,5 @@
 import { getVideoFormat, VideoFormat } from '../videoFormat'
+import { OperationMode } from './mediaReducer'
 import { SET_GENERICS, SET_TAB_DATA, UPDATE_SETTINGS } from './settingsAction'
 export interface ISettings {
     ccgConfig: ICcgConfig
@@ -40,6 +41,7 @@ export interface IGenericSettings {
     startupMixState: boolean[]
     startupManualstartState: boolean[]
     startupWebState: boolean[]
+    startupOperationMode: OperationMode[]
 }
 
 export const defaultSettingsReducerState = (): ISettings[] => {
@@ -102,6 +104,16 @@ export const defaultSettingsReducerState = (): ISettings[] => {
                     false,
                     false,
                 ],
+                startupOperationMode: [
+                    OperationMode.CONTROL,
+                    OperationMode.CONTROL,
+                    OperationMode.CONTROL,
+                    OperationMode.CONTROL,
+                    OperationMode.CONTROL,
+                    OperationMode.CONTROL,
+                    OperationMode.CONTROL,
+                    OperationMode.CONTROL,
+                ],
             },
         },
     ]
@@ -142,6 +154,8 @@ export const settings = (
                 nextState[0].generics.startupManualstartState ?? []
             nextState[0].generics.startupWebState =
                 nextState[0].generics.startupWebState ?? []
+            nextState[0].generics.startupOperationMode =
+                nextState[0].generics.startupOperationMode ?? []
             nextState[0].generics.webURL = nextState[0].generics.webURL ?? []
             return nextState
         default:

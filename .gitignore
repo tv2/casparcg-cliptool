@@ -56,3 +56,4 @@ ehthumbs.db
 # Windows shortcuts #
 #####################
 *.lnk
+/storage/hiddenFiles.json

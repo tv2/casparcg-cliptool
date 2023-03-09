@@ -12,8 +12,14 @@ import {
     updateThumbFileList,
     updateFolderList,
     setNumberOfOutputs,
+    setOperationMode,
+    updateHiddenFiles,
 } from '../../model/reducers/mediaActions'
-import { IMediaFile, IThumbFile } from '../../model/reducers/mediaReducer'
+import {
+    IMediaFile,
+    IThumbFile,
+    OperationMode,
+} from '../../model/reducers/mediaReducer'
 import {
     setGenerics,
     setTabData,
@@ -82,10 +88,18 @@ socket.on(IO.TIME_TALLY_UPDATE, (data: IO.ITimeTallyPayload[]) => {
     })
 })
 
-socket.on(IO.LOOP_STATEUPDATE, (channelIndex: number, loop: boolean) => {
+socket.on(IO.LOOP_STATE_UPDATE, (channelIndex: number, loop: boolean) => {
     reduxStore.dispatch(setLoop(channelIndex, loop))
     console.log('Loop State updated')
 })
+
+socket.on(
+    IO.OPERATION_MODE_UPDATE,
+    (channelIndex: number, mode: OperationMode) => {
+        reduxStore.dispatch(setOperationMode(channelIndex, mode))
+        console.log('Operation Mode updated')
+    }
+)
 
 socket.on(IO.MIX_STATE_UPDATE, (channelIndex: number, mix: boolean) => {
     reduxStore.dispatch(setMix(channelIndex, mix))

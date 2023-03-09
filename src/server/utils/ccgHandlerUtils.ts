@@ -1,4 +1,4 @@
-import { IThumbFile } from '../../model/reducers/mediaReducer'
+import { IThumbnailFile } from '../../model/reducers/mediaReducer'
 import os from 'os' // Used to display (log) network addresses on local machine
 
 export const getThisMachineIpAddresses = (): string[] => {
@@ -59,17 +59,17 @@ export const isFolderNameEqual = (
 }
 
 export const hasThumbListChanged = (
-    newList: IThumbFile[],
-    previousList: IThumbFile[]
+    newList: IThumbnailFile[],
+    previousList: IThumbnailFile[]
 ): boolean => {
     if (newList.length !== previousList.length) {
         return true
-    } else {
-        for (let i = 0; i < newList.length; i++) {
-            if (newList[i].name !== previousList[i].name) {
-                return true
-            }
-        }
     }
-    return false
+
+    return newList.some((file, index) => {
+        return (
+            file.name !== previousList[index].name ||
+            file.size !== previousList[index].size
+        )
+    })
 }
