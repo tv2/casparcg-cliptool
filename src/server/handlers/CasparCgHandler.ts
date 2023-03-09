@@ -22,9 +22,10 @@ import {
 import { socketServer } from './expressHandler'
 import * as IO from '../../model/SocketIoConstants'
 import {
+    HiddenFileInfo,
     IMediaFile,
     IOutput,
-    IThumbFile,
+    IThumbnailFile,
     OperationMode,
 } from '../../model/reducers/mediaReducer'
 
@@ -46,7 +47,7 @@ import { saveHiddenFiles } from '../utils/hiddenFilesStorage'
 
 let waitingForCCGResponse: boolean = false
 let previousThumbFileList = []
-let thumbNailList: IThumbFile[] = []
+let thumbNailList: IThumbnailFile[] = []
 
 //Communication with CasparCG consists of 2 parts:
 //1. An AMCP connection for receiving media info and sending commands
@@ -219,7 +220,7 @@ const startTimerControlledServices = async () => {
     setInterval(() => {
         if (!waitingForCCGResponse) {
             waitingForCCGResponse = true
-            loadCcgMedia().then((items: IThumbFile[]) => {
+            loadCcgMedia().then((items: IThumbnailFile[]) => {
                 thumbNailList = items
                 waitingForCCGResponse = false
             })
@@ -228,8 +229,9 @@ const startTimerControlledServices = async () => {
     }, 3000)
 }
 
-const loadCcgMedia = async (): Promise<IThumbFile[]> => {
+const loadCcgMedia = async (): Promise<IThumbnailFile[]> => {
     let thumbFiles = await ccgConnection.thumbnailList()
+
     if (hasThumbListChanged(thumbFiles.response.data, previousThumbFileList)) {
         previousThumbFileList = thumbFiles.response.data
         thumbNailList = []
@@ -291,14 +293,15 @@ const outputExtractFiles = (allFiles: IMediaFile[], outputIndex: number) => {
 
 function checkHiddenFilesChanged(files: IMediaFile[]) {
     let needsUpdating = false
-    const hiddenFiles = reduxState.media[0].hiddenFiles
+    const hiddenFiles: Record<string, HiddenFileInfo> =
+        reduxState.media[0].hiddenFiles
     for (const key in hiddenFiles) {
-        const hidden = hiddenFiles[key]
+        const hiddenFileInfo: HiddenFileInfo = hiddenFiles[key]
         const file = files.find((predicate) => predicate.name == key)
         if (
             !file ||
-            file.changed !== hidden.changed ||
-            file.size !== hidden.size
+            file.changed !== hiddenFileInfo.changed ||
+            file.size !== hiddenFileInfo.size
         ) {
             delete hiddenFiles[key]
             needsUpdating = true
@@ -314,9 +317,9 @@ function checkHiddenFilesChanged(files: IMediaFile[]) {
     }
 }
 
-const loadThumbNailImage = async (element: IThumbFile) => {
+const loadThumbNailImage = async (element: IThumbnailFile) => {
     let thumb = await ccgConnection.thumbnailRetrieve(element.name)
-    let receivedThumb: IThumbFile = {
+    let receivedThumb: IThumbnailFile = {
         name: element.name,
         changed: element.changed,
         size: element.size,
@@ -329,12 +332,16 @@ const loadThumbNailImage = async (element: IThumbFile) => {
 export const assignThumbNailListToOutputs = () => {
     reduxState.media[0].output.forEach(
         (output: IOutput, channelIndex: number) => {
-            let outputMedia = thumbNailList.filter((thumbnail: IThumbFile) => {
-                return isFolderNameEqual(
-                    thumbnail?.name,
-                    reduxState.settings[0].generics.outputFolders[channelIndex]
-                )
-            })
+            let outputMedia = thumbNailList.filter(
+                (thumbnail: IThumbnailFile) => {
+                    return isFolderNameEqual(
+                        thumbnail?.name,
+                        reduxState.settings[0].generics.outputFolders[
+                            channelIndex
+                        ]
+                    )
+                }
+            )
             if (
                 !isDeepCompareEqual(
                     reduxState.media[0].output[channelIndex].thumbnailList,

@@ -1,5 +1,5 @@
 import { updateHiddenFiles } from '../../model/reducers/mediaActions'
-import { IHiddenFileInfo } from '../../model/reducers/mediaReducer'
+import { HiddenFileInfo } from '../../model/reducers/mediaReducer'
 import { reduxState, reduxStore } from '../../model/reducers/store'
 import * as IO from '../../model/SocketIoConstants'
 import { socketServer } from '../handlers/expressHandler'
@@ -10,7 +10,7 @@ const path = require('path')
 
 export function loadHiddenFiles() {
     try {
-        const hiddenFilesFromFile: Record<string, IHiddenFileInfo> = JSON.parse(
+        const hiddenFilesFromFile: Record<string, HiddenFileInfo> = JSON.parse(
             fs.readFileSync(path.resolve('storage', 'hiddenFiles.json'))
         )
         logger.data(hiddenFilesFromFile).info('File loaded with Hidden files:')

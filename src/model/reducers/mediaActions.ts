@@ -1,7 +1,7 @@
 import {
-    IHiddenFileInfo,
+    HiddenFileInfo,
     IMediaFile,
-    IThumbFile,
+    IThumbnailFile,
     OperationMode,
 } from './mediaReducer'
 
@@ -38,7 +38,7 @@ export const updateFolderList = (folderList: string[]) => {
 
 export const updateThumbFileList = (
     channelIndex: number,
-    fileList: IThumbFile[]
+    fileList: IThumbnailFile[]
 ) => {
     return {
         type: UPDATE_THUMB_LIST,
@@ -47,9 +47,7 @@ export const updateThumbFileList = (
     }
 }
 
-export function updateHiddenFiles(
-    hiddenFiles: Record<string, IHiddenFileInfo>
-) {
+export function updateHiddenFiles(hiddenFiles: Record<string, HiddenFileInfo>) {
     return {
         type: UPDATE_HIDDEN_FILES,
         hiddenFiles: hiddenFiles,

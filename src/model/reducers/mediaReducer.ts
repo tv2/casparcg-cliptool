@@ -5,35 +5,35 @@ export enum OperationMode {
     EDIT_VISIBILITY = 'edit_visibility',
 }
 
-export interface IHiddenFileInfo {
+export interface HiddenFileInfo {
     changed: number
     size: number
 }
 
-interface ICommonFile extends IHiddenFileInfo {
+interface File extends HiddenFileInfo {
     name: string
     type: string
 }
 
-export interface IMediaFile extends ICommonFile {
+export interface IMediaFile extends File {
     frames: number
     frameTime: string
     frameRate: number
     duration: number
 }
 
-export interface IThumbFile extends ICommonFile {
-    thumbnail?: string
+export interface IThumbnailFile extends File {
+    thumbnail: string
 }
 export interface IMedia {
     output: IOutput[]
     folderList: string[]
-    hiddenFiles: Record<string, IHiddenFileInfo>
+    hiddenFiles: Record<string, HiddenFileInfo>
 }
 
 export interface IOutput {
     mediaFiles: IMediaFile[]
-    thumbnailList: IThumbFile[]
+    thumbnailList: IThumbnailFile[]
     tallyFile: string
     loopState: boolean
     mixState: boolean

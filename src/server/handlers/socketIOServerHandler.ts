@@ -24,7 +24,7 @@ import { setGenerics } from '../../model/reducers/settingsAction'
 import { IGenericSettings } from '../../model/reducers/settingsReducer'
 import { saveSettings } from '../utils/SettingsStorage'
 import {
-    IHiddenFileInfo,
+    HiddenFileInfo,
     IMedia,
     IMediaFile,
     IOutput,
@@ -148,7 +148,7 @@ export function socketIoHandlers(socket: any) {
             process.exit(0)
         })
 }
-type IHiddenFiles = Record<string, IHiddenFileInfo>
+type IHiddenFiles = Record<string, HiddenFileInfo>
 function toggleHiddenFile(
     fileName: string,
     channelIndex: number,
@@ -187,7 +187,7 @@ function hideFile(
 function buildHiddenFileMetadataFromFileName(
     fileName: string,
     channelIndex: number
-): IHiddenFileInfo {
+): HiddenFileInfo {
     const file = findFile(fileName, channelIndex)
     if (!file) {
         throw new Error(`No such file: ${fileName}`)
@@ -201,7 +201,7 @@ function findFile(fileName: string, channelIndex: number): IMediaFile {
     )
 }
 
-function getMetadata(file: IMediaFile): IHiddenFileInfo {
+function getMetadata(file: IMediaFile): HiddenFileInfo {
     return {
         changed: file.changed,
         size: file.size,

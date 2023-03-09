@@ -5,7 +5,7 @@ import { reduxState } from '../../model/reducers/store'
 import { secondsToTimeCode } from '../util/TimeCodeToString'
 
 //Redux:
-import { IHiddenFileInfo, IMediaFile, IOutput, IThumbFile, OperationMode } from '../../model/reducers/mediaReducer'
+import { HiddenFileInfo, IMediaFile, IOutput, IThumbnailFile, OperationMode } from '../../model/reducers/mediaReducer'
 import { socket } from '../util/SocketClientHandlers'
 import { PGM_LOAD, PGM_PLAY, TOGGLE_THUMBNAIL_VISIBILITY } from '../../model/SocketIoConstants'
 import { useSelector } from 'react-redux'
@@ -17,22 +17,26 @@ interface ThumbnailProps {
 // TODO: during UT-210, figure out the correct type to apply instead of 'any'.
 function getActiveOutput(store: any, channelIndex: number = -1): IOutput {
     const activeTab: number = channelIndex === -1 
-    ? reduxState.appNav[0].activeTab 
-    : channelIndex
+        ? reduxState.appNav[0].activeTab 
+        : channelIndex
     return store.media[0].output[activeTab]
 }
 
-export function findThumbPix(fileName: string, channelIndex: number): string {
+export function findThumbnail(fileName: string, channelIndex: number): string {
     const thumb = getActiveOutput(reduxState, channelIndex)?.thumbnailList
         .find(
-            (item: IThumbFile) => item.name.toUpperCase() === (fileName.toUpperCase())
+            (item: IThumbnailFile) => item.name.toUpperCase() === (fileName.toUpperCase())
         )
     return thumb?.thumbnail ?? ''
 }
 
-export const isThumbWithTally = (thumbName: string): boolean => {
-    // convert to uppercase, handle windows double slash + backslash and remove file extension:
-    const tallyFileName = getActiveOutput(reduxState)
+function isThumbnailWithTallyOnAnyOutput(thumbnailName: string): boolean {
+    return reduxState.media[0].output.some(
+        output => getCleanTallyFile(output) === thumbnailName)
+}
+
+function getCleanTallyFile(output: IOutput): string {
+    const tallyFileName = output
         .tallyFile
         .toUpperCase()
         .replace(/\\/g, '/')
@@ -45,7 +49,11 @@ export const isThumbWithTally = (thumbName: string): boolean => {
             .replace(/\\/g, '/') + '/',
         ''
     )
+    return tallyNoMediaPath
+}
 
+const isThumbWithTally = (thumbName: string): boolean => {
+    const tallyNoMediaPath = getCleanTallyFile(getActiveOutput(reduxState))
     return tallyNoMediaPath === thumbName
 }
 
@@ -54,7 +62,7 @@ export function Thumbnail(): JSX.Element {
     const files: IMediaFile[] = useSelector(
         (storeUpdate: any) => getActiveOutput(storeUpdate)?.mediaFiles
     ) ?? []
-    const hiddenFiles: Record<string, IHiddenFileInfo> = useSelector(
+    const hiddenFiles: Record<string, HiddenFileInfo> = useSelector(
         (storeUpdate: any) => storeUpdate.media[0].hiddenFiles
     ) ?? {}
     const isInEditVisibilityMode = useSelector(
@@ -91,8 +99,11 @@ function handleClickMedia(fileName: string): void {
 }
 
 function toggleVisibility(fileName: string) {
-    if (isThumbWithTally(fileName))
+    if (isThumbnailWithTallyOnAnyOutput(fileName)) {
+        alert('Unable to hide, as the file is in use somewhere.')
         return
+    }
+        
     socket.emit(TOGGLE_THUMBNAIL_VISIBILITY, reduxState.appNav[0].activeTab, fileName)
 }
 
@@ -110,7 +121,7 @@ const RenderThumb = (props: ThumbnailProps) => {
                 .tallyFile
     )
 
-    const hiddenFiles: Record<string, IHiddenFileInfo> = useSelector(
+    const hiddenFiles: Record<string, HiddenFileInfo> = useSelector(
         (storeUpdate: any) => 
             storeUpdate.media[0].hiddenFiles
     ) ?? {}
@@ -168,7 +179,7 @@ const RenderThumbPix = (props: ThumbnailProps) => {
         (storeUpdate: any) => getActiveOutput(storeUpdate)
             .mediaFiles.find((predicate: IMediaFile) => predicate.name === props.file.name)
     )
-    const url = findThumbPix(file.name, reduxState.appNav[0].activeTab || 0)
+    const url = findThumbnail(file.name, reduxState.appNav[0].activeTab || 0)
     const classNames = [
         'thumbnailImage',
         isThumbWithTally(file.name) ? 'selected-thumb' : ''
