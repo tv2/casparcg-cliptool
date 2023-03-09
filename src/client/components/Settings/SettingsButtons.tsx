@@ -7,8 +7,11 @@ import * as IO from '../../../model/SocketIoConstants'
 import { useSelector } from "react-redux";
 import { TOGGLE_SHOW_SETTINGS } from "../../../model/reducers/appNavAction";
 import '../../css/Settings.css'
+import { GenericSettings } from "../../../model/reducers/settingsReducer";
 
 interface SettingsButtonsProps {
+  // TODO: Figure out a proper type.
+  settings: GenericSettings 
   specificChannel: number
 }
 
@@ -25,7 +28,7 @@ export default function SettingsButtons(props: SettingsButtonsProps): JSX.Elemen
       <div className="Settings-channel-form">
         <button
             className="save-button"
-            onClick={handleSave}
+            onClick={() => handleSave(props.settings)}
         >
             SAVE SETTINGS
         </button>
@@ -56,7 +59,10 @@ export default function SettingsButtons(props: SettingsButtonsProps): JSX.Elemen
 }
 
 function handleDiscard(): void {
-  toggleSettingsPage()
+   // TODO: improve logic to check if changes have actually been made.
+  if (window.confirm('Changes have been made, are you sure you want to discard them?')) {
+    toggleSettingsPage()
+  }  
 }
 
 function toggleSettingsPage(): void {
@@ -81,8 +87,12 @@ function handleEditVisibilityMode(): void {
   )
 }
 
-function handleSave(): void {
-  socket.emit(IO.SET_GENERICS, reduxState.settings[0].generics)
+function handleSave(settings: GenericSettings ): void {
+  // TODO: improve logic to check if changes have actually been made.
+  if (window.confirm('Changes have been made, do you want to save them?')) {
+    socket.emit(IO.SET_GENERICS, settings)
+    toggleSettingsPage()
+  }  
 }
 
 function handleRestart(): void {

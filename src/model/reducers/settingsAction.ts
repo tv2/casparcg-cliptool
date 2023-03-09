@@ -1,4 +1,4 @@
-import { IGenericSettings, ITabData } from './settingsReducer'
+import { GenericSettings, TabData } from './settingsReducer'
 import { reduxState } from './store'
 
 export const UPDATE_SETTINGS = 'updateSettings'
@@ -15,7 +15,7 @@ export const updateSettings = (channels, path: string) => {
 }
 
 export const setTabData = (amount: number) => {
-    let tabData: ITabData[] = []
+    let tabData: TabData[] = []
     for (let i = 0; i < amount; i++) {
         tabData.push({
             key: String(i),
@@ -30,7 +30,7 @@ export const setTabData = (amount: number) => {
     }
 }
 
-export const setGenerics = (generics: IGenericSettings) => {
+export const setGenerics = (generics: GenericSettings) => {
     return {
         type: SET_GENERICS,
         generics: generics,

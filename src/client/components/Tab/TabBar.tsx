@@ -1,11 +1,11 @@
 import React from 'react'
-import { ITabData } from '../../../model/reducers/settingsReducer'
+import { TabData } from '../../../model/reducers/settingsReducer'
 
 import '../../css/Tab.css'
 import { Tab } from './Tab'
 
 interface TabBarProps {
-  tabData: ITabData[]
+  tabData: TabData[]
   selectedTab: number
 }
 

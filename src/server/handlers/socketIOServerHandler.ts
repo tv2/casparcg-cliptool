@@ -21,7 +21,7 @@ import {
     updateHiddenFiles,
 } from '../../model/reducers/mediaActions'
 import { setGenerics } from '../../model/reducers/settingsAction'
-import { IGenericSettings } from '../../model/reducers/settingsReducer'
+import { GenericSettings } from '../../model/reducers/settingsReducer'
 import { saveSettings } from '../utils/SettingsStorage'
 import {
     HiddenFileInfo,
@@ -145,7 +145,7 @@ export function socketIoHandlers(socket: any) {
                 stopOverlay(channelIndex, 10)
             }
         })
-        .on(IO.SET_GENERICS, (generics: IGenericSettings) => {
+        .on(IO.SET_GENERICS, (generics: GenericSettings) => {
             logger.info('Updating and storing generic settings serverside.')
             reduxStore.dispatch(setGenerics(generics))
             saveSettings()

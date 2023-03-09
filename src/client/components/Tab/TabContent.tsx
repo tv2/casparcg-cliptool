@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { setActiveTab } from '../../../model/reducers/appNavAction'
-import { ITabData } from '../../../model/reducers/settingsReducer'
+import { TabData } from '../../../model/reducers/settingsReducer'
 import { reduxStore } from '../../../model/reducers/store'
 
 import '../../css/Tab.css'
@@ -10,7 +10,7 @@ import { Thumbnail } from '../Thumbnail/Thumbnail'
 const isSpecificChannel = new URLSearchParams(window.location.search).has('channel')
 
 interface TabBarProps {
-  tabData: ITabData[]
+  tabData: TabData[]
   selectedTab: number
 }
 

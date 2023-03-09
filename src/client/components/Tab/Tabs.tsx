@@ -1,6 +1,6 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
-import { ITabData } from '../../../model/reducers/settingsReducer'
+import { TabData } from '../../../model/reducers/settingsReducer'
 
 import TabBar from './TabBar'
 import TabContent from './TabContent'
@@ -8,7 +8,7 @@ import TabContent from './TabContent'
 import '../../css/Tab.css'
 
 export default function Tabs(): JSX.Element {
-  const tabData: ITabData[] = useSelector((storeUpdate: any) => storeUpdate.settings[0].tabData)
+  const tabData: TabData[] = useSelector((storeUpdate: any) => storeUpdate.settings[0].tabData)
   const selectedTab: number = useSelector((storeUpdate: any) => storeUpdate.appNav[0].activeTab)
 
   return (

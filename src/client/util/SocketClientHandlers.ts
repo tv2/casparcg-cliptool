@@ -27,7 +27,7 @@ import {
     setTabData,
     updateSettings,
 } from '../../model/reducers/settingsAction'
-import { ISettings } from '../../model/reducers/settingsReducer'
+import { Settings } from '../../model/reducers/settingsReducer'
 import {
     setConnectionStatus,
     SET_CONNECTION_STATUS,
@@ -104,7 +104,7 @@ socket.on(
     }
 )
 
-socket.on(IO.SETTINGS_UPDATE, (payload: ISettings) => {
+socket.on(IO.SETTINGS_UPDATE, (payload: Settings) => {
     reduxStore.dispatch(setNumberOfOutputs(payload.ccgConfig.channels.length))
     reduxStore.dispatch(setGenerics(payload.generics))
     reduxStore.dispatch(

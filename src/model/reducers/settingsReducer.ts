@@ -1,22 +1,22 @@
 import { getVideoFormat, VideoFormat } from '../videoFormat'
 import { OperationMode } from './mediaReducer'
 import { SET_GENERICS, SET_TAB_DATA, UPDATE_SETTINGS } from './settingsAction'
-export interface ISettings {
-    ccgConfig: ICcgConfig
-    tabData: ITabData[]
-    generics: IGenericSettings
+export interface Settings {
+    ccgConfig: CcgConfig
+    tabData: TabData[]
+    generics: GenericSettings
 }
-export interface ITabData {
+export interface TabData {
     key: string
     title: string
 }
 
-export interface ICcgConfig {
-    channels: ICcgConfigChannel[]
+export interface CcgConfig {
+    channels: CcgConfigChannel[]
     path: string
 }
 
-export interface ICcgConfigChannel {
+export interface CcgConfigChannel {
     _type?: string
     videoMode?: string
     videoFormat?: VideoFormat
@@ -25,26 +25,30 @@ export interface ICcgConfigChannel {
     channelLayout?: string
 }
 
-export interface IGenericSettings {
-    transistionTime: number
+export interface OutputSettings {
+    label: string
+    folder: string
+    shouldScale: boolean
+    scaleX: number
+    scaleY: number
+    webUrl: string
+    loopState: boolean
+    mixState: boolean
+    manualStartState: boolean
+    webState: boolean
+    operationMode: OperationMode
+}
+
+export interface GenericSettings {
+    transitionTime: number
     ccgIp: string
     ccgAmcpPort: number
     ccgDefaultLayer: number
     ccgOscPort: number
-    outputLabels: string[]
-    outputFolders: string[]
-    scale: boolean[]
-    scaleX: number[]
-    scaleY: number[]
-    webURL: string[]
-    startupLoopState: boolean[]
-    startupMixState: boolean[]
-    startupManualStartState: boolean[]
-    startupWebState: boolean[]
-    startupOperationMode: OperationMode[]
+    outputs: OutputSettings[]
 }
 
-export const defaultSettingsReducerState = (): ISettings[] => {
+export const defaultSettingsReducerState = (): Settings[] => {
     return [
         {
             ccgConfig: {
@@ -53,66 +57,116 @@ export const defaultSettingsReducerState = (): ISettings[] => {
             },
             tabData: [],
             generics: {
-                transistionTime: 16,
+                transitionTime: 16,
                 ccgIp: '0.0.0.0',
                 ccgAmcpPort: 5250,
                 ccgOscPort: 5253,
                 ccgDefaultLayer: 10,
-                outputLabels: ['', '', '', '', '', '', '', ''],
-                outputFolders: ['', '', '', '', '', '', '', ''],
-                scale: [false, false, false, false, false, false, false, false],
-                scaleX: [1920, 1920, 1920, 1920, 1920, 1920, 1920, 1920],
-                scaleY: [1080, 1080, 1080, 1080, 1080, 1080, 1080, 1080],
-                webURL: ['', '', '', '', '', '', '', ''],
-                startupLoopState: [
-                    false,
-                    false,
-                    false,
-                    false,
-                    false,
-                    false,
-                    false,
-                    false,
-                ],
-                startupMixState: [
-                    false,
-                    false,
-                    false,
-                    false,
-                    false,
-                    false,
-                    false,
-                    false,
-                ],
-                startupManualStartState: [
-                    false,
-                    false,
-                    false,
-                    false,
-                    false,
-                    false,
-                    false,
-                    false,
-                ],
-                startupWebState: [
-                    false,
-                    false,
-                    false,
-                    false,
-                    false,
-                    false,
-                    false,
-                    false,
-                ],
-                startupOperationMode: [
-                    OperationMode.CONTROL,
-                    OperationMode.CONTROL,
-                    OperationMode.CONTROL,
-                    OperationMode.CONTROL,
-                    OperationMode.CONTROL,
-                    OperationMode.CONTROL,
-                    OperationMode.CONTROL,
-                    OperationMode.CONTROL,
+                outputs: [
+                    {
+                        label: '',
+                        folder: '',
+                        shouldScale: false,
+                        scaleX: 1920,
+                        scaleY: 1080,
+                        loopState: false,
+                        mixState: false,
+                        manualStartState: false,
+                        webState: false,
+                        webUrl: '',
+                        operationMode: OperationMode.CONTROL,
+                    },
+                    {
+                        label: '',
+                        folder: '',
+                        shouldScale: false,
+                        scaleX: 1920,
+                        scaleY: 1080,
+                        loopState: false,
+                        mixState: false,
+                        manualStartState: false,
+                        webState: false,
+                        webUrl: '',
+                        operationMode: OperationMode.CONTROL,
+                    },
+                    {
+                        label: '',
+                        folder: '',
+                        shouldScale: false,
+                        scaleX: 1920,
+                        scaleY: 1080,
+                        loopState: false,
+                        mixState: false,
+                        manualStartState: false,
+                        webState: false,
+                        webUrl: '',
+                        operationMode: OperationMode.CONTROL,
+                    },
+                    {
+                        label: '',
+                        folder: '',
+                        shouldScale: false,
+                        scaleX: 1920,
+                        scaleY: 1080,
+                        loopState: false,
+                        mixState: false,
+                        manualStartState: false,
+                        webState: false,
+                        webUrl: '',
+                        operationMode: OperationMode.CONTROL,
+                    },
+                    {
+                        label: '',
+                        folder: '',
+                        shouldScale: false,
+                        scaleX: 1920,
+                        scaleY: 1080,
+                        loopState: false,
+                        mixState: false,
+                        manualStartState: false,
+                        webState: false,
+                        webUrl: '',
+                        operationMode: OperationMode.CONTROL,
+                    },
+                    {
+                        label: '',
+                        folder: '',
+                        shouldScale: false,
+                        scaleX: 1920,
+                        scaleY: 1080,
+                        loopState: false,
+                        mixState: false,
+                        manualStartState: false,
+                        webState: false,
+                        webUrl: '',
+                        operationMode: OperationMode.CONTROL,
+                    },
+                    {
+                        label: '',
+                        folder: '',
+                        shouldScale: false,
+                        scaleX: 1920,
+                        scaleY: 1080,
+                        loopState: false,
+                        mixState: false,
+                        manualStartState: false,
+                        webState: false,
+                        webUrl: '',
+                        operationMode: OperationMode.CONTROL,
+                    },
+                    {
+                        label: '',
+                        folder: '',
+                        shouldScale: false,
+                        scaleX: 1920,
+                        scaleY: 1080,
+                        loopState: false,
+                        mixState: false,
+                        manualStartState: false,
+                        webState: false,
+                        webUrl: '',
+                        operationMode: OperationMode.CONTROL,
+                    },
                 ],
             },
         },
@@ -120,8 +174,8 @@ export const defaultSettingsReducerState = (): ISettings[] => {
 }
 
 function updateChannelConfigWithVideoFormat(
-    channelConfig: ICcgConfigChannel
-): ICcgConfigChannel {
+    channelConfig: CcgConfigChannel
+): CcgConfigChannel {
     return {
         ...channelConfig,
         videoFormat: getVideoFormat(channelConfig.videoMode),
@@ -129,7 +183,7 @@ function updateChannelConfigWithVideoFormat(
 }
 
 export const settings = (
-    state: ISettings[] = defaultSettingsReducerState(),
+    state: Settings[] = defaultSettingsReducerState(),
     action
 ) => {
     let nextState = { ...state }
@@ -146,17 +200,7 @@ export const settings = (
             return nextState
         case SET_GENERICS:
             nextState[0].generics = { ...action.generics }
-            nextState[0].generics.startupLoopState =
-                nextState[0].generics.startupLoopState ?? []
-            nextState[0].generics.startupMixState =
-                nextState[0].generics.startupMixState ?? []
-            nextState[0].generics.startupManualStartState =
-                nextState[0].generics.startupManualStartState ?? []
-            nextState[0].generics.startupWebState =
-                nextState[0].generics.startupWebState ?? []
-            nextState[0].generics.startupOperationMode =
-                nextState[0].generics.startupOperationMode ?? []
-            nextState[0].generics.webURL = nextState[0].generics.webURL ?? []
+            nextState[0].generics.outputs = nextState[0].generics.outputs ?? []
             return nextState
         default:
             return nextState

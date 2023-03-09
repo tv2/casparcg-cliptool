@@ -66,7 +66,7 @@ export default function GeneralSettings(): JSX.Element {
                     type="number"
                     value={
                         reduxState.settings[0].generics
-                            .transistionTime
+                            .transitionTime
                     }
                     onChange={handleChange}
                 />

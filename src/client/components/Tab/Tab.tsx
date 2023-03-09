@@ -1,12 +1,12 @@
 import React from "react"
 import { setActiveTab } from "../../../model/reducers/appNavAction"
-import { ITabData } from "../../../model/reducers/settingsReducer"
+import { TabData } from "../../../model/reducers/settingsReducer"
 import { reduxStore } from "../../../model/reducers/store"
 
 import '../../css/Tab.css'
 
 interface TabProps {
-  tabItem: ITabData
+  tabItem: TabData
   isSelected: boolean
   index: number
   totalTabs: number
