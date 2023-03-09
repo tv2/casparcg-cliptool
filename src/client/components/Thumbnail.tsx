@@ -179,6 +179,8 @@ const RenderThumbPix = (props: ThumbnailProps) => {
         (storeUpdate: any) => getActiveOutput(storeUpdate)
             .mediaFiles.find((predicate: IMediaFile) => predicate.name === props.file.name)
     )
+    useSelector((storeUpdate: any) => getActiveOutput(storeUpdate)
+        .thumbnailList)
     const url = findThumbnail(file.name, reduxState.appNav[0].activeTab || 0)
     const classNames = [
         'thumbnailImage',
