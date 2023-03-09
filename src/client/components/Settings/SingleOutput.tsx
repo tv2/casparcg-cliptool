@@ -2,6 +2,7 @@ import React from "react"
 import { reduxState, reduxStore } from "../../../model/reducers/store"
 import { setGenerics } from '../../../model/reducers/settingsAction'
 import { ICcgConfigChannel } from "../../../model/reducers/settingsReducer"
+import '../../css/Settings.css'
 
 interface SingleOutputProps {
   configChannel?: ICcgConfigChannel

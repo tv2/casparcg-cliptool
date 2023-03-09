@@ -1,7 +1,7 @@
 import React from "react"
 import { useSelector } from "react-redux"
 import { HiddenFileInfo, IMediaFile, OperationMode } from "../../../model/reducers/mediaReducer"
-import MediaService from "../../services/mediaService";
+import mediaService from "../../services/mediaService";
 import ThumbnailButton from "./ThumbnailButton";
 import ThumbnailPicture from "./ThumbnailPicture";
 import TimeCode from "./TimeCode";
@@ -14,7 +14,7 @@ interface ThumbnailUsingImageProps {
 export default function ThumbnailUsingImage(props: ThumbnailUsingImageProps): JSX.Element {
   // Redux hook:
   useSelector(
-    (storeUpdate: any) => MediaService.getOutput(storeUpdate)
+    (storeUpdate: any) => mediaService.getOutput(storeUpdate)
             .tallyFile
   )
 
@@ -32,7 +32,7 @@ export default function ThumbnailUsingImage(props: ThumbnailUsingImageProps): JS
     <div className={classNames}>
         <ThumbnailPicture file={props.file} />
         <ThumbnailButton file={props.file} />
-        {MediaService.isThumbnailWithTally(props.file.name) ? (
+        {mediaService.isThumbnailWithTally(props.file.name) ? (
             <TimeCode file={props.file} />
         ) : (
             ''

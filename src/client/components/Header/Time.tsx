@@ -2,7 +2,7 @@ import React from "react"
 import { useSelector } from "react-redux"
 import { IOutput } from "../../../model/reducers/mediaReducer"
 import { reduxState } from "../../../model/reducers/store";
-import MediaService from "../../services/mediaService";
+import mediaService from "../../services/mediaService";
 
 import '../../css/App-header.css'
 
@@ -20,14 +20,14 @@ export default function Time() {
 
     let cleanTallyFile: string = ''
     try {
-        cleanTallyFile = MediaService.getCleanTallyFile(output)
+        cleanTallyFile = mediaService.getCleanTallyFile(output)
     } catch {}
-    const thumbnailUrl = MediaService.findThumbnail(cleanTallyFile, activeTab)
+    const thumbnailUrl = mediaService.findThumbnail(cleanTallyFile, activeTab)
     
     return (
         <div className="App-timer-background">
             <button className="App-header-pgm-counter">
-                {MediaService.secondsToTimeCode(
+                {mediaService.secondsToTimeCode(
                     output?.time,
                     reduxState.settings[0].ccgConfig.channels[activeTab]?.videoFormat?.frameRate
                 )}

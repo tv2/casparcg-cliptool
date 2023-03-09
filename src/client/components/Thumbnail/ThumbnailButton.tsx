@@ -2,7 +2,7 @@ import React from "react"
 import { IMediaFile, OperationMode } from "../../../model/reducers/mediaReducer"
 import { reduxState } from "../../../model/reducers/store"
 import { PGM_LOAD, PGM_PLAY, TOGGLE_THUMBNAIL_VISIBILITY } from "../../../model/SocketIoConstants";
-import MediaService from "../../services/mediaService";
+import mediaService from "../../services/mediaService";
 import { socket } from "../../util/SocketClientHandlers";
 import '../../css/Thumbnail.css'
 
@@ -27,7 +27,7 @@ export default function ThumbnailButton(props: ThumbnailButtonProps): JSX.Elemen
 }
 
 function handleClickMedia(fileName: string): void {    
-  const operationMode = MediaService.getOutput(reduxState)?.operationMode
+  const operationMode = mediaService.getOutput(reduxState)?.operationMode
   switch (operationMode) {
       case OperationMode.EDIT_VISIBILITY: 
           emitToggleVisibility(fileName)
@@ -40,17 +40,17 @@ function handleClickMedia(fileName: string): void {
 }
 
 function emitToggleVisibility(fileName: string): void {
-  if (MediaService.isThumbnailWithTallyOnAnyOutput(fileName)) {
+  if (mediaService.isThumbnailWithTallyOnAnyOutput(fileName)) {
       alert('Unable to hide, as the file is in use somewhere.')
       return
   }
       
-  socket.emit(TOGGLE_THUMBNAIL_VISIBILITY, MediaService.getActiveTab(), fileName)
+  socket.emit(TOGGLE_THUMBNAIL_VISIBILITY, mediaService.getActiveTab(), fileName)
 }
 
 function emitPlayFile(fileName: string ): void {
-  const event = !MediaService.getOutput(reduxState)?.manualStartState 
+  const event = !mediaService.getOutput(reduxState)?.manualStartState 
       ? PGM_PLAY 
       : PGM_LOAD
-  socket.emit(event, MediaService.getActiveTab(), fileName)
+  socket.emit(event, mediaService.getActiveTab(), fileName)
 }

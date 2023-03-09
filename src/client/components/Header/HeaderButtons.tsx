@@ -4,7 +4,7 @@ import { socket } from "../../util/SocketClientHandlers";
 import ToggleButton from "./ToggleButton";
 import * as IO from '../../../model/SocketIoConstants'
 import { useSelector } from "react-redux";
-import MediaService from "../../services/mediaService";
+import mediaService from "../../services/mediaService";
 
 export default function HeaderButtons() {
   const activeTab: number = useSelector(
@@ -58,7 +58,7 @@ function handleLoopStatus(activeTab: number) {
   socket.emit(
       IO.SET_LOOP_STATE,
       activeTab,
-      !MediaService.getOutput(reduxState, activeTab).loopState
+      !mediaService.getOutput(reduxState, activeTab).loopState
   )
 }
 
@@ -66,7 +66,7 @@ function handleMixStatus(activeTab: number) {
   socket.emit(
       IO.SET_MIX_STATE,
       activeTab,
-      !MediaService.getOutput(reduxState, activeTab).mixState
+      !mediaService.getOutput(reduxState, activeTab).mixState
   )
 }
 
@@ -74,7 +74,7 @@ function handleWebState(activeTab: number) {
   socket.emit(
       IO.SET_WEB_STATE,
       activeTab,
-      !MediaService.getOutput(reduxState, activeTab).webState
+      !mediaService.getOutput(reduxState, activeTab).webState
   )
 }
 
@@ -82,6 +82,6 @@ function handleManualStartStatus(activeTab: number) {
   socket.emit(
       IO.SET_MANUAL_START_STATE,
       activeTab,
-      !MediaService.getOutput(reduxState, activeTab).manualStartState
+      !mediaService.getOutput(reduxState, activeTab).manualStartState
   )
 }

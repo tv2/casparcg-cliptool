@@ -5,7 +5,7 @@ class MediaService {
     // TODO: during UT-210, figure out the correct type to apply instead of 'any'.
     public getOutput(store: any, channelIndex: number = -1): IOutput {
         const activeTab: number =
-            channelIndex === -1 ? reduxState.appNav[0].activeTab : channelIndex
+            channelIndex === -1 ? this.getActiveTab() : channelIndex
         return store.media[0].output[activeTab]
     }
 
@@ -80,5 +80,5 @@ class MediaService {
     }
 }
 
-const instance: MediaService = new MediaService()
-export default instance
+const mediaService: MediaService = new MediaService()
+export default mediaService

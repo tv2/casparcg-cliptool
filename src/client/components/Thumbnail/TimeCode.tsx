@@ -1,7 +1,7 @@
 import React from "react";
 import { useSelector } from "react-redux";
 import { IMediaFile } from "../../../model/reducers/mediaReducer";
-import MediaService from "../../services/mediaService";
+import mediaService from "../../services/mediaService";
 
 import '../../css/Thumbnail.css'
 
@@ -13,11 +13,11 @@ interface TimeCodeProps {
 export default function TimeCode(props: TimeCodeProps): JSX.Element {
   // Redux hook:
   const time: [number, number] = useSelector(
-    (storeUpdate: any) => MediaService.getOutput(storeUpdate).time
+    (storeUpdate: any) => mediaService.getOutput(storeUpdate).time
   )
   const frameRate: number = useSelector(
       (storeUpdate: any) => storeUpdate.settings[0].ccgConfig
-          .channels[MediaService.getActiveTab()]?.videoFormat.frameRate
+          .channels[mediaService.getActiveTab()]?.videoFormat.frameRate
   )
 
   const classNames: string = [
@@ -27,8 +27,8 @@ export default function TimeCode(props: TimeCodeProps): JSX.Element {
 
   return (
     <a className={classNames}>
-        {MediaService.isThumbnailWithTally(props.file.name)
-            ? MediaService.secondsToTimeCode(time, frameRate)
+        {mediaService.isThumbnailWithTally(props.file.name)
+            ? mediaService.secondsToTimeCode(time, frameRate)
             : ''}
     </a>
   )

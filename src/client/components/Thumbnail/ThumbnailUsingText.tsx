@@ -1,7 +1,7 @@
 import React from "react";
 import { useSelector } from "react-redux"
 import { IMediaFile } from "../../../model/reducers/mediaReducer";
-import MediaService from "../../services/mediaService";
+import mediaService from "../../services/mediaService";
 
 import '../../css/Thumbnail.css'
 import ThumbnailButton from "./ThumbnailButton";
@@ -14,10 +14,10 @@ interface ThumbnailUsingTextProps {
 export default function ThumbnailUsingText(props: ThumbnailUsingTextProps): JSX.Element {
   // Redux hook:
   useSelector(
-    (storeUpdate: any) => MediaService.getOutput(storeUpdate)
+    (storeUpdate: any) => mediaService.getOutput(storeUpdate)
         .tallyFile
   )
-  const isTallyFile: boolean = MediaService.isThumbnailWithTally(props.file.name)
+  const isTallyFile: boolean = mediaService.isThumbnailWithTally(props.file.name)
   const classNames: string = [
     'thumbnail-text-view',
     isTallyFile ? 'selected-thumb' : ''
