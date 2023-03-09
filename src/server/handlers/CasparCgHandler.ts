@@ -137,7 +137,7 @@ const dispatchConfig = (config: any) => {
         reduxStore.dispatch(
             setManualStart(
                 index,
-                reduxState.settings[0].generics.startupManualstartState[
+                reduxState.settings[0].generics.startupManualStartState[
                     index
                 ] ?? false
             )
