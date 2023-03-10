@@ -51,7 +51,7 @@ export function saveHiddenFiles() {
         'utf8',
         (error) => {
             if (error) {
-                logger.data(error).error('Error writing file:')
+                logger.data(error).error('Error writing hiddenFiles file:')
             } else {
                 logger.data(stringifiedHiddenFiles).trace('Hidden files saved')
             }
