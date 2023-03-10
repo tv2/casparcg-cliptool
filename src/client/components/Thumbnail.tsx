@@ -35,7 +35,7 @@ function isThumbnailWithTallyOnAnyOutput(thumbnailName: string): boolean {
         output => getCleanTallyFile(output) === thumbnailName)
 }
 
-function getCleanTallyFile(output: IOutput): string {
+export function getCleanTallyFile(output: IOutput): string {
     const tallyFileName = output
         .tallyFile
         .toUpperCase()

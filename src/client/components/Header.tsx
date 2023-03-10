@@ -6,7 +6,7 @@ import { secondsToTimeCode } from '../util/TimeCodeToString'
 import { TOGGLE_SHOW_SETTINGS } from '../../model/reducers/appNavAction'
 
 import * as IO from '../../model/SocketIoConstants'
-import { findThumbnail } from './Thumbnail'
+import { findThumbnail, getCleanTallyFile } from './Thumbnail'
 
 //CSS files:
 import '../css/App.css'
@@ -24,11 +24,19 @@ const RenderTime = () => {
         (storeUpdate: any) => storeUpdate.appNav[0].activeTab)
     const output: IOutput = useSelector(
         (storeUpdate: any) => storeUpdate.media[0].output[activeTab])
-    const tallyFile: string = useSelector(
+    useSelector(
         (storeUpdate: any) => storeUpdate.media[0].output[activeTab]?.tallyFile)
     useSelector(
         (storeUpdate: any) => storeUpdate.media[0].output[activeTab]?.time[0])
+    useSelector(
+        (storeUpdate: any) => storeUpdate.media[0].output[activeTab]?.thumbnailList)
 
+    let cleanTallyFile: string = ''
+    try {
+        cleanTallyFile = getCleanTallyFile(output)
+    } catch {}
+    const thumbnailUrl = findThumbnail(cleanTallyFile, activeTab)
+    
     return (
         <div className="App-timer-background">
             <button className="App-header-pgm-counter">
@@ -38,7 +46,7 @@ const RenderTime = () => {
                 )}
             </button>
             <img
-                src={findThumbnail(tallyFile, activeTab)}
+                src={thumbnailUrl}
                 className="App-header-pgm-thumbnail-image"
             />
         </div>
