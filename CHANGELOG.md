@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.15.0](https://github.com/olzzon/CasparCG-ClipTool/compare/v2.13.1...v2.15.0) (2023-03-10)
+
+### Features
+
+-   button logic and settings for http overlay ([2c0509b](https://github.com/olzzon/CasparCG-ClipTool/commit/2c0509bcc67aa22615e7f4d401b34db56036c56f))
+-   change startupWebState check to return if not ([416c494](https://github.com/olzzon/CasparCG-ClipTool/commit/416c494287e6d03e24f7c7adf096fdd5539aa0a0))
+-   Load overlay if startupstate is activated ([445335a](https://github.com/olzzon/CasparCG-ClipTool/commit/445335ac6b51c839e82f40c3e974331e3e7d06e8))
+-   Overlay graphics from http webpage ([44ec73e](https://github.com/olzzon/CasparCG-ClipTool/commit/44ec73e270b5dada9730faa8b35e690b2edb8d81))
+-   setup model for web/http overlay ([0d4720c](https://github.com/olzzon/CasparCG-ClipTool/commit/0d4720c4167a963af76d34537b66c5456ba8fa61))
+
+### Bug Fixes
+
+-   create webURL array if not in received settings. ([51a5bb8](https://github.com/olzzon/CasparCG-ClipTool/commit/51a5bb8dfa8021659472f78f07e76cb84ecf7032))
+-   make webURL optional to avoid crash when loading settings from old version ([e38be54](https://github.com/olzzon/CasparCG-ClipTool/commit/e38be54a2bbe9f46381672ed0b610f398e4248c0))
+-   OSC Error was logged as info ([5f82cdd](https://github.com/olzzon/CasparCG-ClipTool/commit/5f82cdd00e3e81619d5df3a4577a9a02e0ddba62))
+-   Updated incorrect log statements and made logs more consistent. ([d273dde](https://github.com/olzzon/CasparCG-ClipTool/commit/d273dde4baac0d684d47e82a577766d185b4ca0a))
+
 ### [2.14.2](https://github.com/olzzon/CasparCG-ClipTool/compare/v2.14.1...v2.14.2) (2022-12-05)
 
 ### Bug Fixes
