@@ -6,6 +6,7 @@ import { socket } from '../util/SocketClientHandlers'
 import * as IO from '../../model/SocketIoConstants'
 import { TOGGLE_SHOW_SETTINGS } from '../../model/reducers/appNavAction'
 import { OperationMode } from '../../model/reducers/mediaReducer'
+import { useSelector } from 'react-redux'
 
 // Check if URL has specifiet a channel:
 const channel = new URLSearchParams(window.location.search).get('channel')
@@ -14,47 +15,40 @@ const specificChannel = parseInt(channel) || 0
 const OFF_COLOR = { backgroundColor: 'rgb(41, 41, 41)' }
 const ON_COLOR = { backgroundColor: 'rgb(28, 115, 165)' }
 
-//Set style for Select dropdown component:
-const selectorColorStyles = {
-    control: (styles) => ({
-        ...styles,
-        backgroundColor: '#676767',
-        color: 'white',
-        border: 0,
-    }),
-    option: (styles) => {
-        return {
-            backgroundColor: '#AAAAAA',
-            color: 'white',
-        }
-    },
-    singleValue: (styles) => ({ ...styles, color: 'white' }),
-}
-
-function emitSetOperationMode() {
+function handleEditVisibilityMode(): void {
+    const activeTab: number = reduxState.appNav[0].activeTab
+    const output = reduxState.media[0].output[activeTab]
+    if (output.operationMode !== OperationMode.EDIT_VISIBILITY) {
+        toggleSettingsPage()
+    }
     socket.emit(
         IO.SET_OPERATION_MODE, 
-        reduxState.appNav[0].activeTab, 
-        reduxState.media[0].output[reduxState.appNav[0].activeTab]
+        activeTab, 
+        output
             .operationMode !== OperationMode.EDIT_VISIBILITY 
             ? OperationMode.EDIT_VISIBILITY 
             : OperationMode.CONTROL
     )
 }
 
-function getEditVisibilityStyle(): { backgroundColor: string } {
-    return reduxState.media[0].output[reduxState.appNav[0].activeTab]?.operationMode === OperationMode.EDIT_VISIBILITY
+function toggleSettingsPage(): void {
+    reduxStore.dispatch({
+        type: TOGGLE_SHOW_SETTINGS,
+    })
+}
+
+function getEditVisibilityStyle(operationMode: OperationMode): { backgroundColor: string } {
+    return operationMode === OperationMode.EDIT_VISIBILITY
         ? ON_COLOR
         : OFF_COLOR
 }
 
-export const SettingsPage = () => {
-    const handleSettingsPage = () => {
-        reduxStore.dispatch({
-            type: TOGGLE_SHOW_SETTINGS,
-        })
-    }
-
+export const SettingsPage = () => {        
+    const operationMode = useSelector(
+        (storeUpdate: any) => 
+            storeUpdate.media[0].output[reduxState.appNav[0].activeTab]?.operationMode)
+    useSelector((storeUpdate: any) => storeUpdate.settings[0].generics)
+    
     const handleChange = (event) => {
         let generics = { ...reduxState.settings[0].generics }
         generics[event.target.name] = event.target.value
@@ -79,6 +73,38 @@ export const SettingsPage = () => {
     return (
         <div className="Settings-body">
             <p className="Settings-header">SETTINGS :</p>
+            <div className="Settings-channel-form">
+                <button
+                    className="save-button"
+                    onClick={handleSave}
+                >
+                    SAVE SETTINGS
+                </button>
+                <button
+                    className="save-button"
+                    onClick={toggleSettingsPage}
+                >
+                    CLOSE SETTINGS
+                </button>
+                <button
+                    className="save-button"
+                    onClick={handleEditVisibilityMode}
+                    style={getEditVisibilityStyle(operationMode)}
+                >
+                    EDIT VISIBILITY
+                </button>
+                {!specificChannel ? (
+                    <button
+                        className="save-button"
+                        onClick={handleRestart}
+                    >
+                        RESTART CLIPTOOL
+                    </button>
+                ) : (
+                    <React.Fragment />
+                )}
+            </div>
+            <hr/>
             {!specificChannel ? (
                 <form className="Settings-form">
                     <div className="Settings-channel-form">
@@ -149,38 +175,6 @@ export const SettingsPage = () => {
                 <React.Fragment />
             )}
             <RenderOutputSettings />
-            <hr />
-            <div className="Settings-channel-form">
-                <button
-                    className="save-button"
-                    onClick={handleSave}
-                >
-                    UPDATE CLIPTOOL SETTINGS
-                </button>
-                {!specificChannel ? (
-                    <button
-                        className="save-button"
-                        onClick={handleRestart}
-                    >
-                        RESTART CLIPTOOL
-                    </button>
-                ) : (
-                    <React.Fragment />
-                )}
-                <button
-                    className="save-button"
-                    onClick={handleSettingsPage}
-                >
-                    EXIT
-                </button>
-                <button
-                    className="save-button"
-                    onClick={emitSetOperationMode}
-                    style={getEditVisibilityStyle()}
-                >
-                    EDIT VISIBILITY
-                </button>
-            </div>
         </div>
     )
 }

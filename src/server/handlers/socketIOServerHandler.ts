@@ -46,6 +46,14 @@ export function socketIoHandlers(socket: any) {
         .on(
             IO.TOGGLE_THUMBNAIL_VISIBILITY,
             (channelIndex: number, fileName: string) => {
+                if (
+                    reduxState.media[0].output.some(
+                        (output) => output.tallyFile === fileName
+                    )
+                ) {
+                    return
+                }
+
                 const hiddenFiles = reduxState.media[0].hiddenFiles
                 try {
                     const updatedHiddenFiles = toggleHiddenFile(
@@ -148,25 +156,22 @@ export function socketIoHandlers(socket: any) {
             process.exit(0)
         })
 }
-type IHiddenFiles = Record<string, HiddenFileInfo>
+type HiddenFiles = Record<string, HiddenFileInfo>
 function toggleHiddenFile(
     fileName: string,
     channelIndex: number,
-    hiddenFiles: IHiddenFiles
-): IHiddenFiles {
+    hiddenFiles: HiddenFiles
+): HiddenFiles {
     return isFileHidden(fileName, hiddenFiles)
         ? showFile(fileName, hiddenFiles)
         : hideFile(fileName, channelIndex, hiddenFiles)
 }
 
-function isFileHidden(fileName: string, hiddenFiles: IHiddenFiles): boolean {
+function isFileHidden(fileName: string, hiddenFiles: HiddenFiles): boolean {
     return fileName in hiddenFiles
 }
 
-function showFile(
-    fileName: string,
-    hiddenFilesOrig: IHiddenFiles
-): IHiddenFiles {
+function showFile(fileName: string, hiddenFilesOrig: HiddenFiles): HiddenFiles {
     const newHiddenFiles = { ...hiddenFilesOrig }
     delete newHiddenFiles[fileName]
     return newHiddenFiles
@@ -175,8 +180,8 @@ function showFile(
 function hideFile(
     fileName: string,
     channelIndex: number,
-    hiddenFiles: IHiddenFiles
-): IHiddenFiles {
+    hiddenFiles: HiddenFiles
+): HiddenFiles {
     const hiddenFile = buildHiddenFileMetadataFromFileName(
         fileName,
         channelIndex

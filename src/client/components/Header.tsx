@@ -1,40 +1,52 @@
 import React from 'react'
 import { reduxStore, reduxState } from '../../model/reducers/store'
 import { shallowEqual, useSelector } from 'react-redux'
-
-//CSS files:
-import '../css/Rmc-tabs.css'
-import '../css/App.css'
-import '../css/App-header.css'
-import '../css/App-control-view-header.css'
-import '../css/App-text-view-header.css'
 import { socket } from '../util/SocketClientHandlers'
 import { secondsToTimeCode } from '../util/TimeCodeToString'
 import { TOGGLE_SHOW_SETTINGS } from '../../model/reducers/appNavAction'
 
 import * as IO from '../../model/SocketIoConstants'
-import { findThumbnail } from './Thumbnail'
-import { SettingsPage } from './Settings'
+import { findThumbnail, getCleanTallyFile } from './Thumbnail'
+
+//CSS files:
+import '../css/App.css'
+import '../css/App-header.css'
+import '../css/App-control-view-header.css'
+import '../css/App-text-view-header.css'
+import { IOutput } from '../../model/reducers/mediaReducer'
+
 
 const OFF_COLOR = { backgroundColor: 'grey' }
 const ON_COLOR = { backgroundColor: 'rgb(28, 115, 165)' }
 
-const RenderTime = () => {
+const RenderTime = () => {  
+    const activeTab: number = useSelector(
+        (storeUpdate: any) => storeUpdate.appNav[0].activeTab)
+    const output: IOutput = useSelector(
+        (storeUpdate: any) => storeUpdate.media[0].output[activeTab])
+    useSelector(
+        (storeUpdate: any) => storeUpdate.media[0].output[activeTab]?.tallyFile)
+    useSelector(
+        (storeUpdate: any) => storeUpdate.media[0].output[activeTab]?.time[0])
+    useSelector(
+        (storeUpdate: any) => storeUpdate.media[0].output[activeTab]?.thumbnailList)
+
+    let cleanTallyFile: string = ''
+    try {
+        cleanTallyFile = getCleanTallyFile(output)
+    } catch {}
+    const thumbnailUrl = findThumbnail(cleanTallyFile, activeTab)
+    
     return (
         <div className="App-timer-background">
             <button className="App-header-pgm-counter">
                 {secondsToTimeCode(
-                    reduxState.media[0].output[reduxState.appNav[0].activeTab]
-                        ?.time,
-                    reduxState.settings[0].ccgConfig.channels[reduxState.appNav[0].activeTab]?.videoFormat?.frameRate
+                    output?.time,
+                    reduxState.settings[0].ccgConfig.channels[activeTab]?.videoFormat?.frameRate
                 )}
             </button>
             <img
-                src={findThumbnail(
-                    reduxState.media[0].output[reduxState.appNav[0].activeTab]
-                        ?.tallyFile,
-                    reduxState.appNav[0].activeTab
-                )}
+                src={thumbnailUrl}
                 className="App-header-pgm-thumbnail-image"
             />
         </div>
@@ -56,8 +68,8 @@ const handleLoopStatus = () => {
     )
 }
 
-const loopStateStyle = () => {
-    return reduxState.media[0].output[reduxState.appNav[0].activeTab]?.loopState
+const loopStateStyle = (loopState: boolean) => {
+    return loopState
         ? ON_COLOR
         : OFF_COLOR
 }
@@ -78,14 +90,14 @@ const handleWebState = () => {
     )
 }
 
-const mixStateStyle = () => {
-    return reduxState.media[0].output[reduxState.appNav[0].activeTab]?.mixState
+const mixStateStyle = (mixState: boolean) => {
+    return mixState
         ? ON_COLOR
         : OFF_COLOR
 }
 
-const webStateStyle = () => {
-    return reduxState.media[0].output[reduxState.appNav[0].activeTab]?.webState
+const webStateStyle = (webState: boolean) => {
+    return webState
         ? ON_COLOR
         : OFF_COLOR
 }
@@ -101,88 +113,90 @@ const handleManualStartStatus = () => {
 
 export const RenderFullHeader = () => {
     // Redux hook:
-    useSelector((storeUpdate) => storeUpdate, shallowEqual)
+    const activeTab: number = useSelector(
+        (storeUpdate: any) => storeUpdate.appNav[0].activeTab)
+    const mixState: boolean = useSelector(
+        (storeUpdate: any) => storeUpdate.media[0].output[activeTab]?.mixState)
+    const webState: boolean = useSelector(
+        (storeUpdate: any) => storeUpdate.media[0].output[activeTab]?.webState)
+    const loopState: boolean = useSelector(
+        (storeUpdate: any) => storeUpdate.media[0].output[activeTab]?.loopState)
+    const manualstartState: boolean = useSelector(
+        (storeUpdate: any) => storeUpdate.media[0].output[activeTab]?.manualstartState)
 
     return (
         <header className="App-header">
-            {reduxState.appNav[0].selectView === 0 ? (
-                <div className="App-reload-setup-background">
+            <div className="App-header__controls">
+                {reduxState.appNav[0].selectView === 0 ? (
+                    <div className="App-reload-setup-background">
+                        <button
+                            className="App-settings-button"
+                            onClick={() => handleSettingsPage()}
+                        >
+                            SETTINGS
+                        </button>
+                    </div>
+                ) : (
+                    ''
+                )}
+
+                <RenderTime />
+                {reduxState.appNav[0].selectView === 0 ? (
+                    <React.Fragment>
+                        <div className="App-button-background">
+                            <button
+                                className="App-switch-button"
+                                onClick={handleLoopStatus}
+                                style={loopStateStyle(loopState)}
+                            >
+                                LOOP
+                            </button>
+                        </div>
+                        <div className="App-button-background">
+                            <button
+                                className="App-switch-button"
+                                onClick={handleMixStatus}
+                                style={mixStateStyle(mixState)}
+                            >
+                                MIX
+                            </button>
+                        </div>
+                        <div className="App-button-background">
+                            <button
+                                className="App-switch-button"
+                                onClick={handleWebState}
+                                style={webStateStyle(webState)}
+                            >
+                                OVERLAY
+                            </button>
+                        </div>
+                    </React.Fragment>
+                ) : (
+                    ''
+                )}
+
+                <div className="App-button-background">
                     <button
-                        className="App-settings-button"
-                        onClick={() => handleSettingsPage()}
+                        className="App-switch-button"
+                        onClick={handleManualStartStatus}
+                        style={
+                            manualstartState
+                                ? ON_COLOR
+                                : OFF_COLOR
+                        }
                     >
-                        SETTINGS
+                        MANUAL
+                    </button>
+
+                    <button
+                        hidden={ !manualstartState }
+                        className="App-start-button"
+                        onClick={() => socket.emit(IO.PGM_PLAY, activeTab) }
+                    >
+                        START
                     </button>
                 </div>
-            ) : (
-                ''
-            )}
-
-            <RenderTime />
-            {reduxState.appNav[0].selectView === 0 ? (
-                <React.Fragment>
-                    <div className="App-button-background">
-                        <button
-                            className="App-switch-button"
-                            onClick={handleLoopStatus}
-                            style={loopStateStyle()}
-                        >
-                            LOOP
-                        </button>
-                    </div>
-                    <div className="App-button-background">
-                        <button
-                            className="App-switch-button"
-                            onClick={handleMixStatus}
-                            style={mixStateStyle()}
-                        >
-                            MIX
-                        </button>
-                    </div>
-                    <div className="App-button-background">
-                        <button
-                            className="App-switch-button"
-                            onClick={handleWebState}
-                            style={webStateStyle()}
-                        >
-                            OVERLAY
-                        </button>
-                    </div>
-                </React.Fragment>
-            ) : (
-                ''
-            )}
-
-            <div className="App-button-background">
-                <button
-                    className="App-switch-button"
-                    onClick={handleManualStartStatus}
-                    style={
-                        reduxState.media[0].output[
-                            reduxState.appNav[0].activeTab
-                        ]?.manualstartState
-                            ? ON_COLOR
-                            : OFF_COLOR
-                    }
-                >
-                    MANUAL
-                </button>
-
-                <button
-                    hidden={
-                        !reduxState.media[0].output[
-                            reduxState.appNav[0].activeTab
-                        ]?.manualstartState
-                    }
-                    className="App-start-button"
-                    onClick={() =>
-                        socket.emit(IO.PGM_PLAY, reduxState.appNav[0].activeTab)
-                    }
-                >
-                    START
-                </button>
-            </div>
-            {reduxState.appNav[0].showSettingsActive ? <SettingsPage /> : null}
+            </div>            
             {!reduxState.appNav[0].connectionStatus ? (
                 <div className="App-header-server-offline">CONNECTING TO SERVER...</div>
             ) : null}

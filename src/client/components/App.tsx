@@ -1,66 +1,43 @@
 import React from 'react'
-import { Tabs } from 'rmc-tabs'
-import { reduxStore, reduxState } from '../../model/reducers/store'
-import { useSelector } from 'react-redux'
+import { reduxStore } from '../../model/reducers/store'
 import { setActiveTab } from '../../model/reducers/appNavAction'
 
 // Components:
-import { Thumbnail } from './Thumbnail'
 import { RenderFullHeader } from './Header'
+import { OperationModeFooter } from './Footer/OperationModeFooter'
+import Tabs from './Tab/Tabs'
 
 //CSS files:
-import '../css/Rmc-tabs.css'
 import '../css/App.css'
-import { OperationModeFooter } from './Footer/OperationModeFooter'
+import { useSelector } from 'react-redux'
+import { SettingsPage } from './Settings'
+import { Thumbnail } from './Thumbnail'
 
 const channel = new URLSearchParams(window.location.search).get('channel')
 const specificChannel = parseInt(channel) || 0
 
 export const App = () => {
+    const isSettingsOpen = useSelector((storeUpdate: any) => storeUpdate.appNav[0].showSettingsActive)
+
     const setOutput = (tab: number) => {
         reduxStore.dispatch(setActiveTab(tab))
     }
     if (specificChannel) {
         setOutput(specificChannel - 1)
-        return (
-            <div className="App">
-                <RenderFullHeader />
-                <div className="App-body">
-                    <div className="App-intro" key={specificChannel - 1}>
-                        <Thumbnail />
-                    </div>
-                </div>
-                <OperationModeFooter />
-            </div>
-        )
-    } else {
-        return (
-            <div className="App">
-                <RenderFullHeader />
-                <div className="App-body">
-                    { /* @ts-ignore */}
-                    <Tabs
-                        tabs={reduxState.settings[0].tabData}
-                        onChange={(tab, index) => setOutput(index)}
-                    >
-                        {renderTabData()}
-                    </Tabs>
-                </div>
-                <OperationModeFooter />
-            </div>
-        )
     }
-}
-
-const renderTabData = () => {
-    // Redux hook:
-    useSelector((storeUpdate: any) => storeUpdate.settings[0].tabData)
-
-    return reduxState.settings[0].tabData.map((item, index) => {
-        return (
-            <div className="App-intro" key={index}>
-                <Thumbnail />
+    return (
+        <div className="App">
+            <RenderFullHeader />
+            <div className="App-body">
+                {
+                    isSettingsOpen 
+                    ? <SettingsPage /> 
+                    : specificChannel 
+                        ? <Thumbnail/> 
+                        : <Tabs />
+                }
             </div>
-        )
-    })
+            <OperationModeFooter />
+        </div>
+    )
 }
