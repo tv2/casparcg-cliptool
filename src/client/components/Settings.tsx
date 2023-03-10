@@ -49,10 +49,6 @@ export const SettingsPage = () => {
             storeUpdate.media[0].output[reduxState.appNav[0].activeTab]?.operationMode)
     useSelector((storeUpdate: any) => storeUpdate.settings[0].generics)
     
-    const handleSettingsPage = () => {
-        toggleSettingsPage()
-    }
-
     const handleChange = (event) => {
         let generics = { ...reduxState.settings[0].generics }
         generics[event.target.name] = event.target.value
@@ -86,9 +82,9 @@ export const SettingsPage = () => {
                 </button>
                 <button
                     className="save-button"
-                    onClick={handleSettingsPage}
+                    onClick={toggleSettingsPage}
                 >
-                    DISCARD CHANGES
+                    CLOSE SETTINGS
                 </button>
                 <button
                     className="save-button"

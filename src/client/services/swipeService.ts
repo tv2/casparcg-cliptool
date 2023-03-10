@@ -1,5 +1,5 @@
 const MIN_SWIPE_DISTANCE = 50
-const MAX_SLOPE = 0.5
+const MAX_SWIPE_SLOPE = 0.5
 
 enum SwipeDirection {
     LEFT = 'left',
@@ -18,10 +18,8 @@ class SwipeService {
             return false
         }
         const verticalDistance = Math.abs(end.y - start.y)
-        if (verticalDistance / horizontalDistance > MAX_SLOPE) {
-            return false
-        }
-        return true
+        const slope = verticalDistance / horizontalDistance
+        return slope <= MAX_SWIPE_SLOPE
     }
 
     public isValidTab(tab: number, tabCount: number): boolean {
