@@ -4,6 +4,8 @@ import { IMediaFile } from "../../../model/reducers/mediaReducer";
 import mediaService from "../../services/mediaService";
 
 import '../../css/Thumbnail.css'
+import { ReduxStateType } from "../../../model/reducers/store";
+import appNavigationService from "../../services/appNavigationService";
 
 interface TimeCodeProps {
   file: IMediaFile
@@ -13,11 +15,11 @@ interface TimeCodeProps {
 export default function TimeCode(props: TimeCodeProps): JSX.Element {
   // Redux hook:
   const time: [number, number] = useSelector(
-    (storeUpdate: any) => mediaService.getOutput(storeUpdate).time
+    (storeUpdate: ReduxStateType) => mediaService.getOutput(storeUpdate).time
   )
   const frameRate: number = useSelector(
-      (storeUpdate: any) => storeUpdate.settings[0].ccgConfig
-          .channels[mediaService.getActiveTab()]?.videoFormat.frameRate
+      (storeUpdate: ReduxStateType) => storeUpdate.settings[0].ccgConfig
+          .channels[appNavigationService.getActiveTab()]?.videoFormat.frameRate
   )
 
   const classNames: string = [

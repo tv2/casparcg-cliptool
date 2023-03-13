@@ -1,5 +1,5 @@
 import React from 'react'
-import { reduxStore } from '../../model/reducers/store'
+import { ReduxStateType, reduxStore } from '../../model/reducers/store'
 import { setActiveTab } from '../../model/reducers/appNavAction'
 
 // Components:
@@ -17,7 +17,7 @@ const channel = new URLSearchParams(window.location.search).get('channel')
 const specificChannel = parseInt(channel) || 0
 
 export const App = () => {
-    const isSettingsOpen = useSelector((storeUpdate: any) => storeUpdate.appNav[0].showSettingsActive)
+    const isSettingsOpen = useSelector((storeUpdate: ReduxStateType) => storeUpdate.appNav[0].showSettingsActive)
 
     const setOutput = (tab: number) => {
         reduxStore.dispatch(setActiveTab(tab))

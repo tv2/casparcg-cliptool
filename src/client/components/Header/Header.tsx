@@ -1,5 +1,5 @@
 import React from 'react'
-import { reduxStore, reduxState } from '../../../model/reducers/store'
+import { reduxStore, reduxState, ReduxStateType } from '../../../model/reducers/store'
 import { useSelector } from 'react-redux'
 import { TOGGLE_SHOW_SETTINGS } from '../../../model/reducers/appNavAction'
 
@@ -13,7 +13,7 @@ import HeaderButtons from './HeaderButtons'
 
 export default function Header() {
     const connectionStatus: boolean = useSelector(
-        (storeUpdate: any) => storeUpdate.appNav[0].connectionStatus)
+        (storeUpdate: ReduxStateType) => storeUpdate.appNav[0].connectionStatus)
 
     return (
         <header className="App-header">

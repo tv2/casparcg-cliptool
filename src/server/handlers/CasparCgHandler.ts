@@ -131,33 +131,33 @@ const dispatchConfig = (config: any) => {
         reduxStore.dispatch(
             setLoop(
                 index,
-                reduxState.settings[0].generics.startupLoopState[index] ?? false
+                reduxState.settings[0].generics.outputs[index].loopState ??
+                    false
             )
         )
         reduxStore.dispatch(
             setManualStart(
                 index,
-                reduxState.settings[0].generics.startupManualStartState[
-                    index
-                ] ?? false
+                reduxState.settings[0].generics.outputs[index]
+                    .manualStartState ?? false
             )
         )
         reduxStore.dispatch(
             setMix(
                 index,
-                reduxState.settings[0].generics.startupMixState[index] ?? false
+                reduxState.settings[0].generics.outputs[index].mixState ?? false
             )
         )
         reduxStore.dispatch(
             setWeb(
                 index,
-                reduxState.settings[0].generics.startupWebState[index] ?? false
+                reduxState.settings[0].generics.outputs[index].webState ?? false
             )
         )
         reduxStore.dispatch(
             setOperationMode(
                 index,
-                reduxState.settings[0].generics.startupOperationMode[index] ??
+                reduxState.settings[0].generics.outputs[index].operationMode ??
                     OperationMode.CONTROL
             )
         )
@@ -167,12 +167,16 @@ const dispatchConfig = (config: any) => {
     initializeClient()
 }
 
-const loadInitalOverlay = () => {
-    if (!reduxState.settings[0].generics.startupWebState) {
+const loadInitialOverlay = () => {
+    if (!reduxState.settings[0].generics.outputs) {
         return
     }
     reduxState.settings[0].ccgConfig.channels.forEach((ch, index) => {
-        playOverlay(index, 10, reduxState.settings[0].generics.webURL?.[index])
+        playOverlay(
+            index,
+            10,
+            reduxState.settings[0].generics.outputs[index].webUrl
+        )
     })
 }
 
@@ -191,7 +195,7 @@ const ccgAMPHandler = () => {
                 .then((config) => {
                     dispatchConfig(config)
                     waitingForCCGResponse = false
-                    loadInitalOverlay()
+                    loadInitialOverlay()
                 })
                 .catch((error) =>
                     logger.data(error).error('Error receiving CCG Config:')
@@ -271,7 +275,7 @@ const outputExtractFiles = (allFiles: IMediaFile[], outputIndex: number) => {
         return (
             isFolderNameEqual(
                 file.name,
-                reduxState.settings[0].generics.outputFolders[outputIndex]
+                reduxState.settings[0].generics.outputs[outputIndex].folder
             ) && !isAlphaFile(file.name)
         )
     })
@@ -336,9 +340,8 @@ export const assignThumbNailListToOutputs = () => {
                 (thumbnail: IThumbnailFile) => {
                     return isFolderNameEqual(
                         thumbnail?.name,
-                        reduxState.settings[0].generics.outputFolders[
-                            channelIndex
-                        ]
+                        reduxState.settings[0].generics.outputs[channelIndex]
+                            .folder
                     )
                 }
             )

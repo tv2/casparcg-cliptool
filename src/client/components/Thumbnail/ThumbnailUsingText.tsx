@@ -6,6 +6,7 @@ import mediaService from "../../services/mediaService";
 import '../../css/Thumbnail.css'
 import ThumbnailButton from "./ThumbnailButton";
 import TimeCode from "./TimeCode";
+import { ReduxStateType } from "../../../model/reducers/store";
 
 interface ThumbnailUsingTextProps {
   file: IMediaFile
@@ -14,7 +15,7 @@ interface ThumbnailUsingTextProps {
 export default function ThumbnailUsingText(props: ThumbnailUsingTextProps): JSX.Element {
   // Redux hook:
   useSelector(
-    (storeUpdate: any) => mediaService.getOutput(storeUpdate)
+    (storeUpdate: ReduxStateType) => mediaService.getOutput(storeUpdate)
         .tallyFile
   )
   const isTallyFile: boolean = mediaService.isThumbnailWithTally(props.file.name)

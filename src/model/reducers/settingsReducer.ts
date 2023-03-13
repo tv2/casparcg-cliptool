@@ -1,6 +1,11 @@
+import settingsFileService from '../services/settingsFileService'
 import { getVideoFormat, VideoFormat } from '../videoFormat'
-import { OperationMode } from './mediaReducer'
-import { SET_GENERICS, SET_TAB_DATA, UPDATE_SETTINGS } from './settingsAction'
+import * as IO from './settingsAction'
+
+export enum OperationMode {
+    CONTROL = 'control',
+    EDIT_VISIBILITY = 'edit_visibility',
+}
 export interface Settings {
     ccgConfig: CcgConfig
     tabData: TabData[]
@@ -56,119 +61,7 @@ export const defaultSettingsReducerState = (): Settings[] => {
                 path: '',
             },
             tabData: [],
-            generics: {
-                transitionTime: 16,
-                ccgIp: '0.0.0.0',
-                ccgAmcpPort: 5250,
-                ccgOscPort: 5253,
-                ccgDefaultLayer: 10,
-                outputs: [
-                    {
-                        label: '',
-                        folder: '',
-                        shouldScale: false,
-                        scaleX: 1920,
-                        scaleY: 1080,
-                        loopState: false,
-                        mixState: false,
-                        manualStartState: false,
-                        webState: false,
-                        webUrl: '',
-                        operationMode: OperationMode.CONTROL,
-                    },
-                    {
-                        label: '',
-                        folder: '',
-                        shouldScale: false,
-                        scaleX: 1920,
-                        scaleY: 1080,
-                        loopState: false,
-                        mixState: false,
-                        manualStartState: false,
-                        webState: false,
-                        webUrl: '',
-                        operationMode: OperationMode.CONTROL,
-                    },
-                    {
-                        label: '',
-                        folder: '',
-                        shouldScale: false,
-                        scaleX: 1920,
-                        scaleY: 1080,
-                        loopState: false,
-                        mixState: false,
-                        manualStartState: false,
-                        webState: false,
-                        webUrl: '',
-                        operationMode: OperationMode.CONTROL,
-                    },
-                    {
-                        label: '',
-                        folder: '',
-                        shouldScale: false,
-                        scaleX: 1920,
-                        scaleY: 1080,
-                        loopState: false,
-                        mixState: false,
-                        manualStartState: false,
-                        webState: false,
-                        webUrl: '',
-                        operationMode: OperationMode.CONTROL,
-                    },
-                    {
-                        label: '',
-                        folder: '',
-                        shouldScale: false,
-                        scaleX: 1920,
-                        scaleY: 1080,
-                        loopState: false,
-                        mixState: false,
-                        manualStartState: false,
-                        webState: false,
-                        webUrl: '',
-                        operationMode: OperationMode.CONTROL,
-                    },
-                    {
-                        label: '',
-                        folder: '',
-                        shouldScale: false,
-                        scaleX: 1920,
-                        scaleY: 1080,
-                        loopState: false,
-                        mixState: false,
-                        manualStartState: false,
-                        webState: false,
-                        webUrl: '',
-                        operationMode: OperationMode.CONTROL,
-                    },
-                    {
-                        label: '',
-                        folder: '',
-                        shouldScale: false,
-                        scaleX: 1920,
-                        scaleY: 1080,
-                        loopState: false,
-                        mixState: false,
-                        manualStartState: false,
-                        webState: false,
-                        webUrl: '',
-                        operationMode: OperationMode.CONTROL,
-                    },
-                    {
-                        label: '',
-                        folder: '',
-                        shouldScale: false,
-                        scaleX: 1920,
-                        scaleY: 1080,
-                        loopState: false,
-                        mixState: false,
-                        manualStartState: false,
-                        webState: false,
-                        webUrl: '',
-                        operationMode: OperationMode.CONTROL,
-                    },
-                ],
-            },
+            generics: settingsFileService.getDefaultGenericSettings(),
         },
     ]
 }
@@ -189,20 +82,64 @@ export const settings = (
     let nextState = { ...state }
 
     switch (action.type) {
-        case UPDATE_SETTINGS:
+        case IO.UPDATE_SETTINGS: {
             nextState[0].ccgConfig.channels = [
                 ...action.channels.map(updateChannelConfigWithVideoFormat),
             ]
             nextState[0].ccgConfig.path = action.path
             return nextState
-        case SET_TAB_DATA:
+        }
+        case IO.SET_TAB_DATA: {
             nextState[0].tabData = [...action.tabData]
             return nextState
-        case SET_GENERICS:
+        }
+        case IO.SET_GENERICS: {
             nextState[0].generics = { ...action.generics }
             nextState[0].generics.outputs = nextState[0].generics.outputs ?? []
+            return nextState
+        }
+        case IO.SET_LOOP: {
+            if (doesChannelExist(nextState, action)) {
+                nextState[0].generics.outputs[action.channelIndex].loopState =
+                    action.loopState
+            }
+            return nextState
+        }
+
+        case IO.SET_MIX:
+            if (doesChannelExist(nextState, action)) {
+                nextState[0].generics.outputs[action.channelIndex].mixState =
+                    action.mixState
+            }
+            return nextState
+        case IO.SET_WEB:
+            if (doesChannelExist(nextState, action)) {
+                nextState[0].generics.outputs[action.channelIndex].webState =
+                    action.webState
+            }
+            return nextState
+        case IO.SET_MANUAL_START:
+            if (doesChannelExist(nextState, action)) {
+                nextState[0].generics.outputs[
+                    action.channelIndex
+                ].manualStartState = action.manualStartState
+            }
+            return nextState
+        case IO.SET_OPERATION_MODE:
+            if (doesChannelExist(nextState, action)) {
+                nextState[0].generics.outputs[
+                    action.channelIndex
+                ].operationMode = action.operationMode
+            }
             return nextState
         default:
             return nextState
     }
+}
+
+function doesChannelExist(
+    nextState: Settings[],
+    action: { channelIndex: number }
+): boolean {
+    return nextState[0].generics.outputs.length > action.channelIndex
 }

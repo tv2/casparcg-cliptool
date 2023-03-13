@@ -1,10 +1,5 @@
 import * as IO from './mediaActions'
 
-export enum OperationMode {
-    CONTROL = 'control',
-    EDIT_VISIBILITY = 'edit_visibility',
-}
-
 export interface HiddenFileInfo {
     changed: number
     size: number
@@ -35,11 +30,6 @@ export interface IOutput {
     mediaFiles: IMediaFile[]
     thumbnailList: IThumbnailFile[]
     tallyFile: string
-    loopState: boolean
-    mixState: boolean
-    webState: boolean
-    operationMode: OperationMode
-    manualStartState: boolean
     time: [number, number]
 }
 
@@ -60,11 +50,6 @@ const defaultOutputs = (amount: number) => {
             mediaFiles: [],
             thumbnailList: [],
             tallyFile: '',
-            operationMode: OperationMode.CONTROL,
-            loopState: false,
-            mixState: false,
-            webState: false,
-            manualStartState: false,
             time: [0, 0],
         })
     }
@@ -102,41 +87,13 @@ export const media = (state: Array<IMedia> = defaultMediaState(), action) => {
                     action.filename
             }
             return nextState
-        case IO.SET_LOOP:
-            if (doesChannelExist(nextState, action)) {
-                nextState[0].output[action.channelIndex].loopState =
-                    action.loopState
-            }
-            return nextState
-        case IO.SET_MIX:
-            if (doesChannelExist(nextState, action)) {
-                nextState[0].output[action.channelIndex].mixState =
-                    action.mixState
-            }
-            return nextState
-        case IO.SET_WEB:
-            if (doesChannelExist(nextState, action)) {
-                nextState[0].output[action.channelIndex].webState =
-                    action.webState
-            }
-            return nextState
-        case IO.SET_MANUAL_START:
-            if (doesChannelExist(nextState, action)) {
-                nextState[0].output[action.channelIndex].manualStartState =
-                    action.manualStartState
-            }
-            return nextState
+
         case IO.SET_TIME:
             if (doesChannelExist(nextState, action)) {
                 nextState[0].output[action.channelIndex].time = action.time
             }
             return nextState
-        case IO.SET_OPERATION_MODE:
-            if (doesChannelExist(nextState, action)) {
-                nextState[0].output[action.channelIndex].operationMode =
-                    action.operationMode
-            }
-            return nextState
+
         default:
             return nextState
     }

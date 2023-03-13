@@ -1,10 +1,13 @@
 import React from "react"
-import { IMediaFile, OperationMode } from "../../../model/reducers/mediaReducer"
+import { IMediaFile } from "../../../model/reducers/mediaReducer"
 import { reduxState } from "../../../model/reducers/store"
 import { PGM_LOAD, PGM_PLAY, TOGGLE_THUMBNAIL_VISIBILITY } from "../../../model/SocketIoConstants";
 import mediaService from "../../services/mediaService";
 import { socket } from "../../util/SocketClientHandlers";
 import '../../css/Thumbnail.css'
+import { OperationMode } from "../../../model/reducers/settingsReducer";
+import appNavigationService from "../../services/appNavigationService";
+import settingsService from "../../services/settingsService";
 
 interface ThumbnailButtonProps {
   file: IMediaFile
@@ -27,7 +30,7 @@ export default function ThumbnailButton(props: ThumbnailButtonProps): JSX.Elemen
 }
 
 function handleClickMedia(fileName: string): void {    
-  const operationMode = mediaService.getOutput(reduxState)?.operationMode
+  const operationMode = settingsService.getOutputSettings()?.operationMode
   switch (operationMode) {
       case OperationMode.EDIT_VISIBILITY: 
           emitToggleVisibility(fileName)
@@ -45,12 +48,12 @@ function emitToggleVisibility(fileName: string): void {
       return
   }
       
-  socket.emit(TOGGLE_THUMBNAIL_VISIBILITY, mediaService.getActiveTab(), fileName)
+  socket.emit(TOGGLE_THUMBNAIL_VISIBILITY, appNavigationService.getActiveTab(), fileName)
 }
 
 function emitPlayFile(fileName: string ): void {
-  const event = !mediaService.getOutput(reduxState)?.manualStartState 
+  const event = !settingsService.getOutputSettings()?.manualStartState 
       ? PGM_PLAY 
       : PGM_LOAD
-  socket.emit(event, mediaService.getActiveTab(), fileName)
+  socket.emit(event, appNavigationService.getActiveTab(), fileName)
 }

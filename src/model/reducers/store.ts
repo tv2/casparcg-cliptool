@@ -11,3 +11,4 @@ const unsubscribe = storeRedux.subscribe(() => {
 
 export { storeRedux as reduxStore }
 export { reduxState as reduxState }
+export type ReduxStateType = typeof reduxState

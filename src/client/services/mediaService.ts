@@ -1,11 +1,20 @@
-import { IOutput, IThumbnailFile } from '../../model/reducers/mediaReducer'
-import { reduxState } from '../../model/reducers/store'
+import {
+    IOutput as Output,
+    IThumbnailFile,
+} from '../../model/reducers/mediaReducer'
+import { reduxState, ReduxStateType } from '../../model/reducers/store'
+import appNavigationService from './appNavigationService'
 
 class MediaService {
     // TODO: during UT-210, figure out the correct type to apply instead of 'any'.
-    public getOutput(store: any, channelIndex: number = -1): IOutput {
+    public getOutput(
+        store: ReduxStateType = reduxState,
+        channelIndex: number = -1
+    ): Output {
         const activeTab: number =
-            channelIndex === -1 ? this.getActiveTab() : channelIndex
+            channelIndex === -1
+                ? appNavigationService.getActiveTab()
+                : channelIndex
         return store.media[0].output[activeTab]
     }
 
@@ -18,14 +27,8 @@ class MediaService {
         return thumbnailFile?.thumbnail ?? ''
     }
 
-    public getActiveTab(): number {
-        return reduxState.appNav[0].activeTab
-    }
-
     public isThumbnailWithTally(thumbnailName: string): boolean {
-        const tallyNoMediaPath = this.getCleanTallyFile(
-            this.getOutput(reduxState)
-        )
+        const tallyNoMediaPath = this.getCleanTallyFile(this.getOutput())
         return tallyNoMediaPath === thumbnailName
     }
 
@@ -35,7 +38,7 @@ class MediaService {
         )
     }
 
-    public getCleanTallyFile(output: IOutput): string {
+    public getCleanTallyFile(output: Output): string {
         const tallyFileName = output.tallyFile
             .toUpperCase()
             .replace(/\\/g, '/')

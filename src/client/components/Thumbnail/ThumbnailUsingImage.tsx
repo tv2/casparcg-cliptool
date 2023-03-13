@@ -1,11 +1,12 @@
 import React from "react"
 import { useSelector } from "react-redux"
-import { HiddenFileInfo, IMediaFile, OperationMode } from "../../../model/reducers/mediaReducer"
+import { HiddenFileInfo, IMediaFile } from "../../../model/reducers/mediaReducer"
 import mediaService from "../../services/mediaService";
 import ThumbnailButton from "./ThumbnailButton";
 import ThumbnailPicture from "./ThumbnailPicture";
 import TimeCode from "./TimeCode";
 import '../../css/Thumbnail.css'
+import { ReduxStateType } from "../../../model/reducers/store";
 
 interface ThumbnailUsingImageProps {
   file: IMediaFile
@@ -14,12 +15,12 @@ interface ThumbnailUsingImageProps {
 export default function ThumbnailUsingImage(props: ThumbnailUsingImageProps): JSX.Element {
   // Redux hook:
   useSelector(
-    (storeUpdate: any) => mediaService.getOutput(storeUpdate)
+    (storeUpdate: ReduxStateType) => mediaService.getOutput(storeUpdate)
             .tallyFile
   )
 
   const hiddenFiles: Record<string, HiddenFileInfo> = useSelector(
-      (storeUpdate: any) => 
+      (storeUpdate: ReduxStateType) => 
           storeUpdate.media[0].hiddenFiles
   ) ?? {}
 

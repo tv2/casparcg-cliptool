@@ -1,22 +1,23 @@
 import React from "react";
-import { reduxState } from "../../../model/reducers/store";
+import { reduxState, ReduxStateType } from "../../../model/reducers/store";
 import { socket } from "../../util/SocketClientHandlers";
 import ToggleButton from "./ToggleButton";
 import * as IO from '../../../model/SocketIoConstants'
 import { useSelector } from "react-redux";
 import mediaService from "../../services/mediaService";
+import settingsService from "../../services/settingsService";
 
 export default function HeaderButtons() {
   const activeTab: number = useSelector(
-    (storeUpdate: any) => storeUpdate.appNav[0].activeTab)
+    (storeUpdate: ReduxStateType) => storeUpdate.appNav[0].activeTab)
   const mixState: boolean = useSelector(
-      (storeUpdate: any) => storeUpdate.media[0].output[activeTab]?.mixState)
+      (storeUpdate: ReduxStateType) => storeUpdate.settings[0].generics.outputs[activeTab]?.mixState)
   const webState: boolean = useSelector(
-      (storeUpdate: any) => storeUpdate.media[0].output[activeTab]?.webState)
+      (storeUpdate: ReduxStateType) => storeUpdate.settings[0].generics.outputs[activeTab]?.webState)
   const loopState: boolean = useSelector(
-      (storeUpdate: any) => storeUpdate.media[0].output[activeTab]?.loopState)
+      (storeUpdate: ReduxStateType) => storeUpdate.settings[0].generics.outputs[activeTab]?.loopState)
   const manualStartState: boolean = useSelector(
-      (storeUpdate: any) => storeUpdate.media[0].output[activeTab]?.manualStartState)
+      (storeUpdate: ReduxStateType) => storeUpdate.settings[0].generics.outputs[activeTab]?.manualStartState)
   return (
     <>
       {reduxState.appNav[0].selectView === 0 ? (
@@ -58,7 +59,7 @@ function handleLoopStatus(activeTab: number) {
   socket.emit(
       IO.SET_LOOP_STATE,
       activeTab,
-      !mediaService.getOutput(reduxState, activeTab).loopState
+      !settingsService.getOutputSettings(reduxState, activeTab).loopState
   )
 }
 
@@ -66,7 +67,7 @@ function handleMixStatus(activeTab: number) {
   socket.emit(
       IO.SET_MIX_STATE,
       activeTab,
-      !mediaService.getOutput(reduxState, activeTab).mixState
+      !settingsService.getOutputSettings(reduxState, activeTab).mixState
   )
 }
 
@@ -74,7 +75,7 @@ function handleWebState(activeTab: number) {
   socket.emit(
       IO.SET_WEB_STATE,
       activeTab,
-      !mediaService.getOutput(reduxState, activeTab).webState
+      !settingsService.getOutputSettings(reduxState, activeTab).webState
   )
 }
 
@@ -82,6 +83,6 @@ function handleManualStartStatus(activeTab: number) {
   socket.emit(
       IO.SET_MANUAL_START_STATE,
       activeTab,
-      !mediaService.getOutput(reduxState, activeTab).manualStartState
+      !settingsService.getOutputSettings(reduxState, activeTab).manualStartState
   )
 }

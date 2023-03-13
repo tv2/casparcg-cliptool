@@ -4,25 +4,44 @@ import {
     GenericSettings,
 } from '../../model/reducers/settingsReducer'
 import { reduxState, reduxStore } from '../../model/reducers/store'
+import settingsFileService from '../../model/services/settingsFileService'
 import { logger } from './logger'
 
 const fs = require('fs')
 const path = require('path')
 
 export const loadSettings = () => {
-    const defaultGenerics: GenericSettings =
-        defaultSettingsReducerState()[0].generics
+    const defaultGenerics = settingsFileService.getDefaultGenericSettings()
     try {
-        const settingsFromFile: GenericSettings = JSON.parse(
+        const settingsFromFile = JSON.parse(
             fs.readFileSync(path.resolve('storage', 'settings.json'))
         )
-        const isStructureCorrect: boolean = verifyStructure(settingsFromFile)
-        const newGenerics: GenericSettings = isStructureCorrect
-            ? settingsFromFile
-            : correctStructure(settingsFromFile, defaultGenerics)
+        let settings: GenericSettings = null
+        let hasStructureBeenCorrected = false
+        const isOld = settingsFileService.isPreviousStructure(settingsFromFile)
+        if (isOld.success) {
+            logger.warn(
+                'Old settings structure detected - updating it to the new structure.'
+            )
+            settings = settingsFileService.getCorrectedStructureFromOld(
+                isOld.parsed
+            )
+            hasStructureBeenCorrected = true
+        } else {
+            const isNew = settingsFileService.isNewStructure(settingsFromFile)
+            if (isNew.success) {
+                settings = isNew.parsed
+            } else {
+                logger
+                    .data(settingsFromFile)
+                    .error('Failed to parse settings from file, using default!')
+                settings = defaultGenerics
+            }
+        }
+
         logger.data(settingsFromFile).info('File loaded with settings:')
-        reduxStore.dispatch(setGenerics(newGenerics))
-        if (!isStructureCorrect) {
+        reduxStore.dispatch(setGenerics(settings))
+        if (hasStructureBeenCorrected) {
             logger.info('New Settings structure generated, saving Settings...')
             saveSettings()
         }
@@ -53,29 +72,4 @@ export const saveSettings = () => {
             }
         }
     )
-}
-
-// TODO: Re-implement function following new GenericSettings structure.
-function verifyStructure(settings: GenericSettings): boolean {
-    if (settings.outputs.length !== 8) {
-        return false
-    }
-    return settings.outputs.some((output) => {
-        if (output.folder === undefined || output.label === undefined) {
-            return false
-        }
-        return true
-    })
-}
-
-// TODO: Re-implement function following new GenericSettings structure.
-function correctStructure(
-    originalSettings: GenericSettings,
-    defaultSettings: GenericSettings
-): GenericSettings {
-    let generics = { ...originalSettings }
-
-    // It must be possible to do the following in a smaller way... Not sure how currently though.
-
-    return generics
 }

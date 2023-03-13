@@ -6,10 +6,11 @@ import TabBar from './TabBar'
 import TabContent from './TabContent'
 
 import '../../css/Tab.css'
+import { ReduxStateType } from '../../../model/reducers/store'
 
 export default function Tabs(): JSX.Element {
-  const tabData: TabData[] = useSelector((storeUpdate: any) => storeUpdate.settings[0].tabData)
-  const selectedTab: number = useSelector((storeUpdate: any) => storeUpdate.appNav[0].activeTab)
+  const tabData: TabData[] = useSelector((storeUpdate: ReduxStateType) => storeUpdate.settings[0].tabData)
+  const selectedTab: number = useSelector((storeUpdate: ReduxStateType) => storeUpdate.appNav[0].activeTab)
 
   return (
     <div className='tabs'>

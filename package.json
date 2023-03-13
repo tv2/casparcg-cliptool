@@ -78,7 +78,8 @@
         "socket.io": "^4.0.0",
         "socket.io-client": "^4.0.0",
         "sortablejs": "^1.13.0",
-        "xml-js": "^1.6.11"
+        "xml-js": "^1.6.11",
+        "zod": "^3.21.4"
     },
     "devDependencies": {
         "@babel/core": "^7.13.10",

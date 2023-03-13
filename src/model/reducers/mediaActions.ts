@@ -1,9 +1,4 @@
-import {
-    HiddenFileInfo,
-    IMediaFile,
-    IThumbnailFile,
-    OperationMode,
-} from './mediaReducer'
+import { HiddenFileInfo, IMediaFile, IThumbnailFile } from './mediaReducer'
 
 export const UPDATE_MEDIA_FILES = 'updateMediaFiles'
 export const UPDATE_THUMB_LIST = 'updateThumbList'
@@ -11,12 +6,8 @@ export const UPDATE_FOLDER_LIST = 'updateFolderList'
 export const UPDATE_HIDDEN_FILES = 'updateHiddenFiles'
 export const SET_TALLY_FILE_NAME = 'setTallyFileName'
 export const SET_NUMBER_OF_OUTPUTS = 'setNumberOfOutputs'
-export const SET_LOOP = 'setLoop'
-export const SET_MIX = 'setMix'
-export const SET_WEB = 'setWeb'
-export const SET_MANUAL_START = 'setManualStart'
+
 export const SET_TIME = 'setTime'
-export const SET_OPERATION_MODE = 'setOperationMode'
 
 export const updateMediaFiles = (
     channelIndex: number,
@@ -69,56 +60,10 @@ export const setTallyFileName = (channelIndex: number, filename: string) => {
     }
 }
 
-export const setLoop = (channelIndex: number, loopState: boolean) => {
-    return {
-        type: SET_LOOP,
-        channelIndex: channelIndex,
-        loopState: loopState,
-    }
-}
-
-export const setMix = (channelIndex: number, mixState: boolean) => {
-    return {
-        type: SET_MIX,
-        channelIndex: channelIndex,
-        mixState: mixState,
-    }
-}
-
-export const setManualStart = (
-    channelIndex: number,
-    manualStartState: boolean
-) => {
-    return {
-        type: SET_MANUAL_START,
-        channelIndex: channelIndex,
-        manualStartState: manualStartState,
-    }
-}
-
-export const setWeb = (channelIndex: number, webState: boolean) => {
-    return {
-        type: SET_WEB,
-        channelIndex: channelIndex,
-        webState: webState,
-    }
-}
-
 export const setTime = (channelIndex: number, time: [number, number]) => {
     return {
         type: SET_TIME,
         channelIndex: channelIndex,
         time: time,
-    }
-}
-
-export const setOperationMode = (
-    channelIndex: number,
-    operationMode: OperationMode
-) => {
-    return {
-        type: SET_OPERATION_MODE,
-        channelIndex: channelIndex,
-        operationMode: operationMode,
     }
 }

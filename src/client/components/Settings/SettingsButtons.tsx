@@ -1,13 +1,14 @@
 import React from "react";
-import { OperationMode } from "../../../model/reducers/mediaReducer";
-import { reduxState, reduxStore } from "../../../model/reducers/store";
+import { reduxState, ReduxStateType, reduxStore } from "../../../model/reducers/store";
 import mediaService from "../../services/mediaService";
 import { socket } from "../../util/SocketClientHandlers";
 import * as IO from '../../../model/SocketIoConstants'
 import { useSelector } from "react-redux";
 import { TOGGLE_SHOW_SETTINGS } from "../../../model/reducers/appNavAction";
 import '../../css/Settings.css'
-import { GenericSettings } from "../../../model/reducers/settingsReducer";
+import { GenericSettings, OperationMode } from "../../../model/reducers/settingsReducer";
+import settingsService from "../../services/settingsService";
+import appNavigationService from "../../services/appNavigationService";
 
 interface SettingsButtonsProps {
   // TODO: Figure out a proper type.
@@ -17,7 +18,7 @@ interface SettingsButtonsProps {
 
 export default function SettingsButtons(props: SettingsButtonsProps): JSX.Element {
   const operationMode = useSelector(
-    (storeUpdate: any) => mediaService.getOutput(storeUpdate)?.operationMode)
+    (storeUpdate: ReduxStateType) => settingsService.getOutputSettings(storeUpdate)?.operationMode)
   
     const classNames = [ 
       'save-button',               
@@ -72,8 +73,8 @@ function toggleSettingsPage(): void {
 }
 
 function handleEditVisibilityMode(): void {
-  const activeTab: number = mediaService.getActiveTab()
-  const output = mediaService.getOutput(reduxState)
+  const activeTab: number = appNavigationService.getActiveTab()
+  const output = settingsService.getOutputSettings()
   if (output.operationMode !== OperationMode.EDIT_VISIBILITY) {
       toggleSettingsPage()
   }

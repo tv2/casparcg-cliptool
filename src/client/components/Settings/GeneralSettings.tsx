@@ -1,12 +1,12 @@
 import React from "react";
 import { useSelector } from "react-redux";
 import { setGenerics } from "../../../model/reducers/settingsAction";
-import { reduxState, reduxStore } from "../../../model/reducers/store";
+import { reduxState, ReduxStateType, reduxStore } from "../../../model/reducers/store";
 import '../../css/Settings.css'
 
 
 export default function GeneralSettings(): JSX.Element {
-  useSelector((storeUpdate: any) => storeUpdate.settings[0].generics)  
+  useSelector((storeUpdate: ReduxStateType) => storeUpdate.settings[0].generics)  
 
   return (
     <form className="Settings-form">
