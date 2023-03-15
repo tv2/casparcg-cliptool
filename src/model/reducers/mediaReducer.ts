@@ -10,30 +10,29 @@ interface File extends HiddenFileInfo {
     type: string
 }
 
-export interface IMediaFile extends File {
+export interface MediaFile extends File {
     frames: number
     frameTime: string
     frameRate: number
     duration: number
 }
 
-export interface IThumbnailFile extends File {
+export interface ThumbnailFile extends File {
     thumbnail: string
 }
-export interface IMedia {
-    output: IOutput[]
+export interface Media {
+    output: Output[]
     folderList: string[]
     hiddenFiles: Record<string, HiddenFileInfo>
 }
 
-export interface IOutput {
-    mediaFiles: IMediaFile[]
-    thumbnailList: IThumbnailFile[]
-    tallyFile: string
+export interface Output {
+    mediaFiles: MediaFile[]
+    thumbnailList: ThumbnailFile[]
     time: [number, number]
 }
 
-const defaultMediaState = (): Array<IMedia> => {
+const defaultMediaState = (): Array<Media> => {
     return [
         {
             output: [],
@@ -44,19 +43,18 @@ const defaultMediaState = (): Array<IMedia> => {
 }
 
 const defaultOutputs = (amount: number) => {
-    let outputs: IOutput[] = []
+    let outputs: Output[] = []
     for (let i = 0; i < amount; i++) {
         outputs.push({
             mediaFiles: [],
             thumbnailList: [],
-            tallyFile: '',
             time: [0, 0],
         })
     }
     return outputs
 }
 
-export const media = (state: Array<IMedia> = defaultMediaState(), action) => {
+export const media = (state: Array<Media> = defaultMediaState(), action) => {
     let nextState = { ...state }
 
     switch (action.type) {
@@ -81,13 +79,6 @@ export const media = (state: Array<IMedia> = defaultMediaState(), action) => {
         case IO.UPDATE_FOLDER_LIST:
             nextState[0].folderList = action.folderList
             return nextState
-        case IO.SET_TALLY_FILE_NAME:
-            if (doesChannelExist(nextState, action)) {
-                nextState[0].output[action.channelIndex].tallyFile =
-                    action.filename
-            }
-            return nextState
-
         case IO.SET_TIME:
             if (doesChannelExist(nextState, action)) {
                 nextState[0].output[action.channelIndex].time = action.time
@@ -100,7 +91,7 @@ export const media = (state: Array<IMedia> = defaultMediaState(), action) => {
 }
 
 function doesChannelExist(
-    nextState: { output: IOutput[] }[],
+    nextState: { output: Output[] }[],
     action: { channelIndex: number }
 ): boolean {
     return nextState[0].output.length > action.channelIndex

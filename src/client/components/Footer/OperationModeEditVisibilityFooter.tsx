@@ -1,10 +1,10 @@
 import React from "react"
-import { OperationMode } from "../../../model/reducers/mediaReducer"
 import { reduxState } from "../../../model/reducers/store"
 import * as IO from '../../../model/SocketIoConstants'
 import { socket } from '../../util/SocketClientHandlers'
 import { Footer } from "./Footer"
 import "../../css/Operation-mode-edit-visibility-footer.css"
+import { OperationMode } from "../../../model/reducers/settingsReducer"
 
 const BUTTON_TEXT = 'Exit Edit Visibility'
 const DESCRIPTION_TEXT = 'You are currently editing the visibility of files.'.toUpperCase()

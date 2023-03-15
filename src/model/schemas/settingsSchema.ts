@@ -1,6 +1,5 @@
 import { z } from 'zod'
-import { OperationMode } from '../reducers/mediaReducer'
-import { OutputSettings } from '../reducers/settingsReducer'
+import { OperationMode, OutputSettings } from '../reducers/settingsReducer'
 
 const validateSchemaType: <T>(obj: T) => void = <T>(obj: T) => {}
 enum OperationModeSnapshot {
@@ -8,7 +7,7 @@ enum OperationModeSnapshot {
     EDIT_VISIBILITY = 'edit_visibility',
 }
 
-const defaultOutputSettingsState: OutputSettings = {
+export const defaultOutputSettingsState: OutputSettings = {
     label: '',
     folder: '',
     shouldScale: false,
@@ -20,6 +19,7 @@ const defaultOutputSettingsState: OutputSettings = {
     webState: false,
     webUrl: '',
     operationMode: OperationMode.CONTROL,
+    selectedFile: '',
 }
 
 export const PreviousGenericSettings = z.object({
@@ -95,6 +95,7 @@ export const NewGenericSettings = z.object({
             mixState: z.boolean().default(false),
             manualStartState: z.boolean().default(false),
             webState: z.boolean().default(false),
+            selectedFile: z.string().default(''),
             operationMode: z
                 .nativeEnum(OperationMode)
                 .default(OperationMode.CONTROL),

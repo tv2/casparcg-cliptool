@@ -1,12 +1,10 @@
-import {
-    IOutput as Output,
-    IThumbnailFile,
-} from '../../model/reducers/mediaReducer'
-import { reduxState, ReduxStateType } from '../../model/reducers/store'
+import { Output as Output, ThumbnailFile } from '../reducers/mediaReducer'
+import { OutputSettings } from '../reducers/settingsReducer'
+import { reduxState, ReduxStateType } from '../reducers/store'
 import appNavigationService from './appNavigationService'
+import settingsService from './settingsService'
 
 class MediaService {
-    // TODO: during UT-210, figure out the correct type to apply instead of 'any'.
     public getOutput(
         store: ReduxStateType = reduxState,
         channelIndex: number = -1
@@ -21,31 +19,33 @@ class MediaService {
     public findThumbnail(fileName: string, channelIndex: number): string {
         const output = this.getOutput(reduxState, channelIndex)
         const thumbnailFile = output?.thumbnailList.find(
-            (item: IThumbnailFile) =>
+            (item: ThumbnailFile) =>
                 item.name.toUpperCase() === fileName.toUpperCase()
         )
         return thumbnailFile?.thumbnail ?? ''
     }
 
     public isThumbnailWithTally(thumbnailName: string): boolean {
-        const tallyNoMediaPath = this.getCleanTallyFile(this.getOutput())
+        const tallyNoMediaPath = this.getCleanTallyFile(
+            settingsService.getOutputSettings()
+        )
         return tallyNoMediaPath === thumbnailName
     }
 
     public isThumbnailWithTallyOnAnyOutput(thumbnailName: string): boolean {
-        return reduxState.media[0].output.some(
+        return reduxState.settings[0].generics.outputs.some(
             (output) => this.getCleanTallyFile(output) === thumbnailName
         )
     }
 
-    public getCleanTallyFile(output: Output): string {
-        const tallyFileName = output.tallyFile
+    public getCleanTallyFile(output: OutputSettings): string {
+        const selectedFileName = output.selectedFile
             .toUpperCase()
             .replace(/\\/g, '/')
             .replace('//', '/')
             .split('.')
         // Remove system Path e.g.: D:\\media/:
-        const tallyNoMediaPath = tallyFileName[0].replace(
+        const tallyNoMediaPath = selectedFileName[0].replace(
             reduxState.settings[0].ccgConfig.path
                 ?.toUpperCase()
                 .replace(/\\/g, '/') + '/',

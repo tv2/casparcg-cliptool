@@ -1,8 +1,18 @@
 import { GenericSettings, OperationMode } from '../reducers/settingsReducer'
 import {
+    defaultOutputSettingsState,
     NewGenericSettings,
     PreviousGenericSettings,
 } from '../schemas/settingsSchema'
+
+const fallBackDefaultSettings: GenericSettings = {
+    transitionTime: 16,
+    ccgIp: '0.0.0.0',
+    ccgAmcpPort: 5250,
+    ccgDefaultLayer: 5253,
+    ccgOscPort: 10,
+    outputs: Array(8).fill(defaultOutputSettingsState),
+}
 
 class SettingsFileService {
     isPreviousStructure(loadedFile: any): {
@@ -58,12 +68,12 @@ class SettingsFileService {
         return newSettings
     }
 
-    getDefaultGenericSettings(): GenericSettings | undefined {
+    getDefaultGenericSettings(): GenericSettings {
         const parsed = NewGenericSettings.safeParse({})
         if (parsed.success) {
             return parsed.data as GenericSettings
         }
-        return undefined
+        return fallBackDefaultSettings
     }
 }
 

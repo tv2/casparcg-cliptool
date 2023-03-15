@@ -1,16 +1,16 @@
 import React from "react"
-import { IMediaFile } from "../../../model/reducers/mediaReducer"
+import { MediaFile } from "../../../model/reducers/mediaReducer"
 import { reduxState } from "../../../model/reducers/store"
 import { PGM_LOAD, PGM_PLAY, TOGGLE_THUMBNAIL_VISIBILITY } from "../../../model/SocketIoConstants";
-import mediaService from "../../services/mediaService";
+import mediaService from "../../../model/services/mediaService";
 import { socket } from "../../util/SocketClientHandlers";
 import '../../css/Thumbnail.css'
 import { OperationMode } from "../../../model/reducers/settingsReducer";
-import appNavigationService from "../../services/appNavigationService";
-import settingsService from "../../services/settingsService";
+import appNavigationService from "../../../model/services/appNavigationService";
+import settingsService from "../../../model/services/settingsService";
 
 interface ThumbnailButtonProps {
-  file: IMediaFile
+  file: MediaFile
   isTextView?: boolean
 }
 

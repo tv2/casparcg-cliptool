@@ -5,17 +5,11 @@ import osc from 'osc' //Using OSC fork from PieceMeta/osc.js as it has excluded 
 import { CasparCG } from 'casparcg-connection'
 import { reduxState, reduxStore } from '../../model/reducers/store'
 import {
-    setTallyFileName,
     setNumberOfOutputs,
     setTime,
     updateFolderList,
     updateMediaFiles,
     updateThumbFileList,
-    setLoop,
-    setManualStart,
-    setMix,
-    setWeb,
-    setOperationMode,
     updateHiddenFiles,
 } from '../../model/reducers/mediaActions'
 
@@ -23,13 +17,21 @@ import { socketServer } from './expressHandler'
 import * as IO from '../../model/SocketIoConstants'
 import {
     HiddenFileInfo,
-    IMediaFile,
-    IOutput,
-    IThumbnailFile,
-    OperationMode,
+    MediaFile,
+    Output,
+    ThumbnailFile,
 } from '../../model/reducers/mediaReducer'
 
-import { setTabData, updateSettings } from '../../model/reducers/settingsAction'
+import {
+    setLoop,
+    setManualStart,
+    setMix,
+    setOperationMode,
+    setSelectedFileName,
+    setTabData,
+    setWeb,
+    updateSettings,
+} from '../../model/reducers/settingsAction'
 import { initializeClient } from './socketIOServerHandler'
 import {
     extractFoldersList,
@@ -44,10 +46,15 @@ import {
 import { logger } from '../utils/logger'
 import { playMedia, playOverlay } from '../utils/CcgLoadPlay'
 import { saveHiddenFiles } from '../utils/hiddenFilesStorage'
+import {
+    OperationMode,
+    OutputSettings,
+} from '../../model/reducers/settingsReducer'
+import mediaService from '../../model/services/mediaService'
 
 let waitingForCCGResponse: boolean = false
 let previousThumbFileList = []
-let thumbNailList: IThumbnailFile[] = []
+let thumbNailList: ThumbnailFile[] = []
 
 //Communication with CasparCG consists of 2 parts:
 //1. An AMCP connection for receiving media info and sending commands
@@ -101,11 +108,11 @@ const handleOscMessage = (message: any) => {
             if (layerIndex === 9) {
                 let fileName = message.args[0]
                 if (
-                    reduxState.media[0].output[channelIndex]?.tallyFile !==
-                    fileName
+                    reduxState.settings[0].generics.outputs[channelIndex]
+                        ?.selectedFile !== fileName
                 ) {
                     reduxStore.dispatch(
-                        setTallyFileName(channelIndex, fileName)
+                        setSelectedFileName(channelIndex, fileName)
                     )
                     reduxStore.dispatch(setTime(channelIndex, [0, 0]))
                 }
@@ -212,9 +219,14 @@ const startTimerControlledServices = async () => {
     let data: IO.ITimeTallyPayload[] = []
 
     setInterval(() => {
-        reduxState.media[0].output.forEach((output: IOutput, index: number) => {
-            data[index] = { time: output.time, tally: output.tallyFile }
-        })
+        reduxState.settings[0].generics.outputs.forEach(
+            (output: OutputSettings, index: number) => {
+                data[index] = {
+                    time: mediaService.getOutput(reduxState, index).time,
+                    tally: output.selectedFile,
+                }
+            }
+        )
         socketServer.emit(IO.TIME_TALLY_UPDATE, data)
     }, 40)
 
@@ -224,7 +236,7 @@ const startTimerControlledServices = async () => {
     setInterval(() => {
         if (!waitingForCCGResponse) {
             waitingForCCGResponse = true
-            loadCcgMedia().then((items: IThumbnailFile[]) => {
+            loadCcgMedia().then((items: ThumbnailFile[]) => {
                 thumbNailList = items
                 waitingForCCGResponse = false
             })
@@ -233,7 +245,7 @@ const startTimerControlledServices = async () => {
     }, 3000)
 }
 
-const loadCcgMedia = async (): Promise<IThumbnailFile[]> => {
+const loadCcgMedia = async (): Promise<ThumbnailFile[]> => {
     let thumbFiles = await ccgConnection.thumbnailList()
 
     if (hasThumbListChanged(thumbFiles.response.data, previousThumbFileList)) {
@@ -270,7 +282,7 @@ const loadFileList = async () => {
         })
 }
 
-const outputExtractFiles = (allFiles: IMediaFile[], outputIndex: number) => {
+const outputExtractFiles = (allFiles: MediaFile[], outputIndex: number) => {
     let outputMedia = allFiles.filter((file) => {
         return (
             isFolderNameEqual(
@@ -295,7 +307,7 @@ const outputExtractFiles = (allFiles: IMediaFile[], outputIndex: number) => {
     }
 }
 
-function checkHiddenFilesChanged(files: IMediaFile[]) {
+function checkHiddenFilesChanged(files: MediaFile[]) {
     let needsUpdating = false
     const hiddenFiles: Record<string, HiddenFileInfo> =
         reduxState.media[0].hiddenFiles
@@ -321,9 +333,9 @@ function checkHiddenFilesChanged(files: IMediaFile[]) {
     }
 }
 
-const loadThumbNailImage = async (element: IThumbnailFile) => {
+const loadThumbNailImage = async (element: ThumbnailFile) => {
     let thumb = await ccgConnection.thumbnailRetrieve(element.name)
-    let receivedThumb: IThumbnailFile = {
+    let receivedThumb: ThumbnailFile = {
         name: element.name,
         changed: element.changed,
         size: element.size,
@@ -334,34 +346,27 @@ const loadThumbNailImage = async (element: IThumbnailFile) => {
 }
 
 export const assignThumbNailListToOutputs = () => {
-    reduxState.media[0].output.forEach(
-        (output: IOutput, channelIndex: number) => {
-            let outputMedia = thumbNailList.filter(
-                (thumbnail: IThumbnailFile) => {
-                    return isFolderNameEqual(
-                        thumbnail?.name,
-                        reduxState.settings[0].generics.outputs[channelIndex]
-                            .folder
-                    )
-                }
+    reduxState.media[0].output.forEach(({}, channelIndex: number) => {
+        let outputMedia = thumbNailList.filter((thumbnail: ThumbnailFile) => {
+            return isFolderNameEqual(
+                thumbnail?.name,
+                reduxState.settings[0].generics.outputs[channelIndex].folder
             )
-            if (
-                !isDeepCompareEqual(
-                    reduxState.media[0].output[channelIndex].thumbnailList,
-                    outputMedia
-                )
-            ) {
-                reduxStore.dispatch(
-                    updateThumbFileList(channelIndex, outputMedia)
-                )
-                socketServer.emit(
-                    IO.THUMB_UPDATE,
-                    channelIndex,
-                    reduxState.media[0].output[channelIndex].thumbnailList
-                )
-            }
+        })
+        if (
+            !isDeepCompareEqual(
+                reduxState.media[0].output[channelIndex].thumbnailList,
+                outputMedia
+            )
+        ) {
+            reduxStore.dispatch(updateThumbFileList(channelIndex, outputMedia))
+            socketServer.emit(
+                IO.THUMB_UPDATE,
+                channelIndex,
+                reduxState.media[0].output[channelIndex].thumbnailList
+            )
         }
-    )
+    })
 }
 
 export const casparCgClient = () => {

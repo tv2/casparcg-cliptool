@@ -4,8 +4,8 @@ import { socket } from "../../util/SocketClientHandlers";
 import ToggleButton from "./ToggleButton";
 import * as IO from '../../../model/SocketIoConstants'
 import { useSelector } from "react-redux";
-import mediaService from "../../services/mediaService";
-import settingsService from "../../services/settingsService";
+import mediaService from "../../../model/services/mediaService";
+import settingsService from "../../../model/services/settingsService";
 
 export default function HeaderButtons() {
   const activeTab: number = useSelector(

@@ -1,14 +1,14 @@
 import React from "react";
 import { reduxState, ReduxStateType, reduxStore } from "../../../model/reducers/store";
-import mediaService from "../../services/mediaService";
+import mediaService from "../../../model/services/mediaService";
 import { socket } from "../../util/SocketClientHandlers";
 import * as IO from '../../../model/SocketIoConstants'
 import { useSelector } from "react-redux";
 import { TOGGLE_SHOW_SETTINGS } from "../../../model/reducers/appNavAction";
 import '../../css/Settings.css'
 import { GenericSettings, OperationMode } from "../../../model/reducers/settingsReducer";
-import settingsService from "../../services/settingsService";
-import appNavigationService from "../../services/appNavigationService";
+import settingsService from "../../../model/services/settingsService";
+import appNavigationService from "../../../model/services/appNavigationService";
 
 interface SettingsButtonsProps {
   // TODO: Figure out a proper type.

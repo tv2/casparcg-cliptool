@@ -1,4 +1,4 @@
-import { reduxState } from '../../model/reducers/store'
+import { reduxState } from '../reducers/store'
 
 class AppNavigationService {
     public getActiveTab(): number {

@@ -1,5 +1,5 @@
-import { OutputSettings } from '../../model/reducers/settingsReducer'
-import { reduxState, ReduxStateType } from '../../model/reducers/store'
+import { OutputSettings } from '../reducers/settingsReducer'
+import { reduxState, ReduxStateType } from '../reducers/store'
 import appNavigationService from './appNavigationService'
 
 class SettingsService {

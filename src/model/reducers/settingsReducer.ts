@@ -42,6 +42,7 @@ export interface OutputSettings {
     manualStartState: boolean
     webState: boolean
     operationMode: OperationMode
+    selectedFile: string
 }
 
 export interface GenericSettings {
@@ -105,33 +106,44 @@ export const settings = (
             }
             return nextState
         }
-
-        case IO.SET_MIX:
+        case IO.SET_SELECTED_FILE_NAME: {
+            if (doesChannelExist(nextState, action)) {
+                nextState[0].generics.outputs[
+                    action.channelIndex
+                ].selectedFile = action.filename
+            }
+            return nextState
+        }
+        case IO.SET_MIX: {
             if (doesChannelExist(nextState, action)) {
                 nextState[0].generics.outputs[action.channelIndex].mixState =
                     action.mixState
             }
             return nextState
-        case IO.SET_WEB:
+        }
+        case IO.SET_WEB: {
             if (doesChannelExist(nextState, action)) {
                 nextState[0].generics.outputs[action.channelIndex].webState =
                     action.webState
             }
             return nextState
-        case IO.SET_MANUAL_START:
+        }
+        case IO.SET_MANUAL_START: {
             if (doesChannelExist(nextState, action)) {
                 nextState[0].generics.outputs[
                     action.channelIndex
                 ].manualStartState = action.manualStartState
             }
             return nextState
-        case IO.SET_OPERATION_MODE:
+        }
+        case IO.SET_OPERATION_MODE: {
             if (doesChannelExist(nextState, action)) {
                 nextState[0].generics.outputs[
                     action.channelIndex
                 ].operationMode = action.operationMode
             }
             return nextState
+        }
         default:
             return nextState
     }

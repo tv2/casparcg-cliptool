@@ -1,26 +1,31 @@
 import React from "react"
 import { useSelector } from "react-redux"
-import { IOutput } from "../../../model/reducers/mediaReducer"
+import { Output } from "../../../model/reducers/mediaReducer"
 import { reduxState, ReduxStateType } from "../../../model/reducers/store";
-import mediaService from "../../services/mediaService";
+import mediaService from "../../../model/services/mediaService";
 
 import '../../css/App-header.css'
+import appNavigationService from "../../../model/services/appNavigationService";
+import settingsService from "../../../model/services/settingsService";
+import { OutputSettings } from "../../../model/reducers/settingsReducer";
 
 export default function Time() {
     const activeTab: number = useSelector(
-        (storeUpdate: ReduxStateType) => storeUpdate.appNav[0].activeTab)
-    const output: IOutput = useSelector(
-        (storeUpdate: ReduxStateType) => storeUpdate.media[0].output[activeTab])
+        () => appNavigationService.getActiveTab())
+    const mediaOutput: Output = useSelector(
+        (storeUpdate: ReduxStateType) => mediaService.getOutput(storeUpdate))
+    const settingsOutput: OutputSettings = useSelector(
+        (storeUpdate: ReduxStateType) => settingsService.getOutputSettings(storeUpdate))
     useSelector(
-        (storeUpdate: ReduxStateType) => storeUpdate.media[0].output[activeTab]?.tallyFile)
+        (storeUpdate: ReduxStateType) => settingsService.getOutputSettings(storeUpdate).selectedFile)
     useSelector(
-        (storeUpdate: ReduxStateType) => storeUpdate.media[0].output[activeTab]?.time[0])
+        (storeUpdate: ReduxStateType) => mediaService.getOutput(storeUpdate)?.time[0])
     useSelector(
-        (storeUpdate: ReduxStateType) => storeUpdate.media[0].output[activeTab]?.thumbnailList)
+        (storeUpdate: ReduxStateType) => mediaService.getOutput(storeUpdate)?.thumbnailList)
 
     let cleanTallyFile: string = ''
     try {
-        cleanTallyFile = mediaService.getCleanTallyFile(output)
+        cleanTallyFile = mediaService.getCleanTallyFile(settingsOutput)
     } catch {}
     const thumbnailUrl = mediaService.findThumbnail(cleanTallyFile, activeTab)
     
@@ -28,7 +33,7 @@ export default function Time() {
         <div className="App-timer-background">
             <button className="App-header-pgm-counter">
                 {mediaService.secondsToTimeCode(
-                    output?.time,
+                    mediaOutput?.time,
                     reduxState.settings[0].ccgConfig.channels[activeTab]?.videoFormat?.frameRate
                 )}
             </button>

@@ -1,20 +1,20 @@
 import React from "react";
 import { useSelector } from "react-redux"
-import { IMediaFile } from "../../../model/reducers/mediaReducer"
-import mediaService from "../../services/mediaService";
+import { MediaFile } from "../../../model/reducers/mediaReducer"
+import mediaService from "../../../model/services/mediaService";
 import '../../css/Thumbnail.css'
 import { ReduxStateType } from "../../../model/reducers/store";
-import appNavigationService from "../../services/appNavigationService";
+import appNavigationService from "../../../model/services/appNavigationService";
 
 interface ThumbnailPictureProps {
-  file: IMediaFile
+  file: MediaFile
 }
 
 export default function ThumbnailPicture(props: ThumbnailPictureProps): JSX.Element {
   // Redux hook:
-  const file: IMediaFile = useSelector(
+  const file: MediaFile = useSelector(
     (storeUpdate: ReduxStateType) => mediaService.getOutput(storeUpdate)
-        .mediaFiles.find((predicate: IMediaFile) => predicate.name === props.file.name)
+        .mediaFiles.find((predicate: MediaFile) => predicate.name === props.file.name)
   )
   const url: string = mediaService.findThumbnail(file.name, appNavigationService.getActiveTab() || 0)
   const classNames: string = [

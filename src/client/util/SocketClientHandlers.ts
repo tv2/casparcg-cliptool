@@ -3,31 +3,30 @@ import * as IO from '../../model/SocketIoConstants'
 
 import io from 'socket.io-client'
 import {
-    setManualStart,
-    setLoop,
-    setMix,
-    setTallyFileName,
     setTime,
     updateMediaFiles,
     updateThumbFileList,
     updateFolderList,
     setNumberOfOutputs,
-    setWeb,
-    setOperationMode,
     updateHiddenFiles,
 } from '../../model/reducers/mediaActions'
 import {
     HiddenFileInfo,
-    IMediaFile,
-    IThumbnailFile,
-    OperationMode,
+    MediaFile,
+    ThumbnailFile,
 } from '../../model/reducers/mediaReducer'
 import {
     setGenerics,
+    setLoop,
+    setManualStart,
+    setMix,
+    setOperationMode,
+    setSelectedFileName,
     setTabData,
+    setWeb,
     updateSettings,
 } from '../../model/reducers/settingsAction'
-import { Settings } from '../../model/reducers/settingsReducer'
+import { OperationMode, Settings } from '../../model/reducers/settingsReducer'
 import {
     setConnectionStatus,
     SET_CONNECTION_STATUS,
@@ -46,7 +45,7 @@ socket
         reduxStore.dispatch(setConnectionStatus(false))
         console.log('LOST CONNECTION TO CLIPTOOL SERVER')
     })
-    .on(IO.MEDIA_UPDATE, (channelIndex: number, payload: IMediaFile[]) => {
+    .on(IO.MEDIA_UPDATE, (channelIndex: number, payload: MediaFile[]) => {
         reduxStore.dispatch(updateMediaFiles(channelIndex, payload))
         console.log('Client state :', reduxState)
     })
@@ -55,12 +54,9 @@ socket.on(IO.FOLDERS_UPDATE, (payload: string[]) => {
     reduxStore.dispatch(updateFolderList(payload))
 })
 
-socket.on(
-    IO.THUMB_UPDATE,
-    (channelIndex: number, payload: IThumbnailFile[]) => {
-        reduxStore.dispatch(updateThumbFileList(channelIndex, payload))
-    }
-)
+socket.on(IO.THUMB_UPDATE, (channelIndex: number, payload: ThumbnailFile[]) => {
+    reduxStore.dispatch(updateThumbFileList(channelIndex, payload))
+})
 
 socket.on(
     IO.HIDDEN_FILES_UPDATE,
@@ -72,8 +68,11 @@ socket.on(
 socket.on(IO.TIME_TALLY_UPDATE, (data: IO.ITimeTallyPayload[]) => {
     data.forEach((channel, index) => {
         reduxStore.dispatch(setTime(index, channel.time))
-        if (reduxState.media[0].output[index].tallyFile !== channel.tally) {
-            reduxStore.dispatch(setTallyFileName(index, channel.tally))
+        if (
+            reduxState.settings[0].generics.outputs[index].selectedFile !==
+            channel.tally
+        ) {
+            reduxStore.dispatch(setSelectedFileName(index, channel.tally))
         }
     })
 })

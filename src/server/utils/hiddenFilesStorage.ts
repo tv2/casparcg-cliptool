@@ -1,5 +1,6 @@
 import { updateHiddenFiles } from '../../model/reducers/mediaActions'
-import { HiddenFileInfo, IOutput } from '../../model/reducers/mediaReducer'
+import { HiddenFileInfo, Output } from '../../model/reducers/mediaReducer'
+import { OutputSettings } from '../../model/reducers/settingsReducer'
 import { reduxState, reduxStore } from '../../model/reducers/store'
 import * as IO from '../../model/SocketIoConstants'
 import { socketServer } from '../handlers/expressHandler'
@@ -74,8 +75,8 @@ function getCleanHiddenFiles(
 function validateHiddenFiles(
     hiddenFiles: Record<string, HiddenFileInfo>
 ): boolean {
-    const outputs: IOutput[] = reduxState.media[0].output
-    return outputs.some((output) => output.tallyFile in hiddenFiles)
+    const outputs: OutputSettings[] = reduxState.settings[0].generics.outputs
+    return outputs.some((output) => output.selectedFile in hiddenFiles)
 }
 
 function clearInvalidHiddenFiles(
@@ -84,10 +85,10 @@ function clearInvalidHiddenFiles(
     const hiddenFiles: Record<string, HiddenFileInfo> = {
         ...originalHiddenFiles,
     }
-    const outputs: IOutput[] = reduxState.media[0].output
+    const outputs: OutputSettings[] = reduxState.settings[0].generics.outputs
     outputs.forEach((output) => {
-        if (output.tallyFile in hiddenFiles) {
-            delete hiddenFiles[output.tallyFile]
+        if (output.selectedFile in hiddenFiles) {
+            delete hiddenFiles[output.selectedFile]
         }
     })
     return hiddenFiles

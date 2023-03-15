@@ -10,6 +10,7 @@ export const SET_MIX = 'setMix'
 export const SET_WEB = 'setWeb'
 export const SET_MANUAL_START = 'setManualStart'
 export const SET_OPERATION_MODE = 'setOperationMode'
+export const SET_SELECTED_FILE_NAME = 'setSelectedFileName'
 
 export const updateSettings = (channels, path: string) => {
     return {
@@ -93,5 +94,13 @@ export const setOperationMode = (
         type: SET_OPERATION_MODE,
         channelIndex: channelIndex,
         operationMode: operationMode,
+    }
+}
+
+export const setSelectedFileName = (channelIndex: number, filename: string) => {
+    return {
+        type: SET_SELECTED_FILE_NAME,
+        channelIndex: channelIndex,
+        filename: filename,
     }
 }
