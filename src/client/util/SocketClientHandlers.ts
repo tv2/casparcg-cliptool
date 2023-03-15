@@ -11,11 +11,6 @@ import {
     updateHiddenFiles,
 } from '../../model/reducers/mediaActions'
 import {
-    HiddenFileInfo,
-    MediaFile,
-    ThumbnailFile,
-} from '../../model/reducers/mediaReducer'
-import {
     setGenerics,
     setLoop,
     setManualStart,
@@ -28,6 +23,11 @@ import {
 } from '../../model/reducers/settingsAction'
 import { setConnectionStatus } from '../../model/reducers/appNavAction'
 import { OperationMode, Settings } from '../../model/reducers/settingsModels'
+import {
+    HiddenFileInfo,
+    MediaFile,
+    ThumbnailFile,
+} from '../../model/reducers/mediaModels'
 
 export const socket = io()
 

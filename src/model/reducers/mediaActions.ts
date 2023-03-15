@@ -1,4 +1,4 @@
-import { HiddenFileInfo, MediaFile, ThumbnailFile } from './mediaReducer'
+import { HiddenFileInfo, MediaFile, ThumbnailFile } from './mediaModels'
 
 export const UPDATE_MEDIA_FILES = 'updateMediaFiles'
 export const UPDATE_THUMB_LIST = 'updateThumbList'

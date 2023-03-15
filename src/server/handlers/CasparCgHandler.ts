@@ -20,7 +20,7 @@ import {
     MediaFile,
     Output,
     ThumbnailFile,
-} from '../../model/reducers/mediaReducer'
+} from '../../model/reducers/mediaModels'
 
 import {
     setLoop,
@@ -46,11 +46,8 @@ import {
 import { logger } from '../utils/logger'
 import { playOverlay } from '../utils/CcgLoadPlay'
 import { saveHiddenFiles } from '../utils/hiddenFilesStorage'
-import mediaService from '../../model/services/mediaService'
-import {
-    OperationMode,
-    OutputSettings,
-} from '../../model/reducers/settingsModels'
+import { OperationMode } from '../../model/reducers/settingsModels'
+import settingsService from '../../model/services/settingsService'
 
 let waitingForCCGResponse: boolean = false
 let previousThumbFileList = []
@@ -178,11 +175,11 @@ const loadInitialOverlay = () => {
     if (!reduxState.settings[0].generics.outputs) {
         return
     }
-    reduxState.settings[0].ccgConfig.channels.forEach((ch, index) => {
+    reduxState.settings[0].ccgConfig.channels.forEach(({}, index) => {
         playOverlay(
             index,
             10,
-            reduxState.settings[0].generics.outputs[index].webUrl
+            settingsService.getOutputSettings(reduxState, index).webUrl
         )
     })
 }
@@ -219,14 +216,13 @@ const startTimerControlledServices = async () => {
     let data: IO.ITimeTallyPayload[] = []
 
     setInterval(() => {
-        reduxState.settings[0].generics.outputs.forEach(
-            (output: OutputSettings, index: number) => {
-                data[index] = {
-                    time: mediaService.getOutput(reduxState, index).time,
-                    tally: output.selectedFile,
-                }
+        reduxState.media[0].outputs.forEach((output: Output, index: number) => {
+            data[index] = {
+                time: output.time,
+                tally: settingsService.getOutputSettings(reduxState, index)
+                    .selectedFile,
             }
-        )
+        })
         socketServer.emit(IO.TIME_TALLY_UPDATE, data)
     }, 40)
 
@@ -272,7 +268,7 @@ const loadFileList = async () => {
             )
             socketServer.emit(IO.FOLDERS_UPDATE, reduxState.media[0].folderList)
 
-            reduxState.media[0].output.forEach(({}, outputIndex: number) => {
+            reduxState.media[0].outputs.forEach(({}, outputIndex: number) => {
                 outputExtractFiles(payload.response.data, outputIndex)
             })
             checkHiddenFilesChanged(payload.response.data)
@@ -293,7 +289,7 @@ const outputExtractFiles = (allFiles: MediaFile[], outputIndex: number) => {
     })
     if (
         !isDeepCompareEqual(
-            reduxState.media[0].output[outputIndex].mediaFiles,
+            reduxState.media[0].outputs[outputIndex].mediaFiles,
             outputMedia
         )
     ) {
@@ -302,7 +298,7 @@ const outputExtractFiles = (allFiles: MediaFile[], outputIndex: number) => {
         socketServer.emit(
             IO.MEDIA_UPDATE,
             outputIndex,
-            reduxState.media[0].output[outputIndex].mediaFiles
+            reduxState.media[0].outputs[outputIndex].mediaFiles
         )
     }
 }
@@ -346,7 +342,7 @@ const loadThumbNailImage = async (element: ThumbnailFile) => {
 }
 
 export const assignThumbNailListToOutputs = () => {
-    reduxState.media[0].output.forEach(({}, channelIndex: number) => {
+    reduxState.media[0].outputs.forEach(({}, channelIndex: number) => {
         let outputMedia = thumbNailList.filter((thumbnail: ThumbnailFile) => {
             return isFolderNameEqual(
                 thumbnail?.name,
@@ -355,7 +351,7 @@ export const assignThumbNailListToOutputs = () => {
         })
         if (
             !isDeepCompareEqual(
-                reduxState.media[0].output[channelIndex].thumbnailList,
+                reduxState.media[0].outputs[channelIndex].thumbnailList,
                 outputMedia
             )
         ) {
@@ -363,7 +359,7 @@ export const assignThumbNailListToOutputs = () => {
             socketServer.emit(
                 IO.THUMB_UPDATE,
                 channelIndex,
-                reduxState.media[0].output[channelIndex].thumbnailList
+                reduxState.media[0].outputs[channelIndex].thumbnailList
             )
         }
     })

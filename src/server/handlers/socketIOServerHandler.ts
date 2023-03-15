@@ -24,7 +24,7 @@ import {
     setWeb,
 } from '../../model/reducers/settingsAction'
 import { saveSettings } from '../utils/SettingsStorage'
-import { HiddenFileInfo, MediaFile } from '../../model/reducers/mediaReducer'
+import { HiddenFileInfo, MediaFile } from '../../model/reducers/mediaModels'
 import { assignThumbNailListToOutputs } from './CasparCgHandler'
 import { saveHiddenFiles } from '../utils/hiddenFilesStorage'
 import settingsService from '../../model/services/settingsService'
@@ -216,7 +216,7 @@ function buildHiddenFileMetadataFromFileName(
 }
 
 function findFile(fileName: string, channelIndex: number): MediaFile {
-    return reduxState.media[0].output[channelIndex].mediaFiles.find(
+    return reduxState.media[0].outputs[channelIndex].mediaFiles.find(
         (file) => file.name.toUpperCase() === fileName.toUpperCase()
     )
 }
@@ -262,12 +262,12 @@ export const initializeClient = () => {
             socketServer.emit(
                 IO.THUMB_UPDATE,
                 channelIndex,
-                reduxState.media[0].output[channelIndex].thumbnailList
+                reduxState.media[0].outputs[channelIndex].thumbnailList
             )
             socketServer.emit(
                 IO.MEDIA_UPDATE,
                 channelIndex,
-                reduxState.media[0].output[channelIndex].mediaFiles
+                reduxState.media[0].outputs[channelIndex].mediaFiles
             )
             socketServer.emit(
                 IO.HIDDEN_FILES_UPDATE,
@@ -279,7 +279,7 @@ export const initializeClient = () => {
 }
 
 const cleanUpMediaFiles = () => {
-    reduxState.media[0].output.forEach(({}, channelIndex: number) => {
+    reduxState.media[0].outputs.forEach(({}, channelIndex: number) => {
         reduxStore.dispatch(updateMediaFiles(channelIndex, []))
         reduxStore.dispatch(updateThumbFileList(channelIndex, []))
         assignThumbNailListToOutputs()

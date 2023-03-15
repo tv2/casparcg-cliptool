@@ -1,5 +1,4 @@
 import React from "react"
-import { MediaFile } from "../../../model/reducers/mediaReducer"
 import { PGM_LOAD, PGM_PLAY, TOGGLE_THUMBNAIL_VISIBILITY } from "../../../model/SocketIoConstants";
 import mediaService from "../../../model/services/mediaService";
 import { socket } from "../../util/SocketClientHandlers";
@@ -7,6 +6,7 @@ import '../../css/Thumbnail.css'
 import appNavigationService from "../../../model/services/appNavigationService";
 import settingsService from "../../../model/services/settingsService";
 import { OperationMode } from "../../../model/reducers/settingsModels";
+import { MediaFile } from "../../../model/reducers/mediaModels";
 
 interface ThumbnailButtonProps {
   file: MediaFile

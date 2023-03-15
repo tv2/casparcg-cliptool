@@ -1,4 +1,4 @@
-import { Output as Output, ThumbnailFile } from '../reducers/mediaReducer'
+import { Output as Output, ThumbnailFile } from '../reducers/mediaModels'
 import { OutputSettings } from '../reducers/settingsModels'
 import { reduxState, ReduxStateType } from '../reducers/store'
 import appNavigationService from './appNavigationService'
@@ -13,7 +13,7 @@ class MediaService {
             channelIndex === -1
                 ? appNavigationService.getActiveTab()
                 : channelIndex
-        return store.media[0].output[activeTab]
+        return store.media[0].outputs[activeTab]
     }
 
     public findThumbnail(fileName: string, channelIndex: number): string {

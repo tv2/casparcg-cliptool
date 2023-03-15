@@ -1,5 +1,5 @@
 import os from 'os' // Used to display (log) network addresses on local machine
-import { ThumbnailFile } from '../../model/reducers/mediaReducer'
+import { ThumbnailFile } from '../../model/reducers/mediaModels'
 
 export const getThisMachineIpAddresses = (): string[] => {
     let interfaces = os.networkInterfaces()

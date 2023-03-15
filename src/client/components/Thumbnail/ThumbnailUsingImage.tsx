@@ -1,6 +1,5 @@
 import React from "react"
 import { useSelector } from "react-redux"
-import { HiddenFileInfo, MediaFile } from "../../../model/reducers/mediaReducer"
 import mediaService from "../../../model/services/mediaService";
 import ThumbnailButton from "./ThumbnailButton";
 import ThumbnailPicture from "./ThumbnailPicture";
@@ -8,6 +7,7 @@ import TimeCode from "./TimeCode";
 import '../../css/Thumbnail.css'
 import { ReduxStateType } from "../../../model/reducers/store";
 import settingsService from "../../../model/services/settingsService";
+import { HiddenFileInfo, MediaFile } from "../../../model/reducers/mediaModels";
 
 interface ThumbnailUsingImageProps {
   file: MediaFile

@@ -1,6 +1,5 @@
 import React from "react";
 import { useSelector } from "react-redux"
-import { MediaFile } from "../../../model/reducers/mediaReducer";
 import mediaService from "../../../model/services/mediaService";
 
 import '../../css/Thumbnail.css'
@@ -8,6 +7,7 @@ import ThumbnailButton from "./ThumbnailButton";
 import TimeCode from "./TimeCode";
 import { ReduxStateType } from "../../../model/reducers/store";
 import settingsService from "../../../model/services/settingsService";
+import { MediaFile } from "../../../model/reducers/mediaModels";
 
 interface ThumbnailUsingTextProps {
   file: MediaFile
