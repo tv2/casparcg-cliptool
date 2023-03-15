@@ -1,8 +1,5 @@
 import { setGenerics } from '../../model/reducers/settingsAction'
-import {
-    defaultSettingsReducerState,
-    GenericSettings,
-} from '../../model/reducers/settingsReducer'
+import { GenericSettings } from '../../model/reducers/settingsModels'
 import { reduxState, reduxStore } from '../../model/reducers/store'
 import settingsFileService from '../../model/services/settingsFileService'
 import { logger } from './logger'

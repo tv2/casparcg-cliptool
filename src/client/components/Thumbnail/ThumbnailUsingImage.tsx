@@ -34,7 +34,7 @@ export default function ThumbnailUsingImage(props: ThumbnailUsingImageProps): JS
     <div className={classNames}>
         <ThumbnailPicture file={props.file} />
         <ThumbnailButton file={props.file} />
-        {mediaService.isThumbnailWithTally(props.file.name) ? (
+        {mediaService.isThumbnailSelected(props.file.name) ? (
             <TimeCode file={props.file} />
         ) : (
             ''

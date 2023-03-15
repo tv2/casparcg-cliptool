@@ -1,13 +1,12 @@
 import React from "react"
 import { MediaFile } from "../../../model/reducers/mediaReducer"
-import { reduxState } from "../../../model/reducers/store"
 import { PGM_LOAD, PGM_PLAY, TOGGLE_THUMBNAIL_VISIBILITY } from "../../../model/SocketIoConstants";
 import mediaService from "../../../model/services/mediaService";
 import { socket } from "../../util/SocketClientHandlers";
 import '../../css/Thumbnail.css'
-import { OperationMode } from "../../../model/reducers/settingsReducer";
 import appNavigationService from "../../../model/services/appNavigationService";
 import settingsService from "../../../model/services/settingsService";
+import { OperationMode } from "../../../model/reducers/settingsModels";
 
 interface ThumbnailButtonProps {
   file: MediaFile
@@ -43,7 +42,7 @@ function handleClickMedia(fileName: string): void {
 }
 
 function emitToggleVisibility(fileName: string): void {
-  if (mediaService.isThumbnailWithTallyOnAnyOutput(fileName)) {
+  if (mediaService.isThumbnailSelectedOnAnyOutput(fileName)) {
       alert('Unable to hide, as the file is in use somewhere.')
       return
   }

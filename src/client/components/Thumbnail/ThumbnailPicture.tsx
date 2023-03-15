@@ -19,7 +19,7 @@ export default function ThumbnailPicture(props: ThumbnailPictureProps): JSX.Elem
   const url: string = mediaService.findThumbnail(file.name, appNavigationService.getActiveTab() || 0)
   const classNames: string = [
       'thumbnailImage',
-      mediaService.isThumbnailWithTally(file.name) ? 'selected-thumb' : ''
+      mediaService.isThumbnailSelected(file.name) ? 'selected-thumb' : ''
   ].join(' ')
 
   return (

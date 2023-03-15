@@ -7,8 +7,8 @@ import { useSelector } from 'react-redux';
 import { reduxState, ReduxStateType } from '../../../model/reducers/store';
 import ThumbnailUsingImage from './ThumbnailUsingImage';
 import ThumbnailUsingText from './ThumbnailUsingText';
-import { OperationMode } from '../../../model/reducers/settingsReducer';
 import settingsService from '../../../model/services/settingsService';
+import { OperationMode } from '../../../model/reducers/settingsModels';
 
 export function Thumbnail(): JSX.Element {
     // Redux hook:

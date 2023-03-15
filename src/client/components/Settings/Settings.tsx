@@ -4,7 +4,7 @@ import Outputs from './Outputs'
 import SettingsButtons from './SettingsButtons'
 import GeneralSettings from './GeneralSettings'
 import { reduxState } from '../../../model/reducers/store'
-import { GenericSettings } from '../../../model/reducers/settingsReducer'
+import { GenericSettings } from '../../../model/reducers/settingsModels'
 
 // Check if URL has specifiet a channel:
 const channel = new URLSearchParams(window.location.search).get('channel')

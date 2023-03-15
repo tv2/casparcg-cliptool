@@ -6,12 +6,11 @@ import * as IO from '../../../model/SocketIoConstants'
 import { useSelector } from "react-redux";
 import { TOGGLE_SHOW_SETTINGS } from "../../../model/reducers/appNavAction";
 import '../../css/Settings.css'
-import { GenericSettings, OperationMode } from "../../../model/reducers/settingsReducer";
 import settingsService from "../../../model/services/settingsService";
 import appNavigationService from "../../../model/services/appNavigationService";
+import { GenericSettings, OperationMode } from "../../../model/reducers/settingsModels";
 
 interface SettingsButtonsProps {
-  // TODO: Figure out a proper type.
   settings: GenericSettings 
   specificChannel: number
 }

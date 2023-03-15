@@ -2,7 +2,6 @@ import React from "react"
 
 import '../../css/Header.css'
 
-
 interface ToggleButtonProps {
   onClick: () => void
   description: string

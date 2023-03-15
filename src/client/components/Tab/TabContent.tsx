@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { setActiveTab } from '../../../model/reducers/appNavAction'
-import { TabData } from '../../../model/reducers/settingsReducer'
+import { TabData } from '../../../model/reducers/settingsModels'
 import { reduxStore } from '../../../model/reducers/store'
 
 import '../../css/Tab.css'

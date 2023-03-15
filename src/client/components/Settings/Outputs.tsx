@@ -1,5 +1,5 @@
 import React from "react";
-import { GenericSettings } from "../../../model/reducers/settingsReducer";
+import { GenericSettings } from "../../../model/reducers/settingsModels";
 import { reduxState } from "../../../model/reducers/store";
 import SingleOutput from "./SingleOutput";
 

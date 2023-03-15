@@ -1,4 +1,4 @@
-import { OutputSettings } from '../reducers/settingsReducer'
+import { OutputSettings } from '../reducers/settingsModels'
 import { reduxState, ReduxStateType } from '../reducers/store'
 import appNavigationService from './appNavigationService'
 

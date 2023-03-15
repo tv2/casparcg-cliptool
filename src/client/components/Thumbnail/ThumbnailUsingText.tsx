@@ -19,16 +19,16 @@ export default function ThumbnailUsingText(props: ThumbnailUsingTextProps): JSX.
     (storeUpdate: ReduxStateType) => settingsService.getOutputSettings(storeUpdate)
       .selectedFile
   )
-  const isTallyFile: boolean = mediaService.isThumbnailWithTally(props.file.name)
+  const isSelected: boolean = mediaService.isThumbnailSelected(props.file.name)
   const classNames: string = [
     'thumbnail-text-view',
-    isTallyFile ? 'selected-thumb' : ''
+    isSelected ? 'selected-thumb' : ''
   ].join(' ')
 
 return (
     <div className={classNames} >
         <ThumbnailButton file={props.file} isTextView />
-        {isTallyFile ? (
+        {isSelected ? (
             <TimeCode file={props.file} isTextView/>
         ) : (
             ''

@@ -44,13 +44,13 @@ import {
     isFolderNameEqual,
 } from '../utils/ccgHandlerUtils'
 import { logger } from '../utils/logger'
-import { playMedia, playOverlay } from '../utils/CcgLoadPlay'
+import { playOverlay } from '../utils/CcgLoadPlay'
 import { saveHiddenFiles } from '../utils/hiddenFilesStorage'
+import mediaService from '../../model/services/mediaService'
 import {
     OperationMode,
     OutputSettings,
-} from '../../model/reducers/settingsReducer'
-import mediaService from '../../model/services/mediaService'
+} from '../../model/reducers/settingsModels'
 
 let waitingForCCGResponse: boolean = false
 let previousThumbFileList = []

@@ -1,6 +1,6 @@
 import { updateHiddenFiles } from '../../model/reducers/mediaActions'
 import { HiddenFileInfo, Output } from '../../model/reducers/mediaReducer'
-import { OutputSettings } from '../../model/reducers/settingsReducer'
+import { OutputSettings } from '../../model/reducers/settingsModels'
 import { reduxState, reduxStore } from '../../model/reducers/store'
 import * as IO from '../../model/SocketIoConstants'
 import { socketServer } from '../handlers/expressHandler'

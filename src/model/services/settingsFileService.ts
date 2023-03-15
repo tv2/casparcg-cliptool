@@ -1,20 +1,24 @@
-import { GenericSettings, OperationMode } from '../reducers/settingsReducer'
+import { GenericSettings, OperationMode } from '../reducers/settingsModels'
 import {
     defaultOutputSettingsState,
     NewGenericSettings,
     PreviousGenericSettings,
 } from '../schemas/settingsSchema'
 
-const fallBackDefaultSettings: GenericSettings = {
-    transitionTime: 16,
-    ccgIp: '0.0.0.0',
-    ccgAmcpPort: 5250,
-    ccgDefaultLayer: 5253,
-    ccgOscPort: 10,
-    outputs: Array(8).fill(defaultOutputSettingsState),
-}
-
 class SettingsFileService {
+    fallBackDefaultSettings: GenericSettings
+
+    constructor() {
+        this.fallBackDefaultSettings = {
+            transitionTime: 16,
+            ccgIp: '0.0.0.0',
+            ccgAmcpPort: 5250,
+            ccgDefaultLayer: 5253,
+            ccgOscPort: 10,
+            outputs: Array(8).fill(defaultOutputSettingsState),
+        }
+    }
+
     isPreviousStructure(loadedFile: any): {
         success: boolean
         parsed: PreviousGenericSettings | undefined
@@ -73,7 +77,7 @@ class SettingsFileService {
         if (parsed.success) {
             return parsed.data as GenericSettings
         }
-        return fallBackDefaultSettings
+        return this.fallBackDefaultSettings
     }
 }
 

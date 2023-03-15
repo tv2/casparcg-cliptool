@@ -29,7 +29,7 @@ export default function TimeCode(props: TimeCodeProps): JSX.Element {
 
   return (
     <a className={classNames}>
-        {mediaService.isThumbnailWithTally(props.file.name)
+        {mediaService.isThumbnailSelected(props.file.name)
             ? mediaService.secondsToTimeCode(time, frameRate)
             : ''}
     </a>

@@ -1,6 +1,6 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
-import { OperationMode } from '../../../model/reducers/settingsReducer'
+import { OperationMode } from '../../../model/reducers/settingsModels'
 import { ReduxStateType } from '../../../model/reducers/store'
 import appNavigationService from '../../../model/services/appNavigationService'
 import { OperationModeEditVisibilityFooter } from './OperationModeEditVisibilityFooter'

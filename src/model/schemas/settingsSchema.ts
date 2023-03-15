@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { OperationMode, OutputSettings } from '../reducers/settingsReducer'
+import { OperationMode, OutputSettings } from '../reducers/settingsModels'
 
 const validateSchemaType: <T>(obj: T) => void = <T>(obj: T) => {}
 enum OperationModeSnapshot {

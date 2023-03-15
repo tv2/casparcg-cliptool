@@ -1,9 +1,8 @@
 import React, { useState } from "react"
-import { reduxState, reduxStore } from "../../../model/reducers/store"
-import { CcgConfigChannel, OutputSettings } from "../../../model/reducers/settingsReducer"
+import { CcgConfigChannel, OutputSettings } from "../../../model/reducers/settingsModels"
+import { reduxState } from "../../../model/reducers/store"
 import '../../css/Settings.css'
 import SettingsInput, { SettingsInputType } from "./SettingsInput"
-import { useSelector } from "react-redux"
 
 interface SingleOutputProps {
   configChannel?: CcgConfigChannel

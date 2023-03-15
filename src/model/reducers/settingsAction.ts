@@ -1,4 +1,4 @@
-import { GenericSettings, OperationMode, TabData } from './settingsReducer'
+import { GenericSettings, OperationMode, TabData } from './settingsModels'
 import { reduxState } from './store'
 
 export const UPDATE_SETTINGS = 'updateSettings'

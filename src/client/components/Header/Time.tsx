@@ -7,7 +7,7 @@ import mediaService from "../../../model/services/mediaService";
 import '../../css/App-header.css'
 import appNavigationService from "../../../model/services/appNavigationService";
 import settingsService from "../../../model/services/settingsService";
-import { OutputSettings } from "../../../model/reducers/settingsReducer";
+import { OutputSettings } from "../../../model/reducers/settingsModels";
 
 export default function Time() {
     const activeTab: number = useSelector(
@@ -25,7 +25,7 @@ export default function Time() {
 
     let cleanTallyFile: string = ''
     try {
-        cleanTallyFile = mediaService.getCleanTallyFile(settingsOutput)
+        cleanTallyFile = mediaService.getCleanSelectedFile(settingsOutput)
     } catch {}
     const thumbnailUrl = mediaService.findThumbnail(cleanTallyFile, activeTab)
     

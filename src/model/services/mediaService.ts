@@ -1,5 +1,5 @@
 import { Output as Output, ThumbnailFile } from '../reducers/mediaReducer'
-import { OutputSettings } from '../reducers/settingsReducer'
+import { OutputSettings } from '../reducers/settingsModels'
 import { reduxState, ReduxStateType } from '../reducers/store'
 import appNavigationService from './appNavigationService'
 import settingsService from './settingsService'
@@ -25,33 +25,33 @@ class MediaService {
         return thumbnailFile?.thumbnail ?? ''
     }
 
-    public isThumbnailWithTally(thumbnailName: string): boolean {
-        const tallyNoMediaPath = this.getCleanTallyFile(
+    public isThumbnailSelected(thumbnailName: string): boolean {
+        const selectedFileName = this.getCleanSelectedFile(
             settingsService.getOutputSettings()
         )
-        return tallyNoMediaPath === thumbnailName
+        return selectedFileName === thumbnailName
     }
 
-    public isThumbnailWithTallyOnAnyOutput(thumbnailName: string): boolean {
+    public isThumbnailSelectedOnAnyOutput(thumbnailName: string): boolean {
         return reduxState.settings[0].generics.outputs.some(
-            (output) => this.getCleanTallyFile(output) === thumbnailName
+            (output) => this.getCleanSelectedFile(output) === thumbnailName
         )
     }
 
-    public getCleanTallyFile(output: OutputSettings): string {
+    public getCleanSelectedFile(output: OutputSettings): string {
         const selectedFileName = output.selectedFile
             .toUpperCase()
             .replace(/\\/g, '/')
             .replace('//', '/')
             .split('.')
         // Remove system Path e.g.: D:\\media/:
-        const tallyNoMediaPath = selectedFileName[0].replace(
+        const cleanSelectedFileName = selectedFileName[0].replace(
             reduxState.settings[0].ccgConfig.path
                 ?.toUpperCase()
                 .replace(/\\/g, '/') + '/',
             ''
         )
-        return tallyNoMediaPath
+        return cleanSelectedFileName
     }
 
     public secondsToTimeCode(

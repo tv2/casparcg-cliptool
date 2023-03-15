@@ -26,11 +26,8 @@ import {
     setWeb,
     updateSettings,
 } from '../../model/reducers/settingsAction'
-import { OperationMode, Settings } from '../../model/reducers/settingsReducer'
-import {
-    setConnectionStatus,
-    SET_CONNECTION_STATUS,
-} from '../../model/reducers/appNavAction'
+import { setConnectionStatus } from '../../model/reducers/appNavAction'
+import { OperationMode, Settings } from '../../model/reducers/settingsModels'
 
 export const socket = io()
 

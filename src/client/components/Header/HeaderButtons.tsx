@@ -4,7 +4,6 @@ import { socket } from "../../util/SocketClientHandlers";
 import ToggleButton from "./ToggleButton";
 import * as IO from '../../../model/SocketIoConstants'
 import { useSelector } from "react-redux";
-import mediaService from "../../../model/services/mediaService";
 import settingsService from "../../../model/services/settingsService";
 
 export default function HeaderButtons() {

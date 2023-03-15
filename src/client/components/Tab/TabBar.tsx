@@ -1,5 +1,5 @@
 import React from 'react'
-import { TabData } from '../../../model/reducers/settingsReducer'
+import { TabData } from '../../../model/reducers/settingsModels'
 
 import '../../css/Tab.css'
 import { Tab } from './Tab'

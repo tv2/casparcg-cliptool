@@ -23,21 +23,17 @@ import {
     setOperationMode,
     setWeb,
 } from '../../model/reducers/settingsAction'
-import {
-    GenericSettings,
-    OperationMode,
-    OutputSettings,
-} from '../../model/reducers/settingsReducer'
 import { saveSettings } from '../utils/SettingsStorage'
-import {
-    HiddenFileInfo,
-    MediaFile,
-    Output,
-} from '../../model/reducers/mediaReducer'
+import { HiddenFileInfo, MediaFile } from '../../model/reducers/mediaReducer'
 import { assignThumbNailListToOutputs } from './CasparCgHandler'
 import { saveHiddenFiles } from '../utils/hiddenFilesStorage'
 import settingsService from '../../model/services/settingsService'
 import mediaService from '../../model/services/mediaService'
+import {
+    GenericSettings,
+    OperationMode,
+    OutputSettings,
+} from '../../model/reducers/settingsModels'
 
 export function socketIoHandlers(socket: any) {
     logger.info('SETTING UP SOCKET IO MAIN HANDLERS')
