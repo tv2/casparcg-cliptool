@@ -37,6 +37,9 @@ class SettingsFileService {
         const parsed = NewGenericSettings.safeParse(loadedFile)
         if (parsed.success) {
             return { success: true, parsed: parsed.data as GenericSettings }
+        } else {
+            // Would very much like to log this with the logger, but 'logger' is server only, and 'getDefaultGenericSettings()' is used in models
+            console.log('Parsed Error', (parsed as any).error)
         }
         return { success: false, parsed: undefined }
     }

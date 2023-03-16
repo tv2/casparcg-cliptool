@@ -110,8 +110,6 @@ function handleRestart(): void {
 }
 
 function hasChanges(settings: GenericSettings): boolean {
-  const hasChanged = !_.isEqual(settings, reduxState.settings[0].generics)
-  console.log('HasChanges', hasChanged)
-  return hasChanged
+  return !_.isEqual(settings, reduxState.settings[0].generics)
 }
 

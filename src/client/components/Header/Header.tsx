@@ -41,8 +41,10 @@ export default function Header() {
     )
 }
 
-const handleSettingsPage = () => {
-    reduxStore.dispatch({
+function handleSettingsPage() {
+    if (!reduxState.appNav[0].showSettingsActive) {
+        reduxStore.dispatch({
         type: TOGGLE_SHOW_SETTINGS,
-    })
+        })
+    }
 }

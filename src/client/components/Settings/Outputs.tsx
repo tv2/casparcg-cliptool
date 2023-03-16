@@ -26,9 +26,8 @@ export default function Outputs(props: OutputsProps): JSX.Element {
     )
 
     function setOutput(output: OutputSettings, index: number): void {
-        console.log('Output Changed', index, output)
         const settings = {...props.settings}
-        const outputs = {...props.settings.outputs}
+        const outputs = [...props.settings.outputs]
         outputs[index] = output
         settings.outputs = outputs
         props.setSettings(settings)
