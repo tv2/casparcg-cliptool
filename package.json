@@ -64,6 +64,7 @@
         "@tv2media/logger": "^1.2.4",
         "casparcg-connection": "^5.1.0",
         "chokidar": "^3.5.1",
+        "deep-copy-ts": "^0.5.4",
         "express": "^4.17.1",
         "filehound": "^1.17.4",
         "http": "^0.0.0",

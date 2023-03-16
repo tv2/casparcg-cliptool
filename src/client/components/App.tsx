@@ -9,7 +9,7 @@ import Tabs from './Tab/Tabs'
 //CSS files:
 import '../css/App.css'
 import { useSelector } from 'react-redux'
-import { SettingsPage } from './Settings/Settings'
+import { Settings } from './Settings/Settings'
 import { Thumbnail } from './Thumbnail/Thumbnail'
 import Header from './Header/Header'
 
@@ -31,7 +31,7 @@ export const App = () => {
             <div className="App-body">
                 {
                     isSettingsOpen 
-                    ? <SettingsPage /> 
+                    ? <Settings /> 
                     : specificChannel 
                         ? <Thumbnail/> 
                         : <Tabs />

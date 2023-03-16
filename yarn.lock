@@ -1590,6 +1590,11 @@ dedent@^0.7.0:
   resolved "https://registry.yarnpkg.com/dedent/-/dedent-0.7.0.tgz#2495ddbaf6eb874abb0e1be9df22d2e5a544326c"
   integrity sha512-Q6fKUPqnAHAyhiUgFU7BUzLiv0kd8saH9al7tnu5Q/okj6dnupxyTgFIBjVzJATdfIAm9NAsvXNzjaKa+bxVyA==
 
+deep-copy-ts@^0.5.4:
+  version "0.5.4"
+  resolved "https://registry.yarnpkg.com/deep-copy-ts/-/deep-copy-ts-0.5.4.tgz#e81b15797e4075cb3a690a1a7ac30179f2d72562"
+  integrity sha512-YJbPjw0YqdosorpCsa6copy1p/gJsFT9Q6Zq0tLi7D0nXh6Y/usjeIQZfkzV3HVuqY0Hl/5gM7TwgIbIWvEjlA==
+
 deep-extend@^0.6.0:
   version "0.6.0"
   resolved "https://registry.yarnpkg.com/deep-extend/-/deep-extend-0.6.0.tgz#c4fa7c95404a17a9c3e8ca7e1537312b736330ac"

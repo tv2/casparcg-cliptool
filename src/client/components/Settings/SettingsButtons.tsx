@@ -87,7 +87,7 @@ function handleEditVisibilityMode(): void {
   )
 }
 
-function handleSave(settings: GenericSettings ): void {
+function handleSave(settings: GenericSettings): void {
   // TODO: improve logic to check if changes have actually been made.
   if (window.confirm('Changes have been made, do you want to save them?')) {
     socket.emit(IO.SET_GENERICS, settings)
