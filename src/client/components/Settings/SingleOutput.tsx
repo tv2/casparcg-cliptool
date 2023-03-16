@@ -8,6 +8,7 @@ interface SingleOutputProps {
   configChannel?: CcgConfigChannel
   index: number
   output: OutputSettings
+  setOutput: (output: OutputSettings, index: number) => void
 }
 
 export default function SingleOutput(props: SingleOutputProps): JSX.Element {
@@ -133,60 +134,70 @@ export default function SingleOutput(props: SingleOutputProps): JSX.Element {
         const newLabel = getTextFromEvent(event)
         setLabel(newLabel)
         props.output.label = newLabel
+        props.setOutput(props.output, props.index)
     }
     
     function handleLoop(event: React.ChangeEvent<HTMLInputElement>) {
         const newLoop = getCheckedFromEvent(event)
         setLoopState(newLoop)
         props.output.loopState = newLoop
+        props.setOutput(props.output, props.index)
     }
     
     function handleMix(event: React.ChangeEvent<HTMLInputElement>) {
         const newMix = getCheckedFromEvent(event)
         setMixState(newMix)
         props.output.mixState = newMix
+        props.setOutput(props.output, props.index)
     }
 
     function handleManual(event: React.ChangeEvent<HTMLInputElement>) {
         const newManual = getCheckedFromEvent(event)
         setManualStartState(newManual)
         props.output.manualStartState = newManual
+        props.setOutput(props.output, props.index)
     }
     
     function handleScale(event: React.ChangeEvent<HTMLInputElement>) {
         const newShouldScale = getCheckedFromEvent(event)
         setShouldScale(newShouldScale)
         props.output.shouldScale = newShouldScale
+        props.setOutput(props.output, props.index)
     }
     
     function handleScaleX(event: React.ChangeEvent<HTMLInputElement>) {
         const newScaleX = getNumberFromEvent(event)
         setScaleX(newScaleX)
         props.output.scaleX = newScaleX
+        props.setOutput(props.output, props.index)
     }
     
     function handleScaleY(event: React.ChangeEvent<HTMLInputElement>) {
         const newScaleY = getNumberFromEvent(event)
         setScaleY(newScaleY)
         props.output.scaleY = newScaleY
+        props.setOutput(props.output, props.index)
     }
     
     function handleWebState(event: React.ChangeEvent<HTMLInputElement>) {
         const newWebState = getCheckedFromEvent(event)
         setWebState(newWebState)
         props.output.webState = newWebState
+        props.setOutput(props.output, props.index)
     }
 
     function handleWebUrl(event: React.ChangeEvent<HTMLInputElement>) {
         const newWebUrl = getTextFromEvent(event)
         setWebUrl(newWebUrl)
         props.output.webUrl = newWebUrl
+        props.setOutput(props.output, props.index)
     }
     
     function handleTabMediaFolder(event: React.ChangeEvent<HTMLSelectElement>) {
         const newFolder = event.target.value
         setFolder(newFolder)
         props.output.folder = newFolder
+        props.setOutput(props.output, props.index)
     }    
 }
 

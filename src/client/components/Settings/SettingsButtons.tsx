@@ -1,6 +1,5 @@
 import React from "react";
 import { reduxState, ReduxStateType, reduxStore } from "../../../model/reducers/store";
-import mediaService from "../../../model/services/mediaService";
 import { socket } from "../../util/SocketClientHandlers";
 import * as IO from '../../../model/SocketIoConstants'
 import { useSelector } from "react-redux";
@@ -9,6 +8,8 @@ import '../../css/Settings.css'
 import settingsService from "../../../model/services/settingsService";
 import appNavigationService from "../../../model/services/appNavigationService";
 import { GenericSettings, OperationMode } from "../../../model/reducers/settingsModels";
+import { deepStrictEqual } from "assert";
+import _ from "lodash";
 
 interface SettingsButtonsProps {
   settings: GenericSettings 
@@ -34,9 +35,9 @@ export default function SettingsButtons(props: SettingsButtonsProps): JSX.Elemen
         </button>
         <button
             className="save-button"
-            onClick={handleDiscard}
+            onClick={() => handleDiscard(props.settings)}
         >
-            DISCARD CHANGES
+            {hasChanges(props.settings) ? 'DISCARD CHANGES' : 'CLOSE SETTINGS'}
         </button>
         <button
             className={classNames}
@@ -58,11 +59,14 @@ export default function SettingsButtons(props: SettingsButtonsProps): JSX.Elemen
   )
 }
 
-function handleDiscard(): void {
-   // TODO: improve logic to check if changes have actually been made.
-  if (window.confirm('Changes have been made, are you sure you want to discard them?')) {
+function handleDiscard(settings: GenericSettings): void {
+  if (hasChanges(settings)) {
+    if (window.confirm('Changes have been made, are you sure you want to discard them?')) {
+      toggleSettingsPage()
+    }
+  } else {
     toggleSettingsPage()
-  }  
+  }
 }
 
 function toggleSettingsPage(): void {
@@ -88,11 +92,10 @@ function handleEditVisibilityMode(): void {
 }
 
 function handleSave(settings: GenericSettings): void {
-  // TODO: improve logic to check if changes have actually been made.
-  if (window.confirm('Changes have been made, do you want to save them?')) {
+  if (hasChanges(settings) && window.confirm('Changes have been made, do you want to save them?')) {
     socket.emit(IO.SET_GENERICS, settings)
     toggleSettingsPage()
-  }  
+  } 
 }
 
 function handleRestart(): void {
@@ -104,5 +107,11 @@ function handleRestart(): void {
       console.log('Restarting server...')
       socket.emit(IO.RESTART_SERVER)
   }
+}
+
+function hasChanges(settings: GenericSettings): boolean {
+  const hasChanged = !_.isEqual(settings, reduxState.settings[0].generics)
+  console.log('HasChanges', hasChanged)
+  return hasChanged
 }
 

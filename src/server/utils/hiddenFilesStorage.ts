@@ -33,7 +33,9 @@ export function loadHiddenFiles() {
             saveHiddenFiles()
         }
     } catch (error) {
-        logger.data(error).warn('Hidden files not found, or not yet stored.')
+        logger
+            .data(error)
+            .warn('File containing hidden files not found, or not yet stored.')
     }
 }
 
