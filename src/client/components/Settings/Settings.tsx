@@ -20,7 +20,9 @@ export function Settings(): JSX.Element {
             <p className="Settings-header">SETTINGS :</p>
             <SettingsButtons specificChannel={specificChannel} settings={settings}/>
             <hr/>
-            {!specificChannel ? <GeneralSettings /> : <React.Fragment />}
+            {!specificChannel 
+                ? <GeneralSettings settings={settings} setSettings={setSettings}/> 
+                : <React.Fragment />}
             <Outputs specificChannel={specificChannel} settings={settings} setSettings={setSettings}/>
         </div>
     )

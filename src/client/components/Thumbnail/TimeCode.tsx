@@ -27,6 +27,8 @@ export default function TimeCode(props: TimeCodeProps): JSX.Element {
     props.isTextView ? 'text' : ''
   ].join(' ')
 
+  console.log('Time', props.file.name)
+
   return (
     <a className={classNames}>
         {mediaService.isThumbnailSelected(props.file.name)

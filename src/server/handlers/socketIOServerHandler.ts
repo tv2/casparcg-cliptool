@@ -12,7 +12,7 @@ import {
 } from '../utils/CcgLoadPlay'
 import {
     updateMediaFiles,
-    updateThumbFileList,
+    updateThumbnailFileList,
     updateHiddenFiles,
 } from '../../model/reducers/mediaActions'
 import {
@@ -161,6 +161,7 @@ export function socketIoHandlers(socket: any): void {
             }
         })
         .on(IO.SET_GENERICS, (generics: GenericSettings) => {
+            logger.data(generics).trace('Save Settings')
             logger.info('Updating and storing generic settings serverside.')
             reduxStore.dispatch(setGenerics(generics))
             saveSettings()
@@ -231,7 +232,7 @@ function getMetadata(file: MediaFile): HiddenFileInfo {
 
 export function initializeClient(): void {
     socketServer.emit(IO.TAB_DATA_UPDATE, reduxState.settings[0].tabData)
-    let timeTallyData: IO.ITimeTallyPayload[] = []
+    let timeTallyData: IO.TimeTallyPayload[] = []
     reduxState.settings[0].generics.outputs.forEach(
         (output: OutputSettings, channelIndex: number) => {
             timeTallyData[channelIndex] = {
@@ -282,7 +283,7 @@ export function initializeClient(): void {
 function cleanUpMediaFiles(): void {
     reduxState.media[0].outputs.forEach(({}, channelIndex: number) => {
         reduxStore.dispatch(updateMediaFiles(channelIndex, []))
-        reduxStore.dispatch(updateThumbFileList(channelIndex, []))
+        reduxStore.dispatch(updateThumbnailFileList(channelIndex, []))
         assignThumbNailListToOutputs()
     })
 }

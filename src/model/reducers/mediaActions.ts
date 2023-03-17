@@ -1,7 +1,7 @@
 import { HiddenFileInfo, MediaFile, ThumbnailFile } from './mediaModels'
 
 export const UPDATE_MEDIA_FILES = 'updateMediaFiles'
-export const UPDATE_THUMB_LIST = 'updateThumbList'
+export const UPDATE_THUMBNAIL_LIST = 'updateThumbnailList'
 export const UPDATE_FOLDER_LIST = 'updateFolderList'
 export const UPDATE_HIDDEN_FILES = 'updateHiddenFiles'
 export const SET_NUMBER_OF_OUTPUTS = 'setNumberOfOutputs'
@@ -29,12 +29,12 @@ export function updateFolderList(folderList: string[]): {
     }
 }
 
-export function updateThumbFileList(
+export function updateThumbnailFileList(
     channelIndex: number,
     fileList: ThumbnailFile[]
 ): { type: string; channelIndex: number; fileList: ThumbnailFile[] } {
     return {
-        type: UPDATE_THUMB_LIST,
+        type: UPDATE_THUMBNAIL_LIST,
         channelIndex: channelIndex,
         fileList: fileList,
     }

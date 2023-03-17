@@ -9,7 +9,7 @@ import {
     setTime,
     updateFolderList,
     updateMediaFiles,
-    updateThumbFileList,
+    updateThumbnailFileList,
     updateHiddenFiles,
 } from '../../model/reducers/mediaActions'
 
@@ -83,7 +83,7 @@ function ccgOSCServer(): void {
             )
         })
         .on('message', (message: any) => {
-            handleOscMessage(message)
+            processOscMessage(message)
         })
         .on('error', (error: any) => {
             logger.data(error).error('Error in OSC receive')
@@ -93,9 +93,10 @@ function ccgOSCServer(): void {
     logger.info(`OSC listening on port 5253`)
 }
 
-function handleOscMessage(message: any): void {
+function processOscMessage(message: any): void {
     let channelIndex = getChannelNumber(message.address) - 1
     let layerIndex = getLayerNumber(message.address) - 1
+    console.log('Message Raw', message)
 
     if (message.address.includes('/stage/layer')) {
         if (
@@ -108,6 +109,7 @@ function handleOscMessage(message: any): void {
                     reduxState.settings[0].generics.outputs[channelIndex]
                         ?.selectedFile !== fileName
                 ) {
+                    console.log('Message Filtered', message)
                     reduxStore.dispatch(
                         setSelectedFileName(channelIndex, fileName)
                     )
@@ -213,7 +215,7 @@ function ccgAMPHandler(): void {
 
 async function startTimerControlledServices(): Promise<void> {
     //Update of timeleft is set to a default 40ms (same as 25FPS)
-    let data: IO.ITimeTallyPayload[] = []
+    let data: IO.TimeTallyPayload[] = []
 
     setInterval(() => {
         reduxState.media[0].outputs.forEach((output: Output, index: number) => {
@@ -359,7 +361,9 @@ export function assignThumbNailListToOutputs(): void {
                 outputMedia
             )
         ) {
-            reduxStore.dispatch(updateThumbFileList(channelIndex, outputMedia))
+            reduxStore.dispatch(
+                updateThumbnailFileList(channelIndex, outputMedia)
+            )
             socketServer.emit(
                 IO.THUMB_UPDATE,
                 channelIndex,

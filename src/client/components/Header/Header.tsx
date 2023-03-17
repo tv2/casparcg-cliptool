@@ -42,6 +42,7 @@ export default function Header() {
 }
 
 function handleSettingsPage() {
+    // TODO: Figure out how to do the discard check here, and allow the user to close via this again.
     if (!reduxState.appNav[0].showSettingsActive) {
         reduxStore.dispatch({
         type: TOGGLE_SHOW_SETTINGS,

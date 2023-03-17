@@ -25,7 +25,7 @@ function defaultOutputs(amount: number): Output[] {
 
 export function media(state: Media[] = defaultMediaState(), action) {
     let nextState = { ...state }
-
+    //console.log('Update', action)
     switch (action.type) {
         case IO.SET_NUMBER_OF_OUTPUTS:
             nextState[0].outputs = defaultOutputs(action.amount)
@@ -36,7 +36,7 @@ export function media(state: Media[] = defaultMediaState(), action) {
                     action.files
             }
             return nextState
-        case IO.UPDATE_THUMB_LIST:
+        case IO.UPDATE_THUMBNAIL_LIST:
             if (doesChannelExist(nextState, action)) {
                 nextState[0].outputs[action.channelIndex].thumbnailList =
                     action.fileList

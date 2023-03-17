@@ -5,7 +5,7 @@ import * as IO from '../../model/SocketIoConstants'
 import {
     setTime,
     updateMediaFiles,
-    updateThumbFileList,
+    updateThumbnailFileList,
     updateFolderList,
     setNumberOfOutputs,
     updateHiddenFiles,
@@ -68,7 +68,9 @@ socket.on(IO.FOLDERS_UPDATE, (payload: string[]) => {
 socket.on(
     IO.THUMB_UPDATE,
     (channelIndex: number, thumbnailFiles: ThumbnailFile[]) => {
-        reduxStore.dispatch(updateThumbFileList(channelIndex, thumbnailFiles))
+        reduxStore.dispatch(
+            updateThumbnailFileList(channelIndex, thumbnailFiles)
+        )
 
         logger
             .data(thumbnailFiles)
@@ -76,7 +78,7 @@ socket.on(
     }
 )
 
-socket.on(IO.TIME_TALLY_UPDATE, (data: IO.ITimeTallyPayload[]) => {
+socket.on(IO.TIME_TALLY_UPDATE, (data: IO.TimeTallyPayload[]) => {
     data.forEach((channel, index) => {
         reduxStore.dispatch(setTime(index, channel.time))
         if (

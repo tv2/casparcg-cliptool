@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react"
 import { CcgConfigChannel, OutputSettings } from "../../../model/reducers/settingsModels"
 import { reduxState } from "../../../model/reducers/store"
 import '../../css/Settings.css'
+import eventService from "../../services/eventService"
 import SettingsInput, { SettingsInputType } from "./SettingsInput"
 
 interface SingleOutputProps {
@@ -33,7 +34,7 @@ export default function SingleOutput(props: SingleOutputProps): JSX.Element {
                     name={props.index}
                     type={SettingsInputType.TEXT}
                     value={label}
-                    onChange={(event) => handleOutputLabel(event)}
+                    onChange={handleOutputLabel}
                 />
                 <label className="Settings-input-field">
                     MEDIA FOLDER :
@@ -41,7 +42,7 @@ export default function SingleOutput(props: SingleOutputProps): JSX.Element {
                     <select
                         className="settings-select"
                         name={String(props.index)}
-                        onChange={(event) => handleTabMediaFolder(event)}
+                        onChange={handleTabMediaFolder}
                         value={ folder }
                     >
                         {reduxState.media[0].folderList.map(
@@ -67,42 +68,42 @@ export default function SingleOutput(props: SingleOutputProps): JSX.Element {
                     name={props.index}
                     type={SettingsInputType.CHECKBOX}
                     value={loopState}
-                    onChange={(event) => handleLoop(event)}
+                    onChange={handleLoop}
                 />
                 <SettingsInput 
                     preDescription="MIX :"
                     name={props.index}
                     type={SettingsInputType.CHECKBOX}
                     value={mixState}
-                    onChange={(event) => handleMix(event)}
+                    onChange={handleMix}
                 />
                 <SettingsInput 
                     preDescription="MANUAL :"
                     name={props.index}
                     type={SettingsInputType.CHECKBOX}
                     value={manualStartState}
-                    onChange={(event) => handleManual(event)}
+                    onChange={handleManual}
                 />
                 <SettingsInput 
                     preDescription="OVERLAY :"
                     name={props.index}
                     type={SettingsInputType.CHECKBOX}
                     value={webState}
-                    onChange={(event) => handleWebState(event)}
+                    onChange={handleWebState}
                 />
                 <SettingsInput 
                     preDescription="OVERLAY URL :"
                     name={props.index}
                     type={SettingsInputType.TEXT}
                     value={webUrl}
-                    onChange={(event) => handleWebUrl(event)}
+                    onChange={handleWebUrl}
                 />
                 <SettingsInput 
                     preDescription="SCALE :"
                     name={props.index}
                     type={SettingsInputType.CHECKBOX}
                     value={shouldScale}
-                    onChange={(event) => handleScale(event)}
+                    onChange={handleScale}
                 />
                 {shouldScale ? (
                     <React.Fragment>
@@ -111,7 +112,7 @@ export default function SingleOutput(props: SingleOutputProps): JSX.Element {
                             name={props.index}
                             type={SettingsInputType.NUMBER}
                             value={scaleX}
-                            onChange={(event) => handleScaleX(event)}
+                            onChange={handleScaleX}
                             postDescription='px'
                         />
                         <SettingsInput 
@@ -119,7 +120,7 @@ export default function SingleOutput(props: SingleOutputProps): JSX.Element {
                             name={props.index}
                             type={SettingsInputType.NUMBER}
                             value={scaleY}
-                            onChange={(event) => handleScaleY(event)}
+                            onChange={handleScaleY}
                             postDescription='px'
                         />
                     </React.Fragment>
@@ -131,63 +132,63 @@ export default function SingleOutput(props: SingleOutputProps): JSX.Element {
     )
 
     function handleOutputLabel(event: React.ChangeEvent<HTMLInputElement>) {
-        const newLabel = getTextFromEvent(event)
+        const newLabel = eventService.getTextFromEvent(event)
         setLabel(newLabel)
         props.output.label = newLabel
         props.setOutput(props.output, props.index)
     }
     
     function handleLoop(event: React.ChangeEvent<HTMLInputElement>) {
-        const newLoop = getCheckedFromEvent(event)
+        const newLoop = eventService.getCheckedFromEvent(event)
         setLoopState(newLoop)
         props.output.loopState = newLoop
         props.setOutput(props.output, props.index)
     }
     
     function handleMix(event: React.ChangeEvent<HTMLInputElement>) {
-        const newMix = getCheckedFromEvent(event)
+        const newMix = eventService.getCheckedFromEvent(event)
         setMixState(newMix)
         props.output.mixState = newMix
         props.setOutput(props.output, props.index)
     }
 
     function handleManual(event: React.ChangeEvent<HTMLInputElement>) {
-        const newManual = getCheckedFromEvent(event)
+        const newManual = eventService.getCheckedFromEvent(event)
         setManualStartState(newManual)
         props.output.manualStartState = newManual
         props.setOutput(props.output, props.index)
     }
     
     function handleScale(event: React.ChangeEvent<HTMLInputElement>) {
-        const newShouldScale = getCheckedFromEvent(event)
+        const newShouldScale = eventService.getCheckedFromEvent(event)
         setShouldScale(newShouldScale)
         props.output.shouldScale = newShouldScale
         props.setOutput(props.output, props.index)
     }
     
     function handleScaleX(event: React.ChangeEvent<HTMLInputElement>) {
-        const newScaleX = getNumberFromEvent(event)
+        const newScaleX = eventService.getNumberFromEvent(event)
         setScaleX(newScaleX)
         props.output.scaleX = newScaleX
         props.setOutput(props.output, props.index)
     }
     
     function handleScaleY(event: React.ChangeEvent<HTMLInputElement>) {
-        const newScaleY = getNumberFromEvent(event)
+        const newScaleY = eventService.getNumberFromEvent(event)
         setScaleY(newScaleY)
         props.output.scaleY = newScaleY
         props.setOutput(props.output, props.index)
     }
     
     function handleWebState(event: React.ChangeEvent<HTMLInputElement>) {
-        const newWebState = getCheckedFromEvent(event)
+        const newWebState = eventService.getCheckedFromEvent(event)
         setWebState(newWebState)
         props.output.webState = newWebState
         props.setOutput(props.output, props.index)
     }
 
     function handleWebUrl(event: React.ChangeEvent<HTMLInputElement>) {
-        const newWebUrl = getTextFromEvent(event)
+        const newWebUrl = eventService.getTextFromEvent(event)
         setWebUrl(newWebUrl)
         props.output.webUrl = newWebUrl
         props.setOutput(props.output, props.index)
@@ -201,15 +202,5 @@ export default function SingleOutput(props: SingleOutputProps): JSX.Element {
     }    
 }
 
-function getTextFromEvent(event: React.ChangeEvent<HTMLInputElement>): string {
-    return event.target.value
-}
 
-function getNumberFromEvent(event: React.ChangeEvent<HTMLInputElement>): number {
-    return Number(event.target.value)
-}
-
-function getCheckedFromEvent(event: React.ChangeEvent<HTMLInputElement>): boolean {
-    return event.target.checked
-}
 

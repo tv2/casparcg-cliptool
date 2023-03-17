@@ -28,7 +28,7 @@ export const RESTART_SERVER = 'restartServer'
 export const TOGGLE_THUMBNAIL_VISIBILITY = 'toggleThumbnailVisibility'
 
 // Payload types:
-export interface ITimeTallyPayload {
+export interface TimeTallyPayload {
     time: [number, number]
     tally: string
 }

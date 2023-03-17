@@ -56,6 +56,7 @@ export function settings(
             return nextState
         }
         case IO.SET_SELECTED_FILE_NAME: {
+            console.log('Name', action)
             if (doesChannelExist(nextState, action)) {
                 nextState[0].generics.outputs[
                     action.channelIndex

@@ -5,7 +5,7 @@ import io from 'socket.io-client'
 import {
     setTime,
     updateMediaFiles,
-    updateThumbFileList,
+    updateThumbnailFileList,
     updateFolderList,
     setNumberOfOutputs,
     updateHiddenFiles,
@@ -52,7 +52,7 @@ socket.on(IO.FOLDERS_UPDATE, (payload: string[]) => {
 })
 
 socket.on(IO.THUMB_UPDATE, (channelIndex: number, payload: ThumbnailFile[]) => {
-    reduxStore.dispatch(updateThumbFileList(channelIndex, payload))
+    reduxStore.dispatch(updateThumbnailFileList(channelIndex, payload))
 })
 
 socket.on(
@@ -62,13 +62,14 @@ socket.on(
     }
 )
 
-socket.on(IO.TIME_TALLY_UPDATE, (data: IO.ITimeTallyPayload[]) => {
+socket.on(IO.TIME_TALLY_UPDATE, (data: IO.TimeTallyPayload[]) => {
     data.forEach((channel, index) => {
         reduxStore.dispatch(setTime(index, channel.time))
         if (
             reduxState.settings[0].generics.outputs[index].selectedFile !==
             channel.tally
         ) {
+            console.log('Tally', index, channel.tally)
             reduxStore.dispatch(setSelectedFileName(index, channel.tally))
         }
     })
