@@ -10,5 +10,5 @@ loadHiddenFiles()
 import { serverInit } from './handlers/expressHandler'
 serverInit()
 
-import { casparCgClient } from './handlers/CasparCgHandler'
+import { casparCgClient } from './handlers/casparCgHandler'
 casparCgClient()
