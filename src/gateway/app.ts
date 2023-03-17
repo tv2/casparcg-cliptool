@@ -2,7 +2,7 @@ import { ampServerGateway } from './gateways/AmpServerGateway'
 import { oscServerGateway } from './gateways/OscServerGateway'
 import { argHelp, ARG_CONSTANTS } from './util/extractArgs'
 
-export const app = () => {
+export function app() {
     console.log('ControlGateway started')
 
     switch (ARG_CONSTANTS.type) {

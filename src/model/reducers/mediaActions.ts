@@ -8,10 +8,10 @@ export const SET_NUMBER_OF_OUTPUTS = 'setNumberOfOutputs'
 
 export const SET_TIME = 'setTime'
 
-export const updateMediaFiles = (
+export function updateMediaFiles(
     channelIndex: number,
     fileList: MediaFile[]
-) => {
+): { type: string; channelIndex: number; files: MediaFile[] } {
     return {
         type: UPDATE_MEDIA_FILES,
         channelIndex: channelIndex,
@@ -19,17 +19,20 @@ export const updateMediaFiles = (
     }
 }
 
-export const updateFolderList = (folderList: string[]) => {
+export function updateFolderList(folderList: string[]): {
+    type: string
+    folderList: string[]
+} {
     return {
         type: UPDATE_FOLDER_LIST,
         folderList: folderList,
     }
 }
 
-export const updateThumbFileList = (
+export function updateThumbFileList(
     channelIndex: number,
     fileList: ThumbnailFile[]
-) => {
+): { type: string; channelIndex: number; fileList: ThumbnailFile[] } {
     return {
         type: UPDATE_THUMB_LIST,
         channelIndex: channelIndex,
@@ -37,21 +40,29 @@ export const updateThumbFileList = (
     }
 }
 
-export function updateHiddenFiles(hiddenFiles: Record<string, HiddenFileInfo>) {
+export function updateHiddenFiles(
+    hiddenFiles: Record<string, HiddenFileInfo>
+): { type: string; hiddenFiles: Record<string, HiddenFileInfo> } {
     return {
         type: UPDATE_HIDDEN_FILES,
         hiddenFiles: hiddenFiles,
     }
 }
 
-export const setNumberOfOutputs = (amount: number) => {
+export function setNumberOfOutputs(amount: number): {
+    type: string
+    amount: number
+} {
     return {
         type: SET_NUMBER_OF_OUTPUTS,
         amount: amount,
     }
 }
 
-export const setTime = (channelIndex: number, time: [number, number]) => {
+export function setTime(
+    channelIndex: number,
+    time: [number, number]
+): { type: string; channelIndex: number; time: [number, number] } {
     return {
         type: SET_TIME,
         channelIndex: channelIndex,

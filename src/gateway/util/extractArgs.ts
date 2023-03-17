@@ -1,6 +1,6 @@
 import { logger } from './loggerGateway'
 
-const extractArg = (argName: string): string | undefined => {
+function extractArg(argName: string): string | undefined {
     let extracted = process.argv.find((arg) => {
         return arg.includes(argName)
     })
@@ -20,7 +20,7 @@ export const ARG_CONSTANTS: IArgConstants = {
     oscPort: extractArg('oscport') || '5256',
 }
 
-export const argHelp = () => {
+export function argHelp(): void {
     logger.info(`Runtime arguments are:
 ----------------------------------------------------------------
 cliptool='hostname:port' - adress of the clipttol server

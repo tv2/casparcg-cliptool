@@ -7,7 +7,7 @@ import { logger } from './logger'
 const fs = require('fs')
 const path = require('path')
 
-export const loadSettings = () => {
+export function loadSettings(): void {
     const defaultGenerics = settingsFileService.getDefaultGenericSettings()
     try {
         const settingsFromFile = JSON.parse(
@@ -51,7 +51,7 @@ export const loadSettings = () => {
     }
 }
 
-export const saveSettings = () => {
+export function saveSettings(): void {
     const generics: GenericSettings = reduxState.settings[0].generics
     const stringifiedSettings = JSON.stringify(generics)
     if (!fs.existsSync('storage')) {

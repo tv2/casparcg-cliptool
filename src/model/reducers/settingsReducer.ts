@@ -3,7 +3,7 @@ import { getVideoFormat } from '../videoFormat'
 import * as IO from './settingsAction'
 import { CcgConfigChannel, Settings } from './settingsModels'
 
-export const defaultSettingsReducerState = (): Settings[] => {
+export function defaultSettingsReducerState(): Settings[] {
     return [
         {
             ccgConfig: {
@@ -25,10 +25,10 @@ function updateChannelConfigWithVideoFormat(
     }
 }
 
-export const settings = (
+export function settings(
     state: Settings[] = defaultSettingsReducerState(),
     action
-) => {
+) {
     let nextState = { ...state }
 
     switch (action.type) {

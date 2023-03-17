@@ -12,7 +12,10 @@ export const SET_MANUAL_START = 'setManualStart'
 export const SET_OPERATION_MODE = 'setOperationMode'
 export const SET_SELECTED_FILE_NAME = 'setSelectedFileName'
 
-export const updateSettings = (channels, path: string) => {
+export function updateSettings(
+    channels,
+    path: string
+): { type: string; channels: any; path: string } {
     return {
         type: UPDATE_SETTINGS,
         channels,
@@ -20,7 +23,10 @@ export const updateSettings = (channels, path: string) => {
     }
 }
 
-export const setTabData = (amount: number) => {
+export function setTabData(amount: number): {
+    type: string
+    tabData: TabData[]
+} {
     let tabData: TabData[] = []
     for (let i = 0; i < amount; i++) {
         tabData.push({
@@ -36,14 +42,20 @@ export const setTabData = (amount: number) => {
     }
 }
 
-export const setGenerics = (generics: GenericSettings) => {
+export function setGenerics(generics: GenericSettings): {
+    type: string
+    generics: GenericSettings
+} {
     return {
         type: SET_GENERICS,
         generics: generics,
     }
 }
 
-export const setScaling = (scaleX: number, scaleY: number) => {
+export function setScaling(
+    scaleX: number,
+    scaleY: number
+): { type: string; scaleX: number; scaleY: number } {
     return {
         type: SET_SCALING,
         scaleX: scaleX,
@@ -51,7 +63,10 @@ export const setScaling = (scaleX: number, scaleY: number) => {
     }
 }
 
-export const setLoop = (channelIndex: number, loopState: boolean) => {
+export function setLoop(
+    channelIndex: number,
+    loopState: boolean
+): { type: string; channelIndex: number; loopState: boolean } {
     return {
         type: SET_LOOP,
         channelIndex: channelIndex,
@@ -59,7 +74,10 @@ export const setLoop = (channelIndex: number, loopState: boolean) => {
     }
 }
 
-export const setMix = (channelIndex: number, mixState: boolean) => {
+export function setMix(
+    channelIndex: number,
+    mixState: boolean
+): { type: string; channelIndex: number; mixState: boolean } {
     return {
         type: SET_MIX,
         channelIndex: channelIndex,
@@ -67,10 +85,10 @@ export const setMix = (channelIndex: number, mixState: boolean) => {
     }
 }
 
-export const setManualStart = (
+export function setManualStart(
     channelIndex: number,
     manualStartState: boolean
-) => {
+): { type: string; channelIndex: number; manualStartState: boolean } {
     return {
         type: SET_MANUAL_START,
         channelIndex: channelIndex,
@@ -78,7 +96,10 @@ export const setManualStart = (
     }
 }
 
-export const setWeb = (channelIndex: number, webState: boolean) => {
+export function setWeb(
+    channelIndex: number,
+    webState: boolean
+): { type: string; channelIndex: number; webState: boolean } {
     return {
         type: SET_WEB,
         channelIndex: channelIndex,
@@ -86,10 +107,10 @@ export const setWeb = (channelIndex: number, webState: boolean) => {
     }
 }
 
-export const setOperationMode = (
+export function setOperationMode(
     channelIndex: number,
     operationMode: OperationMode
-) => {
+): { type: string; channelIndex: number; operationMode: OperationMode } {
     return {
         type: SET_OPERATION_MODE,
         channelIndex: channelIndex,
@@ -97,7 +118,10 @@ export const setOperationMode = (
     }
 }
 
-export const setSelectedFileName = (channelIndex: number, filename: string) => {
+export function setSelectedFileName(
+    channelIndex: number,
+    filename: string
+): { type: string; channelIndex: number; filename: string } {
     return {
         type: SET_SELECTED_FILE_NAME,
         channelIndex: channelIndex,

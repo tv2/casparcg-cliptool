@@ -1,21 +1,26 @@
 import * as AppNav from './appNavAction'
-export interface INavReducer {
+export interface NavReducer {
     connectionStatus: boolean
     activeTab: number
     showSettingsActive: boolean
     selectView: number
 }
 
-const defaultAppNavReducerState: INavReducer[] = [
-    {
-        connectionStatus: false,
-        activeTab: 0,
-        showSettingsActive: false,
-        selectView: 0,
-    },
-]
+function defaultAppNavReducerState(): NavReducer[] {
+    return [
+        {
+            connectionStatus: false,
+            activeTab: 0,
+            showSettingsActive: false,
+            selectView: 0,
+        },
+    ]
+}
 
-export const appNav = (state = defaultAppNavReducerState, action) => {
+export function appNav(
+    state: NavReducer[] = defaultAppNavReducerState(),
+    action
+) {
     let nextState = { ...state }
 
     switch (action.type) {

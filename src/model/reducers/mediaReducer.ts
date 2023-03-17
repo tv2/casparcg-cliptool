@@ -1,7 +1,7 @@
 import { Media, Output } from './mediaModels'
 import * as IO from './mediaActions'
 
-const defaultMediaState = (): Array<Media> => {
+function defaultMediaState(): Media[] {
     return [
         {
             outputs: [],
@@ -11,7 +11,7 @@ const defaultMediaState = (): Array<Media> => {
     ]
 }
 
-const defaultOutputs = (amount: number) => {
+function defaultOutputs(amount: number): Output[] {
     let outputs: Output[] = []
     for (let i = 0; i < amount; i++) {
         outputs.push({
@@ -23,7 +23,7 @@ const defaultOutputs = (amount: number) => {
     return outputs
 }
 
-export const media = (state: Array<Media> = defaultMediaState(), action) => {
+export function media(state: Media[] = defaultMediaState(), action) {
     let nextState = { ...state }
 
     switch (action.type) {

@@ -3,31 +3,28 @@ import * as IO from '../../model/SocketIoConstants'
 
 // import io from 'socket.io-client'
 import {
-    setManualStart,
-    setLoop,
-    setMix,
-    setTallyFileName,
     setTime,
     updateMediaFiles,
     updateThumbFileList,
     updateFolderList,
     setNumberOfOutputs,
-    setOperationMode,
     updateHiddenFiles,
 } from '../../model/reducers/mediaActions'
-import {
-    IMediaFile,
-    IThumbFile,
-    OperationMode,
-} from '../../model/reducers/mediaReducer'
+
 import {
     setGenerics,
+    setLoop,
+    setManualStart,
+    setMix,
+    setOperationMode,
+    setSelectedFileName,
     setTabData,
     updateSettings,
 } from '../../model/reducers/settingsAction'
-import { ISettings } from '../../model/reducers/settingsReducer'
 import { ARG_CONSTANTS } from './extractArgs'
 import { logger } from './loggerGateway'
+import { MediaFile, ThumbnailFile } from '../../model/reducers/mediaModels'
+import { OperationMode, Settings } from '../../model/reducers/settingsModels'
 
 logger.info(`Connecting Socket to: ${ARG_CONSTANTS.clipToolHost}`)
 
@@ -52,7 +49,7 @@ socket.on('Socket Client reconnect_attempt', () =>
     logger.debug('reconnect_attempt')
 )
 
-socket.on(IO.MEDIA_UPDATE, (channelIndex: number, mediaFiles: IMediaFile[]) => {
+socket.on(IO.MEDIA_UPDATE, (channelIndex: number, mediaFiles: MediaFile[]) => {
     reduxStore.dispatch(updateMediaFiles(channelIndex, mediaFiles))
 
     logger
@@ -70,7 +67,7 @@ socket.on(IO.FOLDERS_UPDATE, (payload: string[]) => {
 
 socket.on(
     IO.THUMB_UPDATE,
-    (channelIndex: number, thumbnailFiles: IThumbFile[]) => {
+    (channelIndex: number, thumbnailFiles: ThumbnailFile[]) => {
         reduxStore.dispatch(updateThumbFileList(channelIndex, thumbnailFiles))
 
         logger
@@ -82,8 +79,11 @@ socket.on(
 socket.on(IO.TIME_TALLY_UPDATE, (data: IO.ITimeTallyPayload[]) => {
     data.forEach((channel, index) => {
         reduxStore.dispatch(setTime(index, channel.time))
-        if (reduxState.media[0].output[index].tallyFile !== channel.tally) {
-            reduxStore.dispatch(setTallyFileName(index, channel.tally))
+        if (
+            reduxState.settings[0].generics.outputs[index].selectedFile !==
+            channel.tally
+        ) {
+            reduxStore.dispatch(setSelectedFileName(index, channel.tally))
         }
     })
 })
@@ -108,13 +108,13 @@ socket.on(IO.MIX_STATE_UPDATE, (channelIndex: number, mix: boolean) => {
 
 socket.on(
     IO.MANUAL_START_STATE_UPDATE,
-    (channelIndex: number, manualstart: boolean) => {
-        reduxStore.dispatch(setManualStart(channelIndex, manualstart))
+    (channelIndex: number, manualStart: boolean) => {
+        reduxStore.dispatch(setManualStart(channelIndex, manualStart))
         console.log('Manual State updated')
     }
 )
 
-socket.on(IO.SETTINGS_UPDATE, (settings: ISettings) => {
+socket.on(IO.SETTINGS_UPDATE, (settings: Settings) => {
     reduxStore.dispatch(setNumberOfOutputs(settings.ccgConfig.channels.length))
     reduxStore.dispatch(setGenerics(settings.generics))
     reduxStore.dispatch(

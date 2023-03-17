@@ -1,4 +1,4 @@
-import React from "react";
+import React, { ChangeEvent, InputHTMLAttributes } from "react";
 import { useSelector } from "react-redux";
 import { setGenerics } from "../../../model/reducers/settingsAction";
 import { reduxState, ReduxStateType, reduxStore } from "../../../model/reducers/store";
@@ -77,8 +77,8 @@ export default function GeneralSettings(): JSX.Element {
   )
 }
 
-const handleChange = (event) => {
-    let generics = { ...reduxState.settings[0].generics }
+function handleChange(event: ChangeEvent<HTMLInputElement>): void {
+    const generics = { ...reduxState.settings[0].generics }
     generics[event.target.name] = event.target.value
     reduxStore.dispatch(setGenerics(generics))
 }

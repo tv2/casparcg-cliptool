@@ -37,8 +37,7 @@ import {
     extractFoldersList,
     getChannelNumber,
     getLayerNumber,
-    getThisMachineIpAddresses,
-    hasThumbListChanged,
+    hasThumbnailListChanged,
     isAlphaFile,
     isDeepCompareEqual,
     isFolderNameEqual,
@@ -48,6 +47,7 @@ import { playOverlay } from '../utils/CcgLoadPlay'
 import { saveHiddenFiles } from '../utils/hiddenFilesStorage'
 import { OperationMode } from '../../model/reducers/settingsModels'
 import settingsService from '../../model/services/settingsService'
+import osService from '../../model/services/osService'
 
 let waitingForCCGResponse: boolean = false
 let previousThumbFileList = []
@@ -65,7 +65,7 @@ export const ccgConnection = new CasparCG({
 })
 
 //Setup OSC Connection:
-const ccgOSCServer = () => {
+function ccgOSCServer(): void {
     const oscConnection = new osc.UDPPort({
         localAddress: '0.0.0.0',
         localPort: reduxState.settings[0].generics.ccgOscPort,
@@ -73,7 +73,7 @@ const ccgOSCServer = () => {
 
     oscConnection
         .on('ready', () => {
-            let ipAddresses = getThisMachineIpAddresses()
+            let ipAddresses = osService.getThisMachineIpAddresses()
 
             logger.info('Listening for OSC over UDP.')
             ipAddresses.forEach((address) =>
@@ -93,7 +93,7 @@ const ccgOSCServer = () => {
     logger.info(`OSC listening on port 5253`)
 }
 
-const handleOscMessage = (message: any) => {
+function handleOscMessage(message: any): void {
     let channelIndex = getChannelNumber(message.address) - 1
     let layerIndex = getLayerNumber(message.address) - 1
 
@@ -126,7 +126,7 @@ const handleOscMessage = (message: any) => {
     }
 }
 
-const dispatchConfig = (config: any) => {
+function dispatchConfig(config: any): void {
     logger.data(config.channels).info('CasparCG Config : ')
     reduxStore.dispatch(setNumberOfOutputs(config.channels.length))
     reduxStore.dispatch(updateSettings(config.channels, config.paths.mediaPath))
@@ -171,7 +171,7 @@ const dispatchConfig = (config: any) => {
     initializeClient()
 }
 
-const loadInitialOverlay = () => {
+function loadInitialOverlay(): void {
     if (!reduxState.settings[0].generics.outputs) {
         return
     }
@@ -184,7 +184,7 @@ const loadInitialOverlay = () => {
     })
 }
 
-const ccgAMPHandler = () => {
+function ccgAMPHandler(): void {
     //Check CCG Version and initialise OSC server:
     logger.debug('Checking CasparCG connection')
     ccgConnection
@@ -211,7 +211,7 @@ const ccgAMPHandler = () => {
     startTimerControlledServices()
 }
 
-const startTimerControlledServices = async () => {
+async function startTimerControlledServices(): Promise<void> {
     //Update of timeleft is set to a default 40ms (same as 25FPS)
     let data: IO.ITimeTallyPayload[] = []
 
@@ -241,10 +241,12 @@ const startTimerControlledServices = async () => {
     }, 3000)
 }
 
-const loadCcgMedia = async (): Promise<ThumbnailFile[]> => {
+async function loadCcgMedia(): Promise<ThumbnailFile[]> {
     let thumbFiles = await ccgConnection.thumbnailList()
 
-    if (hasThumbListChanged(thumbFiles.response.data, previousThumbFileList)) {
+    if (
+        hasThumbnailListChanged(thumbFiles.response.data, previousThumbFileList)
+    ) {
         previousThumbFileList = thumbFiles.response.data
         thumbNailList = []
         for await (const thumbFile of thumbFiles.response.data) {
@@ -259,7 +261,7 @@ const loadCcgMedia = async (): Promise<ThumbnailFile[]> => {
     return thumbNailList
 }
 
-const loadFileList = async () => {
+async function loadFileList(): Promise<void> {
     ccgConnection
         .cls() //AMCP list media files
         .then((payload) => {
@@ -278,7 +280,7 @@ const loadFileList = async () => {
         })
 }
 
-const outputExtractFiles = (allFiles: MediaFile[], outputIndex: number) => {
+function outputExtractFiles(allFiles: MediaFile[], outputIndex: number): void {
     let outputMedia = allFiles.filter((file) => {
         return (
             isFolderNameEqual(
@@ -303,7 +305,7 @@ const outputExtractFiles = (allFiles: MediaFile[], outputIndex: number) => {
     }
 }
 
-function checkHiddenFilesChanged(files: MediaFile[]) {
+function checkHiddenFilesChanged(files: MediaFile[]): void {
     let needsUpdating = false
     const hiddenFiles: Record<string, HiddenFileInfo> =
         reduxState.media[0].hiddenFiles
@@ -329,19 +331,21 @@ function checkHiddenFilesChanged(files: MediaFile[]) {
     }
 }
 
-const loadThumbNailImage = async (element: ThumbnailFile) => {
-    let thumb = await ccgConnection.thumbnailRetrieve(element.name)
-    let receivedThumb: ThumbnailFile = {
+async function loadThumbNailImage(
+    element: ThumbnailFile
+): Promise<ThumbnailFile> {
+    let thumbnail = await ccgConnection.thumbnailRetrieve(element.name)
+    let receivedThumbnail: ThumbnailFile = {
         name: element.name,
         changed: element.changed,
         size: element.size,
         type: element.type,
-        thumbnail: thumb.response.data,
+        thumbnail: thumbnail.response.data,
     }
-    return receivedThumb
+    return receivedThumbnail
 }
 
-export const assignThumbNailListToOutputs = () => {
+export function assignThumbNailListToOutputs(): void {
     reduxState.media[0].outputs.forEach(({}, channelIndex: number) => {
         let outputMedia = thumbNailList.filter((thumbnail: ThumbnailFile) => {
             return isFolderNameEqual(
@@ -365,7 +369,7 @@ export const assignThumbNailListToOutputs = () => {
     })
 }
 
-export const casparCgClient = () => {
+export function casparCgClient(): void {
     ccgAMPHandler()
     ccgOSCServer()
 }

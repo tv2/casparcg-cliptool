@@ -35,7 +35,7 @@ import {
     OutputSettings,
 } from '../../model/reducers/settingsModels'
 
-export function socketIoHandlers(socket: any) {
+export function socketIoHandlers(socket: any): void {
     logger.info('SETTING UP SOCKET IO MAIN HANDLERS')
 
     socketServer.emit(IO.SETTINGS_UPDATE, reduxState.settings[0])
@@ -171,6 +171,7 @@ export function socketIoHandlers(socket: any) {
             process.exit(0)
         })
 }
+
 type HiddenFiles = Record<string, HiddenFileInfo>
 function toggleHiddenFile(
     fileName: string,
@@ -228,7 +229,7 @@ function getMetadata(file: MediaFile): HiddenFileInfo {
     }
 }
 
-export const initializeClient = () => {
+export function initializeClient(): void {
     socketServer.emit(IO.TAB_DATA_UPDATE, reduxState.settings[0].tabData)
     let timeTallyData: IO.ITimeTallyPayload[] = []
     reduxState.settings[0].generics.outputs.forEach(
@@ -278,7 +279,7 @@ export const initializeClient = () => {
     socketServer.emit(IO.TIME_TALLY_UPDATE, timeTallyData)
 }
 
-const cleanUpMediaFiles = () => {
+function cleanUpMediaFiles(): void {
     reduxState.media[0].outputs.forEach(({}, channelIndex: number) => {
         reduxStore.dispatch(updateMediaFiles(channelIndex, []))
         reduxStore.dispatch(updateThumbFileList(channelIndex, []))

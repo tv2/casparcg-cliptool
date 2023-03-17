@@ -22,7 +22,7 @@ socketServer.on('connection', (socket: any) => {
     socketIoHandlers(socket)
 })
 
-export const serverInit = () => {
+export function serverInit(): void {
     server.listen(SERVER_PORT)
     logger.info(`Server started at http://localhost:${SERVER_PORT}`)
 }

@@ -56,15 +56,16 @@ class MediaService {
 
     public secondsToTimeCode(
         timer: [number, number] = [0, 0],
-        frameRate: number = 25
+        frameRate: number = 25,
+        callerIsClient: boolean = true
     ): string {
-        if (timer[1] <= 0) {
+        if (callerIsClient && timer[1] <= 0) {
             return 'SELECTED'
         }
 
         const time = Math.max(0, timer[1] - timer[0])
         if (time === 0) {
-            return '****END****'
+            return callerIsClient ? '****END****' : '00:00:00.00'
         }
 
         const hours = Math.floor(time / (60 * 60))

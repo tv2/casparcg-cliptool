@@ -1,4 +1,3 @@
-import os from 'os' // Used to display (log) network addresses on local machine
 import osc from 'osc' //Using OSC fork from PieceMeta/osc.js as it has excluded hardware serialport support and thereby is crossplatform
 
 import { reduxState } from '../../model/reducers/store'
@@ -7,8 +6,9 @@ import { socket } from '../util/SocketGatewayHandlers'
 import * as IO from '../../model/SocketIoConstants'
 import * as OSC from './OscConstants'
 import { ARG_CONSTANTS } from '../util/extractArgs'
+import osService from '../../model/services/osService'
 
-export const oscServerGateway = () => {
+export function oscServerGateway(): void {
     console.log('Initializing OSC server')
     const oscConnection = new osc.UDPPort({
         localAddress: '0.0.0.0',
@@ -17,7 +17,7 @@ export const oscServerGateway = () => {
 
     oscConnection
         .on('ready', () => {
-            let ipAddresses = getThisMachineIpAddresses()
+            let ipAddresses = osService.getThisMachineIpAddresses()
 
             console.log('Listening for OSC over UDP.')
             ipAddresses.forEach((address) => {
@@ -47,7 +47,7 @@ export const oscServerGateway = () => {
                         {
                             type: 's',
                             value: JSON.stringify(
-                                reduxState.media[0].output[channel - 1]
+                                reduxState.media[0].outputs[channel - 1]
                                     .mediaFiles
                             ),
                         },
@@ -62,10 +62,10 @@ export const oscServerGateway = () => {
     oscConnection.open()
 }
 
-const checkOscCommand = (
+function checkOscCommand(
     message: string,
     command: string | undefined
-): boolean => {
+): boolean {
     if (!command || !message) return false
     if (message === command) return true
     let messageArray: string[] = message.split('/')
@@ -84,19 +84,4 @@ const checkOscCommand = (
         }
     })
     return status
-}
-
-const getThisMachineIpAddresses = () => {
-    let interfaces = os.networkInterfaces()
-    let ipAddresses: Array<string> = []
-    for (let deviceName in interfaces) {
-        let addresses = interfaces[deviceName]
-        for (let i = 0; i < addresses.length; i++) {
-            let addressInfo = addresses[i]
-            if (addressInfo.family === 'IPv4' && !addressInfo.internal) {
-                ipAddresses.push(addressInfo.address)
-            }
-        }
-    }
-    return ipAddresses
 }

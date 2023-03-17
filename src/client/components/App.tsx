@@ -16,10 +16,10 @@ import Header from './Header/Header'
 const channel = new URLSearchParams(window.location.search).get('channel')
 const specificChannel = parseInt(channel) || 0
 
-export const App = () => {
+export function App(): JSX.Element {
     const isSettingsOpen = useSelector((storeUpdate: ReduxStateType) => storeUpdate.appNav[0].showSettingsActive)
 
-    const setOutput = (tab: number) => {
+    function setOutput(tab: number): void {
         reduxStore.dispatch(setActiveTab(tab))
     }
     if (specificChannel) {

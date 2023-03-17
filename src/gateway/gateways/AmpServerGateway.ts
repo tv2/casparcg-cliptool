@@ -6,8 +6,9 @@ import { socket as socketio } from '../util/SocketGatewayHandlers'
 
 import * as IO from '../../model/SocketIoConstants'
 import { logger } from '../util/loggerGateway'
+import osService from '../../model/services/osService'
 
-export const ampServerGateway = () => {
+export function ampServerGateway(): void {
     console.log('Initializing AMP server')
     const ampConnection = createServer((client: any) => {
         console.log('Client Connected')
@@ -32,7 +33,7 @@ export const ampServerGateway = () => {
                 logger.info('AMP Client disconnected')
             })
     }).listen(3811)
-    let ipAddresses = getThisMachineIpAddresses()
+    let ipAddresses = osService.getThisMachineIpAddresses()
     ipAddresses.forEach((address) => {
         logger.info(`AMP Host Listening for TCP at ${address}:3811.`)
     })
@@ -62,19 +63,4 @@ function checkAmpCommand(
         }
     })
     return status
-}
-
-const getThisMachineIpAddresses = () => {
-    let interfaces = os.networkInterfaces()
-    let ipAddresses: Array<string> = []
-    for (let deviceName in interfaces) {
-        let addresses = interfaces[deviceName]
-        for (let i = 0; i < addresses.length; i++) {
-            let addressInfo = addresses[i]
-            if (addressInfo.family === 'IPv4' && !addressInfo.internal) {
-                ipAddresses.push(addressInfo.address)
-            }
-        }
-    }
-    return ipAddresses
 }

@@ -4,11 +4,11 @@ import { ccgConnection } from '../handlers/CasparCgHandler'
 import { Enum as CcgEnum } from 'casparcg-connection'
 import settingsService from '../../model/services/settingsService'
 
-export const playMedia = (
+export function playMedia(
     channelIndex: number,
     layerIndex: number,
     fileName: string
-) => {
+) {
     scale(channelIndex, layerIndex)
     ccgConnection.play(
         channelIndex + 1,
@@ -18,11 +18,11 @@ export const playMedia = (
     )
 }
 
-export const mixMedia = (
+export function mixMedia(
     channelIndex: number,
     layerIndex: number,
     fileName: string
-) => {
+) {
     scale(channelIndex, layerIndex)
 
     ccgConnection.play(
@@ -36,11 +36,11 @@ export const mixMedia = (
     )
 }
 
-export const loadMedia = (
+export function loadMedia(
     channelIndex: number,
     layerIndex: number,
     fileName: string
-) => {
+) {
     scale(channelIndex, layerIndex)
 
     ccgConnection.load(
@@ -51,11 +51,11 @@ export const loadMedia = (
     )
 }
 
-export const playOverlay = (
+export function playOverlay(
     channelIndex: number,
     layerIndex: number,
     fileName: string
-) => {
+) {
     if (!fileName) {
         return
     }
@@ -66,11 +66,11 @@ export const playOverlay = (
     ccgConnection.playHtmlPage(channelIndex + 1, layerIndex + 1)
 }
 
-export const stopOverlay = (channelIndex: number, layerIndex: number) => {
+export function stopOverlay(channelIndex: number, layerIndex: number) {
     ccgConnection.stop(channelIndex + 1, layerIndex + 1)
 }
 
-const scale = (channelIndex: number, layerIndex: number) => {
+function scale(channelIndex: number, layerIndex: number) {
     let resX = reduxState.settings[0].ccgConfig.channels[
         channelIndex
     ].videoMode.includes('720')
