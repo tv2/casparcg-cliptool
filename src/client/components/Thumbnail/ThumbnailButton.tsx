@@ -1,7 +1,7 @@
 import React from "react"
-import { PGM_LOAD, PGM_PLAY, TOGGLE_THUMBNAIL_VISIBILITY } from "../../../model/SocketIoConstants";
+import { PGM_LOAD, PGM_PLAY, TOGGLE_THUMBNAIL_VISIBILITY } from "../../../model/socketIoConstants";
 import mediaService from "../../../model/services/mediaService";
-import { socket } from "../../util/SocketClientHandlers";
+import { socket } from "../../util/socketClientHandlers";
 import '../../css/Thumbnail.css'
 import appNavigationService from "../../../model/services/appNavigationService";
 import settingsService from "../../../model/services/settingsService";

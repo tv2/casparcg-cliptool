@@ -1,5 +1,5 @@
-import { ampServerGateway } from './gateways/AmpServerGateway'
-import { oscServerGateway } from './gateways/OscServerGateway'
+import { ampServerGateway } from './gateways/ampServerGateway'
+import { oscServerGateway } from './gateways/oscServerGateway'
 import { argHelp, ARG_CONSTANTS } from './util/extractArgs'
 
 export function app() {

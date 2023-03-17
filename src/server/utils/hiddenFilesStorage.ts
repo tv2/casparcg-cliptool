@@ -2,7 +2,7 @@ import { updateHiddenFiles } from '../../model/reducers/mediaActions'
 import { HiddenFileInfo, Output } from '../../model/reducers/mediaModels'
 import { OutputSettings } from '../../model/reducers/settingsModels'
 import { reduxState, reduxStore } from '../../model/reducers/store'
-import * as IO from '../../model/SocketIoConstants'
+import * as IO from '../../model/socketIoConstants'
 import { socketServer } from '../handlers/expressHandler'
 import { logger } from './logger'
 

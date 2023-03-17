@@ -1,14 +1,13 @@
 import React from "react";
 import { reduxState, ReduxStateType, reduxStore } from "../../../model/reducers/store";
-import { socket } from "../../util/SocketClientHandlers";
-import * as IO from '../../../model/SocketIoConstants'
+import { socket } from "../../util/socketClientHandlers";
+import * as IO from '../../../model/socketIoConstants'
 import { useSelector } from "react-redux";
 import { TOGGLE_SHOW_SETTINGS } from "../../../model/reducers/appNavAction";
 import '../../css/Settings.css'
 import settingsService from "../../../model/services/settingsService";
 import appNavigationService from "../../../model/services/appNavigationService";
 import { GenericSettings, OperationMode } from "../../../model/reducers/settingsModels";
-import { deepStrictEqual } from "assert";
 import _ from "lodash";
 
 interface SettingsButtonsProps {

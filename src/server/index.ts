@@ -1,7 +1,7 @@
 import { loadBundledEnvironment } from './bundled-environment'
 loadBundledEnvironment()
 
-import { loadSettings } from './utils/SettingsStorage'
+import { loadSettings } from './utils/settingsStorage'
 loadSettings()
 
 import { loadHiddenFiles } from './utils/hiddenFilesStorage'

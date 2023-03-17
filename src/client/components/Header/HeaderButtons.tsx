@@ -1,8 +1,8 @@
 import React from "react";
 import { reduxState, ReduxStateType } from "../../../model/reducers/store";
-import { socket } from "../../util/SocketClientHandlers";
+import { socket } from "../../util/socketClientHandlers";
 import ToggleButton from "./ToggleButton";
-import * as IO from '../../../model/SocketIoConstants'
+import * as IO from '../../../model/socketIoConstants'
 import { useSelector } from "react-redux";
 import settingsService from "../../../model/services/settingsService";
 

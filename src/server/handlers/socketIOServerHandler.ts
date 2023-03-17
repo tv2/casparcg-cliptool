@@ -1,6 +1,6 @@
 import { reduxState, reduxStore } from '../../model/reducers/store'
 import { logger } from '../utils/logger'
-import * as IO from '../../model/SocketIoConstants'
+import * as IO from '../../model/socketIoConstants'
 
 import { socketServer } from './expressHandler'
 import {
@@ -9,7 +9,7 @@ import {
     loadMedia,
     playOverlay,
     stopOverlay,
-} from '../utils/CcgLoadPlay'
+} from '../utils/ccgLoadPlay'
 import {
     updateMediaFiles,
     updateThumbnailFileList,
@@ -23,7 +23,7 @@ import {
     setOperationMode,
     setWeb,
 } from '../../model/reducers/settingsAction'
-import { saveSettings } from '../utils/SettingsStorage'
+import { saveSettings } from '../utils/settingsStorage'
 import { HiddenFileInfo, MediaFile } from '../../model/reducers/mediaModels'
 import { assignThumbNailListToOutputs } from './CasparCgHandler'
 import { saveHiddenFiles } from '../utils/hiddenFilesStorage'
