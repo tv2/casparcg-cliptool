@@ -27,7 +27,7 @@ export default function TimeCode(props: TimeCodeProps): JSX.Element {
     props.isTextView ? 'text' : ''
   ].join(' ')
 
-  console.log('Time', props.file.name)
+  //console.log('Time', props.file.name)
 
   return (
     <a className={classNames}>

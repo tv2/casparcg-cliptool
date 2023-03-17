@@ -69,7 +69,7 @@ socket.on(IO.TIME_TALLY_UPDATE, (data: IO.TimeTallyPayload[]) => {
             reduxState.settings[0].generics.outputs[index].selectedFile !==
             channel.tally
         ) {
-            console.log('Tally', index, channel.tally)
+            //console.log('Tally', index, channel.tally)
             reduxStore.dispatch(setSelectedFileName(index, channel.tally))
         }
     })

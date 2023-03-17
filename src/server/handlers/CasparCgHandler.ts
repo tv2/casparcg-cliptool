@@ -81,6 +81,8 @@ function ccgOSCServer(): void {
                     `OSC Host: ${address}:${oscConnection.options.localPort}`
                 )
             )
+            // Events are undefined in the log statement, but is there during debug mode ? o.O
+            logger.data(oscConnection).trace('OscConnection')
         })
         .on('message', (message: any) => {
             processOscMessage(message)

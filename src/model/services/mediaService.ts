@@ -29,8 +29,8 @@ class MediaService {
         const selectedFileName = this.getCleanSelectedFile(
             settingsService.getOutputSettings()
         )
-        console.log('Select1', selectedFileName)
-        console.log('Select2', thumbnailName)
+        //console.log('Select1', selectedFileName)
+        //console.log('Select2', thumbnailName)
         return selectedFileName === thumbnailName
     }
 
@@ -41,7 +41,7 @@ class MediaService {
     }
 
     public getCleanSelectedFile(output: OutputSettings): string {
-        console.log('Clean', output)
+        //console.log('Clean', output)
         const selectedFileName = output.selectedFile
             .toUpperCase()
             .replace(/\\/g, '/')
