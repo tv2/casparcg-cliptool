@@ -25,7 +25,7 @@ import {
 } from '../../model/reducers/settingsAction'
 import { saveSettings } from '../utils/settingsStorage'
 import { HiddenFileInfo, MediaFile } from '../../model/reducers/mediaModels'
-import { assignThumbNailListToOutputs } from './CasparCgHandler'
+import { assignThumbNailListToOutputs } from './casparCgHandler'
 import { saveHiddenFiles } from '../utils/hiddenFilesStorage'
 import settingsService from '../../model/services/settingsService'
 import mediaService from '../../model/services/mediaService'
