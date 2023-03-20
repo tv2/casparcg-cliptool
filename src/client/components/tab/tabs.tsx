@@ -7,10 +7,12 @@ import TabContent from './tabContent'
 import '../../css/Tab.css'
 import { ReduxStateType } from '../../../model/reducers/store'
 import { TabData } from '../../../model/reducers/settingsModels'
+import appNavigationService from '../../../model/services/appNavigationService'
 
 export default function Tabs(): JSX.Element {
-  const tabData: TabData[] = useSelector((storeUpdate: ReduxStateType) => storeUpdate.settings[0].tabData)
-  const selectedTab: number = useSelector((storeUpdate: ReduxStateType) => storeUpdate.appNav[0].activeTab)
+  const tabData: TabData[] = useSelector((storeUpdate: ReduxStateType) => storeUpdate.settings.tabData)
+  const selectedTab: number = 
+    useSelector((storeUpdate: ReduxStateType) => appNavigationService.getActiveTab(storeUpdate))
 
   return (
     <div className='tabs'>

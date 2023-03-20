@@ -5,21 +5,22 @@ import ToggleButton from "./toggleButton";
 import * as IO from '../../../model/socketIoConstants'
 import { useSelector } from "react-redux";
 import settingsService from "../../../model/services/settingsService";
+import appNavigationService from "../../../model/services/appNavigationService";
 
 export default function HeaderButtons() {
   const activeTab: number = useSelector(
-    (storeUpdate: ReduxStateType) => storeUpdate.appNav[0].activeTab)
+    (storeUpdate: ReduxStateType) => appNavigationService.getActiveTab(storeUpdate))
   const mixState: boolean = useSelector(
-      (storeUpdate: ReduxStateType) => storeUpdate.settings[0].generics.outputs[activeTab]?.mixState)
+      (storeUpdate: ReduxStateType) => settingsService.getGenericSettings(storeUpdate).outputs[activeTab]?.mixState)
   const webState: boolean = useSelector(
-      (storeUpdate: ReduxStateType) => storeUpdate.settings[0].generics.outputs[activeTab]?.webState)
+      (storeUpdate: ReduxStateType) => settingsService.getGenericSettings(storeUpdate).outputs[activeTab]?.webState)
   const loopState: boolean = useSelector(
-      (storeUpdate: ReduxStateType) => storeUpdate.settings[0].generics.outputs[activeTab]?.loopState)
+      (storeUpdate: ReduxStateType) => settingsService.getGenericSettings(storeUpdate).outputs[activeTab]?.loopState)
   const manualStartState: boolean = useSelector(
-      (storeUpdate: ReduxStateType) => storeUpdate.settings[0].generics.outputs[activeTab]?.manualStartState)
+      (storeUpdate: ReduxStateType) => settingsService.getGenericSettings(storeUpdate).outputs[activeTab]?.manualStartState)
   return (
     <>
-      {reduxState.appNav[0].selectView === 0 ? (
+      {reduxState.appNav.selectView === 0 ? (
         <>
             <ToggleButton 
                 isToggled={loopState}

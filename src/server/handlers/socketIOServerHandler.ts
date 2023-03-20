@@ -38,25 +38,27 @@ import {
 export function socketIoHandlers(socket: any): void {
     logger.info('SETTING UP SOCKET IO MAIN HANDLERS')
 
-    socketServer.emit(IO.SETTINGS_UPDATE, reduxState.settings[0])
+    socketServer.emit(IO.SETTINGS_UPDATE, reduxState.settings)
     initializeClient()
 
     socket
         .on(IO.GET_SETTINGS, () => {
-            socketServer.emit(IO.SETTINGS_UPDATE, reduxState.settings[0])
+            socketServer.emit(IO.SETTINGS_UPDATE, reduxState.settings)
         })
         .on(
             IO.TOGGLE_THUMBNAIL_VISIBILITY,
             (channelIndex: number, fileName: string) => {
                 if (
-                    reduxState.settings[0].generics.outputs.some(
-                        (output) => output.selectedFile === fileName
-                    )
+                    settingsService
+                        .getGenericSettings()
+                        .outputs.some(
+                            (output) => output.selectedFile === fileName
+                        )
                 ) {
                     return
                 }
 
-                const hiddenFiles = reduxState.media[0].hiddenFiles
+                const hiddenFiles = reduxState.media.hiddenFiles
                 try {
                     const updatedHiddenFiles = toggleHiddenFile(
                         fileName,
@@ -165,7 +167,7 @@ export function socketIoHandlers(socket: any): void {
             logger.info('Updating and storing generic settings serverside.')
             reduxStore.dispatch(setGenerics(generics))
             saveSettings()
-            socketServer.emit(IO.SETTINGS_UPDATE, reduxState.settings[0])
+            socketServer.emit(IO.SETTINGS_UPDATE, reduxState.settings)
             cleanUpMediaFiles()
         })
         .on(IO.RESTART_SERVER, () => {
@@ -218,9 +220,11 @@ function buildHiddenFileMetadataFromFileName(
 }
 
 function findFile(fileName: string, channelIndex: number): MediaFile {
-    return reduxState.media[0].outputs[channelIndex].mediaFiles.find(
-        (file) => file.name.toUpperCase() === fileName.toUpperCase()
-    )
+    return mediaService
+        .getOutput(reduxState, channelIndex)
+        .mediaFiles.find(
+            (file) => file.name.toUpperCase() === fileName.toUpperCase()
+        )
 }
 
 function getMetadata(file: MediaFile): HiddenFileInfo {
@@ -231,10 +235,11 @@ function getMetadata(file: MediaFile): HiddenFileInfo {
 }
 
 export function initializeClient(): void {
-    socketServer.emit(IO.TAB_DATA_UPDATE, reduxState.settings[0].tabData)
+    socketServer.emit(IO.TAB_DATA_UPDATE, reduxState.settings.tabData)
     let timeTallyData: IO.TimeTallyPayload[] = []
-    reduxState.settings[0].generics.outputs.forEach(
-        (output: OutputSettings, channelIndex: number) => {
+    settingsService
+        .getGenericSettings()
+        .outputs.forEach((output: OutputSettings, channelIndex: number) => {
             timeTallyData[channelIndex] = {
                 time: mediaService.getOutput(reduxState, channelIndex).time,
                 tally: output.selectedFile,
@@ -261,27 +266,27 @@ export function initializeClient(): void {
                 channelIndex,
                 output.manualStartState
             )
+            const mediaOutput = mediaService.getOutput(reduxState, channelIndex)
             socketServer.emit(
-                IO.THUMB_UPDATE,
+                IO.THUMBNAIL_UPDATE,
                 channelIndex,
-                reduxState.media[0].outputs[channelIndex].thumbnailList
+                mediaOutput.thumbnailList
             )
             socketServer.emit(
                 IO.MEDIA_UPDATE,
                 channelIndex,
-                reduxState.media[0].outputs[channelIndex].mediaFiles
+                mediaOutput.mediaFiles
             )
             socketServer.emit(
                 IO.HIDDEN_FILES_UPDATE,
-                reduxState.media[0].hiddenFiles
+                reduxState.media.hiddenFiles
             )
-        }
-    )
+        })
     socketServer.emit(IO.TIME_TALLY_UPDATE, timeTallyData)
 }
 
 function cleanUpMediaFiles(): void {
-    reduxState.media[0].outputs.forEach(({}, channelIndex: number) => {
+    mediaService.getOutputs().forEach(({}, channelIndex: number) => {
         reduxStore.dispatch(updateMediaFiles(channelIndex, []))
         reduxStore.dispatch(updateThumbnailFileList(channelIndex, []))
         assignThumbNailListToOutputs()

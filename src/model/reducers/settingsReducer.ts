@@ -3,17 +3,15 @@ import { getVideoFormat } from '../videoFormat'
 import * as IO from './settingsAction'
 import { CcgConfigChannel, Settings } from './settingsModels'
 
-export function defaultSettingsReducerState(): Settings[] {
-    return [
-        {
-            ccgConfig: {
-                channels: [],
-                path: '',
-            },
-            tabData: [],
-            generics: settingsFileService.getDefaultGenericSettings(),
+export function defaultSettingsReducerState(): Settings {
+    return {
+        ccgConfig: {
+            channels: [],
+            path: '',
         },
-    ]
+        tabData: [],
+        generics: settingsFileService.getDefaultGenericSettings(),
+    }
 }
 
 function updateChannelConfigWithVideoFormat(
@@ -26,61 +24,59 @@ function updateChannelConfigWithVideoFormat(
 }
 
 export function settings(
-    state: Settings[] = defaultSettingsReducerState(),
+    state: Settings = defaultSettingsReducerState(),
     action
 ) {
     let nextState = { ...state }
 
     switch (action.type) {
         case IO.UPDATE_SETTINGS: {
-            nextState[0].ccgConfig.channels = [
+            nextState.ccgConfig.channels = [
                 ...action.channels.map(updateChannelConfigWithVideoFormat),
             ]
-            nextState[0].ccgConfig.path = action.path
+            nextState.ccgConfig.path = action.path
             return nextState
         }
         case IO.SET_TAB_DATA: {
-            nextState[0].tabData = [...action.tabData]
+            nextState.tabData = [...action.tabData]
             return nextState
         }
         case IO.SET_GENERICS: {
-            nextState[0].generics = { ...action.generics }
-            nextState[0].generics.outputs = nextState[0].generics.outputs ?? []
+            nextState.generics = { ...action.generics }
+            nextState.generics.outputs = nextState.generics.outputs ?? []
             return nextState
         }
         case IO.SET_LOOP: {
             if (doesChannelExist(nextState, action)) {
-                nextState[0].generics.outputs[action.channelIndex].loopState =
+                nextState.generics.outputs[action.channelIndex].loopState =
                     action.loopState
             }
             return nextState
         }
         case IO.SET_SELECTED_FILE_NAME: {
-            console.log('Name', action)
             if (doesChannelExist(nextState, action)) {
-                nextState[0].generics.outputs[
-                    action.channelIndex
-                ].selectedFile = action.filename
+                nextState.generics.outputs[action.channelIndex].selectedFile =
+                    action.filename
             }
             return nextState
         }
         case IO.SET_MIX: {
             if (doesChannelExist(nextState, action)) {
-                nextState[0].generics.outputs[action.channelIndex].mixState =
+                nextState.generics.outputs[action.channelIndex].mixState =
                     action.mixState
             }
             return nextState
         }
         case IO.SET_WEB: {
             if (doesChannelExist(nextState, action)) {
-                nextState[0].generics.outputs[action.channelIndex].webState =
+                nextState.generics.outputs[action.channelIndex].webState =
                     action.webState
             }
             return nextState
         }
         case IO.SET_MANUAL_START: {
             if (doesChannelExist(nextState, action)) {
-                nextState[0].generics.outputs[
+                nextState.generics.outputs[
                     action.channelIndex
                 ].manualStartState = action.manualStartState
             }
@@ -88,9 +84,8 @@ export function settings(
         }
         case IO.SET_OPERATION_MODE: {
             if (doesChannelExist(nextState, action)) {
-                nextState[0].generics.outputs[
-                    action.channelIndex
-                ].operationMode = action.operationMode
+                nextState.generics.outputs[action.channelIndex].operationMode =
+                    action.operationMode
             }
             return nextState
         }
@@ -100,8 +95,8 @@ export function settings(
 }
 
 function doesChannelExist(
-    nextState: Settings[],
+    nextState: Settings,
     action: { channelIndex: number }
 ): boolean {
-    return nextState[0].generics.outputs.length > action.channelIndex
+    return nextState.generics.outputs.length > action.channelIndex
 }

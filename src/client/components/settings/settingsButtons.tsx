@@ -1,5 +1,5 @@
 import React from "react";
-import { reduxState, ReduxStateType, reduxStore } from "../../../model/reducers/store";
+import { ReduxStateType, reduxStore } from "../../../model/reducers/store";
 import { socket } from "../../util/socketClientHandlers";
 import * as IO from '../../../model/socketIoConstants'
 import { useSelector } from "react-redux";
@@ -109,8 +109,7 @@ function handleRestart(): void {
 }
 
 function hasChanges(settings: GenericSettings): boolean {
-  const hasChanged = !_.isEqual(settings, reduxState.settings[0].generics)
-  console.log('Changed', hasChanged)
+  const hasChanged = !_.isEqual(settings, settingsService.getGenericSettings())
   return hasChanged
 }
 

@@ -1,7 +1,7 @@
 // Server to Clients:
 export const TIME_TALLY_UPDATE = 'timeTallyUpdate'
 export const MEDIA_UPDATE = 'mediaUpdate'
-export const THUMB_UPDATE = 'thumbUpdate'
+export const THUMBNAIL_UPDATE = 'thumbUpdate'
 export const HIDDEN_FILES_UPDATE = 'hiddenUpdate'
 export const FOLDERS_UPDATE = 'foldersUpdate'
 export const TAB_DATA_UPDATE = 'tabDataUpdate'

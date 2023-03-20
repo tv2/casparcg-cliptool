@@ -13,12 +13,12 @@ import HeaderButtons from './headerButtons'
 
 export default function Header() {
     const connectionStatus: boolean = useSelector(
-        (storeUpdate: ReduxStateType) => storeUpdate.appNav[0].connectionStatus)
+        (storeUpdate: ReduxStateType) => storeUpdate.appNav.connectionStatus)
 
     return (
         <header className="App-header">
             <div className="App-header__controls">
-                {reduxState.appNav[0].selectView === 0 ? (
+                {reduxState.appNav.selectView === 0 ? (
                     <div className="App-reload-setup-background">
                         <button
                             className="App-settings-button"
@@ -43,7 +43,7 @@ export default function Header() {
 
 function handleSettingsPage() {
     // TODO: Figure out how to do the discard check here, and allow the user to close via this again.
-    if (!reduxState.appNav[0].showSettingsActive) {
+    if (!reduxState.appNav.showSettingsActive) {
         reduxStore.dispatch({
         type: TOGGLE_SHOW_SETTINGS,
         })

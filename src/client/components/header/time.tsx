@@ -34,7 +34,7 @@ export default function Time() {
             <button className="App-header-pgm-counter">
                 {mediaService.secondsToTimeCode(
                     mediaOutput?.time,
-                    reduxState.settings[0].ccgConfig.channels[activeTab]?.videoFormat?.frameRate
+                    reduxState.settings.ccgConfig.channels[activeTab]?.videoFormat?.frameRate
                 )}
             </button>
             <img

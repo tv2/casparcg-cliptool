@@ -22,7 +22,7 @@ export default function ThumbnailUsingImage(props: ThumbnailUsingImageProps): JS
 
   const hiddenFiles: Record<string, HiddenFileInfo> = useSelector(
       (storeUpdate: ReduxStateType) => 
-          storeUpdate.media[0].hiddenFiles
+          storeUpdate.media.hiddenFiles
   ) ?? {}
 
   const classNames: string = [

@@ -1,10 +1,10 @@
 import React from "react"
-import { reduxState } from "../../../model/reducers/store"
 import * as IO from '../../../model/socketIoConstants'
 import { socket } from '../../util/socketClientHandlers'
 import { Footer } from "./footer"
 import "../../css/Operation-mode-edit-visibility-footer.css"
 import { OperationMode } from "../../../model/reducers/settingsModels"
+import appNavigationService from "../../../model/services/appNavigationService"
 
 const BUTTON_TEXT = 'Exit Edit Visibility'
 const DESCRIPTION_TEXT = 'You are currently editing the visibility of files.'.toUpperCase()
@@ -12,7 +12,7 @@ const DESCRIPTION_TEXT = 'You are currently editing the visibility of files.'.to
 function resetOperationMode(): void {
   socket.emit(
     IO.SET_OPERATION_MODE, 
-    reduxState.appNav[0].activeTab, 
+    appNavigationService.getActiveTab(), 
     OperationMode.CONTROL
   )
 }

@@ -2,6 +2,7 @@ import { updateHiddenFiles } from '../../model/reducers/mediaActions'
 import { HiddenFileInfo, Output } from '../../model/reducers/mediaModels'
 import { OutputSettings } from '../../model/reducers/settingsModels'
 import { reduxState, reduxStore } from '../../model/reducers/store'
+import settingsService from '../../model/services/settingsService'
 import * as IO from '../../model/socketIoConstants'
 import { socketServer } from '../handlers/expressHandler'
 import { logger } from './logger'
@@ -41,7 +42,7 @@ export function loadHiddenFiles() {
 
 export function saveHiddenFiles() {
     const hiddenFiles: Record<string, HiddenFileInfo> =
-        reduxState.media[0].hiddenFiles
+        reduxState.media.hiddenFiles
     const cleanHiddenFiles: Record<string, HiddenFileInfo> =
         getCleanHiddenFiles(hiddenFiles)
     const stringifiedHiddenFiles = JSON.stringify(cleanHiddenFiles)
@@ -77,7 +78,8 @@ function getCleanHiddenFiles(
 function validateHiddenFiles(
     hiddenFiles: Record<string, HiddenFileInfo>
 ): boolean {
-    const outputs: OutputSettings[] = reduxState.settings[0].generics.outputs
+    const outputs: OutputSettings[] =
+        settingsService.getGenericSettings().outputs
     return outputs.some((output) => output.selectedFile in hiddenFiles)
 }
 
@@ -87,7 +89,8 @@ function clearInvalidHiddenFiles(
     const hiddenFiles: Record<string, HiddenFileInfo> = {
         ...originalHiddenFiles,
     }
-    const outputs: OutputSettings[] = reduxState.settings[0].generics.outputs
+    const outputs: OutputSettings[] =
+        settingsService.getGenericSettings().outputs
     outputs.forEach((output) => {
         if (output.selectedFile in hiddenFiles) {
             delete hiddenFiles[output.selectedFile]

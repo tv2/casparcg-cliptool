@@ -14,7 +14,8 @@ export function playMedia(
         channelIndex + 1,
         layerIndex + 1,
         fileName,
-        reduxState.settings[0].generics.outputs[channelIndex].loopState || false
+        settingsService.getGenericSettings().outputs[channelIndex].loopState ||
+            false
     )
 }
 
@@ -29,7 +30,7 @@ export function mixMedia(
         channelIndex + 1,
         layerIndex + 1,
         fileName,
-        reduxState.settings[0].generics.outputs[channelIndex].loopState ||
+        settingsService.getGenericSettings().outputs[channelIndex].loopState ||
             false,
         CcgEnum.Transition.MIX,
         MIX_DURATION
@@ -47,7 +48,8 @@ export function loadMedia(
         channelIndex + 1,
         layerIndex + 1,
         fileName,
-        reduxState.settings[0].generics.outputs[channelIndex].loopState || false
+        settingsService.getGenericSettings().outputs[channelIndex].loopState ||
+            false
     )
 }
 
@@ -71,12 +73,12 @@ export function stopOverlay(channelIndex: number, layerIndex: number) {
 }
 
 function scale(channelIndex: number, layerIndex: number) {
-    let resX = reduxState.settings[0].ccgConfig.channels[
+    let resX = reduxState.settings.ccgConfig.channels[
         channelIndex
     ].videoMode.includes('720')
         ? 1280
         : 1920
-    let resY = reduxState.settings[0].ccgConfig.channels[
+    let resY = reduxState.settings.ccgConfig.channels[
         channelIndex
     ].videoMode.includes('720')
         ? 720

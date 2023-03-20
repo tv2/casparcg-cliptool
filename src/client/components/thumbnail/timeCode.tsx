@@ -18,7 +18,7 @@ export default function TimeCode(props: TimeCodeProps): JSX.Element {
     (storeUpdate: ReduxStateType) => mediaService.getOutput(storeUpdate).time
   )
   const frameRate: number = useSelector(
-      (storeUpdate: ReduxStateType) => storeUpdate.settings[0].ccgConfig
+      (storeUpdate: ReduxStateType) => storeUpdate.settings.ccgConfig
           .channels[appNavigationService.getActiveTab()]?.videoFormat.frameRate
   )
 

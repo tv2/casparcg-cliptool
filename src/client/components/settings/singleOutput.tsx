@@ -45,7 +45,7 @@ export default function SingleOutput(props: SingleOutputProps): JSX.Element {
                         onChange={handleTabMediaFolder}
                         value={ folder }
                     >
-                        {reduxState.media[0].folderList.map(
+                        {reduxState.media.folderList.map(
                             (path: string, folderIndex: number) => {
                                 return (
                                     <option key={folderIndex} value={path}>
@@ -61,7 +61,7 @@ export default function SingleOutput(props: SingleOutputProps): JSX.Element {
                     <br />
                     {props.configChannel 
                     ? props.configChannel.videoMode 
-                    : reduxState.settings[0].ccgConfig.channels[props.index].videoMode}
+                    : reduxState.settings.ccgConfig.channels[props.index].videoMode}
                 </label>
                 <SettingsInput 
                     preDescription="LOOP :"

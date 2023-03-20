@@ -1,14 +1,12 @@
 import { Media, Output } from './mediaModels'
 import * as IO from './mediaActions'
 
-function defaultMediaState(): Media[] {
-    return [
-        {
-            outputs: [],
-            folderList: [],
-            hiddenFiles: {},
-        },
-    ]
+function defaultMediaState(): Media {
+    return {
+        outputs: [],
+        folderList: [],
+        hiddenFiles: {},
+    }
 }
 
 function defaultOutputs(amount: number): Output[] {
@@ -23,33 +21,32 @@ function defaultOutputs(amount: number): Output[] {
     return outputs
 }
 
-export function media(state: Media[] = defaultMediaState(), action) {
+export function media(state: Media = defaultMediaState(), action) {
     let nextState = { ...state }
     switch (action.type) {
         case IO.SET_NUMBER_OF_OUTPUTS:
-            nextState[0].outputs = defaultOutputs(action.amount)
+            nextState.outputs = defaultOutputs(action.amount)
             return nextState
         case IO.UPDATE_MEDIA_FILES:
             if (doesChannelExist(nextState, action)) {
-                nextState[0].outputs[action.channelIndex].mediaFiles =
-                    action.files
+                nextState.outputs[action.channelIndex].mediaFiles = action.files
             }
             return nextState
         case IO.UPDATE_THUMBNAIL_LIST:
             if (doesChannelExist(nextState, action)) {
-                nextState[0].outputs[action.channelIndex].thumbnailList =
+                nextState.outputs[action.channelIndex].thumbnailList =
                     action.fileList
             }
             return nextState
         case IO.UPDATE_HIDDEN_FILES:
-            nextState[0].hiddenFiles = action.hiddenFiles
+            nextState.hiddenFiles = action.hiddenFiles
             return nextState
         case IO.UPDATE_FOLDER_LIST:
-            nextState[0].folderList = action.folderList
+            nextState.folderList = action.folderList
             return nextState
         case IO.SET_TIME:
             if (doesChannelExist(nextState, action)) {
-                nextState[0].outputs[action.channelIndex].time = action.time
+                nextState.outputs[action.channelIndex].time = action.time
             }
             return nextState
 
@@ -59,8 +56,8 @@ export function media(state: Media[] = defaultMediaState(), action) {
 }
 
 function doesChannelExist(
-    nextState: Media[],
+    nextState: Media,
     action: { channelIndex: number }
 ): boolean {
-    return nextState[0].outputs.length > action.channelIndex
+    return nextState.outputs.length > action.channelIndex
 }

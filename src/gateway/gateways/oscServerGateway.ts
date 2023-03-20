@@ -7,6 +7,7 @@ import * as IO from '../../model/socketIoConstants'
 import * as OSC from './oscConstants'
 import { ARG_CONSTANTS } from '../util/extractArgs'
 import osService from '../../model/services/osService'
+import mediaService from '../../model/services/mediaService'
 
 export function oscServerGateway(): void {
     console.log('Initializing OSC server')
@@ -47,7 +48,7 @@ export function oscServerGateway(): void {
                         {
                             type: 's',
                             value: JSON.stringify(
-                                reduxState.media[0].outputs[channel - 1]
+                                mediaService.getOutput(reduxState, channel - 1)
                                     .mediaFiles
                             ),
                         },

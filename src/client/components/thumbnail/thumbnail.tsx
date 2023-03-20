@@ -16,7 +16,7 @@ export function Thumbnail(): JSX.Element {
         (storeUpdate: ReduxStateType) => mediaService.getOutput(storeUpdate)?.mediaFiles
     ) ?? []
     const hiddenFiles: Record<string, HiddenFileInfo> = useSelector(
-        (storeUpdate: ReduxStateType) => storeUpdate.media[0].hiddenFiles
+        (storeUpdate: ReduxStateType) => storeUpdate.media.hiddenFiles
     ) ?? {}
     const isInEditVisibilityMode: boolean = useSelector(
         (storeUpdate: ReduxStateType) => settingsService.getOutputSettings(storeUpdate)
@@ -30,7 +30,7 @@ export function Thumbnail(): JSX.Element {
         <div className="flexBoxes">
             {shownFiles?.map((file: MediaFile, index: number) => (
                 <div className="boxComponent" key={index}>
-                    {reduxState.appNav[0].selectView === 0 
+                    {reduxState.appNav.selectView === 0 
                         ? <ThumbnailUsingImage file={file} /> 
                         : <ThumbnailUsingText file={file} />}
                 </div>

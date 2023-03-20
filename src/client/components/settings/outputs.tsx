@@ -1,7 +1,7 @@
 import React from "react";
 import { useSelector } from "react-redux";
 import { GenericSettings, OutputSettings } from "../../../model/reducers/settingsModels";
-import { reduxState, ReduxStateType } from "../../../model/reducers/store";
+import { ReduxStateType } from "../../../model/reducers/store";
 import SingleOutput from "./singleOutput";
 
 
@@ -12,7 +12,7 @@ interface OutputsProps {
 }
 
 export default function Outputs(props: OutputsProps): JSX.Element {
-    const ccgConfig = useSelector((storeUpdate: ReduxStateType) => storeUpdate.settings[0].ccgConfig)
+    const ccgConfig = useSelector((storeUpdate: ReduxStateType) => storeUpdate.settings.ccgConfig)
     return (
         <div>
             {props.specificChannel

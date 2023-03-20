@@ -1,4 +1,4 @@
-import { reduxState, reduxStore } from '../../model/reducers/store'
+import { reduxStore } from '../../model/reducers/store'
 import * as IO from '../../model/socketIoConstants'
 
 // import io from 'socket.io-client'
@@ -25,6 +25,7 @@ import { ARG_CONSTANTS } from './extractArgs'
 import { logger } from './loggerGateway'
 import { MediaFile, ThumbnailFile } from '../../model/reducers/mediaModels'
 import { OperationMode, Settings } from '../../model/reducers/settingsModels'
+import settingsService from '../../model/services/settingsService'
 
 logger.info(`Connecting Socket to: ${ARG_CONSTANTS.clipToolHost}`)
 
@@ -66,7 +67,7 @@ socket.on(IO.FOLDERS_UPDATE, (payload: string[]) => {
 })
 
 socket.on(
-    IO.THUMB_UPDATE,
+    IO.THUMBNAIL_UPDATE,
     (channelIndex: number, thumbnailFiles: ThumbnailFile[]) => {
         reduxStore.dispatch(
             updateThumbnailFileList(channelIndex, thumbnailFiles)
@@ -82,7 +83,7 @@ socket.on(IO.TIME_TALLY_UPDATE, (data: IO.TimeTallyPayload[]) => {
     data.forEach((channel, index) => {
         reduxStore.dispatch(setTime(index, channel.time))
         if (
-            reduxState.settings[0].generics.outputs[index].selectedFile !==
+            settingsService.getGenericSettings().outputs[index].selectedFile !==
             channel.tally
         ) {
             reduxStore.dispatch(setSelectedFileName(index, channel.tally))

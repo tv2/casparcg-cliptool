@@ -1,7 +1,8 @@
 import { setGenerics } from '../../model/reducers/settingsAction'
 import { GenericSettings } from '../../model/reducers/settingsModels'
-import { reduxState, reduxStore } from '../../model/reducers/store'
+import { reduxStore } from '../../model/reducers/store'
 import settingsFileService from '../../model/services/settingsFileService'
+import settingsService from '../../model/services/settingsService'
 import { logger } from './logger'
 
 const fs = require('fs')
@@ -52,7 +53,7 @@ export function loadSettings(): void {
 }
 
 export function saveSettings(): void {
-    const generics: GenericSettings = reduxState.settings[0].generics
+    const generics: GenericSettings = settingsService.getGenericSettings()
     const stringifiedSettings = JSON.stringify(generics)
     if (!fs.existsSync('storage')) {
         fs.mkdirSync('storage')

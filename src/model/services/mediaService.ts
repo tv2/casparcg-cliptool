@@ -13,12 +13,19 @@ class MediaService {
             channelIndex === -1
                 ? appNavigationService.getActiveTab()
                 : channelIndex
-        return store.media[0].outputs[activeTab]
+        return store.media.outputs[activeTab]
+    }
+
+    public getOutputs(store: ReduxStateType = reduxState): Output[] {
+        return store.media.outputs
     }
 
     public findThumbnail(fileName: string, channelIndex: number): string {
         const output = this.getOutput(reduxState, channelIndex)
-        const thumbnailFile = output?.thumbnailList.find(
+        if (!output || !output.thumbnailList) {
+            return ''
+        }
+        const thumbnailFile = output.thumbnailList.find(
             (item: ThumbnailFile) =>
                 item.name.toUpperCase() === fileName.toUpperCase()
         )
@@ -33,9 +40,11 @@ class MediaService {
     }
 
     public isThumbnailSelectedOnAnyOutput(thumbnailName: string): boolean {
-        return reduxState.settings[0].generics.outputs.some(
-            (output) => this.getCleanSelectedFile(output) === thumbnailName
-        )
+        return settingsService
+            .getGenericSettings()
+            .outputs.some(
+                (output) => this.getCleanSelectedFile(output) === thumbnailName
+            )
     }
 
     public getCleanSelectedFile(output: OutputSettings): string {
@@ -46,7 +55,7 @@ class MediaService {
             .split('.')
         // Remove system Path e.g.: D:\\media/:
         const cleanSelectedFileName = selectedFileName[0].replace(
-            reduxState.settings[0].ccgConfig.path
+            reduxState.settings.ccgConfig.path
                 ?.toUpperCase()
                 .replace(/\\/g, '/') + '/',
             ''

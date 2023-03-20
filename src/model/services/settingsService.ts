@@ -1,4 +1,4 @@
-import { OutputSettings } from '../reducers/settingsModels'
+import { GenericSettings, OutputSettings } from '../reducers/settingsModels'
 import { reduxState, ReduxStateType } from '../reducers/store'
 import appNavigationService from './appNavigationService'
 
@@ -11,7 +11,11 @@ class SettingsService {
             channelIndex === -1
                 ? appNavigationService.getActiveTab()
                 : channelIndex
-        return state.settings[0].generics.outputs[activeTab]
+        return state.settings.generics.outputs[activeTab]
+    }
+
+    getGenericSettings(state: ReduxStateType = reduxState): GenericSettings {
+        return state.settings.generics
     }
 }
 

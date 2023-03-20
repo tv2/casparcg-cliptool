@@ -1,3 +1,4 @@
+// TODO: Come up with a better name.
 class EventService {
     getTextFromEvent(event: React.ChangeEvent<HTMLInputElement>): string {
         return event.target.value

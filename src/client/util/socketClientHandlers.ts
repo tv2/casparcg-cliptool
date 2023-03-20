@@ -28,6 +28,7 @@ import {
     MediaFile,
     ThumbnailFile,
 } from '../../model/reducers/mediaModels'
+import settingsService from '../../model/services/settingsService'
 
 export const socket = io()
 
@@ -51,9 +52,12 @@ socket.on(IO.FOLDERS_UPDATE, (payload: string[]) => {
     reduxStore.dispatch(updateFolderList(payload))
 })
 
-socket.on(IO.THUMB_UPDATE, (channelIndex: number, payload: ThumbnailFile[]) => {
-    reduxStore.dispatch(updateThumbnailFileList(channelIndex, payload))
-})
+socket.on(
+    IO.THUMBNAIL_UPDATE,
+    (channelIndex: number, payload: ThumbnailFile[]) => {
+        reduxStore.dispatch(updateThumbnailFileList(channelIndex, payload))
+    }
+)
 
 socket.on(
     IO.HIDDEN_FILES_UPDATE,
@@ -66,7 +70,7 @@ socket.on(IO.TIME_TALLY_UPDATE, (data: IO.TimeTallyPayload[]) => {
     data.forEach((channel, index) => {
         reduxStore.dispatch(setTime(index, channel.time))
         if (
-            reduxState.settings[0].generics.outputs[index].selectedFile !==
+            settingsService.getGenericSettings().outputs[index].selectedFile !==
             channel.tally
         ) {
             reduxStore.dispatch(setSelectedFileName(index, channel.tally))
