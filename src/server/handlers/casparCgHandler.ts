@@ -92,13 +92,14 @@ function ccgOSCServer(): void {
         })
 
     oscConnection.open()
-    logger.info(`OSC listening on port 5253`)
+    logger.info(
+        `OSC listening on port '${reduxState.settings[0].generics.ccgOscPort}'`
+    )
 }
 
 function processOscMessage(message: any): void {
     let channelIndex = getChannelNumber(message.address) - 1
     let layerIndex = getLayerNumber(message.address) - 1
-    console.log('Message Raw', message)
 
     if (message.address.includes('/stage/layer')) {
         if (

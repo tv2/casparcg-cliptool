@@ -26,8 +26,8 @@ export const PreviousGenericSettings = z.object({
     transitionTime: z.number().default(16),
     ccgIp: z.string().default('0.0.0.0'),
     ccgAmcpPort: z.number().default(5250),
-    ccgDefaultLayer: z.number().default(5253),
-    ccgOscPort: z.number().default(10),
+    ccgDefaultLayer: z.number().default(10),
+    ccgOscPort: z.number().default(5253),
     outputLabels: z
         .string()
         .array()
@@ -81,8 +81,8 @@ export const NewGenericSettings = z.object({
     transitionTime: z.number().default(16),
     ccgIp: z.string().default('0.0.0.0'),
     ccgAmcpPort: z.number().default(5250),
-    ccgDefaultLayer: z.number().default(5253),
-    ccgOscPort: z.number().default(10),
+    ccgDefaultLayer: z.number().default(10),
+    ccgOscPort: z.number().default(5253),
     outputs: z
         .object({
             label: z.string().default(''),

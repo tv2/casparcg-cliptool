@@ -25,7 +25,6 @@ function defaultOutputs(amount: number): Output[] {
 
 export function media(state: Media[] = defaultMediaState(), action) {
     let nextState = { ...state }
-    //console.log('Update', action)
     switch (action.type) {
         case IO.SET_NUMBER_OF_OUTPUTS:
             nextState[0].outputs = defaultOutputs(action.amount)

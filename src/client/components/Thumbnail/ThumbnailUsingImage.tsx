@@ -30,8 +30,6 @@ export default function ThumbnailUsingImage(props: ThumbnailUsingImageProps): JS
       props.file.name in hiddenFiles ? 'hidden' : ''
   ].join(' ')
 
-  //console.log('Image', props.file.name)
-
   return (
     <div className={classNames}>
         <ThumbnailPicture file={props.file} />
