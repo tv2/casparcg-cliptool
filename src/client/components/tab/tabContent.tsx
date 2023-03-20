@@ -14,11 +14,11 @@ interface TabBarProps {
   selectedTab: number
 }
 
-export default function TabContent(props: TabBarProps) {
+export default function TabContent(props: TabBarProps): JSX.Element {
   const [touchStart, setTouchStart] = useState<Point | null>(null)
   const [touchEnd, setTouchEnd] = useState<Point | null>(null)
 
-  function handleTouchStart(event: React.TouchEvent<HTMLDivElement>) {
+  function handleTouchStart(event: React.TouchEvent<HTMLDivElement>): void {
     if (isSpecificChannel) {
       return
     }
@@ -26,14 +26,14 @@ export default function TabContent(props: TabBarProps) {
     setTouchStart(swipeService.getEventPoint(event))
   }
 
-  function handleTouchMove(event: React.TouchEvent<HTMLDivElement>){
+  function handleTouchMove(event: React.TouchEvent<HTMLDivElement>): void {
     if (isSpecificChannel) {
       return
     }
     setTouchEnd(swipeService.getEventPoint(event))
   }
 
-  function handleTouchEnd() {
+  function handleTouchEnd(): void {
     if (!touchStart || !touchEnd || isSpecificChannel){
       return
     }
@@ -51,7 +51,7 @@ export default function TabContent(props: TabBarProps) {
   return (
     <div className='tab-content-wrapper' >
         {
-          props.tabData.map((item, index) => {
+          props.tabData.map(({}, index) => {
             const isSelected = props.selectedTab === index
 
             const classNames = [ 

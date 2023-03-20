@@ -21,7 +21,7 @@ function defaultOutputs(amount: number): Output[] {
     return outputs
 }
 
-export function media(state: Media = defaultMediaState(), action) {
+export function media(state: Media = defaultMediaState(), action: any) {
     let nextState = { ...state }
     switch (action.type) {
         case IO.SET_NUMBER_OF_OUTPUTS:

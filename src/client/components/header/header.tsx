@@ -11,7 +11,7 @@ import '../../css/App-text-view-header.css'
 import Time from './time'
 import HeaderButtons from './headerButtons'
 
-export default function Header() {
+export default function Header(): JSX.Element {
     const connectionStatus: boolean = useSelector(
         (storeUpdate: ReduxStateType) => storeUpdate.appNav.connectionStatus)
 
@@ -41,7 +41,7 @@ export default function Header() {
     )
 }
 
-function handleSettingsPage() {
+function handleSettingsPage(): void {
     // TODO: Figure out how to do the discard check here, and allow the user to close via this again.
     if (!reduxState.appNav.showSettingsActive) {
         reduxStore.dispatch({

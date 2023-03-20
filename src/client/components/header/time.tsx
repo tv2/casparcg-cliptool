@@ -9,7 +9,7 @@ import settingsService from "../../../model/services/settingsService";
 import { Output } from "../../../model/reducers/mediaModels";
 import { OutputSettings } from "../../../model/reducers/settingsModels";
 
-export default function Time() {
+export default function Time(): JSX.Element {
     const activeTab: number = useSelector(
         () => appNavigationService.getActiveTab())
     const mediaOutput: Output = useSelector(

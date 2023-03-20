@@ -7,7 +7,7 @@ import { useSelector } from "react-redux";
 import settingsService from "../../../model/services/settingsService";
 import appNavigationService from "../../../model/services/appNavigationService";
 
-export default function HeaderButtons() {
+export default function HeaderButtons(): JSX.Element {
   const activeTab: number = useSelector(
     (storeUpdate: ReduxStateType) => appNavigationService.getActiveTab(storeUpdate))
   const mixState: boolean = useSelector(
@@ -55,7 +55,7 @@ export default function HeaderButtons() {
   )
 }
 
-function handleLoopStatus(activeTab: number) {
+function handleLoopStatus(activeTab: number): void {
   socket.emit(
       IO.SET_LOOP_STATE,
       activeTab,
@@ -63,7 +63,7 @@ function handleLoopStatus(activeTab: number) {
   )
 }
 
-function handleMixStatus(activeTab: number) {
+function handleMixStatus(activeTab: number): void {
   socket.emit(
       IO.SET_MIX_STATE,
       activeTab,
@@ -71,7 +71,7 @@ function handleMixStatus(activeTab: number) {
   )
 }
 
-function handleWebState(activeTab: number) {
+function handleWebState(activeTab: number): void {
   socket.emit(
       IO.SET_WEB_STATE,
       activeTab,
@@ -79,7 +79,7 @@ function handleWebState(activeTab: number) {
   )
 }
 
-function handleManualStartStatus(activeTab: number) {
+function handleManualStartStatus(activeTab: number): void {
   socket.emit(
       IO.SET_MANUAL_START_STATE,
       activeTab,

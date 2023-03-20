@@ -8,7 +8,7 @@ import SingleOutput from "./singleOutput";
 interface OutputsProps {
     specificChannel: number
     settings: GenericSettings
-    setSettings: (GenericSettings) => void
+    setSettings: (GenericSettings: GenericSettings) => void
 }
 
 export default function Outputs(props: OutputsProps): JSX.Element {
@@ -16,7 +16,7 @@ export default function Outputs(props: OutputsProps): JSX.Element {
     return (
         <div>
             {props.specificChannel
-                ? <SingleOutput index={props.specificChannel - 1} output={props.settings[props.specificChannel]} setOutput={setOutput}/>
+                ? <SingleOutput index={props.specificChannel - 1} output={props.settings.outputs[props.specificChannel]} setOutput={setOutput}/>
                 : ccgConfig.channels.map(
                         (item, index) => {
                             return <SingleOutput configChannel={item} index={index} output={props.settings.outputs[index]} key={index} setOutput={setOutput}/>

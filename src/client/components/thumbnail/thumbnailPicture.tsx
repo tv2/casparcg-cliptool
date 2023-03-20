@@ -12,7 +12,7 @@ interface ThumbnailPictureProps {
 
 export default function ThumbnailPicture(props: ThumbnailPictureProps): JSX.Element {
   // Redux hook:
-  const file: MediaFile = useSelector(
+  const file: MediaFile | undefined = useSelector(
     (storeUpdate: ReduxStateType) => mediaService.getOutput(storeUpdate)
         .mediaFiles.find((predicate: MediaFile) => predicate.name === props.file.name)
   )

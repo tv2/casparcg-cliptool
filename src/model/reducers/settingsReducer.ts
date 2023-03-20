@@ -25,7 +25,7 @@ function updateChannelConfigWithVideoFormat(
 
 export function settings(
     state: Settings = defaultSettingsReducerState(),
-    action
+    action: any
 ) {
     let nextState = { ...state }
 

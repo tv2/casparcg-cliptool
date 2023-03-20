@@ -12,7 +12,7 @@ interface TabProps {
   totalTabs: number
 }
 
-function setOutput(tab: number) {
+function setOutput(tab: number): void {
   reduxStore.dispatch(setActiveTab(tab))
 }
 

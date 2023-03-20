@@ -1,4 +1,4 @@
-import React, { ChangeEvent, InputHTMLAttributes, useState } from "react";
+import React, { useState } from "react";
 import { GenericSettings } from "../../../model/reducers/settingsModels";
 import '../../css/Settings.css'
 import eventService from "../../services/eventService";
@@ -6,7 +6,7 @@ import SettingsInput, { SettingsInputType } from "./settingsInput";
 
 interface GeneralSettingsProps {
     settings: GenericSettings
-    setSettings: (GenericSettings) => void
+    setSettings: (GenericSettings: GenericSettings) => void
 }
 
 export default function GeneralSettings(props: GeneralSettingsProps): JSX.Element {
@@ -59,7 +59,7 @@ export default function GeneralSettings(props: GeneralSettingsProps): JSX.Elemen
         </form>
     )
     
-    function handleCcgIp(event: React.ChangeEvent<HTMLInputElement>) {
+    function handleCcgIp(event: React.ChangeEvent<HTMLInputElement>): void {
         const settings = { ...props.settings }
         const newCcgIp = eventService.getTextFromEvent(event)
         setCcgIp(newCcgIp)
@@ -67,7 +67,7 @@ export default function GeneralSettings(props: GeneralSettingsProps): JSX.Elemen
         props.setSettings(settings)
     }
 
-    function handleCcgAmcpPort(event: React.ChangeEvent<HTMLInputElement>) {
+    function handleCcgAmcpPort(event: React.ChangeEvent<HTMLInputElement>): void {
         const settings = { ...props.settings }
         const newCcgAmcpPort = eventService.getNumberFromEvent(event)
         setCcgAmcpPort(newCcgAmcpPort)
@@ -75,7 +75,7 @@ export default function GeneralSettings(props: GeneralSettingsProps): JSX.Elemen
         props.setSettings(settings)
     }
 
-    function handleCcgOscPort(event: React.ChangeEvent<HTMLInputElement>) {
+    function handleCcgOscPort(event: React.ChangeEvent<HTMLInputElement>): void {
         const settings = { ...props.settings }
         const newCcgOscPort = eventService.getNumberFromEvent(event)
         setCcgOscPort(newCcgOscPort)
@@ -83,7 +83,7 @@ export default function GeneralSettings(props: GeneralSettingsProps): JSX.Elemen
         props.setSettings(settings)
     }
 
-    function handleCcgDefaultLayer(event: React.ChangeEvent<HTMLInputElement>) {
+    function handleCcgDefaultLayer(event: React.ChangeEvent<HTMLInputElement>): void {
         const settings = { ...props.settings }
         const newCcgDefaultLayer = eventService.getNumberFromEvent(event)
         setCcgDefaultLayer(newCcgDefaultLayer)
@@ -91,7 +91,7 @@ export default function GeneralSettings(props: GeneralSettingsProps): JSX.Elemen
         props.setSettings(settings)
     }
 
-    function handleCcgTransitionTime(event: React.ChangeEvent<HTMLInputElement>) {
+    function handleCcgTransitionTime(event: React.ChangeEvent<HTMLInputElement>): void {
         const settings = { ...props.settings }
         const newCcgTransitionTime = eventService.getNumberFromEvent(event)
         setCcgTransitionTime(newCcgTransitionTime)

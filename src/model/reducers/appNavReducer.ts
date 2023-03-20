@@ -17,7 +17,7 @@ function defaultAppNavReducerState(): NavReducer {
 
 export function appNav(
     state: NavReducer = defaultAppNavReducerState(),
-    action
+    action: any
 ) {
     let nextState = { ...state }
 

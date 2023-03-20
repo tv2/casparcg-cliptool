@@ -51,7 +51,7 @@ import osService from '../../model/services/osService'
 import mediaService from '../../model/services/mediaService'
 
 let waitingForCCGResponse: boolean = false
-let previousThumbFileList = []
+let previousThumbnailFileList: ThumbnailFile[] = []
 let thumbNailList: ThumbnailFile[] = []
 
 //Communication with CasparCG consists of 2 parts:
@@ -238,14 +238,17 @@ async function startTimerControlledServices(): Promise<void> {
 }
 
 async function loadCcgMedia(): Promise<ThumbnailFile[]> {
-    let thumbFiles = await ccgConnection.thumbnailList()
+    let thumbnailFiles: any = await ccgConnection.thumbnailList()
 
     if (
-        hasThumbnailListChanged(thumbFiles.response.data, previousThumbFileList)
+        hasThumbnailListChanged(
+            thumbnailFiles.response.data,
+            previousThumbnailFileList
+        )
     ) {
-        previousThumbFileList = thumbFiles.response.data
+        previousThumbnailFileList = thumbnailFiles.response.data
         thumbNailList = []
-        for await (const thumbFile of thumbFiles.response.data) {
+        for await (const thumbFile of thumbnailFiles.response.data) {
             await loadThumbNailImage(thumbFile).then((thumbImage: any) => {
                 thumbNailList.push(thumbImage)
             })

@@ -463,10 +463,10 @@
   resolved "https://registry.yarnpkg.com/@socket.io/component-emitter/-/component-emitter-3.1.0.tgz#96116f2a912e0c02817345b3c10751069920d553"
   integrity sha512-+9jVqKhRSpsc591z5vX+X5Yyw+he/HCB4iQ/RYxw35CEPaY1gnsNE43nf9n9AaYjAQrTiI/mOwKUKdUs9vf7Xg==
 
-"@tv2media/logger@^1.2.4":
-  version "1.2.4"
-  resolved "https://registry.yarnpkg.com/@tv2media/logger/-/logger-1.2.4.tgz#44a3c36e76da34c3c6501d08f33ab563e11cb9ea"
-  integrity sha512-6IE5U2dZEsmHYvpdSMnoS0HHArEDBfAJELkvBwSEKQNFo05SJh26VcG4b7UB+w35+dO6bKkmJjbMwaZ80NBF5Q==
+"@tv2media/logger@^2.0.0":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@tv2media/logger/-/logger-2.0.0.tgz#bca8d260d966d844d0810fc1c26e8de7bb787239"
+  integrity sha512-H1btFAJqLvWvyH3lWeU/ECZ6khJOb6WeNgwtJf6g1f4ZLiMUK28a2mFPkvjUNtcOImaZWoEfAslJXI/KZ0y37A==
 
 "@types/cookie@^0.4.1":
   version "0.4.1"

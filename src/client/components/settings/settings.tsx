@@ -9,8 +9,8 @@ import _ from 'lodash'
 import settingsService from '../../../model/services/settingsService'
 
 // Check if URL has a specific channel:
-const channel = new URLSearchParams(window.location.search).get('channel')
-const specificChannel = parseInt(channel) || 0
+const channel: string | null = new URLSearchParams(window.location.search).get('channel')
+const specificChannel = channel ? parseInt(channel) || 0 : 0
 
 export function Settings(): JSX.Element { 
     useSelector((storeUpdate: ReduxStateType) => settingsService.getGenericSettings(storeUpdate))
