@@ -1,11 +1,8 @@
 import React, { ChangeEvent, InputHTMLAttributes, useState } from "react";
-import { useSelector } from "react-redux";
-import { setGenerics } from "../../../model/reducers/settingsAction";
 import { GenericSettings } from "../../../model/reducers/settingsModels";
-import { reduxState, ReduxStateType, reduxStore } from "../../../model/reducers/store";
 import '../../css/Settings.css'
 import eventService from "../../services/eventService";
-import SettingsInput, { SettingsInputType } from "./SettingsInput";
+import SettingsInput, { SettingsInputType } from "./settingsInput";
 
 interface GeneralSettingsProps {
     settings: GenericSettings

@@ -1,7 +1,7 @@
 import React from "react";
 import { reduxState, ReduxStateType } from "../../../model/reducers/store";
 import { socket } from "../../util/socketClientHandlers";
-import ToggleButton from "./ToggleButton";
+import ToggleButton from "./toggleButton";
 import * as IO from '../../../model/socketIoConstants'
 import { useSelector } from "react-redux";
 import settingsService from "../../../model/services/settingsService";

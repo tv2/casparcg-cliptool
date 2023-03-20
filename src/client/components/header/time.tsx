@@ -6,8 +6,8 @@ import mediaService from "../../../model/services/mediaService";
 import '../../css/App-header.css'
 import appNavigationService from "../../../model/services/appNavigationService";
 import settingsService from "../../../model/services/settingsService";
-import { OutputSettings } from "../../../model/reducers/settingsModels";
 import { Output } from "../../../model/reducers/mediaModels";
+import { OutputSettings } from "../../../model/reducers/settingsModels";
 
 export default function Time() {
     const activeTab: number = useSelector(

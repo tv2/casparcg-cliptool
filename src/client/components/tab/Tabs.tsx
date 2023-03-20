@@ -1,8 +1,8 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
 
-import TabBar from './TabBar'
-import TabContent from './TabContent'
+import TabBar from './tabBar'
+import TabContent from './tabContent'
 
 import '../../css/Tab.css'
 import { ReduxStateType } from '../../../model/reducers/store'

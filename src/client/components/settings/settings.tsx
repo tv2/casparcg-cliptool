@@ -1,14 +1,13 @@
 import React, { useState } from 'react'
 import '../../css/Settings.css'
-import Outputs from './Outputs'
-import SettingsButtons from './SettingsButtons'
-import GeneralSettings from './GeneralSettings'
+import Outputs from './outputs'
+import SettingsButtons from './settingsButtons'
+import GeneralSettings from './generalSettings'
 import { reduxState, ReduxStateType } from '../../../model/reducers/store'
-import { GenericSettings } from '../../../model/reducers/settingsModels'
 import { useSelector } from 'react-redux'
 import _ from 'lodash'
 
-// Check if URL has specifiet a channel:
+// Check if URL has a specific channel:
 const channel = new URLSearchParams(window.location.search).get('channel')
 const specificChannel = parseInt(channel) || 0
 

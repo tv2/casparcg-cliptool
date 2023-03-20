@@ -4,8 +4,8 @@ import mediaService from "../../../model/services/mediaService";
 
 import '../../css/Thumbnail.css'
 import { ReduxStateType } from "../../../model/reducers/store";
-import appNavigationService from "../../../model/services/appNavigationService";
 import { MediaFile } from "../../../model/reducers/mediaModels";
+import appNavigationService from "../../../model/services/appNavigationService";
 
 interface TimeCodeProps {
   file: MediaFile

@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux'
 import { OperationMode } from '../../../model/reducers/settingsModels'
 import { ReduxStateType } from '../../../model/reducers/store'
 import appNavigationService from '../../../model/services/appNavigationService'
-import { OperationModeEditVisibilityFooter } from './OperationModeEditVisibilityFooter'
+import { OperationModeEditVisibilityFooter } from './operationModeEditVisibilityFooter'
 
 export function OperationModeFooter(): JSX.Element {
   const operationMode: OperationMode = useSelector((storeUpdate: ReduxStateType) =>

@@ -2,7 +2,7 @@ import React from 'react'
 import { TabData } from '../../../model/reducers/settingsModels'
 
 import '../../css/Tab.css'
-import { Tab } from './Tab'
+import { Tab } from './tab'
 
 interface TabBarProps {
   tabData: TabData[]

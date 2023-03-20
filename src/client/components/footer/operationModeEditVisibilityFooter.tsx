@@ -2,7 +2,7 @@ import React from "react"
 import { reduxState } from "../../../model/reducers/store"
 import * as IO from '../../../model/socketIoConstants'
 import { socket } from '../../util/socketClientHandlers'
-import { Footer } from "./Footer"
+import { Footer } from "./footer"
 import "../../css/Operation-mode-edit-visibility-footer.css"
 import { OperationMode } from "../../../model/reducers/settingsModels"
 

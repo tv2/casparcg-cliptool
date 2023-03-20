@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react"
+import React, { useState } from "react"
 import { CcgConfigChannel, OutputSettings } from "../../../model/reducers/settingsModels"
 import { reduxState } from "../../../model/reducers/store"
 import '../../css/Settings.css'
 import eventService from "../../services/eventService"
-import SettingsInput, { SettingsInputType } from "./SettingsInput"
+import SettingsInput, { SettingsInputType } from "./settingsInput"
 
 interface SingleOutputProps {
   configChannel?: CcgConfigChannel

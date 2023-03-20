@@ -1,11 +1,11 @@
 import React from 'react'
 import '../../css/Thumbnail.css'
-import '../App'
+import '../app'
 import mediaService from "../../../model/services/mediaService";
 import { useSelector } from 'react-redux';
 import { reduxState, ReduxStateType } from '../../../model/reducers/store';
-import ThumbnailUsingImage from './ThumbnailUsingImage';
-import ThumbnailUsingText from './ThumbnailUsingText';
+import ThumbnailUsingImage from './thumbnailUsingImage';
+import ThumbnailUsingText from './thumbnailUsingText';
 import settingsService from '../../../model/services/settingsService';
 import { OperationMode } from '../../../model/reducers/settingsModels';
 import { HiddenFileInfo, MediaFile } from '../../../model/reducers/mediaModels';

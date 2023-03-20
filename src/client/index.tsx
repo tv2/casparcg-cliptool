@@ -4,7 +4,7 @@ import ReactDom from 'react-dom'
 import { Provider as ReduxProvider } from 'react-redux'
 import { reduxStore, reduxState } from '../model/reducers/store'
 import { socket } from './util/socketClientHandlers'
-import { App } from './components/App'
+import { App } from './components/app'
 import { setSelectView } from '../model/reducers/appNavAction'
 
 console.log('Redux initialized :', reduxState)

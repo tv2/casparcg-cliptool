@@ -2,7 +2,7 @@ import React from "react";
 import { useSelector } from "react-redux";
 import { GenericSettings, OutputSettings } from "../../../model/reducers/settingsModels";
 import { reduxState, ReduxStateType } from "../../../model/reducers/store";
-import SingleOutput from "./SingleOutput";
+import SingleOutput from "./singleOutput";
 
 
 interface OutputsProps {

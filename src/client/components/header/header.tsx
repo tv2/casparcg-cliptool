@@ -8,8 +8,8 @@ import '../../css/App.css'
 import '../../css/App-header.css'
 import '../../css/App-control-view-header.css'
 import '../../css/App-text-view-header.css'
-import Time from './Time'
-import HeaderButtons from './HeaderButtons'
+import Time from './time'
+import HeaderButtons from './headerButtons'
 
 export default function Header() {
     const connectionStatus: boolean = useSelector(

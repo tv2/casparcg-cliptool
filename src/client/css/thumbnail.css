@@ -1,0 +1,152 @@
+.flexBoxes {
+    height: 100%;
+    overflow: auto;
+    position: relative;
+    box-sizing: border-box;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-content: flex-start;
+    justify-content: center;
+    list-style: none;
+    padding-left: 0;
+}
+
+.boxComponent {
+    position: relative;
+    background: #2e2b41;
+    color: white;
+    box-shadow: 6px 6px 6px #555;
+    width: 300px;
+    height: 200px;
+    margin: 5px;
+    font-size: 0.9em;
+}
+.boxComponentText {
+    position: relative;
+    background: #2e2b41;
+    color: white;
+    box-shadow: 6px 6px 6px #555;
+    width: 270px;
+    height: 150px;
+    margin: 5px;
+    font-size: 0.9em;
+}
+
+.thumbnailImage {
+    border-width: 4px;
+    border-style: solid;
+    border-color: #2e2b41;
+    width: 90%;
+    height: auto;
+    margin: 8px;
+    background-image: repeating-linear-gradient(
+        -45deg,
+        #94939411,
+        #94939411 3%,
+        #2a1938 4%
+    );
+}
+
+.selected-thumb {
+    border-color: red;
+}
+
+.thumb.hidden {
+    scale: 0.8;
+}
+
+.thumb.hidden .thumbnailImage {
+    filter: grayscale(1);
+}
+
+/* Buttons on thumbnail invisible and visible */
+
+.thumbnailImageClickPgm {
+    position: absolute;
+    height: 150px;
+    top: 10px;
+    z-index: 2;
+    background-color: transparent;
+    right: 5%;
+    width: 90%;
+    border-style: dotted;
+    border-width: 0px;
+    border-left-width: 1px;
+    border-color: #2e2b41;
+    outline: 0;
+}
+
+/* thumbname text */
+.text {
+    margin-top: 8px;
+    font-size: 0.7em;
+}
+
+/* on-screen timecode */
+.thumbnail-timecode {
+    position: absolute;
+    width: 250px;
+    left: 25px;
+    top: 50px;
+    text-align: left;
+    padding: 0 4px;
+    font-size: 2.8em;
+    color: red;
+    background: #ffffff8c;
+    border-radius: 16px;
+}
+
+/* on-screen timecode in textmode*/
+.thumbnail-timecode.text {
+    width: 200px;
+    left: 35px;
+    top: 80px;
+    font-size: 2.1em;
+    padding: 0;
+}
+
+/* thumbnail textView */
+
+.thumbnail-text-view {
+    height: 130px;
+    border-width: 2px;
+    border-style: solid;
+    border-color: red;
+    width: 95%;
+    margin: 8px;
+}
+
+.thumbnail-text-view-ClickPgm {
+    position: absolute;
+    height: 130px;
+    top: 10px;
+    z-index: 2;
+    background-color: transparent;
+    right: 5%;
+    width: 90%;
+    border-style: dotted;
+    border-width: 0px;
+    border-color: rgba(133, 133, 133, 0.371);
+    outline: 0;
+}
+
+.text-text-view {
+    word-wrap: break-word;
+    margin-top: 8px;
+    font-size: 1.4em;
+}
+
+.thumbnail-text-view-timecode {
+    position: absolute;
+    width: 250px;
+    left: 25px;
+    top: 85px;
+    text-align: left;
+    font-size: 2.8em;
+    color: red;
+    background: #ffffff8c;
+    border-radius: 16px;
+}

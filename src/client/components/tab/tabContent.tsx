@@ -5,7 +5,7 @@ import { reduxStore } from '../../../model/reducers/store'
 
 import '../../css/Tab.css'
 import swipeService, { Point } from '../../services/swipeService'
-import { Thumbnail } from '../Thumbnail/Thumbnail'
+import { Thumbnail } from '../thumbnail/thumbnail'
 
 const isSpecificChannel = new URLSearchParams(window.location.search).has('channel')
 
