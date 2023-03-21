@@ -44,11 +44,11 @@ import {
 } from '../utils/ccgHandlerUtils'
 import { logger } from '../utils/logger'
 import { playOverlay } from '../utils/ccgLoadPlay'
-import { saveHiddenFiles } from '../utils/hiddenFilesStorage'
 import { OperationMode } from '../../model/reducers/settingsModels'
 import settingsService from '../../model/services/settingsService'
 import osService from '../../model/services/osService'
 import mediaService from '../../model/services/mediaService'
+import hiddenFilesPersistenceService from '../services/hiddenFilesPersistenceService'
 
 let waitingForCCGResponse: boolean = false
 let previousThumbnailFileList: ThumbnailFile[] = []
@@ -321,7 +321,7 @@ function checkHiddenFilesChanged(files: MediaFile[]): void {
             .debug('Hidden files was updated from external changes:')
         reduxStore.dispatch(updateHiddenFiles(hiddenFiles))
         socketServer.emit(IO.HIDDEN_FILES_UPDATE, hiddenFiles)
-        saveHiddenFiles()
+        hiddenFilesPersistenceService.save()
     }
 }
 

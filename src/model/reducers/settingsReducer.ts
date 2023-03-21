@@ -1,4 +1,4 @@
-import settingsFileService from '../services/settingsFileService'
+import settingsService from '../services/settingsService'
 import { getVideoFormat } from '../videoFormat'
 import * as IO from './settingsAction'
 import { CcgConfigChannel, Settings } from './settingsModels'
@@ -10,7 +10,7 @@ export function defaultSettingsReducerState(): Settings {
             path: '',
         },
         tabData: [],
-        generics: settingsFileService.getDefaultGenericSettings(),
+        generics: settingsService.getDefaultGenericSettings(),
     }
 }
 

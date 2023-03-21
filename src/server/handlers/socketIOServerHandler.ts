@@ -26,7 +26,6 @@ import {
 import { saveSettings } from '../utils/settingsStorage'
 import { HiddenFileInfo, MediaFile } from '../../model/reducers/mediaModels'
 import { assignThumbNailListToOutputs } from './casparCgHandler'
-import { saveHiddenFiles } from '../utils/hiddenFilesStorage'
 import settingsService from '../../model/services/settingsService'
 import mediaService from '../../model/services/mediaService'
 import {
@@ -34,6 +33,8 @@ import {
     OperationMode,
     OutputSettings,
 } from '../../model/reducers/settingsModels'
+import hiddenFilesService from '../services/hiddenFilesPersistenceService'
+import settingsPersistenceService from '../services/settingsPersistenceService'
 
 export function socketIoHandlers(socket: any): void {
     logger.info('SETTING UP SOCKET IO MAIN HANDLERS')
@@ -66,7 +67,7 @@ export function socketIoHandlers(socket: any): void {
                         hiddenFiles
                     )
                     reduxStore.dispatch(updateHiddenFiles(updatedHiddenFiles))
-                    saveHiddenFiles()
+                    hiddenFilesService.save()
 
                     socketServer.emit(
                         IO.HIDDEN_FILES_UPDATE,
@@ -166,7 +167,7 @@ export function socketIoHandlers(socket: any): void {
             logger.data(generics).trace('Save Settings')
             logger.info('Updating and storing generic settings serverside.')
             reduxStore.dispatch(setGenerics(generics))
-            saveSettings()
+            settingsPersistenceService.save()
             socketServer.emit(IO.SETTINGS_UPDATE, reduxState.settings)
             cleanUpMediaFiles()
         })

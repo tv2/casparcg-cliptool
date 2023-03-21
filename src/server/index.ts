@@ -1,11 +1,11 @@
 import { loadBundledEnvironment } from './bundled-environment'
 loadBundledEnvironment()
 
-import { loadSettings } from './utils/settingsStorage'
-loadSettings()
+import settingsPersistenceService from './services/settingsPersistenceService'
+settingsPersistenceService.load()
 
-import { loadHiddenFiles } from './utils/hiddenFilesStorage'
-loadHiddenFiles()
+import hiddenFilesPersistenceService from './services/hiddenFilesPersistenceService'
+hiddenFilesPersistenceService.load()
 
 import { serverInit } from './handlers/expressHandler'
 serverInit()
