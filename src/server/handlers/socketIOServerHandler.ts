@@ -23,7 +23,6 @@ import {
     setOperationMode,
     setWeb,
 } from '../../model/reducers/settingsAction'
-import { saveSettings } from '../utils/settingsStorage'
 import { HiddenFileInfo, MediaFile } from '../../model/reducers/mediaModels'
 import { assignThumbNailListToOutputs } from './casparCgHandler'
 import settingsService from '../../model/services/settingsService'
@@ -33,8 +32,8 @@ import {
     OperationMode,
     OutputSettings,
 } from '../../model/reducers/settingsModels'
-import hiddenFilesService from '../services/hiddenFilesPersistenceService'
 import settingsPersistenceService from '../services/settingsPersistenceService'
+import hiddenFilesPersistenceService from '../services/hiddenFilesPersistenceService'
 
 export function socketIoHandlers(socket: any): void {
     logger.info('SETTING UP SOCKET IO MAIN HANDLERS')
@@ -67,7 +66,7 @@ export function socketIoHandlers(socket: any): void {
                         hiddenFiles
                     )
                     reduxStore.dispatch(updateHiddenFiles(updatedHiddenFiles))
-                    hiddenFilesService.save()
+                    hiddenFilesPersistenceService.save()
 
                     socketServer.emit(
                         IO.HIDDEN_FILES_UPDATE,
@@ -220,7 +219,10 @@ function buildHiddenFileMetadataFromFileName(
     return getMetadata(file)
 }
 
-function findFile(fileName: string, channelIndex: number): MediaFile {
+function findFile(
+    fileName: string,
+    channelIndex: number
+): MediaFile | undefined {
     return mediaService
         .getOutput(reduxState, channelIndex)
         .mediaFiles.find(

@@ -13,9 +13,9 @@ export function getLayerNumber(string: string): number {
     return parseInt(channel)
 }
 
-export function extractFoldersList(fileList): string[] {
+export function extractFoldersList(fileList: any): string[] {
     let folders: string[] = []
-    fileList.forEach((media) => {
+    fileList.forEach((media: any) => {
         let pathName =
             media.name.substring(0, media.name.lastIndexOf('/')) || ''
         folders.push(pathName)

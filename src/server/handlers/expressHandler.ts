@@ -11,7 +11,7 @@ export const socketServer = require('socket.io')(server)
 app.use('/', express.static(path.join(__dirname, '../../client')))
 
 server.on('connection', () => {
-    app.get('/', (req: any, res: any) => {
+    app.get('/', ({}: any, res: any) => {
         logger.info('Connected Client')
         res.sendFile('index.html')
     })

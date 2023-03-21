@@ -1,5 +1,3 @@
-import os from 'os' // Used to display (log) network addresses on local machine
-
 import { createServer } from 'net'
 
 import { socket as socketio } from '../util/socketGatewayHandlers'
@@ -10,6 +8,7 @@ import osService from '../../model/services/osService'
 
 export function ampServerGateway(): void {
     console.log('Initializing AMP server')
+    // @ts-ignore
     const ampConnection = createServer((client: any) => {
         console.log('Client Connected')
         let ccgCh = 1
@@ -41,6 +40,7 @@ export function ampServerGateway(): void {
 
 // This is preparation for handling other commands in the AMP protocol.
 // TODO: Make use of it.
+// @ts-ignore
 function checkAmpCommand(
     message: string,
     command: string | undefined

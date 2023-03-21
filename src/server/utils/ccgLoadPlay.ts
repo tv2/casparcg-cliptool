@@ -73,12 +73,12 @@ export function stopOverlay(channelIndex: number, layerIndex: number) {
 }
 
 function scale(channelIndex: number, layerIndex: number) {
-    let resX = reduxState.settings.ccgConfig.channels[
+    const resX = reduxState.settings.ccgConfig.channels[
         channelIndex
     ].videoMode.includes('720')
         ? 1280
         : 1920
-    let resY = reduxState.settings.ccgConfig.channels[
+    const resY = reduxState.settings.ccgConfig.channels[
         channelIndex
     ].videoMode.includes('720')
         ? 720

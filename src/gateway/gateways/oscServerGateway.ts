@@ -1,3 +1,4 @@
+// @ts-ignore
 import osc from 'osc' //Using OSC fork from PieceMeta/osc.js as it has excluded hardware serialport support and thereby is crossplatform
 
 import { reduxState } from '../../model/reducers/store'
