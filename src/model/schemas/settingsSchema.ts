@@ -1,7 +1,7 @@
 import { z } from 'zod'
 import { OperationMode, OutputSettings } from '../reducers/settingsModels'
 
-const validateSchemaType: <T>(obj: T) => void = <T>(obj: T) => {}
+// const validateSchemaType: <T>(obj: T) => void = <T>(obj: T) => {}
 enum OperationModeSnapshot {
     CONTROL = 'control',
     EDIT_VISIBILITY = 'edit_visibility',

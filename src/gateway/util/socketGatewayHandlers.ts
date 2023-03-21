@@ -8,7 +8,6 @@ import {
     updateThumbnailFileList,
     updateFolderList,
     setNumberOfOutputs,
-    updateHiddenFiles,
 } from '../../model/reducers/mediaActions'
 
 import {

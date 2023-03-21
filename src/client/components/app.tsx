@@ -14,7 +14,8 @@ import { Thumbnail } from './thumbnail/thumbnail'
 import Header from './header/header'
 
 const channel = new URLSearchParams(window.location.search).get('channel')
-const specificChannel = parseInt(channel) || 0
+const specificChannel = channel ? parseInt(channel) || 0 : 0
+
 
 export function App(): JSX.Element {
     const isSettingsOpen = useSelector((storeUpdate: ReduxStateType) => storeUpdate.appNav.showSettingsActive)

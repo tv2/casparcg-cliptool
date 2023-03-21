@@ -2,7 +2,7 @@ import { reduxState } from '../../model/reducers/store'
 
 class HandleShortcuts {
     ccgLoadPlay: any
-    constructor(ccgLoadPlay) {
+    constructor(ccgLoadPlay: any) {
         this.ccgLoadPlay = ccgLoadPlay
 
         //Setup Keyboard shortcuts:
@@ -10,7 +10,7 @@ class HandleShortcuts {
     }
 
     //Shortcut for mix and take
-    _handleKeyDown(event) {
+    _handleKeyDown(event: any) {
         //Corresponding output for QWER shortcut:
         const keyTuple = { Q: 1, W: 2, E: 3, R: 4 }
         //Convert event.keyCode to letter:

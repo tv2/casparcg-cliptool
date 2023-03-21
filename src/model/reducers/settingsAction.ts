@@ -13,7 +13,7 @@ export const SET_OPERATION_MODE = 'setOperationMode'
 export const SET_SELECTED_FILE_NAME = 'setSelectedFileName'
 
 export function updateSettings(
-    channels,
+    channels: any,
     path: string
 ): { type: string; channels: any; path: string } {
     return {

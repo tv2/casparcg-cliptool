@@ -5,7 +5,7 @@ let storeRedux = createStore(indexReducer)
 
 //Subscribe to redux store:
 let reduxState = storeRedux.getState()
-const unsubscribe = storeRedux.subscribe(() => {
+storeRedux.subscribe(() => {
     reduxState = storeRedux.getState()
 })
 

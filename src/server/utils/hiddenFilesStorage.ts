@@ -53,7 +53,7 @@ export function saveHiddenFiles() {
         path.resolve('storage', 'hiddenFiles.json'),
         stringifiedHiddenFiles,
         'utf8',
-        (error) => {
+        (error: any) => {
             if (error) {
                 logger.data(error).error('Error writing hiddenFiles file:')
             } else {
