@@ -3,14 +3,15 @@ import { getVideoFormat } from '../videoFormat'
 import * as IO from './settingsAction'
 import { CcgConfigChannel, Settings } from './settingsModels'
 
-export function defaultSettingsReducerState(): Settings {
+function defaultSettingsReducerState(): Settings {
+    const generics = settingsService.getDefaultGenericSettings()
     return {
         ccgConfig: {
             channels: [],
             path: '',
         },
         tabData: [],
-        generics: settingsService.getDefaultGenericSettings(),
+        generics: generics,
     }
 }
 

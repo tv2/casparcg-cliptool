@@ -22,7 +22,7 @@ class SettingsPersistenceService {
             let settings: GenericSettings | null = null
             let hasStructureBeenCorrected = false
             const isOld = this.isPreviousStructure(settingsFromFile)
-            if (isOld.success) {
+            if (isOld.success && isOld.parsed) {
                 logger.warn(
                     'Old settings structure detected - updating it to the new structure.'
                 )
@@ -30,7 +30,7 @@ class SettingsPersistenceService {
                 hasStructureBeenCorrected = true
             } else {
                 const isNew = this.isNewStructure(settingsFromFile)
-                if (isNew.success) {
+                if (isNew.success && isNew.parsed) {
                     settings = isNew.parsed
                 } else {
                     logger

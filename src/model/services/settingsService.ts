@@ -1,5 +1,5 @@
+import { ReduxStateType } from '../reducers/indexReducer'
 import { GenericSettings, OutputSettings } from '../reducers/settingsModels'
-import { reduxState, ReduxStateType } from '../reducers/store'
 import {
     defaultOutputSettingsState,
     NewGenericSettings,
@@ -18,10 +18,11 @@ class SettingsService {
             ccgOscPort: 10,
             outputs: Array(8).fill(defaultOutputSettingsState),
         }
+        console.log('Method', this.getDefaultGenericSettings)
     }
 
     getOutputSettings(
-        state: ReduxStateType = reduxState,
+        state: ReduxStateType,
         channelIndex: number = -1
     ): OutputSettings {
         const activeTab: number =
@@ -31,16 +32,15 @@ class SettingsService {
         return state.settings.generics.outputs[activeTab]
     }
 
-    getGenericSettings(state: ReduxStateType = reduxState): GenericSettings {
+    getGenericSettings(state: ReduxStateType): GenericSettings {
         return state.settings.generics
     }
 
     getDefaultGenericSettings(): GenericSettings {
         const parsed = NewGenericSettings.safeParse({})
-        if (parsed.success) {
-            return parsed.data as GenericSettings
-        }
-        return this.fallBackDefaultSettings
+        return parsed.success
+            ? (parsed.data as GenericSettings)
+            : this.fallBackDefaultSettings
     }
 }
 

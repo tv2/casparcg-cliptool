@@ -16,6 +16,9 @@ export default function ThumbnailPicture(props: ThumbnailPictureProps): JSX.Elem
     (storeUpdate: ReduxStateType) => mediaService.getOutput(storeUpdate)
         .mediaFiles.find((predicate: MediaFile) => predicate.name === props.file.name)
   )
+  if (!file) {
+    return <></>
+  }
   const url: string = mediaService.findThumbnail(file.name, appNavigationService.getActiveTab() || 0)
   const classNames: string = [
       'thumbnailImage',

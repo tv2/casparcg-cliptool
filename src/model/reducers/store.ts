@@ -1,14 +1,18 @@
-import { createStore } from 'redux'
-import indexReducer from './indexReducer'
+import { configureStore } from '@reduxjs/toolkit'
+import { ConfigureStoreOptions } from '@reduxjs/toolkit/dist/configureStore'
+import indexReducer, { ReduxStateType } from './indexReducer'
 
-let storeRedux = createStore(indexReducer)
+const options: ConfigureStoreOptions = {
+    reducer: indexReducer,
+}
+
+let reduxStore = configureStore(options)
 
 //Subscribe to redux store:
-let reduxState = storeRedux.getState()
-storeRedux.subscribe(() => {
-    reduxState = storeRedux.getState()
+let reduxState: ReduxStateType = reduxStore.getState()
+reduxStore.subscribe(() => {
+    reduxState = reduxStore.getState()
 })
 
-export { storeRedux as reduxStore }
+export { reduxStore as reduxStore }
 export { reduxState as reduxState }
-export type ReduxStateType = typeof reduxState
