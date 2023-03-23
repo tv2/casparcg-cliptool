@@ -9,14 +9,6 @@ import appNavigationService from "../../../model/services/appNavigationService"
 const BUTTON_TEXT = 'Exit Edit Visibility'
 const DESCRIPTION_TEXT = 'You are currently editing the visibility of files.'.toUpperCase()
 
-function resetOperationMode(): void {
-  socket.emit(
-    IO.SET_OPERATION_MODE, 
-    appNavigationService.getActiveTab(), 
-    OperationMode.CONTROL
-  )
-}
-
 export function OperationModeEditVisibilityFooter(): JSX.Element {
   return (        
       <Footer>
@@ -29,5 +21,13 @@ export function OperationModeEditVisibilityFooter(): JSX.Element {
           </div>
         </div>
       </Footer>
+  )
+}
+
+function resetOperationMode(): void {
+  socket.emit(
+    IO.SET_OPERATION_MODE, 
+    appNavigationService.getActiveTab(), 
+    OperationMode.CONTROL
   )
 }

@@ -1,5 +1,5 @@
 import React from "react";
-import { ReduxStateType, reduxStore } from "../../../model/reducers/store";
+import { reduxState, reduxStore } from "../../../model/reducers/store";
 import { socket } from "../../util/socketClientHandlers";
 import * as IO from '../../../model/socketIoConstants'
 import { useSelector } from "react-redux";
@@ -9,6 +9,7 @@ import settingsService from "../../../model/services/settingsService";
 import appNavigationService from "../../../model/services/appNavigationService";
 import { GenericSettings, OperationMode } from "../../../model/reducers/settingsModels";
 import _ from "lodash";
+import { ReduxStateType } from "../../../model/reducers/indexReducer";
 
 interface SettingsButtonsProps {
   settings: GenericSettings 
@@ -19,10 +20,7 @@ export default function SettingsButtons(props: SettingsButtonsProps): JSX.Elemen
   const operationMode = useSelector(
     (storeUpdate: ReduxStateType) => settingsService.getOutputSettings(storeUpdate)?.operationMode)
   
-    const classNames = [ 
-      'save-button',               
-      operationMode === OperationMode.EDIT_VISIBILITY ? 'on' : ''
-    ].join(' ')
+    const classNames = `save-button ${operationMode === OperationMode.EDIT_VISIBILITY ? 'on' : ''}`
 
   return (
       <div className="Settings-channel-form">
@@ -44,28 +42,23 @@ export default function SettingsButtons(props: SettingsButtonsProps): JSX.Elemen
         >
             EDIT VISIBILITY
         </button>
-        {!props.specificChannel ? (
+        {!props.specificChannel && (
             <button
                 className="save-button"
                 onClick={handleRestart}
             >
                 RESTART CLIPTOOL
             </button>
-        ) : (
-            <React.Fragment />
         )}
     </div>
   )
 }
 
 function handleDiscard(settings: GenericSettings): void {
-  if (hasChanges(settings)) {
-    if (window.confirm('Changes have been made, are you sure you want to discard them?')) {
-      toggleSettingsPage()
-    }
-  } else {
-    toggleSettingsPage()
-  }
+  if (hasChanges(settings) && !window.confirm('Changes have been made, are you sure you want to discard them?')) {    
+    return    
+  } 
+  toggleSettingsPage()  
 }
 
 function toggleSettingsPage(): void {
@@ -76,7 +69,7 @@ function toggleSettingsPage(): void {
 
 function handleEditVisibilityMode(): void {
   const activeTab: number = appNavigationService.getActiveTab()
-  const output = settingsService.getOutputSettings()
+  const output = settingsService.getOutputSettings(reduxState)
   if (output.operationMode !== OperationMode.EDIT_VISIBILITY) {
       toggleSettingsPage()
   }
@@ -109,7 +102,7 @@ function handleRestart(): void {
 }
 
 function hasChanges(settings: GenericSettings): boolean {
-  const hasChanged = !_.isEqual(settings, settingsService.getGenericSettings())
+  const hasChanged = !_.isEqual(settings, settingsService.getGenericSettings(reduxState))
   return hasChanged
 }
 

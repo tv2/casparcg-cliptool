@@ -9,12 +9,12 @@ import { Thumbnail } from '../thumbnail/thumbnail'
 
 const isSpecificChannel = new URLSearchParams(window.location.search).has('channel')
 
-interface TabBarProps {
+interface TabContentProps {
   tabData: TabData[]
   selectedTab: number
 }
 
-export default function TabContent(props: TabBarProps): JSX.Element {
+export default function TabContent(props: TabContentProps): JSX.Element {
   const [touchStart, setTouchStart] = useState<Point | null>(null)
   const [touchEnd, setTouchEnd] = useState<Point | null>(null)
 
@@ -54,10 +54,8 @@ export default function TabContent(props: TabBarProps): JSX.Element {
           props.tabData.map(({}, index) => {
             const isSelected = props.selectedTab === index
 
-            const classNames = [ 
-              'tab-content',               
-              !isSelected ? 'hidden' : ''
-            ].join(' ')
+            const classNames = `tab-content ${!isSelected ? 'hidden' : ''}`
+            
             return (
               <div className={classNames} 
                 role='tabpanel' 

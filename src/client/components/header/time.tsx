@@ -1,6 +1,6 @@
 import React from "react"
 import { useSelector } from "react-redux"
-import { reduxState, ReduxStateType } from "../../../model/reducers/store";
+import { reduxState } from "../../../model/reducers/store";
 import mediaService from "../../../model/services/mediaService";
 
 import '../../css/App-header.css'
@@ -8,6 +8,7 @@ import appNavigationService from "../../../model/services/appNavigationService";
 import settingsService from "../../../model/services/settingsService";
 import { Output } from "../../../model/reducers/mediaModels";
 import { OutputSettings } from "../../../model/reducers/settingsModels";
+import { ReduxStateType } from "../../../model/reducers/indexReducer";
 
 export default function Time(): JSX.Element {
     const activeTab: number = useSelector(

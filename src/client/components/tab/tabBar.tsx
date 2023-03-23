@@ -21,7 +21,7 @@ export default function TabBar(props: TabBarProps): JSX.Element {
                 index={index} 
                 isSelected={isSelected} 
                 key={index} 
-                tabItem={item} 
+                tabData={item} 
                 totalTabs={props.tabData.length}/>
             )
           })

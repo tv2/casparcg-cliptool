@@ -7,6 +7,7 @@ import appNavigationService from "../../../model/services/appNavigationService";
 import settingsService from "../../../model/services/settingsService";
 import { OperationMode } from "../../../model/reducers/settingsModels";
 import { MediaFile } from "../../../model/reducers/mediaModels";
+import { reduxState } from "../../../model/reducers/store";
 
 interface ThumbnailButtonProps {
   file: MediaFile
@@ -14,9 +15,7 @@ interface ThumbnailButtonProps {
 }
 
 export default function ThumbnailButton(props: ThumbnailButtonProps): JSX.Element {
-  const classNames: string = [
-    props.isTextView ? 'thumbnail-text-view-ClickPgm' : 'thumbnailImageClickPgm'
-  ].join(' ')
+  const classNames: string = props.isTextView ? 'thumbnail-text-view-ClickPgm' : 'thumbnailImageClickPgm'
 
   return (
     <button
@@ -24,12 +23,12 @@ export default function ThumbnailButton(props: ThumbnailButtonProps): JSX.Elemen
             onClick={() => {
                 handleClickMedia(props.file.name)
             }}
-    ></button>
+    />
   )
 }
 
 function handleClickMedia(fileName: string): void {    
-  const operationMode = settingsService.getOutputSettings()?.operationMode
+  const operationMode = settingsService.getOutputSettings(reduxState)?.operationMode
   switch (operationMode) {
       case OperationMode.EDIT_VISIBILITY: 
           emitToggleVisibility(fileName)
@@ -51,7 +50,7 @@ function emitToggleVisibility(fileName: string): void {
 }
 
 function emitPlayFile(fileName: string ): void {
-  const event = !settingsService.getOutputSettings()?.manualStartState 
+  const event = !settingsService.getOutputSettings(reduxState)?.manualStartState 
       ? PGM_PLAY 
       : PGM_LOAD
   socket.emit(event, appNavigationService.getActiveTab(), fileName)

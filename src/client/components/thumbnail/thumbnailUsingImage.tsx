@@ -5,9 +5,9 @@ import ThumbnailButton from "./thumbnailButton";
 import ThumbnailPicture from "./thumbnailPicture";
 import TimeCode from "./timeCode";
 import '../../css/Thumbnail.css'
-import { ReduxStateType } from "../../../model/reducers/store";
 import settingsService from "../../../model/services/settingsService";
 import { HiddenFileInfo, MediaFile } from "../../../model/reducers/mediaModels";
+import { ReduxStateType } from "../../../model/reducers/indexReducer";
 
 interface ThumbnailUsingImageProps {
   file: MediaFile
@@ -25,19 +25,14 @@ export default function ThumbnailUsingImage(props: ThumbnailUsingImageProps): JS
           storeUpdate.media.hiddenFiles
   ) ?? {}
 
-  const classNames: string = [
-      'thumb',
-      props.file.name in hiddenFiles ? 'hidden' : ''
-  ].join(' ')
+  const classNames: string = `thumb ${props.file.name in hiddenFiles ? 'hidden' : ''}`
 
   return (
     <div className={classNames}>
         <ThumbnailPicture file={props.file} />
         <ThumbnailButton file={props.file} />
-        {mediaService.isThumbnailSelected(props.file.name) ? (
+        {mediaService.isThumbnailSelected(props.file.name) && (
             <TimeCode file={props.file} />
-        ) : (
-            ''
         )}
         <p className="text">
             {props.file.name

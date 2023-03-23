@@ -24,7 +24,7 @@ export default function SingleOutput(props: SingleOutputProps): JSX.Element {
     const [scaleX, setScaleX] = useState(props.output.scaleX)
     const [scaleY, setScaleY] = useState(props.output.scaleY)
     return (    
-        props.output ?         
+        props.output &&         
             <form className="Settings-channel-form">
                 <label className="settings-channel-header">
                     OUTPUT {props.index + 1} :
@@ -34,7 +34,7 @@ export default function SingleOutput(props: SingleOutputProps): JSX.Element {
                     name={props.index}
                     type={SettingsInputType.TEXT}
                     value={label}
-                    onChange={handleOutputLabel}
+                    onChange={saveTempOutputLabelChange}
                 />
                 <label className="Settings-input-field">
                     MEDIA FOLDER :
@@ -42,7 +42,7 @@ export default function SingleOutput(props: SingleOutputProps): JSX.Element {
                     <select
                         className="settings-select"
                         name={String(props.index)}
-                        onChange={handleTabMediaFolder}
+                        onChange={saveTempTabMediaFolderChange}
                         value={ folder }
                     >
                         {reduxState.media.folderList.map(
@@ -68,51 +68,51 @@ export default function SingleOutput(props: SingleOutputProps): JSX.Element {
                     name={props.index}
                     type={SettingsInputType.CHECKBOX}
                     value={loopState}
-                    onChange={handleLoop}
+                    onChange={saveTempLoopChange}
                 />
                 <SettingsInput 
                     preDescription="MIX :"
                     name={props.index}
                     type={SettingsInputType.CHECKBOX}
                     value={mixState}
-                    onChange={handleMix}
+                    onChange={saveTempMixChange}
                 />
                 <SettingsInput 
                     preDescription="MANUAL :"
                     name={props.index}
                     type={SettingsInputType.CHECKBOX}
                     value={manualStartState}
-                    onChange={handleManual}
+                    onChange={saveTempManualChange}
                 />
                 <SettingsInput 
                     preDescription="OVERLAY :"
                     name={props.index}
                     type={SettingsInputType.CHECKBOX}
                     value={webState}
-                    onChange={handleWebState}
+                    onChange={saveTempWebStateChange}
                 />
                 <SettingsInput 
                     preDescription="OVERLAY URL :"
                     name={props.index}
                     type={SettingsInputType.TEXT}
                     value={webUrl}
-                    onChange={handleWebUrl}
+                    onChange={saveTempWebUrlChange}
                 />
                 <SettingsInput 
                     preDescription="SCALE :"
                     name={props.index}
                     type={SettingsInputType.CHECKBOX}
                     value={shouldScale}
-                    onChange={handleScale}
+                    onChange={saveTempShouldScaleChange}
                 />
-                {shouldScale ? (
+                {shouldScale && (
                     <React.Fragment>
                         <SettingsInput 
                             preDescription="SCALE X :"
                             name={props.index}
                             type={SettingsInputType.NUMBER}
                             value={scaleX}
-                            onChange={handleScaleX}
+                            onChange={saveTempScaleXChange}
                             postDescription='px'
                         />
                         <SettingsInput 
@@ -120,81 +120,78 @@ export default function SingleOutput(props: SingleOutputProps): JSX.Element {
                             name={props.index}
                             type={SettingsInputType.NUMBER}
                             value={scaleY}
-                            onChange={handleScaleY}
+                            onChange={saveTempScaleYChange}
                             postDescription='px'
                         />
                     </React.Fragment>
-                ) : (
-                    <React.Fragment></React.Fragment>
                 )}
             </form>
-        : <></>
     )
 
-    function handleOutputLabel(event: React.ChangeEvent<HTMLInputElement>): void {
+    function saveTempOutputLabelChange(event: React.ChangeEvent<HTMLInputElement>): void {
         const newLabel = eventService.getTextFromEvent(event)
         setLabel(newLabel)
         props.output.label = newLabel
         props.setOutput(props.output, props.index)
     }
     
-    function handleLoop(event: React.ChangeEvent<HTMLInputElement>): void {
+    function saveTempLoopChange(event: React.ChangeEvent<HTMLInputElement>): void {
         const newLoop = eventService.getCheckedFromEvent(event)
         setLoopState(newLoop)
         props.output.loopState = newLoop
         props.setOutput(props.output, props.index)
     }
     
-    function handleMix(event: React.ChangeEvent<HTMLInputElement>): void {
+    function saveTempMixChange(event: React.ChangeEvent<HTMLInputElement>): void {
         const newMix = eventService.getCheckedFromEvent(event)
         setMixState(newMix)
         props.output.mixState = newMix
         props.setOutput(props.output, props.index)
     }
 
-    function handleManual(event: React.ChangeEvent<HTMLInputElement>): void {
+    function saveTempManualChange(event: React.ChangeEvent<HTMLInputElement>): void {
         const newManual = eventService.getCheckedFromEvent(event)
         setManualStartState(newManual)
         props.output.manualStartState = newManual
         props.setOutput(props.output, props.index)
     }
     
-    function handleScale(event: React.ChangeEvent<HTMLInputElement>): void {
+    function saveTempShouldScaleChange(event: React.ChangeEvent<HTMLInputElement>): void {
         const newShouldScale = eventService.getCheckedFromEvent(event)
         setShouldScale(newShouldScale)
         props.output.shouldScale = newShouldScale
         props.setOutput(props.output, props.index)
     }
     
-    function handleScaleX(event: React.ChangeEvent<HTMLInputElement>): void {
+    function saveTempScaleXChange(event: React.ChangeEvent<HTMLInputElement>): void {
         const newScaleX = eventService.getNumberFromEvent(event)
         setScaleX(newScaleX)
         props.output.scaleX = newScaleX
         props.setOutput(props.output, props.index)
     }
     
-    function handleScaleY(event: React.ChangeEvent<HTMLInputElement>): void {
+    function saveTempScaleYChange(event: React.ChangeEvent<HTMLInputElement>): void {
         const newScaleY = eventService.getNumberFromEvent(event)
         setScaleY(newScaleY)
         props.output.scaleY = newScaleY
         props.setOutput(props.output, props.index)
     }
     
-    function handleWebState(event: React.ChangeEvent<HTMLInputElement>): void {
+    function saveTempWebStateChange(event: React.ChangeEvent<HTMLInputElement>): void {
         const newWebState = eventService.getCheckedFromEvent(event)
         setWebState(newWebState)
         props.output.webState = newWebState
         props.setOutput(props.output, props.index)
     }
 
-    function handleWebUrl(event: React.ChangeEvent<HTMLInputElement>): void {
+    function saveTempWebUrlChange(event: React.ChangeEvent<HTMLInputElement>): void {
         const newWebUrl = eventService.getTextFromEvent(event)
         setWebUrl(newWebUrl)
         props.output.webUrl = newWebUrl
         props.setOutput(props.output, props.index)
     }
     
-    function handleTabMediaFolder(event: React.ChangeEvent<HTMLSelectElement>): void {
+    function saveTempTabMediaFolderChange(event: React.ChangeEvent<HTMLSelectElement>): void {
         const newFolder = event.target.value
         setFolder(newFolder)
         props.output.folder = newFolder

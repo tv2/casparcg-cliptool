@@ -7,7 +7,7 @@ import ThumbnailButton from "./thumbnailButton";
 import TimeCode from "./timeCode";
 import settingsService from "../../../model/services/settingsService";
 import { MediaFile } from "../../../model/reducers/mediaModels";
-import { ReduxStateType } from "../../../model/reducers/store";
+import { ReduxStateType } from "../../../model/reducers/indexReducer";
 
 interface ThumbnailUsingTextProps {
   file: MediaFile
@@ -20,18 +20,13 @@ export default function ThumbnailUsingText(props: ThumbnailUsingTextProps): JSX.
       .selectedFile
   )
   const isSelected: boolean = mediaService.isThumbnailSelected(props.file.name)
-  const classNames: string = [
-    'thumbnail-text-view',
-    isSelected ? 'selected-thumb' : ''
-  ].join(' ')
+  const classNames: string = `thumbnail-text-view ${isSelected ? 'selected-thumb' : ''}`
 
 return (
     <div className={classNames} >
         <ThumbnailButton file={props.file} isTextView />
-        {isSelected ? (
+        {isSelected && (
             <TimeCode file={props.file} isTextView/>
-        ) : (
-            ''
         )}
         <p className="text-text-view">
             {props.file.name

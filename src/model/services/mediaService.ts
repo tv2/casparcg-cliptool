@@ -1,6 +1,7 @@
+import { ReduxStateType } from '../reducers/indexReducer'
 import { Output as Output, ThumbnailFile } from '../reducers/mediaModels'
 import { OutputSettings } from '../reducers/settingsModels'
-import { reduxState, ReduxStateType } from '../reducers/store'
+import { reduxState } from '../reducers/store'
 import appNavigationService from './appNavigationService'
 import settingsService from './settingsService'
 
@@ -34,14 +35,14 @@ class MediaService {
 
     public isThumbnailSelected(thumbnailName: string): boolean {
         const selectedFileName = this.getCleanSelectedFile(
-            settingsService.getOutputSettings()
+            settingsService.getOutputSettings(reduxState)
         )
         return selectedFileName === thumbnailName
     }
 
     public isThumbnailSelectedOnAnyOutput(thumbnailName: string): boolean {
         return settingsService
-            .getGenericSettings()
+            .getGenericSettings(reduxState)
             .outputs.some(
                 (output) => this.getCleanSelectedFile(output) === thumbnailName
             )

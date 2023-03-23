@@ -6,7 +6,7 @@ import { reduxStore } from "../../../model/reducers/store"
 import '../../css/Tab.css'
 
 interface TabProps {
-  tabItem: TabData
+  tabData: TabData
   isSelected: boolean
   index: number
   totalTabs: number
@@ -17,10 +17,7 @@ function setOutput(tab: number): void {
 }
 
 export function Tab(props: TabProps): JSX.Element {
-  const classNames = [ 
-    'tab',               
-    props.isSelected ? 'active' : ''
-  ].join(' ')
+  const classNames = `tab ${props.isSelected ? 'active' : ''}`
  
   return (
     <div 
@@ -32,7 +29,7 @@ export function Tab(props: TabProps): JSX.Element {
         if (!props.isSelected)
           setOutput(props.index)
       }}>
-      {props.tabItem.title}
+      {props.tabData.title}
     </div>
  )
 }

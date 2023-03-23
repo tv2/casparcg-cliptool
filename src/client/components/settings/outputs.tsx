@@ -1,7 +1,7 @@
 import React from "react";
 import { useSelector } from "react-redux";
+import { ReduxStateType } from "../../../model/reducers/indexReducer";
 import { GenericSettings, OutputSettings } from "../../../model/reducers/settingsModels";
-import { ReduxStateType } from "../../../model/reducers/store";
 import SingleOutput from "./singleOutput";
 
 

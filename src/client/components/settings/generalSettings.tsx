@@ -24,42 +24,42 @@ export default function GeneralSettings(props: GeneralSettingsProps): JSX.Elemen
                    name="ccgIp"
                    type={SettingsInputType.TEXT}
                    value={ccgIp}
-                   onChange={handleCcgIp}
+                   onChange={saveTempCcgIpChange}
                 />
                 <SettingsInput 
                    preDescription="AMCP PORT :"
                    name="ccgAmcpPort"
                    type={SettingsInputType.NUMBER}
                    value={ccgAmcpPort}
-                   onChange={handleCcgAmcpPort}
+                   onChange={saveTempCcgAmcpPortChange}
                 />
                 <SettingsInput 
                    preDescription="OSC PORT (into ClipTool) :"
                    name="ccgOscPort"
                    type={SettingsInputType.NUMBER}
                    value={ccgOscPort}
-                   onChange={handleCcgOscPort}
+                   onChange={saveTempCcgOscPortChange}
                 />
                 <SettingsInput 
                    preDescription="DEFAULT LAYER :"
                    name="ccgDefaultLayer"
                    type={SettingsInputType.NUMBER}
                    value={ccgDefaultLayer}
-                   onChange={handleCcgDefaultLayer}
+                   onChange={saveTempCcgDefaultLayerChange}
                 />
                 <SettingsInput 
                    preDescription="TRANSITION TIME :"
                    name="transitionTime"
                    type={SettingsInputType.NUMBER}
                    value={ccgTransitionTime}
-                   onChange={handleCcgTransitionTime}
+                   onChange={saveTempCcgTransitionTimeChange}
                 />
             </div>
             <hr />
         </form>
     )
     
-    function handleCcgIp(event: React.ChangeEvent<HTMLInputElement>): void {
+    function saveTempCcgIpChange(event: React.ChangeEvent<HTMLInputElement>): void {
         const settings = { ...props.settings }
         const newCcgIp = eventService.getTextFromEvent(event)
         setCcgIp(newCcgIp)
@@ -67,7 +67,7 @@ export default function GeneralSettings(props: GeneralSettingsProps): JSX.Elemen
         props.setSettings(settings)
     }
 
-    function handleCcgAmcpPort(event: React.ChangeEvent<HTMLInputElement>): void {
+    function saveTempCcgAmcpPortChange(event: React.ChangeEvent<HTMLInputElement>): void {
         const settings = { ...props.settings }
         const newCcgAmcpPort = eventService.getNumberFromEvent(event)
         setCcgAmcpPort(newCcgAmcpPort)
@@ -75,7 +75,7 @@ export default function GeneralSettings(props: GeneralSettingsProps): JSX.Elemen
         props.setSettings(settings)
     }
 
-    function handleCcgOscPort(event: React.ChangeEvent<HTMLInputElement>): void {
+    function saveTempCcgOscPortChange(event: React.ChangeEvent<HTMLInputElement>): void {
         const settings = { ...props.settings }
         const newCcgOscPort = eventService.getNumberFromEvent(event)
         setCcgOscPort(newCcgOscPort)
@@ -83,7 +83,7 @@ export default function GeneralSettings(props: GeneralSettingsProps): JSX.Elemen
         props.setSettings(settings)
     }
 
-    function handleCcgDefaultLayer(event: React.ChangeEvent<HTMLInputElement>): void {
+    function saveTempCcgDefaultLayerChange(event: React.ChangeEvent<HTMLInputElement>): void {
         const settings = { ...props.settings }
         const newCcgDefaultLayer = eventService.getNumberFromEvent(event)
         setCcgDefaultLayer(newCcgDefaultLayer)
@@ -91,7 +91,7 @@ export default function GeneralSettings(props: GeneralSettingsProps): JSX.Elemen
         props.setSettings(settings)
     }
 
-    function handleCcgTransitionTime(event: React.ChangeEvent<HTMLInputElement>): void {
+    function saveTempCcgTransitionTimeChange(event: React.ChangeEvent<HTMLInputElement>): void {
         const settings = { ...props.settings }
         const newCcgTransitionTime = eventService.getNumberFromEvent(event)
         setCcgTransitionTime(newCcgTransitionTime)

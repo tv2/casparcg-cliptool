@@ -10,10 +10,7 @@ interface ToggleButtonProps {
 }
 
 export default function ToggleButton(props: ToggleButtonProps): JSX.Element {
-  const classNames: string = [
-    'header-toggle-button',
-    props.isToggled ? 'on' : ''
-  ].join(' ')
+  const classNames: string = `header-toggle-button ${props.isToggled ? 'on' : ''}`
 
   return (
     <div className="header-button-background">

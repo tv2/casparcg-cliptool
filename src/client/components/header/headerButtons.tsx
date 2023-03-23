@@ -1,47 +1,46 @@
 import React from "react";
-import { reduxState, ReduxStateType } from "../../../model/reducers/store";
+import { reduxState } from "../../../model/reducers/store";
 import { socket } from "../../util/socketClientHandlers";
 import ToggleButton from "./toggleButton";
 import * as IO from '../../../model/socketIoConstants'
 import { useSelector } from "react-redux";
 import settingsService from "../../../model/services/settingsService";
 import appNavigationService from "../../../model/services/appNavigationService";
+import { ReduxStateType } from "../../../model/reducers/indexReducer";
 
 export default function HeaderButtons(): JSX.Element {
   const activeTab: number = useSelector(
     (storeUpdate: ReduxStateType) => appNavigationService.getActiveTab(storeUpdate))
   const mixState: boolean = useSelector(
-      (storeUpdate: ReduxStateType) => settingsService.getGenericSettings(storeUpdate).outputs[activeTab]?.mixState)
+      (storeUpdate: ReduxStateType) => settingsService.getOutputSettings(storeUpdate)?.mixState)
   const webState: boolean = useSelector(
-      (storeUpdate: ReduxStateType) => settingsService.getGenericSettings(storeUpdate).outputs[activeTab]?.webState)
+      (storeUpdate: ReduxStateType) => settingsService.getOutputSettings(storeUpdate)?.webState)
   const loopState: boolean = useSelector(
-      (storeUpdate: ReduxStateType) => settingsService.getGenericSettings(storeUpdate).outputs[activeTab]?.loopState)
+      (storeUpdate: ReduxStateType) => settingsService.getOutputSettings(storeUpdate)?.loopState)
   const manualStartState: boolean = useSelector(
-      (storeUpdate: ReduxStateType) => settingsService.getGenericSettings(storeUpdate).outputs[activeTab]?.manualStartState)
+      (storeUpdate: ReduxStateType) => settingsService.getOutputSettings(storeUpdate)?.manualStartState)
   return (
     <>
-      {reduxState.appNav.selectView === 0 ? (
+      {reduxState.appNav.selectView === 0 && (
         <>
             <ToggleButton 
                 isToggled={loopState}
-                onClick={() => handleLoopStatus(activeTab)}
+                onClick={() => emitSetLoopState(activeTab)}
                 description='LOOP' />
             <ToggleButton 
                 isToggled={mixState}
-                onClick={() => handleMixStatus(activeTab)}
+                onClick={() => emitSetMixState(activeTab)}
                 description='MIX' />
             <ToggleButton 
                 isToggled={webState}
-                onClick={() => handleWebState(activeTab)}
+                onClick={() => emitSetWebState(activeTab)}
                 description='OVERLAY' />                            
         </>
-    ) : (
-        ''
     )}
 
     <ToggleButton 
         isToggled={manualStartState}
-        onClick={() => handleManualStartStatus(activeTab)}
+        onClick={() => emitSetManualStartState(activeTab)}
         description='MANUAL'>
         <button
             hidden={ !manualStartState }
@@ -55,7 +54,7 @@ export default function HeaderButtons(): JSX.Element {
   )
 }
 
-function handleLoopStatus(activeTab: number): void {
+function emitSetLoopState(activeTab: number): void {
   socket.emit(
       IO.SET_LOOP_STATE,
       activeTab,
@@ -63,7 +62,7 @@ function handleLoopStatus(activeTab: number): void {
   )
 }
 
-function handleMixStatus(activeTab: number): void {
+function emitSetMixState(activeTab: number): void {
   socket.emit(
       IO.SET_MIX_STATE,
       activeTab,
@@ -71,7 +70,7 @@ function handleMixStatus(activeTab: number): void {
   )
 }
 
-function handleWebState(activeTab: number): void {
+function emitSetWebState(activeTab: number): void {
   socket.emit(
       IO.SET_WEB_STATE,
       activeTab,
@@ -79,7 +78,7 @@ function handleWebState(activeTab: number): void {
   )
 }
 
-function handleManualStartStatus(activeTab: number): void {
+function emitSetManualStartState(activeTab: number): void {
   socket.emit(
       IO.SET_MANUAL_START_STATE,
       activeTab,

@@ -3,9 +3,9 @@ import { useSelector } from "react-redux";
 import mediaService from "../../../model/services/mediaService";
 
 import '../../css/Thumbnail.css'
-import { ReduxStateType } from "../../../model/reducers/store";
 import { MediaFile } from "../../../model/reducers/mediaModels";
 import appNavigationService from "../../../model/services/appNavigationService";
+import { ReduxStateType } from "../../../model/reducers/indexReducer";
 
 interface TimeCodeProps {
   file: MediaFile
@@ -24,10 +24,7 @@ export default function TimeCode(props: TimeCodeProps): JSX.Element {
       }
   )
 
-  const classNames: string = [
-    'thumbnail-timecode',
-    props.isTextView ? 'text' : ''
-  ].join(' ')
+  const classNames: string = `thumbnail-timecode ${props.isTextView ? 'text' : ''}`
 
   return (
     <a className={classNames}>
