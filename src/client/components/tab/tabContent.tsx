@@ -18,7 +18,7 @@ export default function TabContent(props: TabContentProps): JSX.Element {
   const [touchStart, setTouchStart] = useState<Point | null>(null)
   const [touchEnd, setTouchEnd] = useState<Point | null>(null)
 
-  function handleTouchStart(event: React.TouchEvent<HTMLDivElement>): void {
+  function onTouchStart(event: React.TouchEvent<HTMLDivElement>): void {
     if (isSpecificChannel) {
       return
     }
@@ -26,14 +26,14 @@ export default function TabContent(props: TabContentProps): JSX.Element {
     setTouchStart(swipeService.getEventPoint(event))
   }
 
-  function handleTouchMove(event: React.TouchEvent<HTMLDivElement>): void {
+  function onTouchMove(event: React.TouchEvent<HTMLDivElement>): void {
     if (isSpecificChannel) {
       return
     }
     setTouchEnd(swipeService.getEventPoint(event))
   }
 
-  function handleTouchEnd(): void {
+  function onTouchEnd(): void {
     if (!touchStart || !touchEnd || isSpecificChannel){
       return
     }
@@ -60,9 +60,9 @@ export default function TabContent(props: TabContentProps): JSX.Element {
               <div className={classNames} 
                 role='tabpanel' 
                 key={index} 
-                onTouchStart={handleTouchStart}
-                onTouchMove={handleTouchMove}
-                onTouchEnd={handleTouchEnd}>
+                onTouchStart={onTouchStart}
+                onTouchMove={onTouchMove}
+                onTouchEnd={onTouchEnd}>
                 <Thumbnail/> 
               </div>
             )

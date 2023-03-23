@@ -70,8 +70,8 @@ socket.on(IO.TIME_TALLY_UPDATE, (data: IO.TimeTallyPayload[]) => {
     data.forEach((channel, index) => {
         reduxStore.dispatch(setTime(index, channel.time))
         if (
-            settingsService.getGenericSettings().outputs[index].selectedFile !==
-            channel.tally
+            settingsService.getOutputSettings(reduxState, index)
+                .selectedFile !== channel.tally
         ) {
             reduxStore.dispatch(setSelectedFileName(index, channel.tally))
         }

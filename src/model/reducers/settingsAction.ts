@@ -1,5 +1,6 @@
 import settingsService from '../services/settingsService'
 import { GenericSettings, OperationMode, TabData } from './settingsModels'
+import { reduxState } from './store'
 
 export const UPDATE_SETTINGS = 'updateSettings'
 export const SET_TAB_DATA = 'setTabData'
@@ -32,8 +33,8 @@ export function setTabData(amount: number): {
         tabData.push({
             key: String(i),
             title:
-                settingsService.getGenericSettings().outputs[i].label ||
-                'Output ' + String(i + 1),
+                settingsService.getGenericSettings(reduxState).outputSettings[i]
+                    .label || 'Output ' + String(i + 1),
         })
     }
     return {

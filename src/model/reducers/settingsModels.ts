@@ -45,11 +45,15 @@ export interface OutputSettings {
     selectedFile: string
 }
 
-export interface GenericSettings {
+export interface CcgSettings {
     transitionTime: number
-    ccgIp: string
-    ccgAmcpPort: number
-    ccgDefaultLayer: number
-    ccgOscPort: number
-    outputs: OutputSettings[]
+    ip: string
+    amcpPort: number
+    defaultLayer: number
+    oscPort: number
+}
+
+export interface GenericSettings {
+    ccgSettings: CcgSettings
+    outputSettings: OutputSettings[]
 }

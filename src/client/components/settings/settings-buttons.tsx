@@ -26,26 +26,26 @@ export default function SettingsButtons(props: SettingsButtonsProps): JSX.Elemen
       <div className="Settings-channel-form">
         <button
             className="save-button"
-            onClick={() => handleSave(props.settings)}
+            onClick={() => saveSettings(props.settings)}
         >
             SAVE SETTINGS
         </button>
         <button
             className="save-button"
-            onClick={() => handleDiscard(props.settings)}
+            onClick={() => discardSettings(props.settings)}
         >
             {hasChanges(props.settings) ? 'DISCARD CHANGES' : 'CLOSE SETTINGS'}
         </button>
         <button
             className={classNames}
-            onClick={handleEditVisibilityMode}
+            onClick={emitSetOperationModeToEditVisibility}
         >
             EDIT VISIBILITY
         </button>
         {!props.specificChannel && (
             <button
                 className="save-button"
-                onClick={handleRestart}
+                onClick={restartCliptool}
             >
                 RESTART CLIPTOOL
             </button>
@@ -54,7 +54,7 @@ export default function SettingsButtons(props: SettingsButtonsProps): JSX.Elemen
   )
 }
 
-function handleDiscard(settings: GenericSettings): void {
+function discardSettings(settings: GenericSettings): void {
   if (hasChanges(settings) && !window.confirm('Changes have been made, are you sure you want to discard them?')) {    
     return    
   } 
@@ -67,7 +67,7 @@ function toggleSettingsPage(): void {
   })
 }
 
-function handleEditVisibilityMode(): void {
+function emitSetOperationModeToEditVisibility(): void {
   const activeTab: number = appNavigationService.getActiveTab()
   const output = settingsService.getOutputSettings(reduxState)
   if (output.operationMode !== OperationMode.EDIT_VISIBILITY) {
@@ -83,14 +83,14 @@ function handleEditVisibilityMode(): void {
   )
 }
 
-function handleSave(settings: GenericSettings): void {
+function saveSettings(settings: GenericSettings): void {
   if (hasChanges(settings) && window.confirm('Changes have been made, do you want to save them?')) {
     socket.emit(IO.SET_GENERICS, settings)
     toggleSettingsPage()
   } 
 }
 
-function handleRestart(): void {
+function restartCliptool(): void {
   if (
       window.confirm(
           'Restarting server will stop all outputs, are you sure?'

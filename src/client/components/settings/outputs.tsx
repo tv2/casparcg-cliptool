@@ -1,14 +1,14 @@
 import React from "react";
 import { useSelector } from "react-redux";
 import { ReduxStateType } from "../../../model/reducers/indexReducer";
-import { GenericSettings, OutputSettings } from "../../../model/reducers/settingsModels";
-import SingleOutput from "./singleOutput";
+import { OutputSettings } from "../../../model/reducers/settingsModels";
+import SingleOutput from "./single-output";
 
 
 interface OutputsProps {
     specificChannel: number
-    settings: GenericSettings
-    setSettings: (GenericSettings: GenericSettings) => void
+    outputSettings: OutputSettings[]
+    onOutputSettingsChange: (outputSettings: OutputSettings[]) => void
 }
 
 export default function Outputs(props: OutputsProps): JSX.Element {
@@ -16,20 +16,18 @@ export default function Outputs(props: OutputsProps): JSX.Element {
     return (
         <div>
             {props.specificChannel
-                ? <SingleOutput index={props.specificChannel - 1} output={props.settings.outputs[props.specificChannel]} setOutput={setOutput}/>
+                ? <SingleOutput index={props.specificChannel - 1} outputSettings={props.outputSettings[props.specificChannel]} setOutputSettings={setOutput}/>
                 : ccgConfig.channels.map(
                         (item, index) => {
-                            return <SingleOutput configChannel={item} index={index} output={props.settings.outputs[index]} key={index} setOutput={setOutput}/>
+                            return <SingleOutput configChannel={item} index={index} outputSettings={props.outputSettings[index]} key={index} setOutputSettings={setOutput}/>
                         }
                     )}
         </div>
     )
 
     function setOutput(output: OutputSettings, index: number): void {
-        const settings = {...props.settings}
-        const outputs = [...props.settings.outputs]
-        outputs[index] = output
-        settings.outputs = outputs
-        props.setSettings(settings)
+        const outputsSettingsCopy = [...props.outputSettings]
+        outputsSettingsCopy[index] = output
+        props.onOutputSettingsChange(outputsSettingsCopy)
     }
 }

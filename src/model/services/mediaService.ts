@@ -43,7 +43,7 @@ class MediaService {
     public isThumbnailSelectedOnAnyOutput(thumbnailName: string): boolean {
         return settingsService
             .getGenericSettings(reduxState)
-            .outputs.some(
+            .outputSettings.some(
                 (output) => this.getCleanSelectedFile(output) === thumbnailName
             )
     }

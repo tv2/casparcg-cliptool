@@ -19,15 +19,15 @@ export default function ThumbnailButton(props: ThumbnailButtonProps): JSX.Elemen
 
   return (
     <button
-            className={classNames}
-            onClick={() => {
-                handleClickMedia(props.file.name)
-            }}
+        className={classNames}
+        onClick={() => {
+          triggerOperationModeAction(props.file.name)
+        }}
     />
   )
 }
 
-function handleClickMedia(fileName: string): void {    
+function triggerOperationModeAction(fileName: string): void {    
   const operationMode = settingsService.getOutputSettings(reduxState)?.operationMode
   switch (operationMode) {
       case OperationMode.EDIT_VISIBILITY: 

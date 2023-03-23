@@ -3,22 +3,23 @@ import { GenericSettings, OutputSettings } from '../reducers/settingsModels'
 import {
     defaultOutputSettingsState,
     NewGenericSettings,
-} from '../schemas/settingsSchema'
+} from '../schemas/new-settings-schema'
 import appNavigationService from './appNavigationService'
 
 class SettingsService {
-    fallBackDefaultSettings: GenericSettings
+    private fallBackDefaultSettings: GenericSettings
 
     constructor() {
         this.fallBackDefaultSettings = {
-            transitionTime: 16,
-            ccgIp: '0.0.0.0',
-            ccgAmcpPort: 5250,
-            ccgDefaultLayer: 5253,
-            ccgOscPort: 10,
-            outputs: Array(8).fill(defaultOutputSettingsState),
+            ccgSettings: {
+                transitionTime: 16,
+                ip: '0.0.0.0',
+                amcpPort: 5250,
+                defaultLayer: 5253,
+                oscPort: 10,
+            },
+            outputSettings: Array(8).fill(defaultOutputSettingsState),
         }
-        console.log('Method', this.getDefaultGenericSettings)
     }
 
     getOutputSettings(
@@ -29,7 +30,7 @@ class SettingsService {
             channelIndex === -1
                 ? appNavigationService.getActiveTab()
                 : channelIndex
-        return state.settings.generics.outputs[activeTab]
+        return state.settings.generics.outputSettings[activeTab]
     }
 
     getGenericSettings(state: ReduxStateType): GenericSettings {

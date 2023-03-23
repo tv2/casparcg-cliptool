@@ -1,17 +1,16 @@
 import React from 'react'
-import { ReduxStateType, reduxStore } from '../../model/reducers/store'
+import { reduxStore } from '../../model/reducers/store'
 import { setActiveTab } from '../../model/reducers/appNavAction'
 
-// Components:
 import { OperationModeFooter } from './footer/operationModeFooter'
 import Tabs from './tab/tabs'
 
-//CSS files:
 import '../css/App.css'
 import { useSelector } from 'react-redux'
 import { Settings } from './settings/settings'
 import { Thumbnail } from './thumbnail/thumbnail'
 import Header from './header/header'
+import { ReduxStateType } from '../../model/reducers/indexReducer'
 
 const channel = new URLSearchParams(window.location.search).get('channel')
 const specificChannel = channel ? parseInt(channel) || 0 : 0
@@ -26,16 +25,14 @@ export function App(): JSX.Element {
     if (specificChannel) {
         setOutput(specificChannel - 1)
     }
+    const mainArea = specificChannel ? <Thumbnail/> : <Tabs />
+
     return (
         <div className="App">
             <Header />
             <div className="App-body">
                 {
-                    isSettingsOpen 
-                    ? <Settings /> 
-                    : specificChannel 
-                        ? <Thumbnail/> 
-                        : <Tabs />
+                    isSettingsOpen ? <Settings /> : mainArea 
                 }
             </div>
             <OperationModeFooter />

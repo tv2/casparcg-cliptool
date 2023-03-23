@@ -22,7 +22,7 @@ export default function Header(): JSX.Element {
                     <div className="App-reload-setup-background">
                         <button
                             className="App-settings-button"
-                            onClick={() => handleSettingsPage()}
+                            onClick={() => emitToggleSettingsVisibility()}
                         >
                             SETTINGS
                         </button>
@@ -39,7 +39,7 @@ export default function Header(): JSX.Element {
     )
 }
 
-function handleSettingsPage(): void {
+function emitToggleSettingsVisibility(): void {
     // TODO: Figure out how to do the discard check here, and allow the user to close via this again.
     if (!reduxState.appNav.showSettingsActive) {
         reduxStore.dispatch({

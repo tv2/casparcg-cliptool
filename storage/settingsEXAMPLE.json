@@ -1,4 +1,5 @@
 {
+    "_comment": "UPDATE WITH NEW EXAMPLE!",
     "transistionTime": 16,
     "ccgIp": "0.0.0.0",
     "ccgAmcpPort": 5250,

@@ -50,8 +50,8 @@ export function socketIoHandlers(socket: any): void {
             (channelIndex: number, fileName: string) => {
                 if (
                     settingsService
-                        .getGenericSettings()
-                        .outputs.some(
+                        .getGenericSettings(reduxState)
+                        .outputSettings.some(
                             (output) => output.selectedFile === fileName
                         )
                 ) {
@@ -241,50 +241,55 @@ export function initializeClient(): void {
     socketServer.emit(IO.TAB_DATA_UPDATE, reduxState.settings.tabData)
     let timeTallyData: IO.TimeTallyPayload[] = []
     settingsService
-        .getGenericSettings()
-        .outputs.forEach((output: OutputSettings, channelIndex: number) => {
-            timeTallyData[channelIndex] = {
-                time: mediaService.getOutput(reduxState, channelIndex).time,
-                tally: output.selectedFile,
-            }
+        .getGenericSettings(reduxState)
+        .outputSettings.forEach(
+            (output: OutputSettings, channelIndex: number) => {
+                timeTallyData[channelIndex] = {
+                    time: mediaService.getOutput(reduxState, channelIndex).time,
+                    tally: output.selectedFile,
+                }
 
-            socketServer.emit(IO.TIME_TALLY_UPDATE, timeTallyData)
-            socketServer.emit(
-                IO.LOOP_STATE_UPDATE,
-                channelIndex,
-                output.loopState
-            )
-            socketServer.emit(
-                IO.OPERATION_MODE_UPDATE,
-                channelIndex,
-                output.operationMode
-            )
-            socketServer.emit(
-                IO.MIX_STATE_UPDATE,
-                channelIndex,
-                output.mixState
-            )
-            socketServer.emit(
-                IO.MANUAL_START_STATE_UPDATE,
-                channelIndex,
-                output.manualStartState
-            )
-            const mediaOutput = mediaService.getOutput(reduxState, channelIndex)
-            socketServer.emit(
-                IO.THUMBNAIL_UPDATE,
-                channelIndex,
-                mediaOutput.thumbnailList
-            )
-            socketServer.emit(
-                IO.MEDIA_UPDATE,
-                channelIndex,
-                mediaOutput.mediaFiles
-            )
-            socketServer.emit(
-                IO.HIDDEN_FILES_UPDATE,
-                reduxState.media.hiddenFiles
-            )
-        })
+                socketServer.emit(IO.TIME_TALLY_UPDATE, timeTallyData)
+                socketServer.emit(
+                    IO.LOOP_STATE_UPDATE,
+                    channelIndex,
+                    output.loopState
+                )
+                socketServer.emit(
+                    IO.OPERATION_MODE_UPDATE,
+                    channelIndex,
+                    output.operationMode
+                )
+                socketServer.emit(
+                    IO.MIX_STATE_UPDATE,
+                    channelIndex,
+                    output.mixState
+                )
+                socketServer.emit(
+                    IO.MANUAL_START_STATE_UPDATE,
+                    channelIndex,
+                    output.manualStartState
+                )
+                const mediaOutput = mediaService.getOutput(
+                    reduxState,
+                    channelIndex
+                )
+                socketServer.emit(
+                    IO.THUMBNAIL_UPDATE,
+                    channelIndex,
+                    mediaOutput.thumbnailList
+                )
+                socketServer.emit(
+                    IO.MEDIA_UPDATE,
+                    channelIndex,
+                    mediaOutput.mediaFiles
+                )
+                socketServer.emit(
+                    IO.HIDDEN_FILES_UPDATE,
+                    reduxState.media.hiddenFiles
+                )
+            }
+        )
     socketServer.emit(IO.TIME_TALLY_UPDATE, timeTallyData)
 }
 

@@ -11,7 +11,6 @@ interface SettingsInputProps {
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void
   value: string | boolean | number
   type: SettingsInputType
-  name: string | number
   preDescription: string
   postDescription?: string
 }
@@ -25,7 +24,6 @@ export default function SettingsInput(props: SettingsInputProps): JSX.Element {
           {props.preDescription}
           <br />
           <input 
-            name={String(props.name)}
             type={props.type}
             value={String(props.value)}
             onChange={props.onChange}
@@ -40,7 +38,6 @@ export default function SettingsInput(props: SettingsInputProps): JSX.Element {
           {props.preDescription}
           <br />
           <input 
-            name={String(props.name)}
             type={props.type}
             checked={Boolean(props.value)}
             onChange={props.onChange}

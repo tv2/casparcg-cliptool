@@ -1,8 +1,6 @@
-//Node Modules:
 // @ts-ignore
 import osc from 'osc' //Using OSC fork from PieceMeta/osc.js as it has excluded hardware serialport support and thereby is crossplatform
 
-//Modules:
 import { CasparCG } from 'casparcg-connection'
 import { reduxState, reduxStore } from '../../model/reducers/store'
 import {
@@ -61,8 +59,8 @@ let thumbNailList: ThumbnailFile[] = []
 
 //Setup AMCP Connection:
 export const ccgConnection = new CasparCG({
-    host: settingsService.getGenericSettings().ccgIp,
-    port: settingsService.getGenericSettings().ccgAmcpPort,
+    host: settingsService.getGenericSettings(reduxState).ccgSettings.ip,
+    port: settingsService.getGenericSettings(reduxState).ccgSettings.amcpPort,
     autoConnect: true,
 })
 
@@ -70,7 +68,8 @@ export const ccgConnection = new CasparCG({
 function ccgOSCServer(): void {
     const oscConnection = new osc.UDPPort({
         localAddress: '0.0.0.0',
-        localPort: settingsService.getGenericSettings().ccgOscPort,
+        localPort:
+            settingsService.getGenericSettings(reduxState).ccgSettings.oscPort,
     })
 
     oscConnection
@@ -94,7 +93,7 @@ function ccgOSCServer(): void {
     oscConnection.open()
     logger.info(
         `OSC listening on port '${
-            settingsService.getGenericSettings().ccgOscPort
+            settingsService.getGenericSettings(reduxState).ccgSettings.oscPort
         }'.`
     )
 }
@@ -111,7 +110,7 @@ function processOscMessage(message: any): void {
             if (layerIndex === 9) {
                 let fileName = message.args[0]
                 if (
-                    settingsService.getGenericSettings().outputs[channelIndex]
+                    settingsService.getOutputSettings(reduxState, channelIndex)
                         ?.selectedFile !== fileName
                 ) {
                     reduxStore.dispatch(
@@ -138,26 +137,35 @@ function dispatchConfig(config: any): void {
     reduxStore.dispatch(updateSettings(config.channels, config.paths.mediaPath))
     reduxStore.dispatch(setTabData(config.channels.length))
     config.channels.forEach(({}, index: number) => {
-        const genericSettings = settingsService.getGenericSettings()
+        const genericSettings = settingsService.getGenericSettings(reduxState)
         reduxStore.dispatch(
-            setLoop(index, genericSettings.outputs[index].loopState ?? false)
+            setLoop(
+                index,
+                genericSettings.outputSettings[index].loopState ?? false
+            )
         )
         reduxStore.dispatch(
             setManualStart(
                 index,
-                genericSettings.outputs[index].manualStartState ?? false
+                genericSettings.outputSettings[index].manualStartState ?? false
             )
         )
         reduxStore.dispatch(
-            setMix(index, genericSettings.outputs[index].mixState ?? false)
+            setMix(
+                index,
+                genericSettings.outputSettings[index].mixState ?? false
+            )
         )
         reduxStore.dispatch(
-            setWeb(index, genericSettings.outputs[index].webState ?? false)
+            setWeb(
+                index,
+                genericSettings.outputSettings[index].webState ?? false
+            )
         )
         reduxStore.dispatch(
             setOperationMode(
                 index,
-                genericSettings.outputs[index].operationMode ??
+                genericSettings.outputSettings[index].operationMode ??
                     OperationMode.CONTROL
             )
         )
@@ -168,7 +176,7 @@ function dispatchConfig(config: any): void {
 }
 
 function loadInitialOverlay(): void {
-    if (!settingsService.getGenericSettings().outputs) {
+    if (!settingsService.getGenericSettings(reduxState).outputSettings) {
         return
     }
     reduxState.settings.ccgConfig.channels.forEach(({}, index) => {
@@ -186,9 +194,10 @@ function ccgAMPHandler(): void {
     ccgConnection
         .version()
         .then((response) => {
-            const genericSettings = settingsService.getGenericSettings()
-            const address = genericSettings.ccgIp
-            const port = genericSettings.ccgAmcpPort
+            const genericSettings =
+                settingsService.getGenericSettings(reduxState)
+            const address = genericSettings.ccgSettings.ip
+            const port = genericSettings.ccgSettings.amcpPort
             logger.info(`AMCP connection established to: ${address}:${port}`)
             logger.info(`CasparCG Server Version: ${response.response.data}`)
             ccgConnection
@@ -285,7 +294,8 @@ function outputExtractFiles(allFiles: MediaFile[], outputIndex: number): void {
         return (
             isFolderNameEqual(
                 file.name,
-                settingsService.getGenericSettings().outputs[outputIndex].folder
+                settingsService.getOutputSettings(reduxState, outputIndex)
+                    .folder
             ) && !isAlphaFile(file.name)
         )
     })
@@ -345,7 +355,7 @@ export function assignThumbNailListToOutputs(): void {
         let outputMedia = thumbNailList.filter((thumbnail: ThumbnailFile) => {
             return isFolderNameEqual(
                 thumbnail?.name,
-                settingsService.getGenericSettings().outputs[channelIndex]
+                settingsService.getOutputSettings(reduxState, channelIndex)
                     .folder
             )
         })

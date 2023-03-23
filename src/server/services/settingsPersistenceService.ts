@@ -3,11 +3,9 @@ import {
     GenericSettings,
     OperationMode,
 } from '../../model/reducers/settingsModels'
-import { reduxStore } from '../../model/reducers/store'
-import {
-    NewGenericSettings,
-    PreviousGenericSettings,
-} from '../../model/schemas/settingsSchema'
+import { reduxState, reduxStore } from '../../model/reducers/store'
+import { NewGenericSettings } from '../../model/schemas/new-settings-schema'
+import { PreviousGenericSettings } from '../../model/schemas/old-settings-schema'
 import settingsService from '../../model/services/settingsService'
 import { logger } from '../utils/logger'
 import persistenceService from './persistenceService'
@@ -60,7 +58,8 @@ class SettingsPersistenceService {
     }
 
     public save(): void {
-        const generics: GenericSettings = settingsService.getGenericSettings()
+        const generics: GenericSettings =
+            settingsService.getGenericSettings(reduxState)
         const stringifiedSettings = JSON.stringify(generics)
 
         persistenceService.saveFile(
@@ -84,6 +83,9 @@ class SettingsPersistenceService {
         if (parsed.success) {
             return { success: true, parsed: parsed.data }
         }
+        logger
+            .data(parsed)
+            .debug('Failed to parse loaded settings to old structure')
         return { success: false, parsed: undefined }
     }
 
@@ -94,10 +96,10 @@ class SettingsPersistenceService {
         const parsed = NewGenericSettings.safeParse(loadedFile)
         if (parsed.success) {
             return { success: true, parsed: parsed.data as GenericSettings }
-        } else {
-            // Would very much like to log this with the logger, but 'logger' is server only, and 'getDefaultGenericSettings()' is used in models
-            console.log('Parsed Error', (parsed as any).error)
         }
+        logger
+            .data(parsed)
+            .error('Failed to parse loaded settings to new structure')
         return { success: false, parsed: undefined }
     }
 
@@ -107,12 +109,14 @@ class SettingsPersistenceService {
         const newSettings: GenericSettings = {
             ...settingsService.getDefaultGenericSettings(),
         }
-        newSettings.transitionTime = old.transitionTime ?? 16
-        newSettings.ccgIp = old.ccgIp ?? '0.0.0.0'
-        newSettings.ccgAmcpPort = old.ccgAmcpPort ?? 5250
-        newSettings.ccgDefaultLayer = old.ccgDefaultLayer ?? 5253
-        newSettings.ccgOscPort = old.ccgOscPort ?? 10
-        newSettings.outputs.forEach((output, index) => {
+        newSettings.ccgSettings = {
+            transitionTime: old.transitionTime ?? 16,
+            ip: old.ccgIp ?? '0.0.0.0',
+            amcpPort: old.ccgAmcpPort ?? 5250,
+            defaultLayer: old.ccgDefaultLayer ?? 10,
+            oscPort: old.ccgOscPort ?? 5253,
+        }
+        newSettings.outputSettings.forEach((output, index) => {
             output.label = old.outputLabels[index] ?? ''
             output.folder = old.outputFolders[index] ?? ''
             output.shouldScale = old.scale[index] ?? false
