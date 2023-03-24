@@ -10,18 +10,18 @@ import { ReduxStateType } from "../../../model/reducers/indexReducer";
 
 export default function HeaderButtons(): JSX.Element {
   const activeTab: number = useSelector(
-    (storeUpdate: ReduxStateType) => appNavigationService.getActiveTab(storeUpdate))
+    (storeUpdate: ReduxStateType) => appNavigationService.getActiveTab(storeUpdate.appNavigation))
   const mixState: boolean = useSelector(
-      (storeUpdate: ReduxStateType) => settingsService.getOutputSettings(storeUpdate)?.mixState)
+      (storeUpdate: ReduxStateType) => settingsService.getOutputSettings(storeUpdate.settings, activeTab)?.mixState)
   const webState: boolean = useSelector(
-      (storeUpdate: ReduxStateType) => settingsService.getOutputSettings(storeUpdate)?.webState)
+      (storeUpdate: ReduxStateType) => settingsService.getOutputSettings(storeUpdate.settings, activeTab)?.webState)
   const loopState: boolean = useSelector(
-      (storeUpdate: ReduxStateType) => settingsService.getOutputSettings(storeUpdate)?.loopState)
+      (storeUpdate: ReduxStateType) => settingsService.getOutputSettings(storeUpdate.settings, activeTab)?.loopState)
   const manualStartState: boolean = useSelector(
-      (storeUpdate: ReduxStateType) => settingsService.getOutputSettings(storeUpdate)?.manualStartState)
+      (storeUpdate: ReduxStateType) => settingsService.getOutputSettings(storeUpdate.settings, activeTab)?.manualStartState)
   return (
     <>
-      {reduxState.appNav.selectView === 0 && (
+      {reduxState.appNavigation.selectView === 0 && (
         <>
             <ToggleButton 
                 isToggled={loopState}
@@ -58,7 +58,7 @@ function emitSetLoopState(activeTab: number): void {
   socket.emit(
       IO.SET_LOOP_STATE,
       activeTab,
-      !settingsService.getOutputSettings(reduxState, activeTab).loopState
+      !settingsService.getOutputSettings(reduxState.settings, activeTab).loopState
   )
 }
 
@@ -66,7 +66,7 @@ function emitSetMixState(activeTab: number): void {
   socket.emit(
       IO.SET_MIX_STATE,
       activeTab,
-      !settingsService.getOutputSettings(reduxState, activeTab).mixState
+      !settingsService.getOutputSettings(reduxState.settings, activeTab).mixState
   )
 }
 
@@ -74,7 +74,7 @@ function emitSetWebState(activeTab: number): void {
   socket.emit(
       IO.SET_WEB_STATE,
       activeTab,
-      !settingsService.getOutputSettings(reduxState, activeTab).webState
+      !settingsService.getOutputSettings(reduxState.settings, activeTab).webState
   )
 }
 
@@ -82,6 +82,6 @@ function emitSetManualStartState(activeTab: number): void {
   socket.emit(
       IO.SET_MANUAL_START_STATE,
       activeTab,
-      !settingsService.getOutputSettings(reduxState, activeTab).manualStartState
+      !settingsService.getOutputSettings(reduxState.settings, activeTab).manualStartState
   )
 }

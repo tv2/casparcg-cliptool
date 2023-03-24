@@ -12,13 +12,13 @@ import { ReduxStateType } from "../../../model/reducers/indexReducer";
 
 export default function Time(): JSX.Element {
     const activeTab: number = useSelector(
-        () => appNavigationService.getActiveTab())
+        (storeUpdate: ReduxStateType) => appNavigationService.getActiveTab(storeUpdate.appNavigation))
     const mediaOutput: Output = useSelector(
         (storeUpdate: ReduxStateType) => mediaService.getOutput(storeUpdate))
     const settingsOutput: OutputSettings = useSelector(
-        (storeUpdate: ReduxStateType) => settingsService.getOutputSettings(storeUpdate))
+        (storeUpdate: ReduxStateType) => settingsService.getOutputSettings(storeUpdate.settings, activeTab))
     useSelector(
-        (storeUpdate: ReduxStateType) => settingsService.getOutputSettings(storeUpdate).selectedFile)
+        (storeUpdate: ReduxStateType) => settingsService.getOutputSettings(storeUpdate.settings, activeTab).selectedFile)
     useSelector(
         (storeUpdate: ReduxStateType) => mediaService.getOutput(storeUpdate)?.time[0])
     useSelector(
@@ -26,7 +26,7 @@ export default function Time(): JSX.Element {
 
     let cleanTallyFile: string = ''
     try {
-        cleanTallyFile = mediaService.getCleanSelectedFile(settingsOutput)
+        cleanTallyFile = settingsService.getCleanSelectedFile(settingsOutput, reduxState.settings)
     } catch {}
     const thumbnailUrl = mediaService.findThumbnail(cleanTallyFile, activeTab)
     

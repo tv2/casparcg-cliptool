@@ -16,7 +16,7 @@ class HandleShortcuts {
         //Convert event.keyCode to letter:
         let keyPressed = String.fromCharCode(event.keyCode)
 
-        if (reduxState.appNav.showSettingsActive) {
+        if (reduxState.appNavigation.showSettingsActive) {
             keyPressed = ''
         }
 

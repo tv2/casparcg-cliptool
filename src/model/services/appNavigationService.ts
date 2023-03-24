@@ -1,9 +1,7 @@
-import { ReduxStateType } from '../reducers/indexReducer'
-import { reduxState } from '../reducers/store'
-
+import { AppNavigation } from '../reducers/app-navigation-reducer'
 class AppNavigationService {
-    public getActiveTab(state: ReduxStateType = reduxState): number {
-        return state.appNav.activeTab
+    public getActiveTab(navigationState: AppNavigation): number {
+        return navigationState.activeTab
     }
 }
 

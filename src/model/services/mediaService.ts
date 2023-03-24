@@ -1,9 +1,7 @@
 import { ReduxStateType } from '../reducers/indexReducer'
 import { Output as Output, ThumbnailFile } from '../reducers/mediaModels'
-import { OutputSettings } from '../reducers/settingsModels'
 import { reduxState } from '../reducers/store'
 import appNavigationService from './appNavigationService'
-import settingsService from './settingsService'
 
 class MediaService {
     public getOutput(
@@ -12,7 +10,7 @@ class MediaService {
     ): Output {
         const activeTab: number =
             channelIndex === -1
-                ? appNavigationService.getActiveTab()
+                ? appNavigationService.getActiveTab(reduxState.appNavigation)
                 : channelIndex
         return store.media.outputs[activeTab]
     }
@@ -31,37 +29,6 @@ class MediaService {
                 item.name.toUpperCase() === fileName.toUpperCase()
         )
         return thumbnailFile?.thumbnail ?? ''
-    }
-
-    public isThumbnailSelected(thumbnailName: string): boolean {
-        const selectedFileName = this.getCleanSelectedFile(
-            settingsService.getOutputSettings(reduxState)
-        )
-        return selectedFileName === thumbnailName
-    }
-
-    public isThumbnailSelectedOnAnyOutput(thumbnailName: string): boolean {
-        return settingsService
-            .getGenericSettings(reduxState)
-            .outputSettings.some(
-                (output) => this.getCleanSelectedFile(output) === thumbnailName
-            )
-    }
-
-    public getCleanSelectedFile(output: OutputSettings): string {
-        const selectedFileName = output.selectedFile
-            .toUpperCase()
-            .replace(/\\/g, '/')
-            .replace('//', '/')
-            .split('.')
-        // Remove system Path e.g.: D:\\media/:
-        const cleanSelectedFileName = selectedFileName[0].replace(
-            reduxState.settings.ccgConfig.path
-                ?.toUpperCase()
-                .replace(/\\/g, '/') + '/',
-            ''
-        )
-        return cleanSelectedFileName
     }
 
     public secondsToTimeCode(

@@ -59,8 +59,10 @@ let thumbNailList: ThumbnailFile[] = []
 
 //Setup AMCP Connection:
 export const ccgConnection = new CasparCG({
-    host: settingsService.getGenericSettings(reduxState).ccgSettings.ip,
-    port: settingsService.getGenericSettings(reduxState).ccgSettings.amcpPort,
+    host: settingsService.getGenericSettings(reduxState.settings).ccgSettings
+        .ip,
+    port: settingsService.getGenericSettings(reduxState.settings).ccgSettings
+        .amcpPort,
     autoConnect: true,
 })
 
@@ -68,8 +70,8 @@ export const ccgConnection = new CasparCG({
 function ccgOSCServer(): void {
     const oscConnection = new osc.UDPPort({
         localAddress: '0.0.0.0',
-        localPort:
-            settingsService.getGenericSettings(reduxState).ccgSettings.oscPort,
+        localPort: settingsService.getGenericSettings(reduxState.settings)
+            .ccgSettings.oscPort,
     })
 
     oscConnection
@@ -93,7 +95,8 @@ function ccgOSCServer(): void {
     oscConnection.open()
     logger.info(
         `OSC listening on port '${
-            settingsService.getGenericSettings(reduxState).ccgSettings.oscPort
+            settingsService.getGenericSettings(reduxState.settings).ccgSettings
+                .oscPort
         }'.`
     )
 }
@@ -110,8 +113,10 @@ function processOscMessage(message: any): void {
             if (layerIndex === 9) {
                 let fileName = message.args[0]
                 if (
-                    settingsService.getOutputSettings(reduxState, channelIndex)
-                        ?.selectedFile !== fileName
+                    settingsService.getOutputSettings(
+                        reduxState.settings,
+                        channelIndex
+                    )?.selectedFile !== fileName
                 ) {
                     reduxStore.dispatch(
                         setSelectedFileName(channelIndex, fileName)
@@ -137,7 +142,9 @@ function dispatchConfig(config: any): void {
     reduxStore.dispatch(updateSettings(config.channels, config.paths.mediaPath))
     reduxStore.dispatch(setTabData(config.channels.length))
     config.channels.forEach(({}, index: number) => {
-        const genericSettings = settingsService.getGenericSettings(reduxState)
+        const genericSettings = settingsService.getGenericSettings(
+            reduxState.settings
+        )
         reduxStore.dispatch(
             setLoop(
                 index,
@@ -176,14 +183,16 @@ function dispatchConfig(config: any): void {
 }
 
 function loadInitialOverlay(): void {
-    if (!settingsService.getGenericSettings(reduxState).outputSettings) {
+    if (
+        !settingsService.getGenericSettings(reduxState.settings).outputSettings
+    ) {
         return
     }
     reduxState.settings.ccgConfig.channels.forEach(({}, index) => {
         playOverlay(
             index,
             10,
-            settingsService.getOutputSettings(reduxState, index).webUrl
+            settingsService.getOutputSettings(reduxState.settings, index).webUrl
         )
     })
 }
@@ -194,8 +203,9 @@ function ccgAMPHandler(): void {
     ccgConnection
         .version()
         .then((response) => {
-            const genericSettings =
-                settingsService.getGenericSettings(reduxState)
+            const genericSettings = settingsService.getGenericSettings(
+                reduxState.settings
+            )
             const address = genericSettings.ccgSettings.ip
             const port = genericSettings.ccgSettings.amcpPort
             logger.info(`AMCP connection established to: ${address}:${port}`)
@@ -225,8 +235,10 @@ async function startTimerControlledServices(): Promise<void> {
         mediaService.getOutputs().forEach((output: Output, index: number) => {
             data[index] = {
                 time: output.time,
-                tally: settingsService.getOutputSettings(reduxState, index)
-                    .selectedFile,
+                tally: settingsService.getOutputSettings(
+                    reduxState.settings,
+                    index
+                ).selectedFile,
             }
         })
         socketServer.emit(IO.TIME_TALLY_UPDATE, data)
@@ -294,8 +306,10 @@ function outputExtractFiles(allFiles: MediaFile[], outputIndex: number): void {
         return (
             isFolderNameEqual(
                 file.name,
-                settingsService.getOutputSettings(reduxState, outputIndex)
-                    .folder
+                settingsService.getOutputSettings(
+                    reduxState.settings,
+                    outputIndex
+                ).folder
             ) && !isAlphaFile(file.name)
         )
     })
@@ -355,8 +369,10 @@ export function assignThumbNailListToOutputs(): void {
         let outputMedia = thumbNailList.filter((thumbnail: ThumbnailFile) => {
             return isFolderNameEqual(
                 thumbnail?.name,
-                settingsService.getOutputSettings(reduxState, channelIndex)
-                    .folder
+                settingsService.getOutputSettings(
+                    reduxState.settings,
+                    channelIndex
+                ).folder
             )
         })
         const outputThumbnailList = mediaService.getOutput(

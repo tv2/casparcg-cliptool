@@ -58,8 +58,9 @@ class SettingsPersistenceService {
     }
 
     public save(): void {
-        const generics: GenericSettings =
-            settingsService.getGenericSettings(reduxState)
+        const generics: GenericSettings = settingsService.getGenericSettings(
+            reduxState.settings
+        )
         const stringifiedSettings = JSON.stringify(generics)
 
         persistenceService.saveFile(

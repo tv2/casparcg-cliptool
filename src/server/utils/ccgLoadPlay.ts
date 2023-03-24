@@ -14,8 +14,8 @@ export function playMedia(
         channelIndex + 1,
         layerIndex + 1,
         fileName,
-        settingsService.getOutputSettings(reduxState, channelIndex).loopState ||
-            false
+        settingsService.getOutputSettings(reduxState.settings, channelIndex)
+            .loopState || false
     )
 }
 
@@ -30,8 +30,8 @@ export function mixMedia(
         channelIndex + 1,
         layerIndex + 1,
         fileName,
-        settingsService.getOutputSettings(reduxState, channelIndex).loopState ||
-            false,
+        settingsService.getOutputSettings(reduxState.settings, channelIndex)
+            .loopState || false,
         CcgEnum.Transition.MIX,
         MIX_DURATION
     )
@@ -48,8 +48,8 @@ export function loadMedia(
         channelIndex + 1,
         layerIndex + 1,
         fileName,
-        settingsService.getOutputSettings(reduxState, channelIndex).loopState ||
-            false
+        settingsService.getOutputSettings(reduxState.settings, channelIndex)
+            .loopState || false
     )
 }
 
@@ -84,7 +84,7 @@ function scale(channelIndex: number, layerIndex: number): void {
     let scaleOutX = 1
     let scaleOutY = 1
     const outputSetting = settingsService.getOutputSettings(
-        reduxState,
+        reduxState.settings,
         channelIndex
     )
     if (outputSetting.shouldScale) {

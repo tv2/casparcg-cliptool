@@ -1,6 +1,6 @@
 import React from 'react'
 import { reduxStore } from '../../model/reducers/store'
-import { setActiveTab } from '../../model/reducers/appNavAction'
+import { setActiveTab } from '../../model/reducers/app-navigation-action'
 
 import { OperationModeFooter } from './footer/operationModeFooter'
 import Tabs from './tab/tabs'
@@ -17,7 +17,7 @@ const specificChannel = channel ? parseInt(channel) || 0 : 0
 
 
 export function App(): JSX.Element {
-    const isSettingsOpen = useSelector((storeUpdate: ReduxStateType) => storeUpdate.appNav.showSettingsActive)
+    const isSettingsOpen = useSelector((storeUpdate: ReduxStateType) => storeUpdate.appNavigation.showSettingsActive)
 
     function setOutput(tab: number): void {
         reduxStore.dispatch(setActiveTab(tab))

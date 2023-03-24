@@ -1,7 +1,7 @@
+import { CcgConfigChannel, Settings } from './settingsModels'
 import settingsService from '../services/settingsService'
 import { getVideoFormat } from '../videoFormat'
 import * as IO from './settingsAction'
-import { CcgConfigChannel, Settings } from './settingsModels'
 
 function defaultSettingsReducerState(): Settings {
     const generics = settingsService.getDefaultGenericSettings()

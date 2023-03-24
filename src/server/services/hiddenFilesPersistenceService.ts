@@ -77,8 +77,9 @@ class HiddenFilesPersistenceService {
     private validateHiddenFiles(
         hiddenFiles: Record<string, HiddenFileInfo>
     ): boolean {
-        const outputs: OutputSettings[] =
-            settingsService.getGenericSettings(reduxState).outputSettings
+        const outputs: OutputSettings[] = settingsService.getGenericSettings(
+            reduxState.settings
+        ).outputSettings
         return outputs.some((output) => output.selectedFile in hiddenFiles)
     }
 
@@ -88,8 +89,9 @@ class HiddenFilesPersistenceService {
         const hiddenFiles: Record<string, HiddenFileInfo> = {
             ...originalHiddenFiles,
         }
-        const outputs: OutputSettings[] =
-            settingsService.getGenericSettings(reduxState).outputSettings
+        const outputs: OutputSettings[] = settingsService.getGenericSettings(
+            reduxState.settings
+        ).outputSettings
         outputs.forEach((output) => {
             if (output.selectedFile in hiddenFiles) {
                 delete hiddenFiles[output.selectedFile]

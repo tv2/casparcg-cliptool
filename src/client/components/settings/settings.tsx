@@ -15,8 +15,8 @@ const channel: string | null = new URLSearchParams(window.location.search).get('
 const specificChannel = channel ? parseInt(channel) || 0 : 0
 
 export function Settings(): JSX.Element { 
-    useSelector((storeUpdate: ReduxStateType) => settingsService.getGenericSettings(storeUpdate))
-    const [settings, setSettings] = useState(_.cloneDeep(settingsService.getGenericSettings(reduxState)))    
+    useSelector((storeUpdate: ReduxStateType) => settingsService.getGenericSettings(storeUpdate.settings))
+    const [settings, setSettings] = useState(_.cloneDeep(settingsService.getGenericSettings(reduxState.settings)))    
 
     return (
         <div className="Settings-body">

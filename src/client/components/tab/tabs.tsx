@@ -12,7 +12,7 @@ import { ReduxStateType } from '../../../model/reducers/indexReducer'
 export default function Tabs(): JSX.Element {
   const tabData: TabData[] = useSelector((storeUpdate: ReduxStateType) => storeUpdate.settings.tabData)
   const selectedTab: number = 
-    useSelector((storeUpdate: ReduxStateType) => appNavigationService.getActiveTab(storeUpdate))
+    useSelector((storeUpdate: ReduxStateType) => appNavigationService.getActiveTab(storeUpdate.appNavigation))
 
   return (
     <div className='tabs'>

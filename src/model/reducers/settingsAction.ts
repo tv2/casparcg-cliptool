@@ -33,8 +33,8 @@ export function setTabData(amount: number): {
         tabData.push({
             key: String(i),
             title:
-                settingsService.getGenericSettings(reduxState).outputSettings[i]
-                    .label || 'Output ' + String(i + 1),
+                settingsService.getGenericSettings(reduxState.settings)
+                    .outputSettings[i].label || 'Output ' + String(i + 1),
         })
     }
     return {

@@ -1,10 +1,12 @@
-import { ReduxStateType } from '../reducers/indexReducer'
-import { GenericSettings, OutputSettings } from '../reducers/settingsModels'
+import {
+    GenericSettings,
+    OutputSettings,
+    Settings,
+} from '../reducers/settingsModels'
 import {
     defaultOutputSettingsState,
     NewGenericSettings,
 } from '../schemas/new-settings-schema'
-import appNavigationService from './appNavigationService'
 
 class SettingsService {
     private fallBackDefaultSettings: GenericSettings
@@ -21,20 +23,15 @@ class SettingsService {
             outputSettings: Array(8).fill(defaultOutputSettingsState),
         }
     }
-
     getOutputSettings(
-        state: ReduxStateType,
-        channelIndex: number = -1
+        settingsState: Settings,
+        channelIndex: number
     ): OutputSettings {
-        const activeTab: number =
-            channelIndex === -1
-                ? appNavigationService.getActiveTab()
-                : channelIndex
-        return state.settings.generics.outputSettings[activeTab]
+        return settingsState.generics.outputSettings[channelIndex]
     }
 
-    getGenericSettings(state: ReduxStateType): GenericSettings {
-        return state.settings.generics
+    getGenericSettings(settingsState: Settings): GenericSettings {
+        return settingsState.generics
     }
 
     getDefaultGenericSettings(): GenericSettings {
@@ -42,6 +39,47 @@ class SettingsService {
         return parsed.success
             ? (parsed.data as GenericSettings)
             : this.fallBackDefaultSettings
+    }
+
+    public isThumbnailSelected(
+        thumbnailName: string,
+        settingsState: Settings,
+        channelIndex: number
+    ): boolean {
+        const selectedFileName = this.getCleanSelectedFile(
+            this.getOutputSettings(settingsState, channelIndex),
+            settingsState
+        )
+        return selectedFileName === thumbnailName
+    }
+
+    public isThumbnailSelectedOnAnyOutput(
+        thumbnailName: string,
+        settingsState: Settings
+    ): boolean {
+        return this.getGenericSettings(settingsState).outputSettings.some(
+            (output) =>
+                this.getCleanSelectedFile(output, settingsState) ===
+                thumbnailName
+        )
+    }
+
+    public getCleanSelectedFile(
+        output: OutputSettings,
+        settingsState: Settings
+    ): string {
+        const selectedFileName = output.selectedFile
+            .toUpperCase()
+            .replace(/\\/g, '/')
+            .replace('//', '/')
+            .split('.')
+        // Remove system Path e.g.: D:\\media/:
+        const cleanSelectedFileName = selectedFileName[0].replace(
+            settingsState.ccgConfig.path?.toUpperCase().replace(/\\/g, '/') +
+                '/',
+            ''
+        )
+        return cleanSelectedFileName
     }
 }
 

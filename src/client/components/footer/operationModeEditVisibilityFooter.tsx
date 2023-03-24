@@ -5,6 +5,7 @@ import { Footer } from "./footer"
 import "../../css/Operation-mode-edit-visibility-footer.css"
 import { OperationMode } from "../../../model/reducers/settingsModels"
 import appNavigationService from "../../../model/services/appNavigationService"
+import { reduxState } from "../../../model/reducers/store"
 
 const BUTTON_TEXT = 'Exit Edit Visibility'
 const DESCRIPTION_TEXT = 'You are currently editing the visibility of files.'.toUpperCase()
@@ -27,7 +28,7 @@ export function OperationModeEditVisibilityFooter(): JSX.Element {
 function resetOperationMode(): void {
   socket.emit(
     IO.SET_OPERATION_MODE, 
-    appNavigationService.getActiveTab(), 
+    appNavigationService.getActiveTab(reduxState.appNavigation), 
     OperationMode.CONTROL
   )
 }

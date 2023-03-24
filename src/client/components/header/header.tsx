@@ -1,7 +1,7 @@
 import React from 'react'
 import { reduxStore, reduxState } from '../../../model/reducers/store'
 import { useSelector } from 'react-redux'
-import { TOGGLE_SHOW_SETTINGS } from '../../../model/reducers/appNavAction'
+import { TOGGLE_SHOW_SETTINGS } from '../../../model/reducers/app-navigation-action'
 
 import '../../css/App.css'
 import '../../css/App-header.css'
@@ -13,12 +13,12 @@ import { ReduxStateType } from '../../../model/reducers/indexReducer'
 
 export default function Header(): JSX.Element {
     const connectionStatus: boolean = useSelector(
-        (storeUpdate: ReduxStateType) => storeUpdate.appNav.connectionStatus)
+        (storeUpdate: ReduxStateType) => storeUpdate.appNavigation.connectionStatus)
 
     return (
         <header className="App-header">
             <div className="App-header__controls">
-                {reduxState.appNav.selectView === 0 && (
+                {reduxState.appNavigation.selectView === 0 && (
                     <div className="App-reload-setup-background">
                         <button
                             className="App-settings-button"
@@ -41,7 +41,7 @@ export default function Header(): JSX.Element {
 
 function emitToggleSettingsVisibility(): void {
     // TODO: Figure out how to do the discard check here, and allow the user to close via this again.
-    if (!reduxState.appNav.showSettingsActive) {
+    if (!reduxState.appNavigation.showSettingsActive) {
         reduxStore.dispatch({
         type: TOGGLE_SHOW_SETTINGS,
         })

@@ -50,7 +50,7 @@ export function socketIoHandlers(socket: any): void {
             (channelIndex: number, fileName: string) => {
                 if (
                     settingsService
-                        .getGenericSettings(reduxState)
+                        .getGenericSettings(reduxState.settings)
                         .outputSettings.some(
                             (output) => output.selectedFile === fileName
                         )
@@ -83,8 +83,10 @@ export function socketIoHandlers(socket: any): void {
         )
         .on(IO.PGM_PLAY, (channelIndex: number, fileName: string) => {
             if (
-                !settingsService.getOutputSettings(reduxState, channelIndex)
-                    .mixState
+                !settingsService.getOutputSettings(
+                    reduxState.settings,
+                    channelIndex
+                ).mixState
             ) {
                 playMedia(channelIndex, 9, fileName)
             } else {
@@ -101,8 +103,10 @@ export function socketIoHandlers(socket: any): void {
             socketServer.emit(
                 IO.LOOP_STATE_UPDATE,
                 channelIndex,
-                settingsService.getOutputSettings(reduxState, channelIndex)
-                    .loopState
+                settingsService.getOutputSettings(
+                    reduxState.settings,
+                    channelIndex
+                ).loopState
             )
         })
         .on(
@@ -112,8 +116,10 @@ export function socketIoHandlers(socket: any): void {
                 socketServer.emit(
                     IO.OPERATION_MODE_UPDATE,
                     channelIndex,
-                    settingsService.getOutputSettings(reduxState, channelIndex)
-                        .operationMode
+                    settingsService.getOutputSettings(
+                        reduxState.settings,
+                        channelIndex
+                    ).operationMode
                 )
             }
         )
@@ -124,8 +130,10 @@ export function socketIoHandlers(socket: any): void {
                 socketServer.emit(
                     IO.MANUAL_START_STATE_UPDATE,
                     channelIndex,
-                    settingsService.getOutputSettings(reduxState, channelIndex)
-                        .manualStartState
+                    settingsService.getOutputSettings(
+                        reduxState.settings,
+                        channelIndex
+                    ).manualStartState
                 )
             }
         )
@@ -134,8 +142,10 @@ export function socketIoHandlers(socket: any): void {
             socketServer.emit(
                 IO.MIX_STATE_UPDATE,
                 channelIndex,
-                settingsService.getOutputSettings(reduxState, channelIndex)
-                    .mixState
+                settingsService.getOutputSettings(
+                    reduxState.settings,
+                    channelIndex
+                ).mixState
             )
         })
         .on(IO.SET_WEB_STATE, (channelIndex: number, state: boolean) => {
@@ -143,15 +153,19 @@ export function socketIoHandlers(socket: any): void {
             socketServer.emit(
                 IO.WEB_STATE_UPDATE,
                 channelIndex,
-                settingsService.getOutputSettings(reduxState, channelIndex)
-                    .webState
+                settingsService.getOutputSettings(
+                    reduxState.settings,
+                    channelIndex
+                ).webState
             )
             if (
-                settingsService.getOutputSettings(reduxState, channelIndex)
-                    .webState
+                settingsService.getOutputSettings(
+                    reduxState.settings,
+                    channelIndex
+                ).webState
             ) {
                 const webUrl = settingsService.getOutputSettings(
-                    reduxState,
+                    reduxState.settings,
                     channelIndex
                 ).webUrl
                 playOverlay(channelIndex, 10, webUrl)
@@ -241,7 +255,7 @@ export function initializeClient(): void {
     socketServer.emit(IO.TAB_DATA_UPDATE, reduxState.settings.tabData)
     let timeTallyData: IO.TimeTallyPayload[] = []
     settingsService
-        .getGenericSettings(reduxState)
+        .getGenericSettings(reduxState.settings)
         .outputSettings.forEach(
             (output: OutputSettings, channelIndex: number) => {
                 timeTallyData[channelIndex] = {

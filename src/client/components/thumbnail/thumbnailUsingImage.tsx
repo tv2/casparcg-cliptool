@@ -1,6 +1,5 @@
 import React from "react"
 import { useSelector } from "react-redux"
-import mediaService from "../../../model/services/mediaService";
 import ThumbnailButton from "./thumbnailButton";
 import ThumbnailPicture from "./thumbnailPicture";
 import TimeCode from "./timeCode";
@@ -8,16 +7,19 @@ import '../../css/Thumbnail.css'
 import settingsService from "../../../model/services/settingsService";
 import { HiddenFileInfo, MediaFile } from "../../../model/reducers/mediaModels";
 import { ReduxStateType } from "../../../model/reducers/indexReducer";
+import { reduxState } from "../../../model/reducers/store";
+import appNavigationService from "../../../model/services/appNavigationService";
 
 interface ThumbnailUsingImageProps {
   file: MediaFile
 }
 
 export default function ThumbnailUsingImage(props: ThumbnailUsingImageProps): JSX.Element {
-  // Redux hook:
+  const activeTab: number = useSelector(
+    (storeUpdate: ReduxStateType) => appNavigationService.getActiveTab(storeUpdate.appNavigation))
   useSelector(
-    (storeUpdate: ReduxStateType) => settingsService.getOutputSettings(storeUpdate)
-            .selectedFile
+    (storeUpdate: ReduxStateType) => settingsService
+      .getOutputSettings(storeUpdate.settings, activeTab).selectedFile
   )
 
   const hiddenFiles: Record<string, HiddenFileInfo> = useSelector(
@@ -31,7 +33,7 @@ export default function ThumbnailUsingImage(props: ThumbnailUsingImageProps): JS
     <div className={classNames}>
         <ThumbnailPicture file={props.file} />
         <ThumbnailButton file={props.file} />
-        {mediaService.isThumbnailSelected(props.file.name) && (
+        {settingsService.isThumbnailSelected(props.file.name, reduxState.settings, activeTab) && (
             <TimeCode file={props.file} />
         )}
         <p className="text">

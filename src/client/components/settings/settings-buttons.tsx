@@ -3,7 +3,7 @@ import { reduxState, reduxStore } from "../../../model/reducers/store";
 import { socket } from "../../util/socketClientHandlers";
 import * as IO from '../../../model/socketIoConstants'
 import { useSelector } from "react-redux";
-import { TOGGLE_SHOW_SETTINGS } from "../../../model/reducers/appNavAction";
+import { TOGGLE_SHOW_SETTINGS } from "../../../model/reducers/app-navigation-action";
 import '../../css/Settings.css'
 import settingsService from "../../../model/services/settingsService";
 import appNavigationService from "../../../model/services/appNavigationService";
@@ -17,10 +17,12 @@ interface SettingsButtonsProps {
 }
 
 export default function SettingsButtons(props: SettingsButtonsProps): JSX.Element {
+  const activeTab: number = useSelector(
+    (storeUpdate: ReduxStateType) => appNavigationService.getActiveTab(storeUpdate.appNavigation))
   const operationMode = useSelector(
-    (storeUpdate: ReduxStateType) => settingsService.getOutputSettings(storeUpdate)?.operationMode)
+    (storeUpdate: ReduxStateType) => settingsService.getOutputSettings(storeUpdate.settings, activeTab)?.operationMode)
   
-    const classNames = `save-button ${operationMode === OperationMode.EDIT_VISIBILITY ? 'on' : ''}`
+  const classNames = `save-button ${operationMode === OperationMode.EDIT_VISIBILITY ? 'on' : ''}`
 
   return (
       <div className="Settings-channel-form">
@@ -68,8 +70,8 @@ function toggleSettingsPage(): void {
 }
 
 function emitSetOperationModeToEditVisibility(): void {
-  const activeTab: number = appNavigationService.getActiveTab()
-  const output = settingsService.getOutputSettings(reduxState)
+  const activeTab: number = appNavigationService.getActiveTab(reduxState.appNavigation)
+  const output = settingsService.getOutputSettings(reduxState.settings, activeTab)
   if (output.operationMode !== OperationMode.EDIT_VISIBILITY) {
       toggleSettingsPage()
   }
@@ -102,7 +104,7 @@ function restartCliptool(): void {
 }
 
 function hasChanges(settings: GenericSettings): boolean {
-  const hasChanged = !_.isEqual(settings, settingsService.getGenericSettings(reduxState))
+  const hasChanged = !_.isEqual(settings, settingsService.getGenericSettings(reduxState.settings))
   return hasChanged
 }
 
