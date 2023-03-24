@@ -32,6 +32,8 @@ export function settings(
 
     switch (action.type) {
         case IO.UPDATE_SETTINGS: {
+            console.log('State', nextState)
+            console.log('Action', action)
             nextState.ccgConfig.channels = [
                 ...action.channels.map(updateChannelConfigWithVideoFormat),
             ]

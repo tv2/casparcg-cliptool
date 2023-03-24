@@ -8,7 +8,7 @@ import {
     setTime,
     updateFolderList,
     updateMediaFiles,
-    updateThumbnailFileList,
+    //updateThumbnailFileList,
     updateHiddenFiles,
 } from '../../model/reducers/mediaActions'
 
@@ -380,9 +380,9 @@ export function assignThumbNailListToOutputs(): void {
             channelIndex
         )
         if (!isDeepCompareEqual(outputThumbnailList, outputMedia)) {
-            reduxStore.dispatch(
-                updateThumbnailFileList(channelIndex, outputMedia)
-            )
+            // reduxStore.dispatch(
+            //     updateThumbnailFileList(channelIndex, outputMedia)
+            // )
             socketServer.emit(
                 IO.THUMBNAIL_UPDATE,
                 channelIndex,
