@@ -8,6 +8,7 @@ import settingsService from "../../../model/services/settingsService";
 import appNavigationService from "../../../model/services/appNavigationService";
 import { ReduxStateType } from "../../../model/reducers/indexReducer";
 
+// TODO: Remove link to 'header'
 export default function HeaderButtons(): JSX.Element {
   const activeTab: number = useSelector(
     (storeUpdate: ReduxStateType) => appNavigationService.getActiveTab(storeUpdate.appNavigation))

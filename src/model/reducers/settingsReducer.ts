@@ -1,4 +1,4 @@
-import { CcgConfigChannel, Settings } from './settingsModels'
+import { CcgConfigChannel, OutputSettings, Settings } from './settingsModels'
 import settingsService from '../services/settingsService'
 import { getVideoFormat } from '../videoFormat'
 import * as IO from './settingsAction'
@@ -52,55 +52,77 @@ export function settings(
         }
         case IO.SET_LOOP: {
             if (doesChannelExist(nextState, action)) {
-                nextState.generics.outputSettings[
-                    action.channelIndex
-                ].loopState = action.loopState
+                return updateAttributeByPartial(state, nextState, action, {
+                    loopState: action.loopState,
+                })
             }
             return nextState
         }
         case IO.SET_SELECTED_FILE_NAME: {
             if (doesChannelExist(nextState, action)) {
-                nextState.generics.outputSettings[
-                    action.channelIndex
-                ].selectedFile = action.filename
+                return updateAttributeByPartial(state, nextState, action, {
+                    selectedFile: action.filename,
+                })
             }
             return nextState
         }
         case IO.SET_MIX: {
             if (doesChannelExist(nextState, action)) {
-                nextState.generics.outputSettings[
-                    action.channelIndex
-                ].mixState = action.mixState
+                return updateAttributeByPartial(state, nextState, action, {
+                    mixState: action.mixState,
+                })
             }
             return nextState
         }
         case IO.SET_WEB: {
             if (doesChannelExist(nextState, action)) {
-                nextState.generics.outputSettings[
-                    action.channelIndex
-                ].webState = action.webState
+                return updateAttributeByPartial(state, nextState, action, {
+                    webState: action.webState,
+                })
             }
             return nextState
         }
         case IO.SET_MANUAL_START: {
             if (doesChannelExist(nextState, action)) {
-                nextState.generics.outputSettings[
-                    action.channelIndex
-                ].manualStartState = action.manualStartState
+                return updateAttributeByPartial(state, nextState, action, {
+                    manualStartState: action.manualStartState,
+                })
             }
             return nextState
         }
         case IO.SET_OPERATION_MODE: {
             if (doesChannelExist(nextState, action)) {
-                nextState.generics.outputSettings[
-                    action.channelIndex
-                ].operationMode = action.operationMode
+                return updateAttributeByPartial(state, nextState, action, {
+                    operationMode: action.operationMode,
+                })
             }
             return nextState
         }
         default:
             return nextState
     }
+}
+
+// TODO: get help moving to reducerService.
+function updateAttributeByPartial(
+    originalState: Settings,
+    nextState: Settings,
+    action: any,
+    updates: Partial<OutputSettings>
+): Settings {
+    const outputSettings = [...originalState.generics.outputSettings]
+    outputSettings[action.channelIndex] = {
+        ...outputSettings[action.channelIndex],
+        ...updates,
+    }
+    nextState = {
+        ...originalState,
+        generics: {
+            ...originalState.generics,
+            outputSettings,
+        },
+    }
+    return nextState
 }
 
 function doesChannelExist(

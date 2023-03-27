@@ -86,7 +86,7 @@ class SettingsPersistenceService {
         }
         logger
             .data(parsed)
-            .debug('Failed to parse loaded settings to old structure')
+            .trace('Failed to parse loaded settings to old structure')
         return { success: false, parsed: undefined }
     }
 
@@ -96,6 +96,7 @@ class SettingsPersistenceService {
     } {
         const parsed = NewGenericSettings.safeParse(loadedFile)
         if (parsed.success) {
+            logger.info('Loaded settings as new structure.')
             return { success: true, parsed: parsed.data as GenericSettings }
         }
         logger

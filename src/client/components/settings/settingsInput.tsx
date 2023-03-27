@@ -14,7 +14,7 @@ interface SettingsInputProps {
   preDescription: string
   postDescription?: string
 }
-
+// TODO: split to different components.
 export default function SettingsInput(props: SettingsInputProps): JSX.Element {
   switch (props.type) {
     case SettingsInputType.TEXT:

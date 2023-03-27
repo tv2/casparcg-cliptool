@@ -12,6 +12,7 @@ import { HiddenFileInfo, MediaFile } from '../../../model/reducers/mediaModels';
 import { ReduxStateType } from '../../../model/reducers/indexReducer';
 import appNavigationService from '../../../model/services/appNavigationService';
 
+// TODO: Plural
 export function Thumbnail(): JSX.Element {
     const activeTab: number = useSelector(
         (storeUpdate: ReduxStateType) => appNavigationService.getActiveTab(storeUpdate.appNavigation))

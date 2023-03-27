@@ -10,15 +10,11 @@ function defaultMediaState(): Media {
 }
 
 function defaultOutputs(amount: number): Output[] {
-    let outputs: Output[] = []
-    for (let i = 0; i < amount; i++) {
-        outputs.push({
-            mediaFiles: [],
-            thumbnailList: [],
-            time: [0, 0],
-        })
-    }
-    return outputs
+    return Array(amount).fill({
+        mediaFiles: [],
+        thumbnailList: [],
+        time: [0, 0],
+    })
 }
 
 export function media(state: Media = defaultMediaState(), action: any) {
@@ -29,20 +25,16 @@ export function media(state: Media = defaultMediaState(), action: any) {
             return nextState
         case IO.UPDATE_MEDIA_FILES:
             if (doesChannelExist(nextState, action)) {
-                const outputs = [...nextState.outputs]
-                const output = { ...outputs[action.channelIndex] }
-                output.mediaFiles = action.files
-                outputs[action.channelIndex] = output
-                nextState.outputs = outputs
+                return updateAttributeByPartial(state, nextState, action, {
+                    mediaFiles: action.files,
+                })
             }
             return nextState
         case IO.UPDATE_THUMBNAIL_LIST:
             if (doesChannelExist(nextState, action)) {
-                const outputs = [...nextState.outputs]
-                const output = { ...outputs[action.channelIndex] }
-                output.thumbnailList = action.fileList
-                outputs[action.channelIndex] = output
-                nextState.outputs = outputs
+                return updateAttributeByPartial(state, nextState, action, {
+                    thumbnailList: action.fileList,
+                })
             }
             return nextState
         case IO.UPDATE_HIDDEN_FILES:
@@ -53,17 +45,35 @@ export function media(state: Media = defaultMediaState(), action: any) {
             return nextState
         case IO.SET_TIME:
             if (doesChannelExist(nextState, action)) {
-                const outputs = [...nextState.outputs]
-                const output = { ...outputs[action.channelIndex] }
-                output.time = action.time
-                outputs[action.channelIndex] = output
-                nextState.outputs = outputs
+                return updateAttributeByPartial(state, nextState, action, {
+                    time: action.time,
+                })
             }
             return nextState
 
         default:
             return nextState
     }
+}
+
+// TODO: get help moving to reducerService.
+function updateAttributeByPartial(
+    originalState: Media,
+    nextState: Media,
+    action: any,
+    updates: Partial<Output>
+): Media {
+    const outputs = [...originalState.outputs]
+    outputs[action.channelIndex] = {
+        ...outputs[action.channelIndex],
+        ...updates,
+    }
+    nextState = {
+        ...originalState,
+        outputs,
+    }
+
+    return nextState
 }
 
 function doesChannelExist(

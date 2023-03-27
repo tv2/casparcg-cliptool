@@ -24,23 +24,31 @@ export function updateSettings(
     }
 }
 
-export function setTabData(amount: number): {
+export function setTabData(amountOfTabs: number): {
     type: string
     tabData: TabData[]
 } {
-    let tabData: TabData[] = []
-    for (let i = 0; i < amount; i++) {
-        tabData.push({
-            key: String(i),
-            title:
-                settingsService.getGenericSettings(reduxState.settings)
-                    .outputSettings[i].label || 'Output ' + String(i + 1),
-        })
-    }
     return {
         type: SET_TAB_DATA,
-        tabData: tabData,
+        tabData: createTabData(amountOfTabs),
     }
+}
+function createTabData(amountOfTabs: number): TabData[] {
+    return Array(amountOfTabs)
+        .fill({})
+        .map(({}, index) => {
+            const output = settingsService.getOutputSettings(
+                reduxState.settings,
+                index
+            )
+            return {
+                key: index,
+                title:
+                    output && output.label
+                        ? output.label
+                        : `Output ${index + 1}`,
+            }
+        })
 }
 
 export function setGenerics(generics: GenericSettings): {

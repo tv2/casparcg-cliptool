@@ -4,6 +4,10 @@ import indexReducer, { ReduxStateType } from './indexReducer'
 
 const options: ConfigureStoreOptions = {
     reducer: indexReducer,
+    middleware: (getDefaultMiddleware) =>
+        getDefaultMiddleware({
+            serializableCheck: false,
+        }),
 }
 
 let reduxStore = configureStore(options)

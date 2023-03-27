@@ -9,6 +9,7 @@ interface ToggleButtonProps {
   children?: React.ReactNode
 }
 
+// TODO: pull button out to seperate file
 export default function ToggleButton(props: ToggleButtonProps): JSX.Element {
   const classNames: string = `header-toggle-button ${props.isToggled ? 'on' : ''}`
 

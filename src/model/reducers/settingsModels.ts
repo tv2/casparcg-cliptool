@@ -12,7 +12,7 @@ export interface Settings {
 }
 
 export interface TabData {
-    key: string
+    key: number
     title: string
 }
 

@@ -1,8 +1,6 @@
 import React from 'react'
 import '../../css/Footer.css'
 
-
-
 interface FooterProps {
   children: React.ReactNode
 }

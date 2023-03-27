@@ -24,6 +24,7 @@ class MediaService {
         if (!output || !output.thumbnailList) {
             return ''
         }
+        //console.log('Output', output)
         const thumbnailFile = output.thumbnailList.find(
             (item: ThumbnailFile) =>
                 item.name.toUpperCase() === fileName.toUpperCase()
