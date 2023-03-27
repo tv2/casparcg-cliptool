@@ -29,13 +29,20 @@ export function media(state: Media = defaultMediaState(), action: any) {
             return nextState
         case IO.UPDATE_MEDIA_FILES:
             if (doesChannelExist(nextState, action)) {
-                nextState.outputs[action.channelIndex].mediaFiles = action.files
+                const outputs = [...nextState.outputs]
+                const output = { ...outputs[action.channelIndex] }
+                output.mediaFiles = action.files
+                outputs[action.channelIndex] = output
+                nextState.outputs = outputs
             }
             return nextState
         case IO.UPDATE_THUMBNAIL_LIST:
             if (doesChannelExist(nextState, action)) {
-                nextState.outputs[action.channelIndex].thumbnailList =
-                    action.fileList
+                const outputs = [...nextState.outputs]
+                const output = { ...outputs[action.channelIndex] }
+                output.thumbnailList = action.fileList
+                outputs[action.channelIndex] = output
+                nextState.outputs = outputs
             }
             return nextState
         case IO.UPDATE_HIDDEN_FILES:
@@ -46,7 +53,11 @@ export function media(state: Media = defaultMediaState(), action: any) {
             return nextState
         case IO.SET_TIME:
             if (doesChannelExist(nextState, action)) {
-                nextState.outputs[action.channelIndex].time = action.time
+                const outputs = [...nextState.outputs]
+                const output = { ...outputs[action.channelIndex] }
+                output.time = action.time
+                outputs[action.channelIndex] = output
+                nextState.outputs = outputs
             }
             return nextState
 

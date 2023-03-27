@@ -32,12 +32,12 @@ export function settings(
 
     switch (action.type) {
         case IO.UPDATE_SETTINGS: {
-            console.log('State', nextState)
-            console.log('Action', action)
-            nextState.ccgConfig.channels = [
+            const config = { ...nextState.ccgConfig }
+            config.channels = [
                 ...action.channels.map(updateChannelConfigWithVideoFormat),
             ]
-            nextState.ccgConfig.path = action.path
+            config.path = action.path
+            nextState.ccgConfig = config
             return nextState
         }
         case IO.SET_TAB_DATA: {
