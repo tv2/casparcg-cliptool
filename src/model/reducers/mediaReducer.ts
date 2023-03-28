@@ -1,5 +1,6 @@
 import { Media, Output } from './mediaModels'
 import * as IO from './mediaActions'
+import reducerService from '../services/reducer-service'
 
 function defaultMediaState(): Media {
     return {
@@ -24,14 +25,24 @@ export function media(state: Media = defaultMediaState(), action: any) {
             nextState.outputs = defaultOutputs(action.amount)
             return nextState
         case IO.UPDATE_MEDIA_FILES:
-            if (doesChannelExist(nextState, action)) {
+            if (
+                reducerService.doesMediaOutputChannelExist(
+                    nextState,
+                    action.channelIndex
+                )
+            ) {
                 return updateAttributeByPartial(state, nextState, action, {
                     mediaFiles: action.files,
                 })
             }
             return nextState
         case IO.UPDATE_THUMBNAIL_LIST:
-            if (doesChannelExist(nextState, action)) {
+            if (
+                reducerService.doesMediaOutputChannelExist(
+                    nextState,
+                    action.channelIndex
+                )
+            ) {
                 return updateAttributeByPartial(state, nextState, action, {
                     thumbnailList: action.fileList,
                 })
@@ -44,7 +55,12 @@ export function media(state: Media = defaultMediaState(), action: any) {
             nextState.folderList = action.folderList
             return nextState
         case IO.SET_TIME:
-            if (doesChannelExist(nextState, action)) {
+            if (
+                reducerService.doesMediaOutputChannelExist(
+                    nextState,
+                    action.channelIndex
+                )
+            ) {
                 return updateAttributeByPartial(state, nextState, action, {
                     time: action.time,
                 })
@@ -74,11 +90,4 @@ function updateAttributeByPartial(
     }
 
     return nextState
-}
-
-function doesChannelExist(
-    nextState: Media,
-    action: { channelIndex: number }
-): boolean {
-    return nextState.outputs.length > action.channelIndex
 }

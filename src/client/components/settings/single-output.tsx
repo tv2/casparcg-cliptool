@@ -3,7 +3,10 @@ import { CcgConfigChannel, OutputSettings } from "../../../model/reducers/settin
 import { reduxState } from "../../../model/reducers/store"
 import '../../css/Settings.css'
 import eventService from "../../services/eventService"
-import SettingsInput, { SettingsInputType } from "./settingsInput"
+import Label from "../shared/label"
+import LabelledCheckboxInput from "../shared/labelled-checkbox-input"
+import LabelledNumberInput from "../shared/labelled-number-input"
+import LabelledTextInput from "../shared/labelled-text-input"
 
 interface SingleOutputProps {
   configChannel?: CcgConfigChannel
@@ -29,15 +32,14 @@ export default function SingleOutput(props: SingleOutputProps): JSX.Element {
                 <label className="settings-channel-header">
                     OUTPUT {props.index + 1} :
                 </label>
-                <SettingsInput 
-                    preDescription="LABEL :"
-                    type={SettingsInputType.TEXT}
+                <LabelledTextInput
+                    labelClassName="Settings-input-field"
+                    description="LABEL :"
                     value={label}
                     onChange={saveTempOutputLabelChange}
                 />
-                <label className="Settings-input-field">
-                    MEDIA FOLDER :
-                    <br />
+                <Label className="Settings-input-field" 
+                    description="MEDIA FOLDER :">
                     <select
                         className="settings-select"
                         name={String(props.index)}
@@ -54,67 +56,66 @@ export default function SingleOutput(props: SingleOutputProps): JSX.Element {
                             }
                         )}
                     </select>
-                </label>
-                <label className="Settings-input-field">
-                    FORMAT :
-                    <br />
+                </Label>
+                <Label className="Settings-input-field"
+                    description="FORMAT :">
                     {props.configChannel 
                     ? props.configChannel.videoMode 
                     : reduxState.settings.ccgConfig.channels[props.index].videoMode}
-                </label>
-                <SettingsInput 
-                    preDescription="LOOP :"
-                    type={SettingsInputType.CHECKBOX}
+                </Label>
+                <LabelledCheckboxInput
+                    description="LOOP :"
+                    labelClassName="Settings-tick-field"
                     value={loopState}
                     onChange={saveTempLoopChange}
                 />
-                <SettingsInput 
-                    preDescription="MIX :"
-                    type={SettingsInputType.CHECKBOX}
+                <LabelledCheckboxInput
+                    description="MIX :"
+                    labelClassName="Settings-tick-field"
                     value={mixState}
                     onChange={saveTempMixChange}
                 />
-                <SettingsInput 
-                    preDescription="MANUAL :"
-                    type={SettingsInputType.CHECKBOX}
+                <LabelledCheckboxInput
+                    description="MANUAL :"
+                    labelClassName="Settings-tick-field"
                     value={manualStartState}
                     onChange={saveTempManualChange}
                 />
-                <SettingsInput 
-                    preDescription="OVERLAY :"
-                    type={SettingsInputType.CHECKBOX}
+                <LabelledCheckboxInput
+                    description="OVERLAY :"
+                    labelClassName="Settings-tick-field"
                     value={webState}
                     onChange={saveTempWebStateChange}
                 />
-                <SettingsInput 
-                    preDescription="OVERLAY URL :"
-                    type={SettingsInputType.TEXT}
+                <LabelledTextInput
+                    labelClassName="Settings-input-field"
+                    description="OVERLAY URL :"
                     value={webUrl}
                     onChange={saveTempWebUrlChange}
                 />
-                <SettingsInput 
-                    preDescription="SCALE :"
-                    type={SettingsInputType.CHECKBOX}
+                <LabelledCheckboxInput
+                    description="SCALE :"
+                    labelClassName="Settings-tick-field"
                     value={shouldScale}
                     onChange={saveTempShouldScaleChange}
                 />
                 {shouldScale && (
-                    <React.Fragment>
-                        <SettingsInput 
-                            preDescription="SCALE X :"
-                            type={SettingsInputType.NUMBER}
+                    <>
+                        <LabelledNumberInput 
+                            labelClassName="Settings-input-field"
+                            description="SCALE X :"
                             value={scaleX}
                             onChange={saveTempScaleXChange}
-                            postDescription='px'
+                            numberUnit='px'
                         />
-                        <SettingsInput 
-                            preDescription="SCALE Y :"
-                            type={SettingsInputType.NUMBER}
+                        <LabelledNumberInput 
+                            labelClassName="Settings-input-field"
+                            description="SCALE Y :"
                             value={scaleY}
                             onChange={saveTempScaleYChange}
-                            postDescription='px'
+                            numberUnit='px'
                         />
-                    </React.Fragment>
+                    </>
                 )}
             </form>
     )

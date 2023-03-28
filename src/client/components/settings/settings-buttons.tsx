@@ -10,6 +10,7 @@ import appNavigationService from "../../../model/services/appNavigationService";
 import { GenericSettings, OperationMode } from "../../../model/reducers/settingsModels";
 import _ from "lodash";
 import { ReduxStateType } from "../../../model/reducers/indexReducer";
+import Button from "../shared/button";
 
 interface SettingsButtonsProps {
   settings: GenericSettings 
@@ -22,35 +23,22 @@ export default function SettingsButtons(props: SettingsButtonsProps): JSX.Elemen
   const operationMode = useSelector(
     (storeUpdate: ReduxStateType) => settingsService.getOutputSettings(storeUpdate.settings, activeTab)?.operationMode)
   
-  const classNames = `save-button ${operationMode === OperationMode.EDIT_VISIBILITY ? 'on' : ''}`
-
   return (
       <div className="Settings-channel-form">
-        <button
-            className="save-button"
-            onClick={() => saveSettings(props.settings)}
-        >
-            SAVE SETTINGS
-        </button>
-        <button
-            className="save-button"
-            onClick={() => discardSettings(props.settings)}
-        >
-            {hasChanges(props.settings) ? 'DISCARD CHANGES' : 'CLOSE SETTINGS'}
-        </button>
-        <button
-            className={classNames}
-            onClick={emitSetOperationModeToEditVisibility}
-        >
-            EDIT VISIBILITY
-        </button>
+        <Button className="save-button" 
+          onClick={() => saveSettings(props.settings)} 
+          text='SAVE SETTINGS'/>
+        <Button className="save-button" 
+          onClick={() => discardSettings(props.settings)} 
+          text={hasChanges(props.settings) ? 'DISCARD CHANGES' : 'CLOSE SETTINGS'}/>
+        <Button className={`save-button ${operationMode === OperationMode.EDIT_VISIBILITY ? 'on' : ''}`} 
+          onClick={() => emitSetOperationModeToEditVisibility()} 
+          text="EDIT VISIBILITY"/>
+        
         {!props.specificChannel && (
-            <button
-                className="save-button"
-                onClick={restartCliptool}
-            >
-                RESTART CLIPTOOL
-            </button>
+          <Button className="save-button" 
+            onClick={() => restartCliptool()} 
+            text="RESTART CLIPTOOL"/>
         )}
     </div>
   )

@@ -4,7 +4,6 @@ import { ReduxStateType } from "../../../model/reducers/indexReducer";
 import { OutputSettings } from "../../../model/reducers/settingsModels";
 import SingleOutput from "./single-output";
 
-
 interface OutputsProps {
     specificChannel: number
     outputSettings: OutputSettings[]

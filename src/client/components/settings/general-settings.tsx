@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import { CcgSettings } from "../../../model/reducers/settingsModels";
 import '../../css/Settings.css'
 import eventService from "../../services/eventService";
-import SettingsInput, { SettingsInputType } from "./settingsInput";
+import LabelledNumberInput from "../shared/labelled-number-input";
+import LabelledTextInput from "../shared/labelled-text-input";
 
 interface GeneralSettingsProps {
     ccgSettings: CcgSettings
@@ -19,35 +20,35 @@ export default function GeneralSettings(props: GeneralSettingsProps): JSX.Elemen
     return (
         <form className="Settings-form">
             <div className="Settings-channel-form">
-                <SettingsInput 
-                   preDescription="IP ADDRESS :"
-                   type={SettingsInputType.TEXT}
-                   value={ip}
-                   onChange={saveTempIpChange}
+                <LabelledTextInput
+                    labelClassName="Settings-input-field"
+                    description="OVERLAY URL :"
+                    value={ip}
+                    onChange={saveTempIpChange}
                 />
-                <SettingsInput 
-                   preDescription="AMCP PORT :"
-                   type={SettingsInputType.NUMBER}
-                   value={amcpPort}
-                   onChange={saveTempAmcpPortChange}
+                <LabelledNumberInput 
+                    labelClassName="Settings-input-field"
+                    description="AMCP PORT :"
+                    value={amcpPort}
+                    onChange={saveTempAmcpPortChange}
                 />
-                <SettingsInput 
-                   preDescription="OSC PORT (into ClipTool) :"
-                   type={SettingsInputType.NUMBER}
-                   value={oscPort}
-                   onChange={saveTempOscPortChange}
+                <LabelledNumberInput 
+                    labelClassName="Settings-input-field"
+                    description="OSC PORT (into ClipTool) :"
+                    value={oscPort}
+                    onChange={saveTempOscPortChange}
                 />
-                <SettingsInput 
-                   preDescription="DEFAULT LAYER :"
-                   type={SettingsInputType.NUMBER}
-                   value={defaultLayer}
-                   onChange={saveTempDefaultLayerChange}
+                <LabelledNumberInput 
+                    labelClassName="Settings-input-field"
+                    description="DEFAULT LAYER :"
+                    value={defaultLayer}
+                    onChange={saveTempDefaultLayerChange}
                 />
-                <SettingsInput 
-                   preDescription="TRANSITION TIME :"
-                   type={SettingsInputType.NUMBER}
-                   value={transitionTime}
-                   onChange={saveTempTransitionTimeChange}
+                <LabelledNumberInput 
+                    labelClassName="Settings-input-field"
+                    description="TRANSITION TIME :"
+                    value={transitionTime}
+                    onChange={saveTempTransitionTimeChange}
                 />
             </div>
             <hr />

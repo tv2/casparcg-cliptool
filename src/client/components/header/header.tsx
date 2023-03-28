@@ -8,7 +8,7 @@ import '../../css/App-header.css'
 import '../../css/App-control-view-header.css'
 import '../../css/App-text-view-header.css'
 import Time from './time'
-import HeaderButtons from './headerButtons'
+import ControlButtons from './control-buttons'
 import { ReduxStateType } from '../../../model/reducers/indexReducer'
 
 export default function Header(): JSX.Element {
@@ -30,7 +30,7 @@ export default function Header(): JSX.Element {
                 )}
 
                 <Time />
-                <HeaderButtons />
+                <ControlButtons />
             </div>            
             {!connectionStatus && (
                 <div className="App-header-server-offline">CONNECTING TO SERVER...</div>

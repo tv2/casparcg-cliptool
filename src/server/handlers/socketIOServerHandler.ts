@@ -254,16 +254,12 @@ function getMetadata(file: MediaFile): HiddenFileInfo {
 export function initializeClient(): void {
     socketServer.emit(IO.TAB_DATA_UPDATE, reduxState.settings.tabData)
     let timeTallyData: IO.TimeTallyPayload[] = []
+    const selectedFiles: string[] = []
     settingsService
         .getGenericSettings(reduxState.settings)
         .outputSettings.forEach(
             (output: OutputSettings, channelIndex: number) => {
-                timeTallyData[channelIndex] = {
-                    time: mediaService.getOutput(reduxState, channelIndex).time,
-                    tally: output.selectedFile,
-                }
-
-                socketServer.emit(IO.TIME_TALLY_UPDATE, timeTallyData)
+                selectedFiles.push(output.selectedFile)
                 socketServer.emit(
                     IO.LOOP_STATE_UPDATE,
                     channelIndex,
@@ -284,26 +280,25 @@ export function initializeClient(): void {
                     channelIndex,
                     output.manualStartState
                 )
-                const mediaOutput = mediaService.getOutput(
-                    reduxState,
-                    channelIndex
-                )
-                socketServer.emit(
-                    IO.THUMBNAIL_UPDATE,
-                    channelIndex,
-                    mediaOutput.thumbnailList
-                )
-                socketServer.emit(
-                    IO.MEDIA_UPDATE,
-                    channelIndex,
-                    mediaOutput.mediaFiles
-                )
                 socketServer.emit(
                     IO.HIDDEN_FILES_UPDATE,
                     reduxState.media.hiddenFiles
                 )
             }
         )
+    mediaService.getOutputs(reduxState).forEach((output, channelIndex) => {
+        timeTallyData[channelIndex] = {
+            time: output.time,
+            tally: selectedFiles[channelIndex],
+        }
+        socketServer.emit(IO.TIME_TALLY_UPDATE, timeTallyData)
+        socketServer.emit(
+            IO.THUMBNAIL_UPDATE,
+            channelIndex,
+            output.thumbnailList
+        )
+        socketServer.emit(IO.MEDIA_UPDATE, channelIndex, output.mediaFiles)
+    })
     socketServer.emit(IO.TIME_TALLY_UPDATE, timeTallyData)
 }
 
