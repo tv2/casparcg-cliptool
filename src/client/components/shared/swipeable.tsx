@@ -8,7 +8,6 @@ interface SwipeableProps {
   onSwipe: (direction: SwipeDirection) => void
   children: React.ReactNode
   allowSwipe?: boolean
-  shouldRender?: boolean
 }
 
 export default function Swipeable(props: SwipeableProps): JSX.Element {
@@ -43,14 +42,13 @@ export default function Swipeable(props: SwipeableProps): JSX.Element {
   }
 
   return (
-    props.shouldRender 
-      ? <div className={props.divClassName} 
-          role={props.role}
-          onTouchStart={onTouchStart}
-          onTouchMove={onTouchMove}
-          onTouchEnd={onTouchEnd}>
-        {props.children}
-      </div> 
-      : <></>
+    <div className={props.divClassName} 
+      role={props.role}
+      onTouchStart={onTouchStart}
+      onTouchMove={onTouchMove}
+      onTouchEnd={onTouchEnd}>
+      {props.children}
+    </div> 
+
   )
 }

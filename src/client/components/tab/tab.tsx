@@ -15,11 +15,8 @@ export interface TabProps {
 const isSpecificChannel = new URLSearchParams(window.location.search).has('channel')
 
 export default function Tab(props: TabProps): JSX.Element {
-  const isSelected = props.selectedTab === props.tabIndex
-
   return (
     <Swipeable onSwipe={(direction) => onValidSwipe(direction, props.selectedTab, props.totalTabs)} 
-        shouldRender={isSelected}
         allowSwipe={isSpecificChannel}
         role="tabpanel"> 
       <Thumbnails/> 
