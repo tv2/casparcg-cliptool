@@ -1,7 +1,7 @@
 import React from "react"
 import { useSelector } from "react-redux"
-import ThumbnailButton from "./thumbnailButton";
-import ThumbnailPicture from "./thumbnailPicture";
+import ThumbnailButton from "./thumbnail-button";
+import ThumbnailPicture from "./thumbnail-picture";
 import TimeCode from "./timeCode";
 import '../../css/Thumbnail.css'
 import settingsService from "../../../model/services/settingsService";
@@ -10,11 +10,11 @@ import { ReduxStateType } from "../../../model/reducers/indexReducer";
 import { reduxState } from "../../../model/reducers/store";
 import appNavigationService from "../../../model/services/appNavigationService";
 
-interface ThumbnailUsingImageProps {
+interface ImageThumbnailProps {
   file: MediaFile
 }
 
-export default function ThumbnailUsingImage(props: ThumbnailUsingImageProps): JSX.Element {
+export default function ImageThumbnail(props: ImageThumbnailProps): JSX.Element {
   const activeTab: number = useSelector(
     (storeUpdate: ReduxStateType) => appNavigationService.getActiveTab(storeUpdate.appNavigation))
   useSelector(
@@ -32,7 +32,7 @@ export default function ThumbnailUsingImage(props: ThumbnailUsingImageProps): JS
   return (
     <div className={classNames}>
         <ThumbnailPicture file={props.file} />
-        <ThumbnailButton file={props.file} />
+        <ThumbnailButton file={props.file} buttonClassName="thumbnailImageClickPgm"/>
         {settingsService.isThumbnailSelected(props.file.name, reduxState.settings, activeTab) && (
             <TimeCode file={props.file} />
         )}

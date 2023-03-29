@@ -8,7 +8,7 @@ import Tabs from './tab/tabs'
 import '../css/App.css'
 import { useSelector } from 'react-redux'
 import { Settings } from './settings/settings'
-import { Thumbnail } from './thumbnail/thumbnail'
+import { Thumbnails } from './thumbnail/thumbnails'
 import Header from './header/header'
 import { ReduxStateType } from '../../model/reducers/indexReducer'
 
@@ -25,7 +25,7 @@ export function App(): JSX.Element {
     if (specificChannel) {
         setOutput(specificChannel - 1)
     }
-    const mainArea = specificChannel ? <Thumbnail/> : <Tabs />
+    const mainArea = specificChannel ? <Thumbnails/> : <Tabs />
 
     return (
         <div className="App">

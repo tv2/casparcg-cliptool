@@ -4,8 +4,9 @@ import { TabData } from '../../../model/reducers/settingsModels'
 import { reduxStore } from '../../../model/reducers/store'
 
 import '../../css/Tab.css'
-import swipeService, { Point } from '../../services/swipeService'
-import { Thumbnail } from '../thumbnail/thumbnail'
+import swipeService, { Point, SwipeDirection } from '../../services/swipeService'
+import Swipeable from '../shared/swipeable'
+import { Thumbnails } from '../thumbnail/thumbnails'
 
 const isSpecificChannel = new URLSearchParams(window.location.search).has('channel')
 
@@ -14,60 +15,33 @@ interface TabContentProps {
   selectedTab: number
 }
 
-export default function TabContent(props: TabContentProps): JSX.Element {
-  const [touchStart, setTouchStart] = useState<Point | null>(null)
-  const [touchEnd, setTouchEnd] = useState<Point | null>(null)
-
-  function onTouchStart(event: React.TouchEvent<HTMLDivElement>): void {
-    if (isSpecificChannel) {
-      return
-    }
-    setTouchEnd(null)
-    setTouchStart(swipeService.getEventPoint(event))
-  }
-
-  function onTouchMove(event: React.TouchEvent<HTMLDivElement>): void {
-    if (isSpecificChannel) {
-      return
-    }
-    setTouchEnd(swipeService.getEventPoint(event))
-  }
-
-  function onTouchEnd(): void {
-    if (!touchStart || !touchEnd || isSpecificChannel){
-      return
-    }
-    if (!swipeService.isValidSwipe(touchStart, touchEnd)) {
-      return
-    }
-    const direction = swipeService.getSwipeDirection(touchStart, touchEnd)
-    const nextTab = swipeService.getNextTab(props.selectedTab, direction)
-    if (!swipeService.isValidTab(nextTab, props.tabData.length)) {
-      return
-    }
-    reduxStore.dispatch(setActiveTab(nextTab))
-  }
-
+export default function TabContent(props: TabContentProps): JSX.Element {  
   return (
     <div className='tab-content-wrapper' >
         {
           props.tabData.map(({}, index) => {
             const isSelected = props.selectedTab === index
-
-            const classNames = `tab-content ${!isSelected ? 'hidden' : ''}`
             
+            // TODO: Find/Figure out a better value used for key.
             return (
-              <div className={classNames} 
-                role='tabpanel' 
-                key={index} 
-                onTouchStart={onTouchStart}
-                onTouchMove={onTouchMove}
-                onTouchEnd={onTouchEnd}>
-                <Thumbnail/> 
-              </div>
+              <Swipeable onSwipe={(direction) => onValidSwipe(direction, props)} 
+                  shouldRender={isSelected} 
+                  allowSwipe={isSpecificChannel}
+                  role="tabpanel"
+                  key={index}> 
+                <Thumbnails/> 
+              </Swipeable>
             )
         })
         }
       </div>
-  )
+  ) 
+}
+
+function onValidSwipe(direction: SwipeDirection, props: TabContentProps) {
+  const nextTab = swipeService.getNextTab(props.selectedTab, direction)
+  if (!swipeService.isValidTab(nextTab, props.tabData.length)) {
+    return
+  }
+  reduxStore.dispatch(setActiveTab(nextTab))
 }

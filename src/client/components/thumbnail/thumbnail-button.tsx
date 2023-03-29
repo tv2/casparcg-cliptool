@@ -9,20 +9,20 @@ import { MediaFile } from "../../../model/reducers/mediaModels";
 import { reduxState } from "../../../model/reducers/store";
 import { useSelector } from "react-redux";
 import { ReduxStateType } from "../../../model/reducers/indexReducer";
+import Button from "../shared/button";
 
 interface ThumbnailButtonProps {
   file: MediaFile
-  isTextView?: boolean
+  buttonClassName: string
 }
 
 export default function ThumbnailButton(props: ThumbnailButtonProps): JSX.Element {
   const activeTab: number = useSelector(
     (storeUpdate: ReduxStateType) => appNavigationService.getActiveTab(storeUpdate.appNavigation))
-  const classNames: string = props.isTextView ? 'thumbnail-text-view-ClickPgm' : 'thumbnailImageClickPgm'
 
   return (
-    <button
-        className={classNames}
+    <Button
+        className={props.buttonClassName}
         onClick={() => {
           triggerOperationModeAction(props.file.name, activeTab)
         }}

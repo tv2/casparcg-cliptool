@@ -2,7 +2,7 @@ import React from "react";
 
 interface ButtonProps {
   onClick: () => void
-  text: string
+  text?: string
   className?: string
   isHidden?: boolean
 }

@@ -1,7 +1,7 @@
 import React from "react";
 import { useSelector } from "react-redux"
 import '../../css/Thumbnail.css'
-import ThumbnailButton from "./thumbnailButton";
+import ThumbnailButton from "./thumbnail-button";
 import TimeCode from "./timeCode";
 import settingsService from "../../../model/services/settingsService";
 import { MediaFile } from "../../../model/reducers/mediaModels";
@@ -9,11 +9,11 @@ import { ReduxStateType } from "../../../model/reducers/indexReducer";
 import { reduxState } from "../../../model/reducers/store";
 import appNavigationService from "../../../model/services/appNavigationService";
 
-interface ThumbnailUsingTextProps {
+interface TextThumbnailProps {
   file: MediaFile
 }
 
-export default function ThumbnailUsingText(props: ThumbnailUsingTextProps): JSX.Element {
+export default function TextThumbnail(props: TextThumbnailProps): JSX.Element {
   const activeTab: number = useSelector(
     (storeUpdate: ReduxStateType) => appNavigationService.getActiveTab(storeUpdate.appNavigation))
   useSelector(
@@ -25,7 +25,7 @@ export default function ThumbnailUsingText(props: ThumbnailUsingTextProps): JSX.
 
 return (
     <div className={classNames} >
-        <ThumbnailButton file={props.file} isTextView />
+        <ThumbnailButton file={props.file} buttonClassName="thumbnail-text-view-ClickPgm" />
         {isSelected && (
             <TimeCode file={props.file} isTextView/>
         )}

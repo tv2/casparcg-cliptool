@@ -1,7 +1,7 @@
 const MIN_SWIPE_DISTANCE = 50
 const MAX_SWIPE_SLOPE = 0.5
 
-enum SwipeDirection {
+export enum SwipeDirection {
     LEFT = 'left',
     RIGHT = 'right',
 }

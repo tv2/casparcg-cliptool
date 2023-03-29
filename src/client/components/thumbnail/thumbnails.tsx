@@ -4,16 +4,15 @@ import '../app'
 import mediaService from "../../../model/services/mediaService";
 import { useSelector } from 'react-redux';
 import { reduxState } from '../../../model/reducers/store';
-import ThumbnailUsingImage from './thumbnailUsingImage';
-import ThumbnailUsingText from './thumbnailUsingText';
+import ImageThumbnail from './image-thumbnail';
+import TextThumbnail from './text-thumbnail';
 import settingsService from '../../../model/services/settingsService';
 import { OperationMode } from '../../../model/reducers/settingsModels';
 import { HiddenFileInfo, MediaFile } from '../../../model/reducers/mediaModels';
 import { ReduxStateType } from '../../../model/reducers/indexReducer';
 import appNavigationService from '../../../model/services/appNavigationService';
 
-// TODO: Plural
-export function Thumbnail(): JSX.Element {
+export function Thumbnails(): JSX.Element {
     const activeTab: number = useSelector(
         (storeUpdate: ReduxStateType) => appNavigationService.getActiveTab(storeUpdate.appNavigation))
     const files: MediaFile[] = useSelector(
@@ -34,8 +33,8 @@ export function Thumbnail(): JSX.Element {
             {shownFiles?.map((file: MediaFile, index: number) => (
                 <div className="boxComponent" key={index}>
                     {reduxState.appNavigation.selectView === 0 
-                        ? <ThumbnailUsingImage file={file} /> 
-                        : <ThumbnailUsingText file={file} />}
+                        ? <ImageThumbnail file={file} /> 
+                        : <TextThumbnail file={file} />}
                 </div>
             ))}
         </div>
