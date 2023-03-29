@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { OperationMode, OutputSettings } from '../reducers/settingsModels'
+import { OperationMode, OutputSettings } from '../reducers/settings-models'
 import arrayService from '../services/array-service'
 
 export const defaultOutputSettingsState: OutputSettings = {

@@ -1,26 +1,26 @@
 import React from "react";
 import { reduxState } from "../../../model/reducers/store";
 import { socket } from "../../util/socketClientHandlers";
-import * as IO from '../../../model/socketIoConstants'
+import * as IO from '../../../model/socket-io-constants'
 import { useSelector } from "react-redux";
 import settingsService from "../../../model/services/settings-service";
 import appNavigationService from "../../../model/services/app-navigation-service";
-import { ReduxStateType } from "../../../model/reducers/indexReducer";
+import { State } from "../../../model/reducers/index-reducer";
 import Button from "../shared/button";
 import '../../css/Header.css'
 
 // TODO: rename CSS class to more generic names - WITHOUT mentioning a location.
 export default function ControlButtons(): JSX.Element {
   const activeTab: number = useSelector(
-    (storeUpdate: ReduxStateType) => appNavigationService.getActiveTab(storeUpdate.appNavigation))
+    (storeUpdate: State) => appNavigationService.getActiveTab(storeUpdate.appNavigation))
   const mixState: boolean = useSelector(
-      (storeUpdate: ReduxStateType) => settingsService.getOutputSettings(storeUpdate.settings, activeTab)?.mixState)
+      (storeUpdate: State) => settingsService.getOutputSettings(storeUpdate.settings, activeTab)?.mixState)
   const webState: boolean = useSelector(
-      (storeUpdate: ReduxStateType) => settingsService.getOutputSettings(storeUpdate.settings, activeTab)?.webState)
+      (storeUpdate: State) => settingsService.getOutputSettings(storeUpdate.settings, activeTab)?.webState)
   const loopState: boolean = useSelector(
-      (storeUpdate: ReduxStateType) => settingsService.getOutputSettings(storeUpdate.settings, activeTab)?.loopState)
+      (storeUpdate: State) => settingsService.getOutputSettings(storeUpdate.settings, activeTab)?.loopState)
   const manualStartState: boolean = useSelector(
-      (storeUpdate: ReduxStateType) => settingsService.getOutputSettings(storeUpdate.settings, activeTab)?.manualStartState)
+      (storeUpdate: State) => settingsService.getOutputSettings(storeUpdate.settings, activeTab)?.manualStartState)
 
   const buttonWrapperCss = "header-button-background"
   const buttonBaseCss = "header-toggle-button"

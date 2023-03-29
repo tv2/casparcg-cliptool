@@ -1,9 +1,9 @@
 import { createServer } from 'net'
 
-import { socket as socketio } from '../util/socketGatewayHandlers'
+import { socket as socketio } from '../util/socket-gateway-handlers'
 
-import * as IO from '../../model/socketIoConstants'
-import { logger } from '../util/loggerGateway'
+import * as IO from '../../model/socket-io-constants'
+import { logger } from '../util/logger-gateway'
 import osService from '../../model/services/os-service'
 
 export function ampServerGateway(): void {

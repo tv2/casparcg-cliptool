@@ -7,22 +7,22 @@ import { reduxState } from '../../../model/reducers/store';
 import ImageThumbnail from './image-thumbnail';
 import TextThumbnail from './text-thumbnail';
 import settingsService from '../../../model/services/settings-service';
-import { OperationMode } from '../../../model/reducers/settingsModels';
-import { HiddenFileInfo, MediaFile } from '../../../model/reducers/mediaModels';
-import { ReduxStateType } from '../../../model/reducers/indexReducer';
+import { OperationMode } from '../../../model/reducers/settings-models';
+import { HiddenFileInfo, MediaFile } from '../../../model/reducers/media-models';
+import { State } from '../../../model/reducers/index-reducer';
 import appNavigationService from '../../../model/services/app-navigation-service';
 
 export function Thumbnails(): JSX.Element {
     const activeTab: number = useSelector(
-        (storeUpdate: ReduxStateType) => appNavigationService.getActiveTab(storeUpdate.appNavigation))
+        (storeUpdate: State) => appNavigationService.getActiveTab(storeUpdate.appNavigation))
     const files: MediaFile[] = useSelector(
-        (storeUpdate: ReduxStateType) => mediaService.getOutput(storeUpdate)?.mediaFiles
+        (storeUpdate: State) => mediaService.getOutput(storeUpdate)?.mediaFiles
     ) ?? []
     const hiddenFiles: Record<string, HiddenFileInfo> = useSelector(
-        (storeUpdate: ReduxStateType) => storeUpdate.media.hiddenFiles
+        (storeUpdate: State) => storeUpdate.media.hiddenFiles
     ) ?? {}
     const isInEditVisibilityMode: boolean = useSelector(
-        (storeUpdate: ReduxStateType) => settingsService.getOutputSettings(storeUpdate.settings, activeTab)
+        (storeUpdate: State) => settingsService.getOutputSettings(storeUpdate.settings, activeTab)
             ?.operationMode === OperationMode.EDIT_VISIBILITY
     ) ?? false
     const shownFiles: MediaFile[] = !isInEditVisibilityMode 

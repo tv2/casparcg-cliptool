@@ -6,23 +6,23 @@ import mediaService from "../../../model/services/media-service";
 import '../../css/App-header.css'
 import appNavigationService from "../../../model/services/app-navigation-service";
 import settingsService from "../../../model/services/settings-service";
-import { Output } from "../../../model/reducers/mediaModels";
-import { OutputSettings } from "../../../model/reducers/settingsModels";
-import { ReduxStateType } from "../../../model/reducers/indexReducer";
+import { Output } from "../../../model/reducers/media-models";
+import { OutputSettings } from "../../../model/reducers/settings-models";
+import { State } from "../../../model/reducers/index-reducer";
 
 export default function Time(): JSX.Element {
     const activeTab: number = useSelector(
-        (storeUpdate: ReduxStateType) => appNavigationService.getActiveTab(storeUpdate.appNavigation))
+        (storeUpdate: State) => appNavigationService.getActiveTab(storeUpdate.appNavigation))
     const mediaOutput: Output = useSelector(
-        (storeUpdate: ReduxStateType) => mediaService.getOutput(storeUpdate))
+        (storeUpdate: State) => mediaService.getOutput(storeUpdate))
     const settingsOutput: OutputSettings = useSelector(
-        (storeUpdate: ReduxStateType) => settingsService.getOutputSettings(storeUpdate.settings, activeTab))
+        (storeUpdate: State) => settingsService.getOutputSettings(storeUpdate.settings, activeTab))
     useSelector(
-        (storeUpdate: ReduxStateType) => settingsService.getOutputSettings(storeUpdate.settings, activeTab).selectedFile)
+        (storeUpdate: State) => settingsService.getOutputSettings(storeUpdate.settings, activeTab).selectedFile)
     useSelector(
-        (storeUpdate: ReduxStateType) => mediaService.getOutput(storeUpdate)?.time[0])
+        (storeUpdate: State) => mediaService.getOutput(storeUpdate)?.time[0])
     useSelector(
-        (storeUpdate: ReduxStateType) => mediaService.getOutput(storeUpdate)?.thumbnailList)
+        (storeUpdate: State) => mediaService.getOutput(storeUpdate)?.thumbnailList)
 
     let cleanTallyFile: string = ''
     try {

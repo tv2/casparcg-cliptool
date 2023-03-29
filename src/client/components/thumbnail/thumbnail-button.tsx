@@ -1,14 +1,14 @@
 import React from "react"
-import { PGM_LOAD, PGM_PLAY, TOGGLE_THUMBNAIL_VISIBILITY } from "../../../model/socketIoConstants";
+import { PGM_LOAD, PGM_PLAY, TOGGLE_THUMBNAIL_VISIBILITY } from "../../../model/socket-io-constants";
 import { socket } from "../../util/socketClientHandlers";
 import '../../css/Thumbnail.css'
 import appNavigationService from "../../../model/services/app-navigation-service";
 import settingsService from "../../../model/services/settings-service";
-import { OperationMode } from "../../../model/reducers/settingsModels";
-import { MediaFile } from "../../../model/reducers/mediaModels";
+import { OperationMode } from "../../../model/reducers/settings-models";
+import { MediaFile } from "../../../model/reducers/media-models";
 import { reduxState } from "../../../model/reducers/store";
 import { useSelector } from "react-redux";
-import { ReduxStateType } from "../../../model/reducers/indexReducer";
+import { State } from "../../../model/reducers/index-reducer";
 import Button from "../shared/button";
 
 interface ThumbnailButtonProps {
@@ -18,7 +18,7 @@ interface ThumbnailButtonProps {
 
 export default function ThumbnailButton(props: ThumbnailButtonProps): JSX.Element {
   const activeTab: number = useSelector(
-    (storeUpdate: ReduxStateType) => appNavigationService.getActiveTab(storeUpdate.appNavigation))
+    (storeUpdate: State) => appNavigationService.getActiveTab(storeUpdate.appNavigation))
 
   return (
     <Button

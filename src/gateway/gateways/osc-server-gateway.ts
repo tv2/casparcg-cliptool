@@ -2,11 +2,11 @@
 import osc from 'osc' //Using OSC fork from PieceMeta/osc.js as it has excluded hardware serialport support and thereby is crossplatform
 
 import { reduxState } from '../../model/reducers/store'
-import { socket } from '../util/socketGatewayHandlers'
+import { socket } from '../util/socket-gateway-handlers'
 
-import * as IO from '../../model/socketIoConstants'
-import * as OSC from './oscConstants'
-import { ARG_CONSTANTS } from '../util/extractArgs'
+import * as IO from '../../model/socket-io-constants'
+import * as OSC from './osc-constants'
+import { ARG_CONSTANTS } from '../util/extract-args'
 import osService from '../../model/services/os-service'
 import mediaService from '../../model/services/media-service'
 

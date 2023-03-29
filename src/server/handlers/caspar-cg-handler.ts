@@ -10,16 +10,16 @@ import {
     updateMediaFiles,
     updateThumbnailFileList,
     updateHiddenFiles,
-} from '../../model/reducers/mediaActions'
+} from '../../model/reducers/media-actions'
 
-import { socketServer } from './expressHandler'
-import * as IO from '../../model/socketIoConstants'
+import { socketServer } from './express-handler'
+import * as IO from '../../model/socket-io-constants'
 import {
     HiddenFileInfo,
     MediaFile,
     Output,
     ThumbnailFile,
-} from '../../model/reducers/mediaModels'
+} from '../../model/reducers/media-models'
 
 import {
     setLoop,
@@ -30,8 +30,8 @@ import {
     setTabData,
     setWeb,
     updateSettings,
-} from '../../model/reducers/settingsAction'
-import { initializeClient } from './socketIOServerHandler'
+} from '../../model/reducers/settings-action'
+import { initializeClient } from './socket-io-server-handler'
 import {
     extractFoldersList,
     getChannelNumber,
@@ -40,14 +40,14 @@ import {
     isAlphaFile,
     isDeepCompareEqual,
     isFolderNameEqual,
-} from '../utils/ccgHandlerUtils'
+} from '../utils/ccg-handler-utils'
 import { logger } from '../utils/logger'
-import { playOverlay } from '../utils/ccgLoadPlay'
-import { OperationMode } from '../../model/reducers/settingsModels'
+import { playOverlay } from '../utils/ccg-load-play'
+import { OperationMode } from '../../model/reducers/settings-models'
 import settingsService from '../../model/services/settings-service'
 import osService from '../../model/services/os-service'
 import mediaService from '../../model/services/media-service'
-import hiddenFilesPersistenceService from '../services/hiddenFilesPersistenceService'
+import hiddenFilesPersistenceService from '../services/hidden-files-persistence-service'
 
 let waitingForCCGResponse: boolean = false
 let previousThumbnailFileList: ThumbnailFile[] = []

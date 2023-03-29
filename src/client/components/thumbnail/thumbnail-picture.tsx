@@ -3,8 +3,8 @@ import { useSelector } from "react-redux"
 import mediaService from "../../../model/services/media-service";
 import '../../css/Thumbnail.css'
 import appNavigationService from "../../../model/services/app-navigation-service";
-import { MediaFile } from "../../../model/reducers/mediaModels";
-import { ReduxStateType } from "../../../model/reducers/indexReducer";
+import { MediaFile } from "../../../model/reducers/media-models";
+import { State } from "../../../model/reducers/index-reducer";
 import { reduxState } from "../../../model/reducers/store";
 import settingsService from "../../../model/services/settings-service";
 
@@ -14,9 +14,9 @@ interface ThumbnailPictureProps {
 
 export default function ThumbnailPicture(props: ThumbnailPictureProps): JSX.Element {
   const activeTab: number = useSelector(
-    (storeUpdate: ReduxStateType) => appNavigationService.getActiveTab(storeUpdate.appNavigation))
+    (storeUpdate: State) => appNavigationService.getActiveTab(storeUpdate.appNavigation))
   const file: MediaFile | undefined = useSelector(
-    (storeUpdate: ReduxStateType) => mediaService.getOutput(storeUpdate)
+    (storeUpdate: State) => mediaService.getOutput(storeUpdate)
         .mediaFiles.find((predicate: MediaFile) => predicate.name === props.file.name)
   )
   if (!file) {

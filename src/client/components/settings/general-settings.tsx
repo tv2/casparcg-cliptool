@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { CcgSettings } from "../../../model/reducers/settingsModels";
+import { CcgSettings } from "../../../model/reducers/settings-models";
 import '../../css/Settings.css'
-import eventService from "../../services/eventService";
+import eventService from "../../services/event-service";
 import LabelledNumberInput from "../shared/labelled-number-input";
 import LabelledTextInput from "../shared/labelled-text-input";
 

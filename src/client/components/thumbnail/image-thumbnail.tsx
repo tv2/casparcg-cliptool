@@ -5,8 +5,8 @@ import ThumbnailPicture from "./thumbnail-picture";
 import TimeCode from "./timeCode";
 import '../../css/Thumbnail.css'
 import settingsService from "../../../model/services/settings-service";
-import { HiddenFileInfo, MediaFile } from "../../../model/reducers/mediaModels";
-import { ReduxStateType } from "../../../model/reducers/indexReducer";
+import { HiddenFileInfo, MediaFile } from "../../../model/reducers/media-models";
+import { State } from "../../../model/reducers/index-reducer";
 import { reduxState } from "../../../model/reducers/store";
 import appNavigationService from "../../../model/services/app-navigation-service";
 
@@ -16,14 +16,14 @@ interface ImageThumbnailProps {
 
 export default function ImageThumbnail(props: ImageThumbnailProps): JSX.Element {
   const activeTab: number = useSelector(
-    (storeUpdate: ReduxStateType) => appNavigationService.getActiveTab(storeUpdate.appNavigation))
+    (storeUpdate: State) => appNavigationService.getActiveTab(storeUpdate.appNavigation))
   useSelector(
-    (storeUpdate: ReduxStateType) => settingsService
+    (storeUpdate: State) => settingsService
       .getOutputSettings(storeUpdate.settings, activeTab).selectedFile
   )
 
   const hiddenFiles: Record<string, HiddenFileInfo> = useSelector(
-      (storeUpdate: ReduxStateType) => 
+      (storeUpdate: State) => 
           storeUpdate.media.hiddenFiles
   ) ?? {}
 

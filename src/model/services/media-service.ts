@@ -1,11 +1,11 @@
-import { ReduxStateType } from '../reducers/indexReducer'
-import { Output as Output, ThumbnailFile } from '../reducers/mediaModels'
+import { State } from '../reducers/index-reducer'
+import { Output as Output, ThumbnailFile } from '../reducers/media-models'
 import { reduxState } from '../reducers/store'
 import appNavigationService from './app-navigation-service'
 
 class MediaService {
     public getOutput(
-        store: ReduxStateType = reduxState,
+        store: State = reduxState,
         channelIndex: number = -1
     ): Output {
         const activeTab: number =
@@ -15,7 +15,7 @@ class MediaService {
         return store.media.outputs[activeTab]
     }
 
-    public getOutputs(store: ReduxStateType = reduxState): Output[] {
+    public getOutputs(store: State = reduxState): Output[] {
         return store.media.outputs
     }
 

@@ -2,7 +2,7 @@ import {
     GenericSettings,
     OutputSettings,
     Settings,
-} from '../reducers/settingsModels'
+} from '../reducers/settings-models'
 import {
     defaultOutputSettingsState,
     NewGenericSettings,

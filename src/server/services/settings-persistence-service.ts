@@ -1,14 +1,14 @@
-import { setGenerics } from '../../model/reducers/settingsAction'
+import { setGenerics } from '../../model/reducers/settings-action'
 import {
     GenericSettings,
     OperationMode,
-} from '../../model/reducers/settingsModels'
+} from '../../model/reducers/settings-models'
 import { reduxState, reduxStore } from '../../model/reducers/store'
 import { NewGenericSettings } from '../../model/schemas/new-settings-schema'
 import { PreviousGenericSettings } from '../../model/schemas/old-settings-schema'
 import settingsService from '../../model/services/settings-service'
 import { logger } from '../utils/logger'
-import persistenceService from './persistenceService'
+import persistenceService from './persistence-service'
 
 class SettingsPersistenceService {
     load(): void {

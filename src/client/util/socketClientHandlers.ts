@@ -1,5 +1,5 @@
 import { reduxState, reduxStore } from '../../model/reducers/store'
-import * as IO from '../../model/socketIoConstants'
+import * as IO from '../../model/socket-io-constants'
 
 import io from 'socket.io-client'
 import {
@@ -9,7 +9,7 @@ import {
     updateFolderList,
     setNumberOfOutputs,
     updateHiddenFiles,
-} from '../../model/reducers/mediaActions'
+} from '../../model/reducers/media-actions'
 import {
     setGenerics,
     setLoop,
@@ -20,14 +20,14 @@ import {
     setTabData,
     setWeb,
     updateSettings,
-} from '../../model/reducers/settingsAction'
+} from '../../model/reducers/settings-action'
 import { setConnectionStatus } from '../../model/reducers/app-navigation-action'
-import { OperationMode, Settings } from '../../model/reducers/settingsModels'
+import { OperationMode, Settings } from '../../model/reducers/settings-models'
 import {
     HiddenFileInfo,
     MediaFile,
     ThumbnailFile,
-} from '../../model/reducers/mediaModels'
+} from '../../model/reducers/media-models'
 import settingsService from '../../model/services/settings-service'
 
 export const socket = io()

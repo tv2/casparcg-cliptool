@@ -1,6 +1,6 @@
 import React from "react"
 import { useState } from "react"
-import swipeService, { Point, SwipeDirection } from "../../services/swipeService"
+import swipeService, { Point, SwipeDirection } from "../../services/swipe-service"
 
 interface SwipeableProps {
   divClassName?: string

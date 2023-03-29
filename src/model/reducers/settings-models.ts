@@ -1,4 +1,4 @@
-import { VideoFormat } from '../videoFormat'
+import { VideoFormat } from '../video-format'
 
 export enum OperationMode {
     CONTROL = 'control',

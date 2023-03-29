@@ -1,7 +1,7 @@
 import React from "react"
 import { useSelector } from "react-redux"
-import { ReduxStateType } from "../../model/reducers/indexReducer"
-import { TabData } from "../../model/reducers/settingsModels"
+import { State } from "../../model/reducers/index-reducer"
+import { TabData } from "../../model/reducers/settings-models"
 import appNavigationService from "../../model/services/app-navigation-service"
 import Tab from "./tab/tab"
 import Tabs from "./tab/tabs"
@@ -13,8 +13,8 @@ interface MainProps {
 
 // TODO: possibly find a better name
 export default function Main(props: MainProps): JSX.Element {
-  const tabData: TabData[] = useSelector((storeUpdate: ReduxStateType) => storeUpdate.settings.tabData)
-  const selectedTab: number = useSelector((storeUpdate: ReduxStateType) => appNavigationService.getActiveTab(storeUpdate.appNavigation))
+  const tabData: TabData[] = useSelector((storeUpdate: State) => storeUpdate.settings.tabData)
+  const selectedTab: number = useSelector((storeUpdate: State) => appNavigationService.getActiveTab(storeUpdate.appNavigation))
   
   return props.specificChannel 
     ? <Thumbnails/> 

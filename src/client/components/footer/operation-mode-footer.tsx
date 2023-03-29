@@ -1,15 +1,15 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
-import { ReduxStateType } from '../../../model/reducers/indexReducer'
-import { OperationMode } from '../../../model/reducers/settingsModels'
+import { State } from '../../../model/reducers/index-reducer'
+import { OperationMode } from '../../../model/reducers/settings-models'
 import appNavigationService from '../../../model/services/app-navigation-service'
 import settingsService from '../../../model/services/settings-service'
-import { OperationModeEditVisibilityFooter } from './operationModeEditVisibilityFooter'
+import { OperationModeEditVisibilityFooter } from './operation-mode-edit-visibility-footer'
 
 export function OperationModeFooter(): JSX.Element {
   const activeTab: number = useSelector(
-    (storeUpdate: ReduxStateType) => appNavigationService.getActiveTab(storeUpdate.appNavigation))  
-  const operationMode: OperationMode = useSelector((storeUpdate: ReduxStateType) =>
+    (storeUpdate: State) => appNavigationService.getActiveTab(storeUpdate.appNavigation))  
+  const operationMode: OperationMode = useSelector((storeUpdate: State) =>
     settingsService.getOutputSettings(storeUpdate.settings, activeTab)?.operationMode)
 
   switch (operationMode) {

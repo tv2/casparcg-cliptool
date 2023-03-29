@@ -1,4 +1,4 @@
-import { Media } from '../reducers/mediaModels'
+import { Media } from '../reducers/media-models'
 
 class ReducerService {
     doesMediaOutputChannelExist(

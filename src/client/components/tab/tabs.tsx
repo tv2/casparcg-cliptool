@@ -1,6 +1,6 @@
 import React from "react"
 import { useSelector } from "react-redux"
-import { ReduxStateType } from "../../../model/reducers/indexReducer"
+import { State } from "../../../model/reducers/index-reducer"
 import appNavigationService from "../../../model/services/app-navigation-service"
 import { TabProps } from "./tab"
 import TabTitle from "./tab-title"
@@ -13,7 +13,7 @@ interface TabsProps {
 
 export default function Tabs(props: TabsProps): JSX.Element {   
   const selectedTab: number = 
-    useSelector((storeUpdate: ReduxStateType) => appNavigationService.getActiveTab(storeUpdate.appNavigation))
+    useSelector((storeUpdate: State) => appNavigationService.getActiveTab(storeUpdate.appNavigation))
 
   return (
     <div>

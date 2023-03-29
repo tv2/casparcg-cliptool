@@ -1,9 +1,9 @@
 import React from "react"
-import * as IO from '../../../model/socketIoConstants'
+import * as IO from '../../../model/socket-io-constants'
 import { socket } from '../../util/socketClientHandlers'
 import { Footer } from "./footer"
 import "../../css/Operation-mode-edit-visibility-footer.css"
-import { OperationMode } from "../../../model/reducers/settingsModels"
+import { OperationMode } from "../../../model/reducers/settings-models"
 import appNavigationService from "../../../model/services/app-navigation-service"
 import { reduxState } from "../../../model/reducers/store"
 

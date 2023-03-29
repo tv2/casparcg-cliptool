@@ -1,6 +1,6 @@
 const MIX_DURATION = 16
 import { reduxState } from '../../model/reducers/store'
-import { ccgConnection } from '../handlers/casparCgHandler'
+import { ccgConnection } from '../handlers/caspar-cg-handler'
 import { Enum as CcgEnum } from 'casparcg-connection'
 import settingsService from '../../model/services/settings-service'
 

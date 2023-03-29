@@ -5,17 +5,17 @@ import SettingsButtons from './settings-buttons'
 import { useSelector } from 'react-redux'
 import _ from 'lodash'
 import settingsService from '../../../model/services/settings-service'
-import { ReduxStateType } from '../../../model/reducers/indexReducer'
+import { State } from '../../../model/reducers/index-reducer'
 import { reduxState } from '../../../model/reducers/store'
 import GeneralSettings from './general-settings'
-import { CcgSettings, GenericSettings, OutputSettings } from '../../../model/reducers/settingsModels'
+import { CcgSettings, GenericSettings, OutputSettings } from '../../../model/reducers/settings-models'
 
 // Check if URL has a specific channel:
 const channel: string | null = new URLSearchParams(window.location.search).get('channel')
 const specificChannel = channel ? parseInt(channel) || 0 : 0
 
 export function Settings(): JSX.Element { 
-    useSelector((storeUpdate: ReduxStateType) => settingsService.getGenericSettings(storeUpdate.settings))
+    useSelector((storeUpdate: State) => settingsService.getGenericSettings(storeUpdate.settings))
     const [settings, setSettings] = useState(_.cloneDeep(settingsService.getGenericSettings(reduxState.settings)))    
 
     return (

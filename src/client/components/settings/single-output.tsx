@@ -1,8 +1,8 @@
 import React, { useState } from "react"
-import { CcgConfigChannel, OutputSettings } from "../../../model/reducers/settingsModels"
+import { CcgConfigChannel, OutputSettings } from "../../../model/reducers/settings-models"
 import { reduxState } from "../../../model/reducers/store"
 import '../../css/Settings.css'
-import eventService from "../../services/eventService"
+import eventService from "../../services/event-service"
 import Label from "../shared/label"
 import LabelledCheckboxInput from "../shared/labelled-checkbox-input"
 import LabelledNumberInput from "../shared/labelled-number-input"

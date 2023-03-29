@@ -1,5 +1,5 @@
-import { ARG_CONSTANTS } from './util/extractArgs'
-import { logger } from './util/loggerGateway'
+import { ARG_CONSTANTS } from './util/extract-args'
+import { logger } from './util/logger-gateway'
 
 import { reduxState } from '../model/reducers/store'
 import { app } from './app'

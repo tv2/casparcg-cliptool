@@ -1,6 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit'
 import { ConfigureStoreOptions } from '@reduxjs/toolkit/dist/configureStore'
-import indexReducer, { ReduxStateType } from './indexReducer'
+import indexReducer, { State } from './index-reducer'
 
 const options: ConfigureStoreOptions = {
     reducer: indexReducer,
@@ -13,7 +13,7 @@ const options: ConfigureStoreOptions = {
 let reduxStore = configureStore(options)
 
 //Subscribe to redux store:
-let reduxState: ReduxStateType = reduxStore.getState()
+let reduxState: State = reduxStore.getState()
 reduxStore.subscribe(() => {
     reduxState = reduxStore.getState()
 })

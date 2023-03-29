@@ -1,15 +1,15 @@
 import React from "react";
 import { reduxState, reduxStore } from "../../../model/reducers/store";
 import { socket } from "../../util/socketClientHandlers";
-import * as IO from '../../../model/socketIoConstants'
+import * as IO from '../../../model/socket-io-constants'
 import { useSelector } from "react-redux";
 import { TOGGLE_SHOW_SETTINGS } from "../../../model/reducers/app-navigation-action";
 import '../../css/Settings.css'
 import settingsService from "../../../model/services/settings-service";
 import appNavigationService from "../../../model/services/app-navigation-service";
-import { GenericSettings, OperationMode } from "../../../model/reducers/settingsModels";
+import { GenericSettings, OperationMode } from "../../../model/reducers/settings-models";
 import _ from "lodash";
-import { ReduxStateType } from "../../../model/reducers/indexReducer";
+import { State } from "../../../model/reducers/index-reducer";
 import Button from "../shared/button";
 
 interface SettingsButtonsProps {
@@ -19,9 +19,9 @@ interface SettingsButtonsProps {
 
 export default function SettingsButtons(props: SettingsButtonsProps): JSX.Element {
   const activeTab: number = useSelector(
-    (storeUpdate: ReduxStateType) => appNavigationService.getActiveTab(storeUpdate.appNavigation))
+    (storeUpdate: State) => appNavigationService.getActiveTab(storeUpdate.appNavigation))
   const operationMode = useSelector(
-    (storeUpdate: ReduxStateType) => settingsService.getOutputSettings(storeUpdate.settings, activeTab)?.operationMode)
+    (storeUpdate: State) => settingsService.getOutputSettings(storeUpdate.settings, activeTab)?.operationMode)
   
   return (
       <div className="Settings-channel-form">

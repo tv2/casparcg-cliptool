@@ -9,11 +9,11 @@ import '../../css/App-control-view-header.css'
 import '../../css/App-text-view-header.css'
 import Time from './time'
 import ControlButtons from './control-buttons'
-import { ReduxStateType } from '../../../model/reducers/indexReducer'
+import { State } from '../../../model/reducers/index-reducer'
 
 export default function Header(): JSX.Element {
     const connectionStatus: boolean = useSelector(
-        (storeUpdate: ReduxStateType) => storeUpdate.appNavigation.connectionStatus)
+        (storeUpdate: State) => storeUpdate.appNavigation.connectionStatus)
 
     return (
         <header className="App-header">

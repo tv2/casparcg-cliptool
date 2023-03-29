@@ -1,8 +1,8 @@
 import { loadBundledEnvironment } from './bundled-environment'
-import settingsPersistenceService from './services/settingsPersistenceService'
-import hiddenFilesPersistenceService from './services/hiddenFilesPersistenceService'
-import { serverInit } from './handlers/expressHandler'
-import { casparCgClient } from './handlers/casparCgHandler'
+import settingsPersistenceService from './services/settings-persistence-service'
+import hiddenFilesPersistenceService from './services/hidden-files-persistence-service'
+import { serverInit } from './handlers/express-handler'
+import { casparCgClient } from './handlers/caspar-cg-handler'
 
 loadBundledEnvironment()
 settingsPersistenceService.load()
