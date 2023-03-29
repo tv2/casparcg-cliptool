@@ -15,11 +15,10 @@ export default function TabBar(props: TabBarProps): JSX.Element {
         <div className="tabs-bar__tabs">
         {
           props.tabData.map((item, index) => {
-            const isSelected = props.selectedTab === index    
             return (
               <Tab 
                 index={index} 
-                isSelected={isSelected} 
+                selectedTab={props.selectedTab} 
                 key={index} 
                 tabData={item} 
                 totalTabs={props.tabData.length}/>

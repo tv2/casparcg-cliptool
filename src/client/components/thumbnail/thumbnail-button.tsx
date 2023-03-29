@@ -2,8 +2,8 @@ import React from "react"
 import { PGM_LOAD, PGM_PLAY, TOGGLE_THUMBNAIL_VISIBILITY } from "../../../model/socketIoConstants";
 import { socket } from "../../util/socketClientHandlers";
 import '../../css/Thumbnail.css'
-import appNavigationService from "../../../model/services/appNavigationService";
-import settingsService from "../../../model/services/settingsService";
+import appNavigationService from "../../../model/services/app-navigation-service";
+import settingsService from "../../../model/services/settings-service";
 import { OperationMode } from "../../../model/reducers/settingsModels";
 import { MediaFile } from "../../../model/reducers/mediaModels";
 import { reduxState } from "../../../model/reducers/store";

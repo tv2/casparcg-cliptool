@@ -4,7 +4,7 @@ import { socket as socketio } from '../util/socketGatewayHandlers'
 
 import * as IO from '../../model/socketIoConstants'
 import { logger } from '../util/loggerGateway'
-import osService from '../../model/services/osService'
+import osService from '../../model/services/os-service'
 
 export function ampServerGateway(): void {
     console.log('Initializing AMP server')

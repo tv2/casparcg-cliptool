@@ -24,7 +24,7 @@ import { ARG_CONSTANTS } from './extractArgs'
 import { logger } from './loggerGateway'
 import { MediaFile, ThumbnailFile } from '../../model/reducers/mediaModels'
 import { OperationMode, Settings } from '../../model/reducers/settingsModels'
-import settingsService from '../../model/services/settingsService'
+import settingsService from '../../model/services/settings-service'
 
 logger.info(`Connecting Socket to: ${ARG_CONSTANTS.clipToolHost}`)
 

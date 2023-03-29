@@ -7,8 +7,8 @@ import { socket } from '../util/socketGatewayHandlers'
 import * as IO from '../../model/socketIoConstants'
 import * as OSC from './oscConstants'
 import { ARG_CONSTANTS } from '../util/extractArgs'
-import osService from '../../model/services/osService'
-import mediaService from '../../model/services/mediaService'
+import osService from '../../model/services/os-service'
+import mediaService from '../../model/services/media-service'
 
 export function oscServerGateway(): void {
     console.log('Initializing OSC server')

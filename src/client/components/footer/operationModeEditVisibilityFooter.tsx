@@ -4,7 +4,7 @@ import { socket } from '../../util/socketClientHandlers'
 import { Footer } from "./footer"
 import "../../css/Operation-mode-edit-visibility-footer.css"
 import { OperationMode } from "../../../model/reducers/settingsModels"
-import appNavigationService from "../../../model/services/appNavigationService"
+import appNavigationService from "../../../model/services/app-navigation-service"
 import { reduxState } from "../../../model/reducers/store"
 
 const BUTTON_TEXT = 'Exit Edit Visibility'

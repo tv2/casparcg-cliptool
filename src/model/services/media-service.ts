@@ -1,7 +1,7 @@
 import { ReduxStateType } from '../reducers/indexReducer'
 import { Output as Output, ThumbnailFile } from '../reducers/mediaModels'
 import { reduxState } from '../reducers/store'
-import appNavigationService from './appNavigationService'
+import appNavigationService from './app-navigation-service'
 
 class MediaService {
     public getOutput(

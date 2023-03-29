@@ -1,16 +1,16 @@
 import React from 'react'
 import '../../css/Thumbnail.css'
 import '../app'
-import mediaService from "../../../model/services/mediaService";
+import mediaService from "../../../model/services/media-service";
 import { useSelector } from 'react-redux';
 import { reduxState } from '../../../model/reducers/store';
 import ImageThumbnail from './image-thumbnail';
 import TextThumbnail from './text-thumbnail';
-import settingsService from '../../../model/services/settingsService';
+import settingsService from '../../../model/services/settings-service';
 import { OperationMode } from '../../../model/reducers/settingsModels';
 import { HiddenFileInfo, MediaFile } from '../../../model/reducers/mediaModels';
 import { ReduxStateType } from '../../../model/reducers/indexReducer';
-import appNavigationService from '../../../model/services/appNavigationService';
+import appNavigationService from '../../../model/services/app-navigation-service';
 
 export function Thumbnails(): JSX.Element {
     const activeTab: number = useSelector(

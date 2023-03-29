@@ -28,7 +28,7 @@ import {
     MediaFile,
     ThumbnailFile,
 } from '../../model/reducers/mediaModels'
-import settingsService from '../../model/services/settingsService'
+import settingsService from '../../model/services/settings-service'
 
 export const socket = io()
 

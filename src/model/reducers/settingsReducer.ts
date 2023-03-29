@@ -1,5 +1,5 @@
 import { CcgConfigChannel, OutputSettings, Settings } from './settingsModels'
-import settingsService from '../services/settingsService'
+import settingsService from '../services/settings-service'
 import { getVideoFormat } from '../videoFormat'
 import * as IO from './settingsAction'
 

@@ -5,7 +5,7 @@ import { socketServer } from '../handlers/expressHandler'
 import { logger } from '../utils/logger'
 import persistenceService from './persistenceService'
 import * as IO from '../../model/socketIoConstants'
-import settingsService from '../../model/services/settingsService'
+import settingsService from '../../model/services/settings-service'
 import { OutputSettings } from '../../model/reducers/settingsModels'
 
 class HiddenFilesPersistenceService {

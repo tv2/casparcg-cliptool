@@ -1,4 +1,4 @@
-import settingsService from '../services/settingsService'
+import settingsService from '../services/settings-service'
 import { GenericSettings, OperationMode, TabData } from './settingsModels'
 import { reduxState } from './store'
 

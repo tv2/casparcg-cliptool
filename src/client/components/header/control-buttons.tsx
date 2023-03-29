@@ -3,8 +3,8 @@ import { reduxState } from "../../../model/reducers/store";
 import { socket } from "../../util/socketClientHandlers";
 import * as IO from '../../../model/socketIoConstants'
 import { useSelector } from "react-redux";
-import settingsService from "../../../model/services/settingsService";
-import appNavigationService from "../../../model/services/appNavigationService";
+import settingsService from "../../../model/services/settings-service";
+import appNavigationService from "../../../model/services/app-navigation-service";
 import { ReduxStateType } from "../../../model/reducers/indexReducer";
 import Button from "../shared/button";
 import '../../css/Header.css'

@@ -2,11 +2,11 @@ import React from 'react'
 import { useSelector } from 'react-redux'
 
 import TabBar from './tabBar'
-import TabContent from './tabContent'
+// import TabContent from './tabContent'
 
 import '../../css/Tab.css'
 import { TabData } from '../../../model/reducers/settingsModels'
-import appNavigationService from '../../../model/services/appNavigationService'
+import appNavigationService from '../../../model/services/app-navigation-service'
 import { ReduxStateType } from '../../../model/reducers/indexReducer'
 
 export default function Tabs(): JSX.Element {
@@ -17,7 +17,7 @@ export default function Tabs(): JSX.Element {
   return (
     <div className='tabs'>
       <TabBar tabData={tabData} selectedTab={selectedTab}/>
-      <TabContent tabData={tabData} selectedTab={selectedTab} />      
+      {/* <TabContent tabData={tabData} selectedTab={selectedTab} />       */}
     </div>
   )
 }

@@ -5,8 +5,8 @@ import * as IO from '../../../model/socketIoConstants'
 import { useSelector } from "react-redux";
 import { TOGGLE_SHOW_SETTINGS } from "../../../model/reducers/app-navigation-action";
 import '../../css/Settings.css'
-import settingsService from "../../../model/services/settingsService";
-import appNavigationService from "../../../model/services/appNavigationService";
+import settingsService from "../../../model/services/settings-service";
+import appNavigationService from "../../../model/services/app-navigation-service";
 import { GenericSettings, OperationMode } from "../../../model/reducers/settingsModels";
 import _ from "lodash";
 import { ReduxStateType } from "../../../model/reducers/indexReducer";

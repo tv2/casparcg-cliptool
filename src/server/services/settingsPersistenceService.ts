@@ -6,7 +6,7 @@ import {
 import { reduxState, reduxStore } from '../../model/reducers/store'
 import { NewGenericSettings } from '../../model/schemas/new-settings-schema'
 import { PreviousGenericSettings } from '../../model/schemas/old-settings-schema'
-import settingsService from '../../model/services/settingsService'
+import settingsService from '../../model/services/settings-service'
 import { logger } from '../utils/logger'
 import persistenceService from './persistenceService'
 

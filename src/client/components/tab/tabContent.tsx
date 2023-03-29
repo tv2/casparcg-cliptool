@@ -24,8 +24,8 @@ export default function TabContent(props: TabContentProps): JSX.Element {
             
             // TODO: Find/Figure out a better value used for key.
             return (
-              <Swipeable onSwipe={(direction) => onValidSwipe(direction, props)} 
-                  shouldRender={isSelected} 
+              <Swipeable onSwipe={(direction) => onValidSwipe(direction, props.selectedTab, props.tabData.length)} 
+                  shouldRender={isSelected}
                   allowSwipe={isSpecificChannel}
                   role="tabpanel"
                   key={index}> 
@@ -38,9 +38,9 @@ export default function TabContent(props: TabContentProps): JSX.Element {
   ) 
 }
 
-function onValidSwipe(direction: SwipeDirection, props: TabContentProps) {
-  const nextTab = swipeService.getNextTab(props.selectedTab, direction)
-  if (!swipeService.isValidTab(nextTab, props.tabData.length)) {
+function onValidSwipe(direction: SwipeDirection, selectedTab: number, totalTabs: number) {
+  const nextTab = swipeService.getNextTab(selectedTab, direction)
+  if (!swipeService.isValidTab(nextTab, totalTabs)) {
     return
   }
   reduxStore.dispatch(setActiveTab(nextTab))

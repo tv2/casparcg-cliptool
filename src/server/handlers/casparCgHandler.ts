@@ -44,9 +44,9 @@ import {
 import { logger } from '../utils/logger'
 import { playOverlay } from '../utils/ccgLoadPlay'
 import { OperationMode } from '../../model/reducers/settingsModels'
-import settingsService from '../../model/services/settingsService'
-import osService from '../../model/services/osService'
-import mediaService from '../../model/services/mediaService'
+import settingsService from '../../model/services/settings-service'
+import osService from '../../model/services/os-service'
+import mediaService from '../../model/services/media-service'
 import hiddenFilesPersistenceService from '../services/hiddenFilesPersistenceService'
 
 let waitingForCCGResponse: boolean = false

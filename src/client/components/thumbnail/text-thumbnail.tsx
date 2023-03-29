@@ -3,11 +3,11 @@ import { useSelector } from "react-redux"
 import '../../css/Thumbnail.css'
 import ThumbnailButton from "./thumbnail-button";
 import TimeCode from "./timeCode";
-import settingsService from "../../../model/services/settingsService";
+import settingsService from "../../../model/services/settings-service";
 import { MediaFile } from "../../../model/reducers/mediaModels";
 import { ReduxStateType } from "../../../model/reducers/indexReducer";
 import { reduxState } from "../../../model/reducers/store";
-import appNavigationService from "../../../model/services/appNavigationService";
+import appNavigationService from "../../../model/services/app-navigation-service";
 
 interface TextThumbnailProps {
   file: MediaFile

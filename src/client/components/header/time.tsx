@@ -1,11 +1,11 @@
 import React from "react"
 import { useSelector } from "react-redux"
 import { reduxState } from "../../../model/reducers/store";
-import mediaService from "../../../model/services/mediaService";
+import mediaService from "../../../model/services/media-service";
 
 import '../../css/App-header.css'
-import appNavigationService from "../../../model/services/appNavigationService";
-import settingsService from "../../../model/services/settingsService";
+import appNavigationService from "../../../model/services/app-navigation-service";
+import settingsService from "../../../model/services/settings-service";
 import { Output } from "../../../model/reducers/mediaModels";
 import { OutputSettings } from "../../../model/reducers/settingsModels";
 import { ReduxStateType } from "../../../model/reducers/indexReducer";

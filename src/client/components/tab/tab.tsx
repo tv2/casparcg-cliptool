@@ -7,29 +7,28 @@ import '../../css/Tab.css'
 
 interface TabProps {
   tabData: TabData
-  isSelected: boolean
+  selectedTab: number
   index: number
   totalTabs: number
 }
 
-function setOutput(tab: number): void {
-  reduxStore.dispatch(setActiveTab(tab))
-}
-
 export function Tab(props: TabProps): JSX.Element {
-  const classNames = `tab ${props.isSelected ? 'active' : ''}`
- 
+  const isSelected = props.selectedTab === props.index
   return (
     <div 
-      className={classNames} 
+      className={`tab ${isSelected ? 'active' : ''}`} 
       role='tab'
-      aria-selected={props.isSelected} 
+      aria-selected={isSelected} 
       key={props.index}
-      onClick={() => {
-        if (!props.isSelected)
-          setOutput(props.index)
-      }}>
+      onClick={() => setOutput(props.index, isSelected)
+      }>
       {props.tabData.title}
     </div>
  )
+}
+
+function setOutput(tab: number, isSelected: boolean): void {
+  if (!isSelected) {
+    reduxStore.dispatch(setActiveTab(tab))
+  }
 }
