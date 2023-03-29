@@ -1,34 +1,36 @@
 import React from "react"
 import { setActiveTab } from "../../../model/reducers/app-navigation-action"
-import { TabData } from "../../../model/reducers/settingsModels"
 import { reduxStore } from "../../../model/reducers/store"
+import swipeService, { SwipeDirection } from "../../services/swipeService"
+import Swipeable from "../shared/swipeable"
+import { Thumbnails } from "../thumbnail/thumbnails"
 
-import '../../css/Tab.css'
-
-interface TabProps {
-  tabData: TabData
+export interface TabProps {
+  title: string
   selectedTab: number
-  index: number
+  tabIndex: number
   totalTabs: number
 }
 
-export function Tab(props: TabProps): JSX.Element {
-  const isSelected = props.selectedTab === props.index
+const isSpecificChannel = new URLSearchParams(window.location.search).has('channel')
+
+export default function Tab(props: TabProps): JSX.Element {
+  const isSelected = props.selectedTab === props.tabIndex
+
   return (
-    <div 
-      className={`tab ${isSelected ? 'active' : ''}`} 
-      role='tab'
-      aria-selected={isSelected} 
-      key={props.index}
-      onClick={() => setOutput(props.index, isSelected)
-      }>
-      {props.tabData.title}
-    </div>
- )
+    <Swipeable onSwipe={(direction) => onValidSwipe(direction, props.selectedTab, props.totalTabs)} 
+        shouldRender={isSelected}
+        allowSwipe={isSpecificChannel}
+        role="tabpanel"> 
+      <Thumbnails/> 
+    </Swipeable>
+  )
 }
 
-function setOutput(tab: number, isSelected: boolean): void {
-  if (!isSelected) {
-    reduxStore.dispatch(setActiveTab(tab))
+function onValidSwipe(direction: SwipeDirection, selectedTab: number, totalTabs: number) {
+  const nextTab = swipeService.getNextTab(selectedTab, direction)
+  if (!swipeService.isValidTab(nextTab, totalTabs)) {
+    return
   }
+  reduxStore.dispatch(setActiveTab(nextTab))
 }
