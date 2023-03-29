@@ -1,16 +1,18 @@
-import { reduxState } from '../../model/reducers/store'
+import { reduxState } from '../reducers/store'
 
-class HandleShortcuts {
+// Unused currently, but Kasper says use of the original 'handleShortcuts', should be re-implemented in the future.
+// Because of this, the code is being kept - now as a service on the model level, to eliminate duplication.
+class ShortcutService {
     ccgLoadPlay: any
     constructor(ccgLoadPlay: any) {
         this.ccgLoadPlay = ccgLoadPlay
 
         //Setup Keyboard shortcuts:
-        document.addEventListener('keydown', this._handleKeyDown.bind(this))
+        document.addEventListener('keydown', this.processKeyDown.bind(this))
     }
 
     //Shortcut for mix and take
-    _handleKeyDown(event: any) {
+    private processKeyDown(event: any) {
         //Corresponding output for QWER shortcut:
         const keyTuple = { Q: 1, W: 2, E: 3, R: 4 }
         //Convert event.keyCode to letter:
@@ -42,4 +44,4 @@ class HandleShortcuts {
     }
 }
 
-export default HandleShortcuts
+export default ShortcutService

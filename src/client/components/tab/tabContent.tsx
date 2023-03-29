@@ -1,10 +1,10 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { setActiveTab } from '../../../model/reducers/app-navigation-action'
 import { TabData } from '../../../model/reducers/settingsModels'
 import { reduxStore } from '../../../model/reducers/store'
 
 import '../../css/Tab.css'
-import swipeService, { Point, SwipeDirection } from '../../services/swipeService'
+import swipeService, { SwipeDirection } from '../../services/swipeService'
 import Swipeable from '../shared/swipeable'
 import { Thumbnails } from '../thumbnail/thumbnails'
 
