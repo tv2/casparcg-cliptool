@@ -64,7 +64,6 @@
         "@reduxjs/toolkit": "^1.9.3",
         "@tv2media/logger": "^2.0.0",
         "casparcg-connection": "^5.1.0",
-        "chokidar": "^3.5.1",
         "express": "^4.17.1",
         "filehound": "^1.17.4",
         "http": "^0.0.0",
@@ -73,13 +72,9 @@
         "react": "^17.0.2",
         "react-dom": "^17.0.2",
         "react-redux": "^7.2.3",
-        "react-sortablejs": "^6.0.0",
-        "rmc-tabs": "^1.2.29",
         "serialport": "^9.0.7",
         "socket.io": "^4.0.0",
         "socket.io-client": "^4.0.0",
-        "sortablejs": "^1.13.0",
-        "xml-js": "^1.6.11",
         "zod": "^3.21.4"
     },
     "devDependencies": {
