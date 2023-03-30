@@ -15,9 +15,9 @@ interface TextThumbnailProps {
 
 export default function TextThumbnail(props: TextThumbnailProps): JSX.Element {
   const activeTab: number = useSelector(
-    (storeUpdate: State) => appNavigationService.getActiveTab(storeUpdate.appNavigation))
+    (state: State) => appNavigationService.getActiveTab(state.appNavigation))
   useSelector(
-    (storeUpdate: State) => settingsService.getOutputSettings(storeUpdate.settings, activeTab)
+    (state: State) => settingsService.getOutputSettings(state.settings, activeTab)
       .selectedFile
   )
   const isSelected: boolean = settingsService.isThumbnailSelected(props.file.name, reduxState.settings, activeTab)

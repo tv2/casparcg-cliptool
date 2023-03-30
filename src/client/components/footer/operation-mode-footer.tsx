@@ -8,9 +8,9 @@ import { OperationModeEditVisibilityFooter } from './operation-mode-edit-visibil
 
 export function OperationModeFooter(): JSX.Element {
   const activeTab: number = useSelector(
-    (storeUpdate: State) => appNavigationService.getActiveTab(storeUpdate.appNavigation))  
-  const operationMode: OperationMode = useSelector((storeUpdate: State) =>
-    settingsService.getOutputSettings(storeUpdate.settings, activeTab)?.operationMode)
+    (state: State) => appNavigationService.getActiveTab(state.appNavigation))  
+  const operationMode: OperationMode = useSelector((state: State) =>
+    settingsService.getOutputSettings(state.settings, activeTab)?.operationMode)
 
   switch (operationMode) {
     case OperationMode.EDIT_VISIBILITY: {

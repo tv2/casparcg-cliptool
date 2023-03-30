@@ -18,7 +18,7 @@ interface ThumbnailButtonProps {
 
 export default function ThumbnailButton(props: ThumbnailButtonProps): JSX.Element {
   const activeTab: number = useSelector(
-    (storeUpdate: State) => appNavigationService.getActiveTab(storeUpdate.appNavigation))
+    (state: State) => appNavigationService.getActiveTab(state.appNavigation))
 
   return (
     <Button

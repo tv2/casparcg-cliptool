@@ -14,15 +14,15 @@ import browserService from '../../services/browser-service';
 
 export function Thumbnails(): JSX.Element {
     const activeTab: number = useSelector(
-        (storeUpdate: State) => appNavigationService.getActiveTab(storeUpdate.appNavigation))
+        (state: State) => appNavigationService.getActiveTab(state.appNavigation))
     const files: MediaFile[] = useSelector(
-        (storeUpdate: State) => mediaService.getOutput(storeUpdate)?.mediaFiles
+        (state: State) => mediaService.getOutput(state)?.mediaFiles
     ) ?? []
     const hiddenFiles: Record<string, HiddenFileInfo> = useSelector(
-        (storeUpdate: State) => storeUpdate.media.hiddenFiles
+        (state: State) => state.media.hiddenFiles
     ) ?? {}
     const isInEditVisibilityMode: boolean = useSelector(
-        (storeUpdate: State) => settingsService.getOutputSettings(storeUpdate.settings, activeTab)
+        (state: State) => settingsService.getOutputSettings(state.settings, activeTab)
             ?.operationMode === OperationMode.EDIT_VISIBILITY
     ) ?? false
     const shownFiles: MediaFile[] = !isInEditVisibilityMode 

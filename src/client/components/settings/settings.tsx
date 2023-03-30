@@ -13,7 +13,7 @@ import browserService from '../../services/browser-service'
 
 
 export function Settings(): JSX.Element { 
-    useSelector((storeUpdate: State) => settingsService.getGenericSettings(storeUpdate.settings))
+    useSelector((state: State) => settingsService.getGenericSettings(state.settings))
     const [settings, setSettings] = useState(_.cloneDeep(settingsService.getGenericSettings(reduxState.settings)))    
     return (
         <div className="Settings-body">

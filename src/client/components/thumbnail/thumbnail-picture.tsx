@@ -14,15 +14,15 @@ interface ThumbnailPictureProps {
 
 export default function ThumbnailPicture(props: ThumbnailPictureProps): JSX.Element {
   const activeTab: number = useSelector(
-    (storeUpdate: State) => appNavigationService.getActiveTab(storeUpdate.appNavigation))
+    (state: State) => appNavigationService.getActiveTab(state.appNavigation))
   const file: MediaFile | undefined = useSelector(
-    (storeUpdate: State) => mediaService.getOutput(storeUpdate)
+    (state: State) => mediaService.getOutput(state)
         .mediaFiles.find((predicate: MediaFile) => predicate.name === props.file.name)
   )
   if (!file) {
     return <></>
   }
-  const url: string = mediaService.findThumbnail(file.name, activeTab || 0)
+  const url: string = mediaService.getBase64ThumbnailUrl(file.name, activeTab || 0)
   const classNames: string = `thumbnailImage ${settingsService.isThumbnailSelected(file.name, reduxState.settings, activeTab) ? 'selected-thumb' : ''}`
 
   return (

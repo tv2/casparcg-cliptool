@@ -13,6 +13,7 @@ export interface TabProps {
 }
 
 export default function Tab(props: TabProps): JSX.Element {
+  // TODO: add CSS to have 'Swipeable' fill available height.
   return (
     <Swipeable onSwipe={(direction) => onValidSwipe(direction, props.selectedTab, props.totalTabs)} 
         role="tabpanel"> 

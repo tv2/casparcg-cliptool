@@ -11,7 +11,7 @@ interface OutputsProps {
 }
 
 export default function Outputs(props: OutputsProps): JSX.Element {
-    const ccgConfig = useSelector((storeUpdate: State) => storeUpdate.settings.ccgConfig)    
+    const ccgConfig = useSelector((state: State) => state.settings.ccgConfig)    
     return (
         <div>
             {browserService.isChannelView()

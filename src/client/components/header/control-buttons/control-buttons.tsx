@@ -1,30 +1,28 @@
 import React from "react";
-import { reduxState } from "../../../model/reducers/store";
-import { socket } from "../../util/socketClientHandlers";
-import * as IO from '../../../model/socket-io-constants'
+import { reduxState } from "../../../../model/reducers/store";
+import { socket } from "../../../util/socketClientHandlers";
+import * as IO from '../../../../model/socket-io-constants'
 import { useSelector } from "react-redux";
-import settingsService from "../../../model/services/settings-service";
-import appNavigationService from "../../../model/services/app-navigation-service";
-import { State } from "../../../model/reducers/index-reducer";
-import Button from "../shared/button";
-import '../../css/Header.css'
-import browserService from "../../services/browser-service";
+import settingsService from "../../../../model/services/settings-service";
+import appNavigationService from "../../../../model/services/app-navigation-service";
+import { State } from "../../../../model/reducers/index-reducer";
+import Button from "../../shared/button";
+import browserService from "../../../services/browser-service";
 
-// TODO: rename CSS class to more generic names - WITHOUT mentioning a location.
 export default function ControlButtons(): JSX.Element {
   const activeTab: number = useSelector(
-    (storeUpdate: State) => appNavigationService.getActiveTab(storeUpdate.appNavigation))
+    (state: State) => appNavigationService.getActiveTab(state.appNavigation))
   const mixState: boolean = useSelector(
-      (storeUpdate: State) => settingsService.getOutputSettings(storeUpdate.settings, activeTab)?.mixState)
+      (state: State) => settingsService.getOutputSettings(state.settings, activeTab)?.mixState)
   const webState: boolean = useSelector(
-      (storeUpdate: State) => settingsService.getOutputSettings(storeUpdate.settings, activeTab)?.webState)
+      (state: State) => settingsService.getOutputSettings(state.settings, activeTab)?.webState)
   const loopState: boolean = useSelector(
-      (storeUpdate: State) => settingsService.getOutputSettings(storeUpdate.settings, activeTab)?.loopState)
+      (state: State) => settingsService.getOutputSettings(state.settings, activeTab)?.loopState)
   const manualStartState: boolean = useSelector(
-      (storeUpdate: State) => settingsService.getOutputSettings(storeUpdate.settings, activeTab)?.manualStartState)
+      (state: State) => settingsService.getOutputSettings(state.settings, activeTab)?.manualStartState)
 
-  const buttonWrapperCss = "header-button-background"
-  const buttonBaseCss = "header-toggle-button"
+  const buttonWrapperCss = "control-button-background"
+  const buttonBaseCss = "control-button"
   return (
     <>
       {browserService.isOrdinaryView() && (

@@ -12,13 +12,13 @@ export function setActiveTab(tabIndex: number): {
     }
 }
 
-export function setConnectionStatus(connectionStatus: boolean): {
+export function setConnectionStatus(isConnected: boolean): {
     type: string
-    connectionStatus: boolean
+    isConnected: boolean
 } {
     return {
         type: SET_CONNECTION_STATUS,
-        connectionStatus: connectionStatus,
+        isConnected: isConnected,
     }
 }
 

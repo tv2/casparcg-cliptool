@@ -19,9 +19,9 @@ interface SettingsButtonsProps {
 
 export default function SettingsActions(props: SettingsButtonsProps): JSX.Element {
   const activeTab: number = useSelector(
-    (storeUpdate: State) => appNavigationService.getActiveTab(storeUpdate.appNavigation))
+    (state: State) => appNavigationService.getActiveTab(state.appNavigation))
   const operationMode = useSelector(
-    (storeUpdate: State) => settingsService.getOutputSettings(storeUpdate.settings, activeTab)?.operationMode)
+    (state: State) => settingsService.getOutputSettings(state.settings, activeTab)?.operationMode)
   
   const buttonCss = "save-button"
 

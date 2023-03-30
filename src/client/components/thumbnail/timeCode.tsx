@@ -7,6 +7,8 @@ import appNavigationService from "../../../model/services/app-navigation-service
 import { State } from "../../../model/reducers/index-reducer";
 import settingsService from "../../../model/services/settings-service";
 import { reduxState } from "../../../model/reducers/store";
+import timeService from "../../../model/services/time-service";
+
 
 interface TimeCodeProps {
   file: MediaFile
@@ -15,13 +17,13 @@ interface TimeCodeProps {
 
 export default function TimeCode(props: TimeCodeProps): JSX.Element {
   const activeTab: number = useSelector(
-    (storeUpdate: State) => appNavigationService.getActiveTab(storeUpdate.appNavigation))
+    (state: State) => appNavigationService.getActiveTab(state.appNavigation))
   const time: [number, number] = useSelector(
-    (storeUpdate: State) => mediaService.getOutput(storeUpdate).time
+    (state: State) => mediaService.getOutput(state).time
   )
   const frameRate: number = useSelector(
-      (storeUpdate: State) => {
-        const videoFormat = storeUpdate.settings.ccgConfig.channels[appNavigationService.getActiveTab(reduxState.appNavigation)]?.videoFormat
+      (state: State) => {
+        const videoFormat = state.settings.ccgConfig.channels[appNavigationService.getActiveTab(reduxState.appNavigation)]?.videoFormat
         return videoFormat ? videoFormat.frameRate : 25
       }
   )
@@ -31,7 +33,7 @@ export default function TimeCode(props: TimeCodeProps): JSX.Element {
   return (
     <a className={classNames}>
         {settingsService.isThumbnailSelected(props.file.name, reduxState.settings, activeTab)
-            ? mediaService.secondsToTimeCode(time, frameRate)
+            ? timeService.secondsToTimeCode(time, frameRate)
             : ''}
     </a>
   )

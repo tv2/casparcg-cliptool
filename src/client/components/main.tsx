@@ -11,8 +11,8 @@ import { Thumbnails } from "./thumbnail/thumbnails"
 
 // TODO: possibly find a better name
 export default function Main(): JSX.Element {
-  const tabData: TabData[] = useSelector((storeUpdate: State) => storeUpdate.settings.tabData)
-  const selectedTab: number = useSelector((storeUpdate: State) => appNavigationService.getActiveTab(storeUpdate.appNavigation))
+  const tabData: TabData[] = useSelector((state: State) => state.settings.tabData)
+  const selectedTab: number = useSelector((state: State) => appNavigationService.getActiveTab(state.appNavigation))
   
   return browserService.isChannelView() 
     ? <Thumbnails/> 

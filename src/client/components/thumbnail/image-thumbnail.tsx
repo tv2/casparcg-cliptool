@@ -16,15 +16,15 @@ interface ImageThumbnailProps {
 
 export default function ImageThumbnail(props: ImageThumbnailProps): JSX.Element {
   const activeTab: number = useSelector(
-    (storeUpdate: State) => appNavigationService.getActiveTab(storeUpdate.appNavigation))
+    (state: State) => appNavigationService.getActiveTab(state.appNavigation))
   useSelector(
-    (storeUpdate: State) => settingsService
-      .getOutputSettings(storeUpdate.settings, activeTab).selectedFile
+    (state: State) => settingsService
+      .getOutputSettings(state.settings, activeTab).selectedFile
   )
 
   const hiddenFiles: Record<string, HiddenFileInfo> = useSelector(
-      (storeUpdate: State) => 
-          storeUpdate.media.hiddenFiles
+      (state: State) => 
+          state.media.hiddenFiles
   ) ?? {}
 
   const classNames: string = `thumb ${props.file.name in hiddenFiles ? 'hidden' : ''}`

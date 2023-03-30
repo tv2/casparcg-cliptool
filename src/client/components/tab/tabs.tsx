@@ -13,7 +13,7 @@ interface TabsProps {
 
 export default function Tabs(props: TabsProps): JSX.Element {   
   const selectedTab: number = 
-    useSelector((storeUpdate: State) => appNavigationService.getActiveTab(storeUpdate.appNavigation))
+    useSelector((state: State) => appNavigationService.getActiveTab(state.appNavigation))
 
   return (
     <div>

@@ -17,12 +17,11 @@ import browserService from '../services/browser-service'
 
 
 export function App(): JSX.Element {
-    const isSettingsOpen = useSelector((storeUpdate: State) => storeUpdate.appNavigation.showSettingsActive)
+    const isSettingsOpen = useSelector((state: State) => state.appNavigation.isSettingsOpen)
     const isConnected: boolean = useSelector(
-        (storeUpdate: State) => storeUpdate.appNavigation.isConnected)
-    const specificChannel = browserService.getChannel()
+        (state: State) => state.appNavigation.isConnected)
     if (browserService.isChannelView()) {
-        setOutput(specificChannel - 1)
+        setOutput(browserService.getChannel() - 1)
     }   
 
     return (
