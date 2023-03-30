@@ -13,10 +13,10 @@ const options: ConfigureStoreOptions = {
 let reduxStore = configureStore(options)
 
 //Subscribe to redux store:
-let reduxState: State = reduxStore.getState()
+let state: State = reduxStore.getState()
 reduxStore.subscribe(() => {
-    reduxState = reduxStore.getState()
+    state = reduxStore.getState()
 })
 
 export { reduxStore as reduxStore }
-export { reduxState as reduxState }
+export { state as state }

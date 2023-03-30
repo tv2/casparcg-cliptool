@@ -7,7 +7,7 @@ import '../../css/Thumbnail.css'
 import settingsService from "../../../model/services/settings-service";
 import { HiddenFileInfo, MediaFile } from "../../../model/reducers/media-models";
 import { State } from "../../../model/reducers/index-reducer";
-import { reduxState } from "../../../model/reducers/store";
+import { state } from "../../../model/reducers/store";
 import appNavigationService from "../../../model/services/app-navigation-service";
 
 interface ImageThumbnailProps {
@@ -32,8 +32,8 @@ export default function ImageThumbnail(props: ImageThumbnailProps): JSX.Element 
   return (
     <div className={classNames}>
         <ThumbnailPicture file={props.file} />
-        <ThumbnailButton file={props.file} buttonClassName="thumbnailImageClickPgm"/>
-        {settingsService.isThumbnailSelected(props.file.name, reduxState.settings, activeTab) && (
+        <ThumbnailButton file={props.file} className="thumbnailImageClickPgm"/>
+        {settingsService.isThumbnailSelected(props.file.name, state.settings, activeTab) && (
             <TimeCode file={props.file} />
         )}
         <p className="text">

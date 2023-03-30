@@ -1,7 +1,6 @@
 import React from "react";
-import { reduxState, reduxStore } from "../../../model/reducers/store";
+import { state, reduxStore } from "../../../model/reducers/store";
 import { socket } from "../../util/socketClientHandlers";
-import * as IO from '../../../model/socket-io-constants'
 import { useSelector } from "react-redux";
 import { TOGGLE_SHOW_SETTINGS } from "../../../model/reducers/app-navigation-action";
 import '../../css/Settings.css'
@@ -12,6 +11,7 @@ import _ from "lodash";
 import { State } from "../../../model/reducers/index-reducer";
 import Button from "../shared/button";
 import browserService from "../../services/browser-service";
+import { ClientToServer } from "../../../model/socket-io-constants";
 
 interface SettingsButtonsProps {
   settings: GenericSettings 
@@ -60,13 +60,13 @@ function toggleSettingsPage(): void {
 }
 
 function emitSetOperationModeToEditVisibility(): void {
-  const activeTab: number = appNavigationService.getActiveTab(reduxState.appNavigation)
-  const output = settingsService.getOutputSettings(reduxState.settings, activeTab)
+  const activeTab: number = appNavigationService.getActiveTab(state.appNavigation)
+  const output = settingsService.getOutputSettings(state.settings, activeTab)
   if (output.operationMode !== OperationMode.EDIT_VISIBILITY) {
       toggleSettingsPage()
   }
   socket.emit(
-      IO.SET_OPERATION_MODE, 
+      ClientToServer.SET_OPERATION_MODE, 
       activeTab, 
       output
           .operationMode !== OperationMode.EDIT_VISIBILITY 
@@ -77,7 +77,7 @@ function emitSetOperationModeToEditVisibility(): void {
 
 function saveSettings(settings: GenericSettings): void {
   if (hasChanges(settings) && window.confirm('Changes have been made, do you want to save them?')) {
-    socket.emit(IO.SET_GENERICS, settings)
+    socket.emit(ClientToServer.SET_GENERICS, settings)
     toggleSettingsPage()
   } 
 }
@@ -89,12 +89,12 @@ function restartCliptool(): void {
       )
   ) {
       console.log('Restarting server...')
-      socket.emit(IO.RESTART_SERVER)
+      socket.emit(ClientToServer.RESTART_SERVER)
   }
 }
 
 function hasChanges(settings: GenericSettings): boolean {
-  const hasChanged = !_.isEqual(settings, settingsService.getGenericSettings(reduxState.settings))
+  const hasChanged = !_.isEqual(settings, settingsService.getGenericSettings(state.settings))
   return hasChanged
 }
 

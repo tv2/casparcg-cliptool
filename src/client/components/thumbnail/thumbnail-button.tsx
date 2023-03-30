@@ -1,19 +1,19 @@
 import React from "react"
-import { PGM_LOAD, PGM_PLAY, TOGGLE_THUMBNAIL_VISIBILITY } from "../../../model/socket-io-constants";
 import { socket } from "../../util/socketClientHandlers";
 import '../../css/Thumbnail.css'
 import appNavigationService from "../../../model/services/app-navigation-service";
 import settingsService from "../../../model/services/settings-service";
 import { OperationMode } from "../../../model/reducers/settings-models";
 import { MediaFile } from "../../../model/reducers/media-models";
-import { reduxState } from "../../../model/reducers/store";
+import { state } from "../../../model/reducers/store";
 import { useSelector } from "react-redux";
 import { State } from "../../../model/reducers/index-reducer";
 import Button from "../shared/button";
+import { ClientToServer } from "../../../model/socket-io-constants";
 
 interface ThumbnailButtonProps {
   file: MediaFile
-  buttonClassName: string
+  className: string
 }
 
 export default function ThumbnailButton(props: ThumbnailButtonProps): JSX.Element {
@@ -22,7 +22,7 @@ export default function ThumbnailButton(props: ThumbnailButtonProps): JSX.Elemen
 
   return (
     <Button
-        className={props.buttonClassName}
+        className={props.className}
         onClick={() => {
           triggerOperationModeAction(props.file.name, activeTab)
         }}
@@ -31,7 +31,7 @@ export default function ThumbnailButton(props: ThumbnailButtonProps): JSX.Elemen
 }
 
 function triggerOperationModeAction(fileName: string, activeTab: number): void {    
-  const operationMode = settingsService.getOutputSettings(reduxState.settings, activeTab)?.operationMode
+  const operationMode = settingsService.getOutputSettings(state.settings, activeTab)?.operationMode
   switch (operationMode) {
       case OperationMode.EDIT_VISIBILITY: 
           emitToggleVisibility(fileName)
@@ -44,17 +44,17 @@ function triggerOperationModeAction(fileName: string, activeTab: number): void {
 }
 
 function emitToggleVisibility(fileName: string): void {
-  if (settingsService.isThumbnailSelectedOnAnyOutput(fileName, reduxState.settings)) {
+  if (settingsService.isThumbnailSelectedOnAnyOutput(fileName, state.settings)) {
       alert('Unable to hide, as the file is in use somewhere.')
       return
   }
       
-  socket.emit(TOGGLE_THUMBNAIL_VISIBILITY, appNavigationService.getActiveTab(reduxState.appNavigation), fileName)
+  socket.emit(ClientToServer.TOGGLE_THUMBNAIL_VISIBILITY, appNavigationService.getActiveTab(state.appNavigation), fileName)
 }
 
 function emitPlayFile(fileName: string, activeTab: number ): void {
-  const event = !settingsService.getOutputSettings(reduxState.settings, activeTab)?.manualStartState 
-      ? PGM_PLAY 
-      : PGM_LOAD
-  socket.emit(event, appNavigationService.getActiveTab(reduxState.appNavigation), fileName)
+  const event = !settingsService.getOutputSettings(state.settings, activeTab)?.manualStartState 
+      ? ClientToServer.PGM_PLAY 
+      : ClientToServer.PGM_LOAD
+  socket.emit(event, appNavigationService.getActiveTab(state.appNavigation), fileName)
 }

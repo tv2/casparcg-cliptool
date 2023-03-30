@@ -1,6 +1,5 @@
-import { reduxState, reduxStore } from '../../model/reducers/store'
+import { state, reduxStore } from '../../model/reducers/store'
 import { logger } from '../utils/logger'
-import * as IO from '../../model/socket-io-constants'
 
 import { socketServer } from './express-handler'
 import {
@@ -34,23 +33,29 @@ import {
 } from '../../model/reducers/settings-models'
 import settingsPersistenceService from '../services/settings-persistence-service'
 import hiddenFilesPersistenceService from '../services/hidden-files-persistence-service'
+import {
+    ClientToServer,
+    GET_SETTINGS,
+    ServerToClient,
+    TimeTallyPayload,
+} from '../../model/socket-io-constants'
 
 export function socketIoHandlers(socket: any): void {
     logger.info('SETTING UP SOCKET IO MAIN HANDLERS')
 
-    socketServer.emit(IO.SETTINGS_UPDATE, reduxState.settings)
+    socketServer.emit(ServerToClient.SETTINGS_UPDATE, state.settings)
     initializeClient()
 
     socket
-        .on(IO.GET_SETTINGS, () => {
-            socketServer.emit(IO.SETTINGS_UPDATE, reduxState.settings)
+        .on(GET_SETTINGS, () => {
+            socketServer.emit(ServerToClient.SETTINGS_UPDATE, state.settings)
         })
         .on(
-            IO.TOGGLE_THUMBNAIL_VISIBILITY,
+            ClientToServer.TOGGLE_THUMBNAIL_VISIBILITY,
             (channelIndex: number, fileName: string) => {
                 if (
                     settingsService
-                        .getGenericSettings(reduxState.settings)
+                        .getGenericSettings(state.settings)
                         .outputSettings.some(
                             (output) => output.selectedFile === fileName
                         )
@@ -58,7 +63,7 @@ export function socketIoHandlers(socket: any): void {
                     return
                 }
 
-                const hiddenFiles = reduxState.media.hiddenFiles
+                const hiddenFiles = state.media.hiddenFiles
                 try {
                     const updatedHiddenFiles = toggleHiddenFile(
                         fileName,
@@ -69,7 +74,7 @@ export function socketIoHandlers(socket: any): void {
                     hiddenFilesPersistenceService.save()
 
                     socketServer.emit(
-                        IO.HIDDEN_FILES_UPDATE,
+                        ServerToClient.HIDDEN_FILES_UPDATE,
                         updatedHiddenFiles
                     )
                 } catch (error) {
@@ -81,110 +86,131 @@ export function socketIoHandlers(socket: any): void {
                 }
             }
         )
-        .on(IO.PGM_PLAY, (channelIndex: number, fileName: string) => {
-            if (
-                !settingsService.getOutputSettings(
-                    reduxState.settings,
-                    channelIndex
-                ).mixState
-            ) {
-                playMedia(channelIndex, 9, fileName)
-            } else {
-                mixMedia(channelIndex, 9, fileName)
-            }
-            logger.info(`Playing ${fileName} on channel index ${channelIndex}.`)
-        })
-        .on(IO.PGM_LOAD, (channelIndex: number, fileName: string) => {
-            loadMedia(channelIndex, 9, fileName)
-            logger.info(`Loading ${fileName} on channel index ${channelIndex}.`)
-        })
-        .on(IO.SET_LOOP_STATE, (channelIndex: number, state: boolean) => {
-            reduxStore.dispatch(setLoop(channelIndex, state))
-            socketServer.emit(
-                IO.LOOP_STATE_UPDATE,
-                channelIndex,
-                settingsService.getOutputSettings(
-                    reduxState.settings,
-                    channelIndex
-                ).loopState
-            )
-        })
         .on(
-            IO.SET_OPERATION_MODE,
+            ClientToServer.PGM_PLAY,
+            (channelIndex: number, fileName: string) => {
+                if (
+                    !settingsService.getOutputSettings(
+                        state.settings,
+                        channelIndex
+                    ).mixState
+                ) {
+                    playMedia(channelIndex, 9, fileName)
+                } else {
+                    mixMedia(channelIndex, 9, fileName)
+                }
+                logger.info(
+                    `Playing ${fileName} on channel index ${channelIndex}.`
+                )
+            }
+        )
+        .on(
+            ClientToServer.PGM_LOAD,
+            (channelIndex: number, fileName: string) => {
+                loadMedia(channelIndex, 9, fileName)
+                logger.info(
+                    `Loading ${fileName} on channel index ${channelIndex}.`
+                )
+            }
+        )
+        .on(
+            ClientToServer.SET_LOOP_STATE,
+            (channelIndex: number, loopState: boolean) => {
+                reduxStore.dispatch(setLoop(channelIndex, loopState))
+                socketServer.emit(
+                    ServerToClient.LOOP_STATE_UPDATE,
+                    channelIndex,
+                    settingsService.getOutputSettings(
+                        state.settings,
+                        channelIndex
+                    ).loopState
+                )
+            }
+        )
+        .on(
+            ClientToServer.SET_OPERATION_MODE,
             (channelIndex: number, mode: OperationMode) => {
                 reduxStore.dispatch(setOperationMode(channelIndex, mode))
                 socketServer.emit(
-                    IO.OPERATION_MODE_UPDATE,
+                    ServerToClient.OPERATION_MODE_UPDATE,
                     channelIndex,
                     settingsService.getOutputSettings(
-                        reduxState.settings,
+                        state.settings,
                         channelIndex
                     ).operationMode
                 )
             }
         )
         .on(
-            IO.SET_MANUAL_START_STATE,
-            (channelIndex: number, state: boolean) => {
-                reduxStore.dispatch(setManualStart(channelIndex, state))
+            ClientToServer.SET_MANUAL_START_STATE,
+            (channelIndex: number, manualStartState: boolean) => {
+                reduxStore.dispatch(
+                    setManualStart(channelIndex, manualStartState)
+                )
                 socketServer.emit(
-                    IO.MANUAL_START_STATE_UPDATE,
+                    ServerToClient.MANUAL_START_STATE_UPDATE,
                     channelIndex,
                     settingsService.getOutputSettings(
-                        reduxState.settings,
+                        state.settings,
                         channelIndex
                     ).manualStartState
                 )
             }
         )
-        .on(IO.SET_MIX_STATE, (channelIndex: number, state: boolean) => {
-            reduxStore.dispatch(setMix(channelIndex, state))
-            socketServer.emit(
-                IO.MIX_STATE_UPDATE,
-                channelIndex,
-                settingsService.getOutputSettings(
-                    reduxState.settings,
-                    channelIndex
-                ).mixState
-            )
-        })
-        .on(IO.SET_WEB_STATE, (channelIndex: number, state: boolean) => {
-            reduxStore.dispatch(setWeb(channelIndex, state))
-            socketServer.emit(
-                IO.WEB_STATE_UPDATE,
-                channelIndex,
-                settingsService.getOutputSettings(
-                    reduxState.settings,
-                    channelIndex
-                ).webState
-            )
-            if (
-                settingsService.getOutputSettings(
-                    reduxState.settings,
-                    channelIndex
-                ).webState
-            ) {
-                const webUrl = settingsService.getOutputSettings(
-                    reduxState.settings,
-                    channelIndex
-                ).webUrl
-                playOverlay(channelIndex, 10, webUrl)
-                logger.info(
-                    `Overlay playing ${webUrl} on channel index ${channelIndex}.`
+        .on(
+            ClientToServer.SET_MIX_STATE,
+            (channelIndex: number, mixState: boolean) => {
+                reduxStore.dispatch(setMix(channelIndex, mixState))
+                socketServer.emit(
+                    ServerToClient.MIX_STATE_UPDATE,
+                    channelIndex,
+                    settingsService.getOutputSettings(
+                        state.settings,
+                        channelIndex
+                    ).mixState
                 )
-            } else {
-                stopOverlay(channelIndex, 10)
             }
-        })
-        .on(IO.SET_GENERICS, (generics: GenericSettings) => {
+        )
+        .on(
+            ClientToServer.SET_WEB_STATE,
+            (channelIndex: number, webState: boolean) => {
+                reduxStore.dispatch(setWeb(channelIndex, webState))
+                socketServer.emit(
+                    ServerToClient.WEB_STATE_UPDATE,
+                    channelIndex,
+                    settingsService.getOutputSettings(
+                        state.settings,
+                        channelIndex
+                    ).webState
+                )
+                if (
+                    settingsService.getOutputSettings(
+                        state.settings,
+                        channelIndex
+                    ).webState
+                ) {
+                    const webUrl = settingsService.getOutputSettings(
+                        state.settings,
+                        channelIndex
+                    ).webUrl
+                    playOverlay(channelIndex, 10, webUrl)
+                    logger.info(
+                        `Overlay playing ${webUrl} on channel index ${channelIndex}.`
+                    )
+                } else {
+                    stopOverlay(channelIndex, 10)
+                }
+            }
+        )
+        .on(ClientToServer.SET_GENERICS, (generics: GenericSettings) => {
             logger.data(generics).trace('Save Settings')
-            logger.info('Updating and storing generic settings serverside.')
+            logger.info('Updating and storing generic settings server side.')
             reduxStore.dispatch(setGenerics(generics))
             settingsPersistenceService.save()
-            socketServer.emit(IO.SETTINGS_UPDATE, reduxState.settings)
+            socketServer.emit(ServerToClient.SETTINGS_UPDATE, state.settings)
             cleanUpMediaFiles()
         })
-        .on(IO.RESTART_SERVER, () => {
+        .on(ClientToServer.RESTART_SERVER, () => {
             process.exit(0)
         })
 }
@@ -238,7 +264,7 @@ function findFile(
     channelIndex: number
 ): MediaFile | undefined {
     return mediaService
-        .getOutput(reduxState, channelIndex)
+        .getOutput(state, channelIndex)
         .mediaFiles.find(
             (file) => file.name.toUpperCase() === fileName.toUpperCase()
         )
@@ -252,54 +278,58 @@ function getMetadata(file: MediaFile): HiddenFileInfo {
 }
 
 export function initializeClient(): void {
-    socketServer.emit(IO.TAB_DATA_UPDATE, reduxState.settings.tabData)
-    let timeTallyData: IO.TimeTallyPayload[] = []
+    socketServer.emit(ServerToClient.TAB_DATA_UPDATE, state.settings.tabData)
+    let timeTallyData: TimeTallyPayload[] = []
     const selectedFiles: string[] = []
     settingsService
-        .getGenericSettings(reduxState.settings)
+        .getGenericSettings(state.settings)
         .outputSettings.forEach(
             (output: OutputSettings, channelIndex: number) => {
                 selectedFiles.push(output.selectedFile)
                 socketServer.emit(
-                    IO.LOOP_STATE_UPDATE,
+                    ServerToClient.LOOP_STATE_UPDATE,
                     channelIndex,
                     output.loopState
                 )
                 socketServer.emit(
-                    IO.OPERATION_MODE_UPDATE,
+                    ServerToClient.OPERATION_MODE_UPDATE,
                     channelIndex,
                     output.operationMode
                 )
                 socketServer.emit(
-                    IO.MIX_STATE_UPDATE,
+                    ServerToClient.MIX_STATE_UPDATE,
                     channelIndex,
                     output.mixState
                 )
                 socketServer.emit(
-                    IO.MANUAL_START_STATE_UPDATE,
+                    ServerToClient.MANUAL_START_STATE_UPDATE,
                     channelIndex,
                     output.manualStartState
                 )
                 socketServer.emit(
-                    IO.HIDDEN_FILES_UPDATE,
-                    reduxState.media.hiddenFiles
+                    ServerToClient.HIDDEN_FILES_UPDATE,
+                    state.media.hiddenFiles
                 )
             }
         )
-    mediaService.getOutputs(reduxState).forEach((output, channelIndex) => {
+    mediaService.getOutputs(state).forEach((output, channelIndex) => {
         timeTallyData[channelIndex] = {
             time: output.time,
             tally: selectedFiles[channelIndex],
         }
-        socketServer.emit(IO.TIME_TALLY_UPDATE, timeTallyData)
+        socketServer.emit(ServerToClient.TIME_TALLY_UPDATE, timeTallyData)
         socketServer.emit(
-            IO.THUMBNAIL_UPDATE,
+            ServerToClient.THUMBNAIL_UPDATE,
             channelIndex,
             output.thumbnailList
         )
-        socketServer.emit(IO.MEDIA_UPDATE, channelIndex, output.mediaFiles)
+        socketServer.emit(
+            ServerToClient.MEDIA_UPDATE,
+            channelIndex,
+            output.mediaFiles
+        )
     })
-    socketServer.emit(IO.TIME_TALLY_UPDATE, timeTallyData)
+    socketServer.emit(ServerToClient.TIME_TALLY_UPDATE, timeTallyData)
 }
 
 function cleanUpMediaFiles(): void {

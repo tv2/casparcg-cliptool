@@ -1,5 +1,5 @@
 import React from 'react'
-import { reduxStore, reduxState } from '../../../model/reducers/store'
+import { reduxStore, state } from '../../../model/reducers/store'
 import { TOGGLE_SHOW_SETTINGS } from '../../../model/reducers/app-navigation-action'
 
 import '../../css/App.css'
@@ -7,7 +7,7 @@ import '../../css/App-header.css'
 import '../../css/App-control-view-header.css'
 import '../../css/App-text-view-header.css'
 import Time from './time'
-import ControlButtons from './control-buttons/control-buttons'
+import ControlActions from './control-buttons/control-actions'
 import browserService from '../../services/browser-service'
 
 export default function Header(): JSX.Element {  
@@ -26,7 +26,7 @@ export default function Header(): JSX.Element {
                 )}
 
                 <Time />
-                <ControlButtons />
+                <ControlActions />
             </div>                        
         </header>
     )
@@ -34,7 +34,7 @@ export default function Header(): JSX.Element {
 
 function emitToggleSettingsVisibility(): void {
     // TODO: Figure out how to do the discard check here, and allow the user to close via this again.
-    if (!reduxState.appNavigation.isSettingsOpen) {
+    if (!state.appNavigation.isSettingsOpen) {
         reduxStore.dispatch({
         type: TOGGLE_SHOW_SETTINGS,
         })

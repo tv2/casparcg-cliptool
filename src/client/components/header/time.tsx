@@ -1,6 +1,6 @@
 import React from "react"
 import { useSelector } from "react-redux"
-import { reduxState } from "../../../model/reducers/store";
+import { state } from "../../../model/reducers/store";
 import mediaService from "../../../model/services/media-service";
 
 import '../../css/App-header.css'
@@ -25,7 +25,7 @@ export default function Time(): JSX.Element {
     useSelector(
         (state: State) => mediaService.getOutput(state)?.thumbnailList)
 
-    const cleanSelectedFile: string = settingsService.getCleanSelectedFile(settingsOutput, reduxState.settings)    
+    const cleanSelectedFile: string = settingsService.getCleanSelectedFile(settingsOutput, state.settings)    
     const thumbnailUrl = mediaService.getBase64ThumbnailUrl(cleanSelectedFile, activeTab)
     
     return (
@@ -33,7 +33,7 @@ export default function Time(): JSX.Element {
             <button className="App-header-pgm-counter">
                 {timeService.secondsToTimeCode(
                     mediaOutput?.time,
-                    reduxState.settings.ccgConfig.channels[activeTab]?.videoFormat?.frameRate
+                    state.settings.ccgConfig.channels[activeTab]?.videoFormat?.frameRate
                 )}
             </button>
             <img

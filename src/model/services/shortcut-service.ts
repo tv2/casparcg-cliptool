@@ -1,4 +1,4 @@
-import { reduxState } from '../reducers/store'
+import { state } from '../reducers/store'
 
 // Unused currently, but Kasper says use of the original 'handleShortcuts', should be re-implemented in the future.
 // Because of this, the code is being kept - now as a service on the model level, to eliminate duplication.
@@ -18,7 +18,7 @@ class ShortcutService {
         //Convert event.keyCode to letter:
         let keyPressed = String.fromCharCode(event.keyCode)
 
-        if (reduxState.appNavigation.isSettingsOpen) {
+        if (state.appNavigation.isSettingsOpen) {
             keyPressed = ''
         }
 

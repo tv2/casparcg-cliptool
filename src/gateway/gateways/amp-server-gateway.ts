@@ -2,9 +2,9 @@ import { createServer } from 'net'
 
 import { socket as socketio } from '../util/socket-gateway-handlers'
 
-import * as IO from '../../model/socket-io-constants'
 import { logger } from '../util/logger-gateway'
 import osService from '../../model/services/os-service'
+import { ClientToServer } from '../../model/socket-io-constants'
 
 export function ampServerGateway(): void {
     console.log('Initializing AMP server')
@@ -25,7 +25,7 @@ export function ampServerGateway(): void {
                 let channel = 1 // message.address.split('/')[2]
                 if (message.includes('CMDS00042001')) {
                     console.log(`PLAY on channel ${ccgCh}`)
-                    socketio.emit(IO.PGM_PLAY, channel - 1, '')
+                    socketio.emit(ClientToServer.PGM_PLAY, channel - 1, '')
                 }
             })
             .on('end', () => {

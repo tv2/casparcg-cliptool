@@ -1,21 +1,18 @@
 import { State } from '../reducers/index-reducer'
 import { Output as Output, ThumbnailFile } from '../reducers/media-models'
-import { reduxState } from '../reducers/store'
+import { state } from '../reducers/store'
 import appNavigationService from './app-navigation-service'
 
 class MediaService {
-    public getOutput(
-        store: State = reduxState,
-        channelIndex: number = -1
-    ): Output {
+    public getOutput(store: State = state, channelIndex: number = -1): Output {
         const activeTab: number =
             channelIndex === -1
-                ? appNavigationService.getActiveTab(reduxState.appNavigation)
+                ? appNavigationService.getActiveTab(state.appNavigation)
                 : channelIndex
         return store.media.outputs[activeTab]
     }
 
-    public getOutputs(store: State = reduxState): Output[] {
+    public getOutputs(store: State = state): Output[] {
         return store.media.outputs
     }
 
@@ -23,7 +20,7 @@ class MediaService {
         fileName: string,
         channelIndex: number
     ): string {
-        const output = this.getOutput(reduxState, channelIndex)
+        const output = this.getOutput(state, channelIndex)
         if (!output || !output.thumbnailList) {
             return ''
         }

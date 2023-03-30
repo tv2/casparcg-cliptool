@@ -1,14 +1,14 @@
 // @ts-ignore
 import osc from 'osc' //Using OSC fork from PieceMeta/osc.js as it has excluded hardware serialport support and thereby is crossplatform
 
-import { reduxState } from '../../model/reducers/store'
+import { state } from '../../model/reducers/store'
 import { socket } from '../util/socket-gateway-handlers'
 
-import * as IO from '../../model/socket-io-constants'
 import * as OSC from './osc-constants'
 import { ARG_CONSTANTS } from '../util/extract-args'
 import osService from '../../model/services/os-service'
 import mediaService from '../../model/services/media-service'
+import { ClientToServer } from '../../model/socket-io-constants'
 
 export function oscServerGateway(): void {
     console.log('Initializing OSC server')
@@ -35,10 +35,18 @@ export function oscServerGateway(): void {
             let channel = message.address.split('/')[2]
             if (checkOscCommand(message.address, OSC.PGM_PLAY)) {
                 console.log(`PLAY ${message.address} ${message.args[0]}`)
-                socket.emit(IO.PGM_PLAY, channel - 1, message.args[0])
+                socket.emit(
+                    ClientToServer.PGM_PLAY,
+                    channel - 1,
+                    message.args[0]
+                )
             } else if (checkOscCommand(message.address, OSC.PGM_CUE)) {
                 console.log(`LOAD ${message.address} ${message.args[0]}`)
-                socket.emit(IO.PGM_LOAD, channel - 1, message.args[0])
+                socket.emit(
+                    ClientToServer.PGM_LOAD,
+                    channel - 1,
+                    message.args[0]
+                )
             } else if (checkOscCommand(message.address, OSC.MEDIA)) {
                 console.log(
                     `GET MEDIA OUTPUT: ${channel}  Command : ${message.address} `
@@ -49,7 +57,7 @@ export function oscServerGateway(): void {
                         {
                             type: 's',
                             value: JSON.stringify(
-                                mediaService.getOutput(reduxState, channel - 1)
+                                mediaService.getOutput(state, channel - 1)
                                     .mediaFiles
                             ),
                         },

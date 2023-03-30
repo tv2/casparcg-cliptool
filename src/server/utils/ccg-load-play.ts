@@ -1,5 +1,5 @@
 const MIX_DURATION = 16
-import { reduxState } from '../../model/reducers/store'
+import { state } from '../../model/reducers/store'
 import { ccgConnection } from '../handlers/caspar-cg-handler'
 import { Enum as CcgEnum } from 'casparcg-connection'
 import settingsService from '../../model/services/settings-service'
@@ -14,7 +14,7 @@ export function playMedia(
         channelIndex + 1,
         layerIndex + 1,
         fileName,
-        settingsService.getOutputSettings(reduxState.settings, channelIndex)
+        settingsService.getOutputSettings(state.settings, channelIndex)
             .loopState || false
     )
 }
@@ -30,7 +30,7 @@ export function mixMedia(
         channelIndex + 1,
         layerIndex + 1,
         fileName,
-        settingsService.getOutputSettings(reduxState.settings, channelIndex)
+        settingsService.getOutputSettings(state.settings, channelIndex)
             .loopState || false,
         CcgEnum.Transition.MIX,
         MIX_DURATION
@@ -48,7 +48,7 @@ export function loadMedia(
         channelIndex + 1,
         layerIndex + 1,
         fileName,
-        settingsService.getOutputSettings(reduxState.settings, channelIndex)
+        settingsService.getOutputSettings(state.settings, channelIndex)
             .loopState || false
     )
 }
@@ -73,8 +73,7 @@ export function stopOverlay(channelIndex: number, layerIndex: number) {
 }
 
 function scale(channelIndex: number, layerIndex: number): void {
-    const videoMode =
-        reduxState.settings.ccgConfig.channels[channelIndex].videoMode
+    const videoMode = state.settings.ccgConfig.channels[channelIndex].videoMode
     if (!videoMode) {
         return
     }
@@ -84,7 +83,7 @@ function scale(channelIndex: number, layerIndex: number): void {
     let scaleOutX = 1
     let scaleOutY = 1
     const outputSetting = settingsService.getOutputSettings(
-        reduxState.settings,
+        state.settings,
         channelIndex
     )
     if (outputSetting.shouldScale) {

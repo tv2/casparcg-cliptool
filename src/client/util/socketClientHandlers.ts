@@ -1,5 +1,8 @@
-import { reduxState, reduxStore } from '../../model/reducers/store'
-import * as IO from '../../model/socket-io-constants'
+import { state, reduxStore } from '../../model/reducers/store'
+import {
+    ServerToClient,
+    TimeTallyPayload,
+} from '../../model/socket-io-constants'
 
 import io from 'socket.io-client'
 import {
@@ -32,7 +35,7 @@ import settingsService from '../../model/services/settings-service'
 
 export const socket = io()
 
-console.log('Initialising SocketClient')
+console.log('initializing SocketClient')
 
 socket
     .on('connect', () => {
@@ -43,34 +46,37 @@ socket
         reduxStore.dispatch(setConnectionStatus(false))
         console.log('LOST CONNECTION TO CLIPTOOL SERVER')
     })
-    .on(IO.MEDIA_UPDATE, (channelIndex: number, payload: MediaFile[]) => {
-        reduxStore.dispatch(updateMediaFiles(channelIndex, payload))
-        console.log('Client state :', reduxState)
-    })
+    .on(
+        ServerToClient.MEDIA_UPDATE,
+        (channelIndex: number, payload: MediaFile[]) => {
+            reduxStore.dispatch(updateMediaFiles(channelIndex, payload))
+            console.log('Client state :', state)
+        }
+    )
 
-socket.on(IO.FOLDERS_UPDATE, (payload: string[]) => {
+socket.on(ServerToClient.FOLDERS_UPDATE, (payload: string[]) => {
     reduxStore.dispatch(updateFolderList(payload))
 })
 
 socket.on(
-    IO.THUMBNAIL_UPDATE,
+    ServerToClient.THUMBNAIL_UPDATE,
     (channelIndex: number, payload: ThumbnailFile[]) => {
         reduxStore.dispatch(updateThumbnailFileList(channelIndex, payload))
     }
 )
 
 socket.on(
-    IO.HIDDEN_FILES_UPDATE,
+    ServerToClient.HIDDEN_FILES_UPDATE,
     (hiddenFiles: Record<string, HiddenFileInfo>) => {
         reduxStore.dispatch(updateHiddenFiles(hiddenFiles))
     }
 )
 
-socket.on(IO.TIME_TALLY_UPDATE, (data: IO.TimeTallyPayload[]) => {
+socket.on(ServerToClient.TIME_TALLY_UPDATE, (data: TimeTallyPayload[]) => {
     data.forEach((channel, index) => {
         reduxStore.dispatch(setTime(index, channel.time))
         if (
-            settingsService.getOutputSettings(reduxState.settings, index)
+            settingsService.getOutputSettings(state.settings, index)
                 .selectedFile !== channel.tally
         ) {
             reduxStore.dispatch(setSelectedFileName(index, channel.tally))
@@ -78,33 +84,42 @@ socket.on(IO.TIME_TALLY_UPDATE, (data: IO.TimeTallyPayload[]) => {
     })
 })
 
-socket.on(IO.LOOP_STATE_UPDATE, (channelIndex: number, loop: boolean) => {
-    reduxStore.dispatch(setLoop(channelIndex, loop))
-})
+socket.on(
+    ServerToClient.LOOP_STATE_UPDATE,
+    (channelIndex: number, loop: boolean) => {
+        reduxStore.dispatch(setLoop(channelIndex, loop))
+    }
+)
 
 socket.on(
-    IO.OPERATION_MODE_UPDATE,
+    ServerToClient.OPERATION_MODE_UPDATE,
     (channelIndex: number, mode: OperationMode) => {
         reduxStore.dispatch(setOperationMode(channelIndex, mode))
     }
 )
 
-socket.on(IO.MIX_STATE_UPDATE, (channelIndex: number, mix: boolean) => {
-    reduxStore.dispatch(setMix(channelIndex, mix))
-})
-
-socket.on(IO.WEB_STATE_UPDATE, (channelIndex: number, web: boolean) => {
-    reduxStore.dispatch(setWeb(channelIndex, web))
-})
-
 socket.on(
-    IO.MANUAL_START_STATE_UPDATE,
-    (channelIndex: number, manualstart: boolean) => {
-        reduxStore.dispatch(setManualStart(channelIndex, manualstart))
+    ServerToClient.MIX_STATE_UPDATE,
+    (channelIndex: number, mix: boolean) => {
+        reduxStore.dispatch(setMix(channelIndex, mix))
     }
 )
 
-socket.on(IO.SETTINGS_UPDATE, (payload: Settings) => {
+socket.on(
+    ServerToClient.WEB_STATE_UPDATE,
+    (channelIndex: number, web: boolean) => {
+        reduxStore.dispatch(setWeb(channelIndex, web))
+    }
+)
+
+socket.on(
+    ServerToClient.MANUAL_START_STATE_UPDATE,
+    (channelIndex: number, manualStart: boolean) => {
+        reduxStore.dispatch(setManualStart(channelIndex, manualStart))
+    }
+)
+
+socket.on(ServerToClient.SETTINGS_UPDATE, (payload: Settings) => {
     reduxStore.dispatch(setNumberOfOutputs(payload.ccgConfig.channels.length))
     reduxStore.dispatch(setGenerics(payload.generics))
     reduxStore.dispatch(

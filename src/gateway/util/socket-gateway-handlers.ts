@@ -1,7 +1,5 @@
-import { reduxState, reduxStore } from '../../model/reducers/store'
-import * as IO from '../../model/socket-io-constants'
+import { state, reduxStore } from '../../model/reducers/store'
 
-// import io from 'socket.io-client'
 import {
     setTime,
     updateMediaFiles,
@@ -25,6 +23,10 @@ import { logger } from './logger-gateway'
 import { MediaFile, ThumbnailFile } from '../../model/reducers/media-models'
 import { OperationMode, Settings } from '../../model/reducers/settings-models'
 import settingsService from '../../model/services/settings-service'
+import {
+    ServerToClient,
+    TimeTallyPayload,
+} from '../../model/socket-io-constants'
 
 logger.info(`Connecting Socket to: ${ARG_CONSTANTS.clipToolHost}`)
 
@@ -49,24 +51,27 @@ socket.on('Socket Client reconnect_attempt', () =>
     logger.debug('reconnect_attempt')
 )
 
-socket.on(IO.MEDIA_UPDATE, (channelIndex: number, mediaFiles: MediaFile[]) => {
-    reduxStore.dispatch(updateMediaFiles(channelIndex, mediaFiles))
+socket.on(
+    ServerToClient.MEDIA_UPDATE,
+    (channelIndex: number, mediaFiles: MediaFile[]) => {
+        reduxStore.dispatch(updateMediaFiles(channelIndex, mediaFiles))
 
-    logger
-        .data(mediaFiles)
-        .debug(
-            `Media list updated channel index ${channelIndex} with ${mediaFiles}.`
-        )
-})
+        logger
+            .data(mediaFiles)
+            .debug(
+                `Media list updated channel index ${channelIndex} with ${mediaFiles}.`
+            )
+    }
+)
 
-socket.on(IO.FOLDERS_UPDATE, (payload: string[]) => {
+socket.on(ServerToClient.FOLDERS_UPDATE, (payload: string[]) => {
     reduxStore.dispatch(updateFolderList(payload))
 
     logger.data(payload).debug(`Folderlist updated Payload:`)
 })
 
 socket.on(
-    IO.THUMBNAIL_UPDATE,
+    ServerToClient.THUMBNAIL_UPDATE,
     (channelIndex: number, thumbnailFiles: ThumbnailFile[]) => {
         reduxStore.dispatch(
             updateThumbnailFileList(channelIndex, thumbnailFiles)
@@ -78,11 +83,11 @@ socket.on(
     }
 )
 
-socket.on(IO.TIME_TALLY_UPDATE, (data: IO.TimeTallyPayload[]) => {
+socket.on(ServerToClient.TIME_TALLY_UPDATE, (data: TimeTallyPayload[]) => {
     data.forEach((channel, index) => {
         reduxStore.dispatch(setTime(index, channel.time))
         if (
-            settingsService.getOutputSettings(reduxState.settings, index)
+            settingsService.getOutputSettings(state.settings, index)
                 .selectedFile !== channel.tally
         ) {
             reduxStore.dispatch(setSelectedFileName(index, channel.tally))
@@ -90,33 +95,39 @@ socket.on(IO.TIME_TALLY_UPDATE, (data: IO.TimeTallyPayload[]) => {
     })
 })
 
-socket.on(IO.LOOP_STATE_UPDATE, (channelIndex: number, loop: boolean) => {
-    reduxStore.dispatch(setLoop(channelIndex, loop))
-    console.log('Loop State updated')
-})
+socket.on(
+    ServerToClient.LOOP_STATE_UPDATE,
+    (channelIndex: number, loop: boolean) => {
+        reduxStore.dispatch(setLoop(channelIndex, loop))
+        console.log('Loop State updated')
+    }
+)
 
 socket.on(
-    IO.OPERATION_MODE_UPDATE,
+    ServerToClient.OPERATION_MODE_UPDATE,
     (channelIndex: number, mode: OperationMode) => {
         reduxStore.dispatch(setOperationMode(channelIndex, mode))
         console.log('Operation Mode updated')
     }
 )
 
-socket.on(IO.MIX_STATE_UPDATE, (channelIndex: number, mix: boolean) => {
-    reduxStore.dispatch(setMix(channelIndex, mix))
-    console.log('Mix State updated')
-})
+socket.on(
+    ServerToClient.MIX_STATE_UPDATE,
+    (channelIndex: number, mix: boolean) => {
+        reduxStore.dispatch(setMix(channelIndex, mix))
+        console.log('Mix State updated')
+    }
+)
 
 socket.on(
-    IO.MANUAL_START_STATE_UPDATE,
+    ServerToClient.MANUAL_START_STATE_UPDATE,
     (channelIndex: number, manualStart: boolean) => {
         reduxStore.dispatch(setManualStart(channelIndex, manualStart))
         console.log('Manual State updated')
     }
 )
 
-socket.on(IO.SETTINGS_UPDATE, (settings: Settings) => {
+socket.on(ServerToClient.SETTINGS_UPDATE, (settings: Settings) => {
     reduxStore.dispatch(setNumberOfOutputs(settings.ccgConfig.channels.length))
     reduxStore.dispatch(setGenerics(settings.generics))
     reduxStore.dispatch(

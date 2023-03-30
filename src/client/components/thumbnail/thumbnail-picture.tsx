@@ -5,7 +5,7 @@ import '../../css/Thumbnail.css'
 import appNavigationService from "../../../model/services/app-navigation-service";
 import { MediaFile } from "../../../model/reducers/media-models";
 import { State } from "../../../model/reducers/index-reducer";
-import { reduxState } from "../../../model/reducers/store";
+import { state } from "../../../model/reducers/store";
 import settingsService from "../../../model/services/settings-service";
 
 interface ThumbnailPictureProps {
@@ -23,7 +23,7 @@ export default function ThumbnailPicture(props: ThumbnailPictureProps): JSX.Elem
     return <></>
   }
   const url: string = mediaService.getBase64ThumbnailUrl(file.name, activeTab || 0)
-  const classNames: string = `thumbnailImage ${settingsService.isThumbnailSelected(file.name, reduxState.settings, activeTab) ? 'selected-thumb' : ''}`
+  const classNames: string = `thumbnailImage ${settingsService.isThumbnailSelected(file.name, state.settings, activeTab) ? 'selected-thumb' : ''}`
 
   return (
       <img src={url} className={classNames} />

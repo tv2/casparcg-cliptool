@@ -1,6 +1,6 @@
 import React, { useState } from "react"
 import { CcgConfigChannel, OutputSettings } from "../../../model/reducers/settings-models"
-import { reduxState } from "../../../model/reducers/store"
+import { state } from "../../../model/reducers/store"
 import '../../css/Settings.css'
 import eventService from "../../services/event-service"
 import Label from "../shared/label"
@@ -46,7 +46,7 @@ export default function SingleOutput(props: SingleOutputProps): JSX.Element {
                         onChange={saveTempTabMediaFolderChange}
                         value={ folder }
                     >
-                        {reduxState.media.folderList.map(
+                        {state.media.folderList.map(
                             (path: string, folderIndex: number) => {
                                 return (
                                     <option key={folderIndex} value={path}>
@@ -61,7 +61,7 @@ export default function SingleOutput(props: SingleOutputProps): JSX.Element {
                     description="FORMAT :">
                     {props.configChannel 
                     ? props.configChannel.videoMode 
-                    : reduxState.settings.ccgConfig.channels[props.index].videoMode}
+                    : state.settings.ccgConfig.channels[props.index].videoMode}
                 </Label>
                 <LabelledCheckboxInput
                     description="LOOP :"

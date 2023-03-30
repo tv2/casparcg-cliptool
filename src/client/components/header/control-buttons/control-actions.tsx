@@ -1,25 +1,26 @@
 import React from "react";
-import { reduxState } from "../../../../model/reducers/store";
+import { state } from "../../../../model/reducers/store";
 import { socket } from "../../../util/socketClientHandlers";
-import * as IO from '../../../../model/socket-io-constants'
 import { useSelector } from "react-redux";
 import settingsService from "../../../../model/services/settings-service";
 import appNavigationService from "../../../../model/services/app-navigation-service";
 import { State } from "../../../../model/reducers/index-reducer";
 import Button from "../../shared/button";
 import browserService from "../../../services/browser-service";
+import { ClientToServer } from "../../../../model/socket-io-constants";
+import './control-actions.scss'
 
-export default function ControlButtons(): JSX.Element {
+export default function ControlActions(): JSX.Element {
   const activeTab: number = useSelector(
     (state: State) => appNavigationService.getActiveTab(state.appNavigation))
   const mixState: boolean = useSelector(
-      (state: State) => settingsService.getOutputSettings(state.settings, activeTab)?.mixState)
+      (state: State) => settingsService.getOutputSettings(state.settings, activeTab).mixState)
   const webState: boolean = useSelector(
-      (state: State) => settingsService.getOutputSettings(state.settings, activeTab)?.webState)
+      (state: State) => settingsService.getOutputSettings(state.settings, activeTab).webState)
   const loopState: boolean = useSelector(
-      (state: State) => settingsService.getOutputSettings(state.settings, activeTab)?.loopState)
+      (state: State) => settingsService.getOutputSettings(state.settings, activeTab).loopState)
   const manualStartState: boolean = useSelector(
-      (state: State) => settingsService.getOutputSettings(state.settings, activeTab)?.manualStartState)
+      (state: State) => settingsService.getOutputSettings(state.settings, activeTab).manualStartState)
 
   const buttonWrapperCss = "control-button-background"
   const buttonBaseCss = "control-button"
@@ -59,7 +60,7 @@ export default function ControlButtons(): JSX.Element {
         />
         <Button
           className="App-start-button"
-          onClick={() => socket.emit(IO.PGM_PLAY, activeTab) }
+          onClick={() => socket.emit(ClientToServer.PGM_PLAY, activeTab) }
           text="START"
           isHidden={!manualStartState}
         />        
@@ -70,32 +71,32 @@ export default function ControlButtons(): JSX.Element {
 
 function emitSetLoopState(activeTab: number): void {
   socket.emit(
-      IO.SET_LOOP_STATE,
+      ClientToServer.SET_LOOP_STATE,
       activeTab,
-      !settingsService.getOutputSettings(reduxState.settings, activeTab).loopState
+      !settingsService.getOutputSettings(state.settings, activeTab).loopState
   )
 }
 
 function emitSetMixState(activeTab: number): void {
   socket.emit(
-      IO.SET_MIX_STATE,
+      ClientToServer.SET_MIX_STATE,
       activeTab,
-      !settingsService.getOutputSettings(reduxState.settings, activeTab).mixState
+      !settingsService.getOutputSettings(state.settings, activeTab).mixState
   )
 }
 
 function emitSetWebState(activeTab: number): void {
   socket.emit(
-      IO.SET_WEB_STATE,
+      ClientToServer.SET_WEB_STATE,
       activeTab,
-      !settingsService.getOutputSettings(reduxState.settings, activeTab).webState
+      !settingsService.getOutputSettings(state.settings, activeTab).webState
   )
 }
 
 function emitSetManualStartState(activeTab: number): void {
   socket.emit(
-      IO.SET_MANUAL_START_STATE,
+      ClientToServer.SET_MANUAL_START_STATE,
       activeTab,
-      !settingsService.getOutputSettings(reduxState.settings, activeTab).manualStartState
+      !settingsService.getOutputSettings(state.settings, activeTab).manualStartState
   )
 }

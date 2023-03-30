@@ -1,12 +1,12 @@
 import { updateHiddenFiles } from '../../model/reducers/media-actions'
 import { HiddenFileInfo } from '../../model/reducers/media-models'
-import { reduxState, reduxStore } from '../../model/reducers/store'
+import { state, reduxStore } from '../../model/reducers/store'
 import { socketServer } from '../handlers/express-handler'
 import { logger } from '../utils/logger'
 import persistenceService from './persistence-service'
-import * as IO from '../../model/socket-io-constants'
 import settingsService from '../../model/services/settings-service'
 import { OutputSettings } from '../../model/reducers/settings-models'
+import { ServerToClient } from '../../model/socket-io-constants'
 
 class HiddenFilesPersistenceService {
     public load(): void {
@@ -27,7 +27,10 @@ class HiddenFilesPersistenceService {
                     }:`
                 )
             reduxStore.dispatch(updateHiddenFiles(cleanHiddenFiles))
-            socketServer.emit(IO.HIDDEN_FILES_UPDATE, cleanHiddenFiles)
+            socketServer.emit(
+                ServerToClient.HIDDEN_FILES_UPDATE,
+                cleanHiddenFiles
+            )
             if (isInvalidHiddenFiles) {
                 this.save()
             }
@@ -42,7 +45,7 @@ class HiddenFilesPersistenceService {
 
     public save(): void {
         const hiddenFiles: Record<string, HiddenFileInfo> =
-            reduxState.media.hiddenFiles
+            state.media.hiddenFiles
         const cleanHiddenFiles: Record<string, HiddenFileInfo> =
             this.getCleanHiddenFiles(hiddenFiles)
         const stringifiedHiddenFiles = JSON.stringify(cleanHiddenFiles)
@@ -78,7 +81,7 @@ class HiddenFilesPersistenceService {
         hiddenFiles: Record<string, HiddenFileInfo>
     ): boolean {
         const outputs: OutputSettings[] = settingsService.getGenericSettings(
-            reduxState.settings
+            state.settings
         ).outputSettings
         return outputs.some((output) => output.selectedFile in hiddenFiles)
     }
@@ -90,7 +93,7 @@ class HiddenFilesPersistenceService {
             ...originalHiddenFiles,
         }
         const outputs: OutputSettings[] = settingsService.getGenericSettings(
-            reduxState.settings
+            state.settings
         ).outputSettings
         outputs.forEach((output) => {
             if (output.selectedFile in hiddenFiles) {
