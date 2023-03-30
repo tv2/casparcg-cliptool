@@ -1,5 +1,4 @@
 export const SET_ACTIVE_TAB = 'setActiveTab'
-export const SELECT_VIEW = 'selectView'
 export const SET_CONNECTION_STATUS = 'setConnectionStatus'
 export const TOGGLE_SHOW_SETTINGS = 'toggleShowSettings'
 
@@ -10,16 +9,6 @@ export function setActiveTab(tabIndex: number): {
     return {
         type: SET_ACTIVE_TAB,
         tabIndex: tabIndex,
-    }
-}
-
-export function setSelectView(selectView: number): {
-    type: string
-    selectView: number
-} {
-    return {
-        type: SELECT_VIEW,
-        selectView: selectView,
     }
 }
 

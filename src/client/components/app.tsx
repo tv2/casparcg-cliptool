@@ -11,15 +11,17 @@ import Header from './header/header'
 import { State } from '../../model/reducers/index-reducer'
 
 import Main from './main'
-
-const channel = new URLSearchParams(window.location.search).get('channel')
-const specificChannel = channel ? parseInt(channel) || 0 : 0
+import OfflineOverlay from './offline-overlay'
+import jsxService from '../services/jsx-service'
+import browserService from '../services/browser-service'
 
 
 export function App(): JSX.Element {
     const isSettingsOpen = useSelector((storeUpdate: State) => storeUpdate.appNavigation.showSettingsActive)
-    
-    if (specificChannel) {
+    const isConnected: boolean = useSelector(
+        (storeUpdate: State) => storeUpdate.appNavigation.isConnected)
+    const specificChannel = browserService.getChannel()
+    if (browserService.isChannelView()) {
         setOutput(specificChannel - 1)
     }   
 
@@ -28,7 +30,13 @@ export function App(): JSX.Element {
             <Header />
             <div className="App-body">
                 {
-                    isSettingsOpen ? <Settings /> : <Main specificChannel={specificChannel}/> 
+                    jsxService.decideJsx(
+                        !isConnected, 
+                        <OfflineOverlay />, 
+                        jsxService.decideJsx(
+                            isSettingsOpen, 
+                            <Settings />, 
+                            <Main />)) 
                 }
             </div>
             <OperationModeFooter />

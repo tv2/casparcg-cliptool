@@ -1,6 +1,5 @@
 import React from 'react'
 import { reduxStore, reduxState } from '../../../model/reducers/store'
-import { useSelector } from 'react-redux'
 import { TOGGLE_SHOW_SETTINGS } from '../../../model/reducers/app-navigation-action'
 
 import '../../css/App.css'
@@ -9,16 +8,13 @@ import '../../css/App-control-view-header.css'
 import '../../css/App-text-view-header.css'
 import Time from './time'
 import ControlButtons from './control-buttons'
-import { State } from '../../../model/reducers/index-reducer'
+import browserService from '../../services/browser-service'
 
-export default function Header(): JSX.Element {
-    const connectionStatus: boolean = useSelector(
-        (storeUpdate: State) => storeUpdate.appNavigation.connectionStatus)
-
+export default function Header(): JSX.Element {  
     return (
         <header className="App-header">
             <div className="App-header__controls">
-                {reduxState.appNavigation.selectView === 0 && (
+                {browserService.isOrdinaryView() && (
                     <div className="App-reload-setup-background">
                         <button
                             className="App-settings-button"
@@ -31,10 +27,7 @@ export default function Header(): JSX.Element {
 
                 <Time />
                 <ControlButtons />
-            </div>            
-            {!connectionStatus && (
-                <div className="App-header-server-offline">CONNECTING TO SERVER...</div>
-            )}
+            </div>                        
         </header>
     )
 }

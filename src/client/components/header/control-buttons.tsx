@@ -8,6 +8,7 @@ import appNavigationService from "../../../model/services/app-navigation-service
 import { State } from "../../../model/reducers/index-reducer";
 import Button from "../shared/button";
 import '../../css/Header.css'
+import browserService from "../../services/browser-service";
 
 // TODO: rename CSS class to more generic names - WITHOUT mentioning a location.
 export default function ControlButtons(): JSX.Element {
@@ -26,7 +27,7 @@ export default function ControlButtons(): JSX.Element {
   const buttonBaseCss = "header-toggle-button"
   return (
     <>
-      {reduxState.appNavigation.selectView === 0 && (
+      {browserService.isOrdinaryView() && (
         <>
           <div className={buttonWrapperCss}>
             <Button

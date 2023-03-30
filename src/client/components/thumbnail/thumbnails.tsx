@@ -3,7 +3,6 @@ import '../../css/Thumbnail.css'
 import '../app'
 import mediaService from "../../../model/services/media-service";
 import { useSelector } from 'react-redux';
-import { reduxState } from '../../../model/reducers/store';
 import ImageThumbnail from './image-thumbnail';
 import TextThumbnail from './text-thumbnail';
 import settingsService from '../../../model/services/settings-service';
@@ -11,6 +10,7 @@ import { OperationMode } from '../../../model/reducers/settings-models';
 import { HiddenFileInfo, MediaFile } from '../../../model/reducers/media-models';
 import { State } from '../../../model/reducers/index-reducer';
 import appNavigationService from '../../../model/services/app-navigation-service';
+import browserService from '../../services/browser-service';
 
 export function Thumbnails(): JSX.Element {
     const activeTab: number = useSelector(
@@ -32,9 +32,9 @@ export function Thumbnails(): JSX.Element {
         <div className="flexBoxes">
             {shownFiles?.map((file: MediaFile, index: number) => (
                 <div className="boxComponent" key={index}>
-                    {reduxState.appNavigation.selectView === 0 
-                        ? <ImageThumbnail file={file} /> 
-                        : <TextThumbnail file={file} />}
+                    { browserService.isTextView()
+                        ? <TextThumbnail file={file} /> 
+                        : <ImageThumbnail file={file} />}
                 </div>
             ))}
         </div>

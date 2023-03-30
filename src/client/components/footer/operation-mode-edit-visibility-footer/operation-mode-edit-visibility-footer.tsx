@@ -1,11 +1,10 @@
 import React from "react"
-import * as IO from '../../../model/socket-io-constants'
-import { socket } from '../../util/socketClientHandlers'
-import { Footer } from "./footer"
-import "../../css/Operation-mode-edit-visibility-footer.css"
-import { OperationMode } from "../../../model/reducers/settings-models"
-import appNavigationService from "../../../model/services/app-navigation-service"
-import { reduxState } from "../../../model/reducers/store"
+import * as IO from '../../../../model/socket-io-constants'
+import { socket } from '../../../util/socketClientHandlers'
+import { Footer } from "../footer/footer"
+import { OperationMode } from "../../../../model/reducers/settings-models"
+import appNavigationService from "../../../../model/services/app-navigation-service"
+import { reduxState } from "../../../../model/reducers/store"
 
 const BUTTON_TEXT = 'Exit Edit Visibility'
 const DESCRIPTION_TEXT = 'You are currently editing the visibility of files.'.toUpperCase()

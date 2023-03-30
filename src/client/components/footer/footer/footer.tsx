@@ -1,5 +1,4 @@
 import React from 'react'
-import '../../css/Footer.css'
 
 interface FooterProps {
   children: React.ReactNode
@@ -7,7 +6,7 @@ interface FooterProps {
 
 export function Footer({ children }: FooterProps): JSX.Element {
   return (
-    <footer className='Footer'>
+    <footer className='footer'>
       { children }
     </footer>
   )

@@ -1,17 +1,15 @@
 import * as AppNav from './app-navigation-action'
 export interface AppNavigation {
-    connectionStatus: boolean
+    isConnected: boolean
     activeTab: number
     showSettingsActive: boolean
-    selectView: number
 }
 
 function defaultAppNavReducerState(): AppNavigation {
     return {
-        connectionStatus: false,
+        isConnected: false,
         activeTab: 0,
         showSettingsActive: false,
-        selectView: 0,
     }
 }
 
@@ -26,13 +24,10 @@ export function appNavigation(
             nextState.activeTab = action.tabIndex
             return nextState
         case AppNav.SET_CONNECTION_STATUS:
-            nextState.connectionStatus = action.connectionStatus
+            nextState.isConnected = action.connectionStatus
             return nextState
         case AppNav.TOGGLE_SHOW_SETTINGS:
             nextState.showSettingsActive = !nextState.showSettingsActive
-            return nextState
-        case AppNav.SELECT_VIEW:
-            nextState.selectView = action.selectView
             return nextState
         default:
             return nextState

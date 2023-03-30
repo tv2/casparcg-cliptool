@@ -11,32 +11,34 @@ import { GenericSettings, OperationMode } from "../../../model/reducers/settings
 import _ from "lodash";
 import { State } from "../../../model/reducers/index-reducer";
 import Button from "../shared/button";
+import browserService from "../../services/browser-service";
 
 interface SettingsButtonsProps {
   settings: GenericSettings 
-  specificChannel: number
 }
 
-export default function SettingsButtons(props: SettingsButtonsProps): JSX.Element {
+export default function SettingsActions(props: SettingsButtonsProps): JSX.Element {
   const activeTab: number = useSelector(
     (storeUpdate: State) => appNavigationService.getActiveTab(storeUpdate.appNavigation))
   const operationMode = useSelector(
     (storeUpdate: State) => settingsService.getOutputSettings(storeUpdate.settings, activeTab)?.operationMode)
   
+  const buttonCss = "save-button"
+
   return (
       <div className="Settings-channel-form">
-        <Button className="save-button" 
+        <Button className={buttonCss} 
           onClick={() => saveSettings(props.settings)} 
           text='SAVE SETTINGS'/>
-        <Button className="save-button" 
+        <Button className={buttonCss}
           onClick={() => discardSettings(props.settings)} 
           text={hasChanges(props.settings) ? 'DISCARD CHANGES' : 'CLOSE SETTINGS'}/>
-        <Button className={`save-button ${operationMode === OperationMode.EDIT_VISIBILITY ? 'on' : ''}`} 
+        <Button className={`${buttonCss} ${operationMode === OperationMode.EDIT_VISIBILITY ? 'on' : ''}`} 
           onClick={() => emitSetOperationModeToEditVisibility()} 
           text="EDIT VISIBILITY"/>
         
-        {!props.specificChannel && (
-          <Button className="save-button" 
+        {!browserService.isChannelView() && (
+          <Button className={buttonCss} 
             onClick={() => restartCliptool()} 
             text="RESTART CLIPTOOL"/>
         )}
