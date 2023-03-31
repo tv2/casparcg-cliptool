@@ -4,7 +4,6 @@ import '../../css/Thumbnail.css'
 import appNavigationService from "../../../model/services/app-navigation-service";
 import settingsService from "../../../model/services/settings-service";
 import { OperationMode } from "../../../model/reducers/settings-models";
-import { MediaFile } from "../../../model/reducers/media-models";
 import { state } from "../../../model/reducers/store";
 import { useSelector } from "react-redux";
 import { State } from "../../../model/reducers/index-reducer";
@@ -12,7 +11,7 @@ import Button from "../shared/button";
 import { ClientToServer } from "../../../model/socket-io-constants";
 
 interface ThumbnailButtonProps {
-  file: MediaFile
+  fileName: string
   className: string
 }
 
@@ -24,7 +23,7 @@ export default function ThumbnailButton(props: ThumbnailButtonProps): JSX.Elemen
     <Button
         className={props.className}
         onClick={() => {
-          triggerOperationModeAction(props.file.name, activeTab)
+          triggerOperationModeAction(props.fileName, activeTab)
         }}
     />
   )

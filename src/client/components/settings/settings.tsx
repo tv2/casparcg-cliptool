@@ -7,8 +7,8 @@ import _ from 'lodash'
 import settingsService from '../../../model/services/settings-service'
 import { State } from '../../../model/reducers/index-reducer'
 import { state } from '../../../model/reducers/store'
-import GeneralSettings from './general-settings'
-import { CcgSettings, OutputSettings } from '../../../model/reducers/settings-models'
+import CasparcgSettingsForm from './casparcg-settings-form'
+import { CasparcgSettings, OutputSettings } from '../../../model/reducers/settings-models'
 import browserService from '../../services/browser-service'
 
 
@@ -20,12 +20,12 @@ export function Settings(): JSX.Element {
             <p className="Settings-header">SETTINGS :</p>
             <SettingsActions settings={settings}/>
             <hr/>
-            {!browserService.isChannelView() && <GeneralSettings ccgSettings={settings.ccgSettings} onCcgSettingsChange={saveTempCcgSettingChanges}/> }
+            {!browserService.isChannelView() && <CasparcgSettingsForm settings={settings.ccgSettings} onSettingsChange={saveTempCcgSettingChanges}/> }
             <Outputs  outputSettings={settings.outputSettings} onOutputSettingsChange={saveTempOutputSettingsChange}/>
         </div>
     )
 
-    function saveTempCcgSettingChanges(ccgSettings: CcgSettings): void {
+    function saveTempCcgSettingChanges(ccgSettings: CasparcgSettings): void {
         setSettings({ ...settings, ccgSettings })    
     }
 

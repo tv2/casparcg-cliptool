@@ -6,7 +6,7 @@ import { state, reduxStore } from '../../model/reducers/store'
 import {
     setNumberOfOutputs,
     setTime,
-    updateFolderList,
+    updateFolders,
     updateMediaFiles,
     updateThumbnailFileList,
     updateHiddenFiles,
@@ -285,11 +285,11 @@ async function loadFileList(): Promise<void> {
         .cls() //AMCP list media files
         .then((payload) => {
             reduxStore.dispatch(
-                updateFolderList(extractFoldersList(payload.response.data))
+                updateFolders(extractFoldersList(payload.response.data))
             )
             socketServer.emit(
                 ServerToClient.FOLDERS_UPDATE,
-                state.media.folderList
+                state.media.folders
             )
 
             mediaService.getOutputs().forEach(({}, outputIndex: number) => {

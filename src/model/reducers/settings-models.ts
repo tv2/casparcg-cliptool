@@ -45,7 +45,7 @@ export interface OutputSettings {
     selectedFile: string
 }
 
-export interface CcgSettings {
+export interface CasparcgSettings {
     transitionTime: number
     ip: string
     amcpPort: number
@@ -54,6 +54,6 @@ export interface CcgSettings {
 }
 
 export interface GenericSettings {
-    ccgSettings: CcgSettings
+    ccgSettings: CasparcgSettings
     outputSettings: OutputSettings[]
 }

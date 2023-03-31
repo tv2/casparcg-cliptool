@@ -1,6 +1,5 @@
 import React, { useState } from "react"
 import { CcgConfigChannel, OutputSettings } from "../../../model/reducers/settings-models"
-import { state } from "../../../model/reducers/store"
 import '../../css/Settings.css'
 import eventService from "../../services/event-service"
 import Label from "../shared/label"
@@ -8,14 +7,15 @@ import LabelledCheckboxInput from "../shared/labelled-checkbox-input"
 import LabelledNumberInput from "../shared/labelled-number-input"
 import LabelledTextInput from "../shared/labelled-text-input"
 
-interface SingleOutputProps {
-  configChannel?: CcgConfigChannel
+interface OutputProps {
+  configChannel: CcgConfigChannel
   index: number
   outputSettings: OutputSettings
+  folders: string[]
   setOutputSettings: (output: OutputSettings, index: number) => void
 }
 
-export default function SingleOutput(props: SingleOutputProps): JSX.Element {
+export default function Output(props: OutputProps): JSX.Element {
     const [label, setLabel] = useState(props.outputSettings.label)
     const [folder, setFolder] = useState(props.outputSettings.folder)
     const [loopState, setLoopState] = useState(props.outputSettings.loopState)
@@ -46,7 +46,7 @@ export default function SingleOutput(props: SingleOutputProps): JSX.Element {
                         onChange={saveTempTabMediaFolderChange}
                         value={ folder }
                     >
-                        {state.media.folderList.map(
+                        {props.folders.map(
                             (path: string, folderIndex: number) => {
                                 return (
                                     <option key={folderIndex} value={path}>
@@ -59,9 +59,7 @@ export default function SingleOutput(props: SingleOutputProps): JSX.Element {
                 </Label>
                 <Label className="Settings-input-field"
                     description="FORMAT :">
-                    {props.configChannel 
-                    ? props.configChannel.videoMode 
-                    : state.settings.ccgConfig.channels[props.index].videoMode}
+                    { props.configChannel.videoMode }
                 </Label>
                 <LabelledCheckboxInput
                     description="LOOP :"

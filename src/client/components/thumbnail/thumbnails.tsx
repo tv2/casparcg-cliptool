@@ -16,24 +16,24 @@ export function Thumbnails(): JSX.Element {
     const activeTab: number = useSelector(
         (state: State) => appNavigationService.getActiveTab(state.appNavigation))
     const files: MediaFile[] = useSelector(
-        (state: State) => mediaService.getOutput(state)?.mediaFiles
+        (state: State) => mediaService.getOutput(state).mediaFiles
     ) ?? []
     const hiddenFiles: Record<string, HiddenFileInfo> = useSelector(
         (state: State) => state.media.hiddenFiles
     ) ?? {}
     const isInEditVisibilityMode: boolean = useSelector(
         (state: State) => settingsService.getOutputSettings(state.settings, activeTab)
-            ?.operationMode === OperationMode.EDIT_VISIBILITY
+            .operationMode === OperationMode.EDIT_VISIBILITY
     ) ?? false
     const shownFiles: MediaFile[] = !isInEditVisibilityMode 
         ? files.filter(({ name }) => !(name in hiddenFiles)) 
         : files
     return (
         <div className="flexBoxes">
-            {shownFiles?.map((file: MediaFile, index: number) => (
-                <div className="boxComponent" key={index}>
-                    { browserService.isTextView()
-                        ? <TextThumbnail file={file} /> 
+            {shownFiles.map((file: MediaFile) => (
+                <div className="boxComponent" key={file.name}>
+                    {browserService.isTextView()
+                        ? <TextThumbnail file={file} />
                         : <ImageThumbnail file={file} />}
                 </div>
             ))}

@@ -2,7 +2,7 @@ import { HiddenFileInfo, MediaFile, ThumbnailFile } from './media-models'
 
 export const UPDATE_MEDIA_FILES = 'updateMediaFiles'
 export const UPDATE_THUMBNAIL_LIST = 'updateThumbnailList'
-export const UPDATE_FOLDER_LIST = 'updateFolderList'
+export const UPDATE_FOLDER_LIST = 'updateFolders'
 export const UPDATE_HIDDEN_FILES = 'updateHiddenFiles'
 export const SET_NUMBER_OF_OUTPUTS = 'setNumberOfOutputs'
 
@@ -19,13 +19,13 @@ export function updateMediaFiles(
     }
 }
 
-export function updateFolderList(folderList: string[]): {
+export function updateFolders(folders: string[]): {
     type: string
-    folderList: string[]
+    folders: string[]
 } {
     return {
         type: UPDATE_FOLDER_LIST,
-        folderList: folderList,
+        folders: folders,
     }
 }
 

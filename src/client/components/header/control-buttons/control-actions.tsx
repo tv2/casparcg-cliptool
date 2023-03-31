@@ -58,12 +58,11 @@ export default function ControlActions(): JSX.Element {
           onClick={() => emitSetManualStartState(activeTab)}
           text="MANUAL"
         />
-        <Button
+        {manualStartState && <Button
           className="App-start-button"
           onClick={() => socket.emit(ClientToServer.PGM_PLAY, activeTab) }
-          text="START"
-          isHidden={!manualStartState}
-        />        
+          text="START"          
+        />}        
       </div> 
     </>
   )

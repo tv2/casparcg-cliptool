@@ -94,7 +94,6 @@ function restartCliptool(): void {
 }
 
 function hasChanges(settings: GenericSettings): boolean {
-  const hasChanged = !_.isEqual(settings, settingsService.getGenericSettings(state.settings))
-  return hasChanged
+  return !_.isEqual(settings, settingsService.getGenericSettings(state.settings))
 }
 

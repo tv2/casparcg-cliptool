@@ -5,7 +5,7 @@ import reducerService from '../services/reducer-service'
 function defaultMediaState(): Media {
     return {
         outputs: [],
-        folderList: [],
+        folders: [],
         hiddenFiles: {},
     }
 }
@@ -52,7 +52,7 @@ export function media(state: Media = defaultMediaState(), action: any) {
             nextState.hiddenFiles = action.hiddenFiles
             return nextState
         case IO.UPDATE_FOLDER_LIST:
-            nextState.folderList = action.folderList
+            nextState.folders = action.folders
             return nextState
         case IO.SET_TIME:
             if (

@@ -4,7 +4,7 @@ import {
     setTime,
     updateMediaFiles,
     updateThumbnailFileList,
-    updateFolderList,
+    updateFolders,
     setNumberOfOutputs,
 } from '../../model/reducers/media-actions'
 
@@ -65,9 +65,9 @@ socket.on(
 )
 
 socket.on(ServerToClient.FOLDERS_UPDATE, (payload: string[]) => {
-    reduxStore.dispatch(updateFolderList(payload))
+    reduxStore.dispatch(updateFolders(payload))
 
-    logger.data(payload).debug(`Folderlist updated Payload:`)
+    logger.data(payload).debug(`Folders updated Payload:`)
 })
 
 socket.on(

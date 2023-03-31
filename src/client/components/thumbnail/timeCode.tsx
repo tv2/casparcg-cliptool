@@ -2,22 +2,15 @@ import React from "react";
 import { useSelector } from "react-redux";
 import mediaService from "../../../model/services/media-service";
 import '../../css/Thumbnail.css'
-import { MediaFile } from "../../../model/reducers/media-models";
 import appNavigationService from "../../../model/services/app-navigation-service";
 import { State } from "../../../model/reducers/index-reducer";
-import settingsService from "../../../model/services/settings-service";
-import { state } from "../../../model/reducers/store";
 import timeService from "../../../model/services/time-service";
 
-
 interface TimeCodeProps {
-  file: MediaFile
-  isTextView?: boolean
+  classNames?: string
 }
 
 export default function TimeCode(props: TimeCodeProps): JSX.Element {
-  const activeTab: number = useSelector(
-    (state: State) => appNavigationService.getActiveTab(state.appNavigation))
   const time: [number, number] = useSelector(
     (state: State) => mediaService.getOutput(state).time
   )
@@ -28,13 +21,9 @@ export default function TimeCode(props: TimeCodeProps): JSX.Element {
       }
   )
 
-  const classNames: string = `thumbnail-timecode ${props.isTextView ? 'text' : ''}`
-
   return (
-    <a className={classNames}>
-        {settingsService.isThumbnailSelected(props.file.name, state.settings, activeTab)
-            ? timeService.secondsToTimeCode(time, frameRate)
-            : ''}
+    <a className={`thumbnail-timecode ${props.classNames ?? ''}`}>        
+        {timeService.secondsToTimeCode(time, frameRate)}            
     </a>
   )
 }

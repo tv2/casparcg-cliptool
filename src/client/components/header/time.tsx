@@ -32,7 +32,7 @@ export default function Time(): JSX.Element {
         <div className="App-timer-background">
             <button className="App-header-pgm-counter">
                 {timeService.secondsToTimeCode(
-                    mediaOutput?.time,
+                    mediaOutput.time,
                     state.settings.ccgConfig.channels[activeTab]?.videoFormat?.frameRate
                 )}
             </button>

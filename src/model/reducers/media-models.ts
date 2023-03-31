@@ -19,7 +19,7 @@ export interface ThumbnailFile extends File {
 }
 export interface Media {
     outputs: Output[]
-    folderList: string[]
+    folders: string[]
     hiddenFiles: Record<string, HiddenFileInfo>
 }
 

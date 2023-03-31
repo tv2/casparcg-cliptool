@@ -6,8 +6,8 @@ import TimeCode from "./timeCode";
 import settingsService from "../../../model/services/settings-service";
 import { MediaFile } from "../../../model/reducers/media-models";
 import { State } from "../../../model/reducers/index-reducer";
-import { state } from "../../../model/reducers/store";
 import appNavigationService from "../../../model/services/app-navigation-service";
+import { state } from "../../../model/reducers/store";
 
 interface TextThumbnailProps {
   file: MediaFile
@@ -23,11 +23,11 @@ export default function TextThumbnail(props: TextThumbnailProps): JSX.Element {
   const isSelected: boolean = settingsService.isThumbnailSelected(props.file.name, state.settings, activeTab)
   const classNames: string = `thumbnail-text-view ${isSelected ? 'selected-thumb' : ''}`
 
-return (
+  return (
     <div className={classNames} >
-        <ThumbnailButton file={props.file} className="thumbnail-text-view-ClickPgm" />
+        <ThumbnailButton fileName={props.file.name} className="thumbnail-text-view-ClickPgm" />
         {isSelected && (
-            <TimeCode file={props.file} isTextView/>
+            <TimeCode classNames="text"/>
         )}
         <p className="text-text-view">
             {props.file.name
