@@ -1,17 +1,19 @@
 import React from "react";
-import { state, reduxStore } from "../../../model/reducers/store";
-import { socket } from "../../util/socketClientHandlers";
+import { state, reduxStore } from "../../../../model/reducers/store";
+import { socket } from "../../../util/socketClientHandlers";
 import { useSelector } from "react-redux";
-import { TOGGLE_SHOW_SETTINGS } from "../../../model/reducers/app-navigation-action";
-import '../../css/Settings.css'
-import settingsService from "../../../model/services/settings-service";
-import appNavigationService from "../../../model/services/app-navigation-service";
-import { GenericSettings, OperationMode } from "../../../model/reducers/settings-models";
+import { TOGGLE_SHOW_SETTINGS } from "../../../../model/reducers/app-navigation-action";
+import settingsService from "../../../../model/services/settings-service";
+import appNavigationService from "../../../../model/services/app-navigation-service";
+import { GenericSettings, OperationMode } from "../../../../model/reducers/settings-models";
 import _ from "lodash";
-import { State } from "../../../model/reducers/index-reducer";
-import Button from "../shared/button";
-import browserService from "../../services/browser-service";
-import { ClientToServer } from "../../../model/socket-io-constants";
+import { State } from "../../../../model/reducers/index-reducer";
+import Button from "../../shared/button";
+import browserService from "../../../services/browser-service";
+import { ClientToServer } from "../../../../model/socket-io-constants";
+import './settings-actions.scss'
+import './../shared-settings.scss'
+
 
 interface SettingsButtonsProps {
   settings: GenericSettings 
@@ -26,7 +28,7 @@ export default function SettingsActions(props: SettingsButtonsProps): JSX.Elemen
   const buttonCss = "save-button"
 
   return (
-      <div className="Settings-channel-form">
+      <div className="settings-channel-form">
         <Button className={buttonCss} 
           onClick={() => saveSettings(props.settings)} 
           text='SAVE SETTINGS'/>

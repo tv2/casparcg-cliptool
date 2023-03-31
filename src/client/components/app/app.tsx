@@ -1,19 +1,16 @@
 import React from 'react'
-import { reduxStore } from '../../model/reducers/store'
-import { setActiveTab } from '../../model/reducers/app-navigation-action'
-
-import { OperationModeFooter } from './footer/operation-mode-footer'
-
-import '../css/App.css'
+import { reduxStore } from '../../../model/reducers/store'
+import { setActiveTab } from '../../../model/reducers/app-navigation-action'
+import { OperationModeFooter } from '../footer/operation-mode-footer'
 import { useSelector } from 'react-redux'
-import { Settings } from './settings/settings'
-import Header from './header/header'
-import { State } from '../../model/reducers/index-reducer'
-
-import Main from './main'
-import OfflineOverlay from './offline-overlay'
-import jsxService from '../services/jsx-service'
-import browserService from '../services/browser-service'
+import { Settings } from '../settings/settings/settings'
+import Header from '../header/header/header'
+import { State } from '../../../model/reducers/index-reducer'
+import Main from '../main'
+import OfflineOverlay from '../offline-overlay/offline-overlay'
+import jsxService from '../../services/jsx-service'
+import browserService from '../../services/browser-service'
+import './app.scss'
 
 
 export function App(): JSX.Element {
@@ -25,9 +22,9 @@ export function App(): JSX.Element {
     }   
 
     return (
-        <div className="App">
+        <div className="app">
             <Header />
-            <div className="App-body">
+            <div className="app-body">
                 {
                     jsxService.decideJsx(
                         !isConnected, 

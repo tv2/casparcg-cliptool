@@ -1,10 +1,11 @@
 import React from "react"
 import { useSelector } from "react-redux"
-import { State } from "../../../model/reducers/index-reducer"
-import appNavigationService from "../../../model/services/app-navigation-service"
-import { TabProps } from "./tab"
-import TabTitle from "./tab-title"
-import '../../css/Tab.css'
+import { State } from "../../../../model/reducers/index-reducer"
+import appNavigationService from "../../../../model/services/app-navigation-service"
+import { TabProps } from "../tab"
+import TabTitle from "../tab-title/tab-title"
+import './tabs.scss'
+
 
 interface TabsProps {
   // TODO: figure out how to apply the correct type identifier such that only 'Tab' components are allowed. 

@@ -1,6 +1,6 @@
 import React from "react"
 import { socket } from "../../util/socketClientHandlers";
-import '../../css/Thumbnail.css'
+import '../../css/thumbnail.css'
 import appNavigationService from "../../../model/services/app-navigation-service";
 import settingsService from "../../../model/services/settings-service";
 import { OperationMode } from "../../../model/reducers/settings-models";

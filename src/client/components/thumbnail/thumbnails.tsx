@@ -1,6 +1,6 @@
 import React from 'react'
-import '../../css/Thumbnail.css'
-import '../app'
+import '../../css/thumbnail.css'
+import '../app/app'
 import mediaService from "../../../model/services/media-service";
 import { useSelector } from 'react-redux';
 import ImageThumbnail from './image-thumbnail';
@@ -16,8 +16,8 @@ export function Thumbnails(): JSX.Element {
     const activeTab: number = useSelector(
         (state: State) => appNavigationService.getActiveTab(state.appNavigation))
     const files: MediaFile[] = useSelector(
-        (state: State) => mediaService.getOutput(state).mediaFiles
-    ) ?? []
+        (state: State) => mediaService.getOutput(state)?.mediaFiles ?? []
+    )
     const hiddenFiles: Record<string, HiddenFileInfo> = useSelector(
         (state: State) => state.media.hiddenFiles
     ) ?? {}

@@ -4,7 +4,7 @@ import { State } from "../../../model/reducers/index-reducer";
 import { OutputSettings } from "../../../model/reducers/settings-models";
 import { state } from "../../../model/reducers/store";
 import browserService from "../../services/browser-service";
-import Output from "./output";
+import Output from "./output/output";
 
 interface OutputsProps {
     outputSettings: OutputSettings[]

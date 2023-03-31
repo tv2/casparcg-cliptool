@@ -1,11 +1,12 @@
 import React, { useState } from "react"
-import { CcgConfigChannel, OutputSettings } from "../../../model/reducers/settings-models"
-import '../../css/Settings.css'
-import eventService from "../../services/event-service"
-import Label from "../shared/label"
-import LabelledCheckboxInput from "../shared/labelled-checkbox-input"
-import LabelledNumberInput from "../shared/labelled-number-input"
-import LabelledTextInput from "../shared/labelled-text-input"
+import { CcgConfigChannel, OutputSettings } from "../../../../model/reducers/settings-models"
+import eventService from "../../../services/event-service"
+import Label from "../../shared/label"
+import LabelledCheckboxInput from "../../shared/labelled-checkbox-input"
+import LabelledNumberInput from "../../shared/labelled-number-input"
+import LabelledTextInput from "../../shared/labelled-text-input"
+import './output.scss'
+import './../shared-settings.scss'
 
 interface OutputProps {
   configChannel: CcgConfigChannel
@@ -26,19 +27,22 @@ export default function Output(props: OutputProps): JSX.Element {
     const [shouldScale, setShouldScale] = useState(props.outputSettings.shouldScale)
     const [scaleX, setScaleX] = useState(props.outputSettings.scaleX)
     const [scaleY, setScaleY] = useState(props.outputSettings.scaleY)
+
+    const fieldCss: string = 'settings-input-field'
+    const tickCss: string = 'settings-tick-field'
     return (    
         props.outputSettings &&         
-            <form className="Settings-channel-form">
+            <form className="settings-channel-form">
                 <label className="settings-channel-header">
                     OUTPUT {props.index + 1} :
                 </label>
                 <LabelledTextInput
-                    labelClassName="Settings-input-field"
+                    labelClassName={fieldCss}
                     description="LABEL :"
                     value={label}
                     onChange={saveTempOutputLabelChange}
                 />
-                <Label className="Settings-input-field" 
+                <Label className={fieldCss} 
                     description="MEDIA FOLDER :">
                     <select
                         className="settings-select"
@@ -57,57 +61,57 @@ export default function Output(props: OutputProps): JSX.Element {
                         )}
                     </select>
                 </Label>
-                <Label className="Settings-input-field"
+                <Label className={fieldCss}
                     description="FORMAT :">
                     { props.configChannel.videoMode }
                 </Label>
                 <LabelledCheckboxInput
                     description="LOOP :"
-                    labelClassName="Settings-tick-field"
+                    labelClassName={tickCss}
                     value={loopState}
                     onChange={saveTempLoopChange}
                 />
                 <LabelledCheckboxInput
                     description="MIX :"
-                    labelClassName="Settings-tick-field"
+                    labelClassName={tickCss}
                     value={mixState}
                     onChange={saveTempMixChange}
                 />
                 <LabelledCheckboxInput
                     description="MANUAL :"
-                    labelClassName="Settings-tick-field"
+                    labelClassName={tickCss}
                     value={manualStartState}
                     onChange={saveTempManualChange}
                 />
                 <LabelledCheckboxInput
                     description="OVERLAY :"
-                    labelClassName="Settings-tick-field"
+                    labelClassName={tickCss}
                     value={webState}
                     onChange={saveTempWebStateChange}
                 />
                 <LabelledTextInput
-                    labelClassName="Settings-input-field"
+                    labelClassName={fieldCss}
                     description="OVERLAY URL :"
                     value={webUrl}
                     onChange={saveTempWebUrlChange}
                 />
                 <LabelledCheckboxInput
                     description="SCALE :"
-                    labelClassName="Settings-tick-field"
+                    labelClassName={tickCss}
                     value={shouldScale}
                     onChange={saveTempShouldScaleChange}
                 />
                 {shouldScale && (
                     <>
                         <LabelledNumberInput 
-                            labelClassName="Settings-input-field"
+                            labelClassName={fieldCss}
                             description="SCALE X :"
                             value={scaleX}
                             onChange={saveTempScaleXChange}
                             numberUnit='px'
                         />
                         <LabelledNumberInput 
-                            labelClassName="Settings-input-field"
+                            labelClassName={fieldCss}
                             description="SCALE Y :"
                             value={scaleY}
                             onChange={saveTempScaleYChange}

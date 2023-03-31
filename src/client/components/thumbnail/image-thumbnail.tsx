@@ -3,7 +3,7 @@ import { useSelector } from "react-redux"
 import ThumbnailButton from "./thumbnail-button";
 import ThumbnailPicture from "./thumbnail-picture";
 import TimeCode from "./timeCode";
-import '../../css/Thumbnail.css'
+import '../../css/thumbnail.css'
 import settingsService from "../../../model/services/settings-service";
 import { HiddenFileInfo, MediaFile } from "../../../model/reducers/media-models";
 import { State } from "../../../model/reducers/index-reducer";

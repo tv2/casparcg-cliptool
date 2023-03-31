@@ -1,19 +1,20 @@
 import React from "react"
 import { useSelector } from "react-redux"
-import { state } from "../../../model/reducers/store";
-import mediaService from "../../../model/services/media-service";
+import { state } from "../../../../model/reducers/store";
+import mediaService from "../../../../model/services/media-service";
 
-import '../../css/App-header.css'
-import appNavigationService from "../../../model/services/app-navigation-service";
-import settingsService from "../../../model/services/settings-service";
-import timeService from "../../../model/services/time-service";
-import { Output } from "../../../model/reducers/media-models";
-import { OutputSettings } from "../../../model/reducers/settings-models";
-import { State } from "../../../model/reducers/index-reducer";
+import appNavigationService from "../../../../model/services/app-navigation-service";
+import settingsService from "../../../../model/services/settings-service";
+import timeService from "../../../../model/services/time-service";
+import { Output } from "../../../../model/reducers/media-models";
+import { OutputSettings } from "../../../../model/reducers/settings-models";
+import { State } from "../../../../model/reducers/index-reducer";
+import './timer.scss'
 
 export default function Time(): JSX.Element {
     const activeTab: number = useSelector(
         (state: State) => appNavigationService.getActiveTab(state.appNavigation))
+    // Below line is undefined one first render, but immediately isn't undefined.
     const mediaOutput: Output = useSelector(
         (state: State) => mediaService.getOutput(state))
     const settingsOutput: OutputSettings = useSelector(
@@ -29,16 +30,16 @@ export default function Time(): JSX.Element {
     const thumbnailUrl = mediaService.getBase64ThumbnailUrl(cleanSelectedFile, activeTab)
     
     return (
-        <div className="App-timer-background">
-            <button className="App-header-pgm-counter">
+        <div className="app-timer-background">
+            <button className="app-header-pgm-counter">
                 {timeService.secondsToTimeCode(
-                    mediaOutput.time,
+                    mediaOutput?.time,
                     state.settings.ccgConfig.channels[activeTab]?.videoFormat?.frameRate
                 )}
             </button>
             <img
                 src={thumbnailUrl}
-                className="App-header-pgm-thumbnail-image"
+                className="app-header-pgm-thumbnail-image"
             />
         </div>
     )

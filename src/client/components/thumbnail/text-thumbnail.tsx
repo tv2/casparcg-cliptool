@@ -1,6 +1,6 @@
 import React from "react";
 import { useSelector } from "react-redux"
-import '../../css/Thumbnail.css'
+import '../../css/thumbnail.css'
 import ThumbnailButton from "./thumbnail-button";
 import TimeCode from "./timeCode";
 import settingsService from "../../../model/services/settings-service";

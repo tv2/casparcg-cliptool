@@ -1,23 +1,21 @@
 import React, { useState } from 'react'
-import '../../css/Settings.css'
-import Outputs from './outputs'
-import SettingsActions from './settings-actions'
+import Outputs from '../outputs'
+import SettingsActions from '../settings-actions/settings-actions'
 import { useSelector } from 'react-redux'
-import _ from 'lodash'
-import settingsService from '../../../model/services/settings-service'
-import { State } from '../../../model/reducers/index-reducer'
-import { state } from '../../../model/reducers/store'
-import CasparcgSettingsForm from './casparcg-settings-form'
-import { CasparcgSettings, OutputSettings } from '../../../model/reducers/settings-models'
-import browserService from '../../services/browser-service'
-
+import settingsService from '../../../../model/services/settings-service'
+import { State } from '../../../../model/reducers/index-reducer'
+import { state } from '../../../../model/reducers/store'
+import CasparcgSettingsForm from '../casparcg-settings-form/casparcg-settings-form'
+import { CasparcgSettings, OutputSettings } from '../../../../model/reducers/settings-models'
+import browserService from '../../../services/browser-service'
+import './settings.scss'
 
 export function Settings(): JSX.Element { 
     useSelector((state: State) => settingsService.getGenericSettings(state.settings))
     const [settings, setSettings] = useState(deepClone(settingsService.getGenericSettings(state.settings)))    
     return (
-        <div className="Settings-body">
-            <p className="Settings-header">SETTINGS :</p>
+        <div className="settings-body">
+            <p className="settings-header">SETTINGS :</p>
             <SettingsActions settings={settings}/>
             <hr/>
             {!browserService.isChannelView() && <CasparcgSettingsForm settings={settings.ccgSettings} onSettingsChange={saveTempCcgSettingChanges}/> }

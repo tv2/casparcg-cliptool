@@ -1,9 +1,10 @@
 import React, { useState } from "react";
-import { CasparcgSettings } from "../../../model/reducers/settings-models";
-import '../../css/Settings.css'
-import eventService from "../../services/event-service";
-import LabelledNumberInput from "../shared/labelled-number-input";
-import LabelledTextInput from "../shared/labelled-text-input";
+import { CasparcgSettings } from "../../../../model/reducers/settings-models";
+import eventService from "../../../services/event-service";
+import LabelledNumberInput from "../../shared/labelled-number-input";
+import LabelledTextInput from "../../shared/labelled-text-input";
+import './casparcg-settings-form.scss'
+import './../shared-settings.scss'
 
 interface CasparcgSettingsFormProps {
     settings: CasparcgSettings
@@ -17,35 +18,36 @@ export default function CasparcgSettingsForm(props: CasparcgSettingsFormProps): 
     const [defaultLayer, setDefaultLayer] = useState(props.settings.defaultLayer)
     const [transitionTime, setTransitionTime] = useState(props.settings.transitionTime)
   
+    const fieldCss: string = 'settings-input-field'
     return (
-        <form className="Settings-form">
-            <div className="Settings-channel-form">
+        <form className="settings-form">
+            <div className="settings-channel-form">
                 <LabelledTextInput
-                    labelClassName="Settings-input-field"
+                    labelClassName={fieldCss}
                     description="OVERLAY URL :"
                     value={ip}
                     onChange={saveTempIpChange}
                 />
                 <LabelledNumberInput 
-                    labelClassName="Settings-input-field"
+                    labelClassName={fieldCss}
                     description="AMCP PORT :"
                     value={amcpPort}
                     onChange={saveTempAmcpPortChange}
                 />
                 <LabelledNumberInput 
-                    labelClassName="Settings-input-field"
+                    labelClassName={fieldCss}
                     description="OSC PORT (into ClipTool) :"
                     value={oscPort}
                     onChange={saveTempOscPortChange}
                 />
                 <LabelledNumberInput 
-                    labelClassName="Settings-input-field"
+                    labelClassName={fieldCss}
                     description="DEFAULT LAYER :"
                     value={defaultLayer}
                     onChange={saveTempDefaultLayerChange}
                 />
                 <LabelledNumberInput 
-                    labelClassName="Settings-input-field"
+                    labelClassName={fieldCss}
                     description="TRANSITION TIME :"
                     value={transitionTime}
                     onChange={saveTempTransitionTimeChange}

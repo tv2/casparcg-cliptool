@@ -26,7 +26,7 @@ export default function ControlActions(): JSX.Element {
   const buttonBaseCss = "control-button"
   return (
     <>
-      {browserService.isOrdinaryView() && (
+      {!browserService.isTextView() && (
         <>
           <div className={buttonWrapperCss}>
             <Button

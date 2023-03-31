@@ -1,7 +1,7 @@
 import React from "react"
-import { setActiveTab } from "../../../model/reducers/app-navigation-action"
-import { reduxStore } from "../../../model/reducers/store"
-import '../../css/Tab.css'
+import { setActiveTab } from "../../../../model/reducers/app-navigation-action"
+import { reduxStore } from "../../../../model/reducers/store"
+import './tab-title.scss'
 
 interface TabTitleProps {
   title: string

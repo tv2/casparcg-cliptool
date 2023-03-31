@@ -1,0 +1,57 @@
+.app-header {
+  position: sticky;
+  flex-shrink: 0;
+  z-index: 10;
+  top: 0px;
+  width: 100%;
+  background-color: rgb(53, 53, 53);
+  color: rgb(28, 115, 165);
+  box-shadow: 2px 2px 2px #555;
+  overflow: hidden;
+}
+
+.app-header__controls {
+  display: flex;
+  flex-direction: row;
+  touch-action: pan-x;
+  min-height: 130px;
+  overflow-x: auto;
+  overflow-y: hidden;
+
+  &::-webkit-scrollbar {
+    height: 6px;
+    background-color: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    height: 6px;
+    background-color: grey;
+  }
+}
+
+.app-reload-setup-background {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  width: 170px;
+  height: 115px;
+  background-color: rgb(22, 22, 22);
+  border-width: 0px;
+  border-style: solid;
+  border-color: rgb(63, 63, 63);
+  box-shadow: 6px 6px 6px rgb(34, 34, 34);
+}
+
+.app-settings-button {
+  font-size: 1.1em;
+  width: 120px;
+  height: 60px;
+  line-height: 25px;
+  margin-top: 20px;
+  background: rgb(11, 12, 11);
+  color: white;
+  font-family: 'Roboto Condensed', sans-serif;
+  border-radius: 5px;
+  border-width: 1px;
+  border-color: rgba(170, 170, 170, 0.315);
+  outline: 0;
+}
