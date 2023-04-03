@@ -232,13 +232,17 @@ async function startTimerControlledServices(): Promise<void> {
     let data: TimeTallyPayload[] = []
 
     setInterval(() => {
-        mediaService.getOutputs().forEach((output: Output, index: number) => {
-            data[index] = {
-                time: output.time,
-                tally: settingsService.getOutputSettings(state.settings, index)
-                    .selectedFile,
-            }
-        })
+        mediaService
+            .getOutputs(state)
+            .forEach((output: Output, index: number) => {
+                data[index] = {
+                    time: output.time,
+                    tally: settingsService.getOutputSettings(
+                        state.settings,
+                        index
+                    ).selectedFile,
+                }
+            })
         socketServer.emit(ServerToClient.TIME_TALLY_UPDATE, data)
     }, 40)
 
@@ -292,9 +296,11 @@ async function loadFileList(): Promise<void> {
                 state.media.folders
             )
 
-            mediaService.getOutputs().forEach(({}, outputIndex: number) => {
-                outputExtractFiles(payload.response.data, outputIndex)
-            })
+            mediaService
+                .getOutputs(state)
+                .forEach(({}, outputIndex: number) => {
+                    outputExtractFiles(payload.response.data, outputIndex)
+                })
             checkHiddenFilesChanged(payload.response.data)
         })
         .catch((error) => {
@@ -316,7 +322,7 @@ function outputExtractFiles(allFiles: MediaFile[], outputIndex: number): void {
     if (!isDeepCompareEqual(mediaFiles, outputMedia)) {
         logger.info(`Media files changed for output: ${outputIndex}`)
         reduxStore.dispatch(updateMediaFiles(outputIndex, outputMedia))
-        socketServer.emit(ServerToClient.MEDIA_UPDATE, outputIndex, mediaFiles)
+        socketServer.emit(ServerToClient.MEDIA_UPDATE, outputIndex, outputMedia)
     }
 }
 
@@ -360,7 +366,7 @@ async function loadThumbNailImage(
 }
 
 export function assignThumbNailListToOutputs(): void {
-    mediaService.getOutputs().forEach(({}, channelIndex: number) => {
+    mediaService.getOutputs(state).forEach(({}, channelIndex: number) => {
         let outputMedia = thumbNailList.filter((thumbnail: ThumbnailFile) => {
             return isFolderNameEqual(
                 thumbnail?.name,
@@ -368,7 +374,10 @@ export function assignThumbNailListToOutputs(): void {
                     .folder
             )
         })
-        const outputThumbnailList = mediaService.getOutput(state, channelIndex)
+        const outputThumbnailList = mediaService.getOutput(
+            state,
+            channelIndex
+        ).thumbnailList
         if (!isDeepCompareEqual(outputThumbnailList, outputMedia)) {
             reduxStore.dispatch(
                 updateThumbnailFileList(channelIndex, outputMedia)
@@ -376,7 +385,7 @@ export function assignThumbNailListToOutputs(): void {
             socketServer.emit(
                 ServerToClient.THUMBNAIL_UPDATE,
                 channelIndex,
-                outputThumbnailList
+                outputMedia
             )
         }
     })

@@ -30,6 +30,7 @@
 }
 
 .app-reload-setup-background {
+  margin-left: 20px;
   margin-top: 10px;
   margin-bottom: 10px;
   width: 170px;
@@ -39,6 +40,9 @@
   border-style: solid;
   border-color: rgb(63, 63, 63);
   box-shadow: 6px 6px 6px rgb(34, 34, 34);
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly
 }
 
 .app-settings-button {
@@ -46,7 +50,6 @@
   width: 120px;
   height: 60px;
   line-height: 25px;
-  margin-top: 20px;
   background: rgb(11, 12, 11);
   color: white;
   font-family: 'Roboto Condensed', sans-serif;
@@ -54,4 +57,7 @@
   border-width: 1px;
   border-color: rgba(170, 170, 170, 0.315);
   outline: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }

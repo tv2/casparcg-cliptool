@@ -13,7 +13,7 @@ import './thumbnails.scss'
 
 export function Thumbnails(): JSX.Element {
     const activeTab: number = useSelector(
-        (state: State) => appNavigationService.getActiveTab(state.appNavigation))
+        (state: State) => appNavigationService.getActiveTab(state.appNavigation))   
     const files: MediaFile[] = useSelector(
         (state: State) => mediaService.getOutput(state)?.mediaFiles ?? []
     )

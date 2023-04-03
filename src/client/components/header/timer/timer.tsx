@@ -14,7 +14,6 @@ import './timer.scss'
 export default function Time(): JSX.Element {
     const activeTab: number = useSelector(
         (state: State) => appNavigationService.getActiveTab(state.appNavigation))
-    // Below line is undefined one first render, but immediately isn't undefined.
     const mediaOutput: Output = useSelector(
         (state: State) => mediaService.getOutput(state))
     const settingsOutput: OutputSettings = useSelector(
@@ -27,16 +26,16 @@ export default function Time(): JSX.Element {
         (state: State) => mediaService.getOutput(state)?.thumbnailList)
 
     const cleanSelectedFile: string = settingsService.getCleanSelectedFile(settingsOutput, state.settings)    
-    const thumbnailUrl = mediaService.getBase64ThumbnailUrl(cleanSelectedFile, activeTab)
+    const thumbnailUrl = mediaService.getBase64ThumbnailUrl(cleanSelectedFile, activeTab, state)
     
     return (
         <div className="app-timer-background">
-            <button className="app-header-pgm-counter">
+            <label className="app-header-pgm-counter">
                 {timeService.secondsToTimeCode(
                     mediaOutput?.time,
                     state.settings.ccgConfig.channels[activeTab]?.videoFormat?.frameRate
                 )}
-            </button>
+            </label>
             <img
                 src={thumbnailUrl}
                 className="app-header-pgm-thumbnail-image"

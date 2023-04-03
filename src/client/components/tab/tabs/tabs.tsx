@@ -2,7 +2,7 @@ import React from "react"
 import { useSelector } from "react-redux"
 import { State } from "../../../../model/reducers/index-reducer"
 import appNavigationService from "../../../../model/services/app-navigation-service"
-import { TabProps } from "../tab"
+import { TabProps } from "../tab/tab"
 import TabTitle from "../tab-title/tab-title"
 import './tabs.scss'
 
@@ -17,7 +17,7 @@ export default function Tabs(props: TabsProps): JSX.Element {
     useSelector((state: State) => appNavigationService.getActiveTab(state.appNavigation))
 
   return (
-    <div>
+    <div className="tabs">
       <div className='tabs-bar' role='tablist'>
         <div className='tabs-bar__tabs'>
           {React.Children.map(props.children, (child, index) => {

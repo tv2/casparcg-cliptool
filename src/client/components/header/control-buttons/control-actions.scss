@@ -8,13 +8,14 @@
   border-style: solid;
   border-color: rgb(63, 63, 63);
   box-shadow: 6px 6px 6px rgb(34, 34, 34);
+  display: flex;
+  align-items: center;
 }
 
 .control-button {
   font-size: 0.9em;
   width: 108px;
   line-height: 60px;
-  margin-top: 25px;
   margin-left: 20px;
   margin-right: 20px;
   color: white;
@@ -27,4 +28,20 @@
   &.on {
     background-color: rgb(28, 115, 165);
   }
+}
+
+.control-start-button {
+  margin-left: 12px;
+  margin-right: 12px;
+  margin-top: 5px;
+  font-size: 1.2em;
+  width: 108px;
+  line-height: 60px;
+  background: rgb(122, 0, 0);
+  color: white;
+  font-family: 'Roboto Condensed', sans-serif;
+  border-radius: 16px;
+  border-width: 1px;
+  border-color: rgba(85, 85, 85, 0.507);
+  outline: 1px;
 }

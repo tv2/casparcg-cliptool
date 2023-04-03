@@ -2,7 +2,7 @@ import React from 'react'
 import { reduxStore, state } from '../../../../model/reducers/store'
 import { TOGGLE_SHOW_SETTINGS } from '../../../../model/reducers/app-navigation-action'
 
-import Time from '../time/timer'
+import Time from '../timer/timer'
 import ControlActions from '../control-buttons/control-actions'
 import browserService from '../../../services/browser-service'
 import Button from '../../shared/button'

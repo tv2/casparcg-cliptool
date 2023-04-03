@@ -88,6 +88,5 @@ function updateAttributeByPartial(
         ...originalState,
         outputs,
     }
-
     return nextState
 }

@@ -12,7 +12,7 @@ interface TabTitleProps {
 export default function TabTitle(props: TabTitleProps): JSX.Element {
   const isSelected = props.selectedTab === props.tabIndex
   return (
-  <div className={`tab ${isSelected ? 'active' : ''}`} 
+  <div className={`tab-title ${isSelected ? 'active' : ''}`} 
     role='tab'
       aria-selected={isSelected} 
       key={props.tabIndex}

@@ -333,7 +333,7 @@ export function initializeClient(): void {
 }
 
 function cleanUpMediaFiles(): void {
-    mediaService.getOutputs().forEach(({}, channelIndex: number) => {
+    mediaService.getOutputs(state).forEach(({}, channelIndex: number) => {
         reduxStore.dispatch(updateMediaFiles(channelIndex, []))
         reduxStore.dispatch(updateThumbnailFileList(channelIndex, []))
         assignThumbNailListToOutputs()

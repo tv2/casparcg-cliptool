@@ -3,7 +3,7 @@ import { useState } from "react"
 import swipeService, { Point, SwipeDirection } from "../../services/swipe-service"
 
 interface SwipeableProps {
-  divClassName?: string
+  className?: string
   role?: React.AriaRole
   onSwipe: (direction: SwipeDirection) => void
   children: React.ReactNode
@@ -41,7 +41,7 @@ export default function Swipeable(props: SwipeableProps): JSX.Element {
   }
 
   return (
-    <div className={props.divClassName} 
+    <div className={props.className} 
       role={props.role}
       onTouchStart={onTouchStart}
       onTouchMove={onTouchMove}
