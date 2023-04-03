@@ -1,13 +1,14 @@
 import React from "react";
 import { useSelector } from "react-redux"
-import '../../css/thumbnail.css'
-import ThumbnailButton from "./thumbnail-button";
-import TimeCode from "./timeCode";
-import settingsService from "../../../model/services/settings-service";
-import { MediaFile } from "../../../model/reducers/media-models";
-import { State } from "../../../model/reducers/index-reducer";
-import appNavigationService from "../../../model/services/app-navigation-service";
-import { state } from "../../../model/reducers/store";
+import ThumbnailButton from "../thumbnail-button";
+import TimeCode from "../time-code/time-code";
+import settingsService from "../../../../model/services/settings-service";
+import { MediaFile } from "../../../../model/reducers/media-models";
+import { State } from "../../../../model/reducers/index-reducer";
+import appNavigationService from "../../../../model/services/app-navigation-service";
+import { state } from "../../../../model/reducers/store";
+import './text-thumbnail.scss'
+import './../shared-thumbnail.scss'
 
 interface TextThumbnailProps {
   file: MediaFile
@@ -21,10 +22,9 @@ export default function TextThumbnail(props: TextThumbnailProps): JSX.Element {
       .selectedFile
   )
   const isSelected: boolean = settingsService.isThumbnailSelected(props.file.name, state.settings, activeTab)
-  const classNames: string = `thumbnail-text-view ${isSelected ? 'selected-thumb' : ''}`
 
   return (
-    <div className={classNames} >
+    <div className={`thumbnail-text-view ${isSelected ? 'selected-thumb' : ''}`} >
         <ThumbnailButton fileName={props.file.name} className="thumbnail-text-view-ClickPgm" />
         {isSelected && (
             <TimeCode classNames="text"/>

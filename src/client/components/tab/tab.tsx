@@ -3,7 +3,7 @@ import { setActiveTab } from "../../../model/reducers/app-navigation-action"
 import { reduxStore } from "../../../model/reducers/store"
 import swipeService, { SwipeDirection } from "../../services/swipe-service"
 import Swipeable from "../shared/swipeable"
-import { Thumbnails } from "../thumbnail/thumbnails"
+import { Thumbnails } from "../thumbnail/thumbnails/thumbnails"
 
 export interface TabProps {
   title: string

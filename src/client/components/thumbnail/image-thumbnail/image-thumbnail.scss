@@ -1,0 +1,27 @@
+.thumb.hidden {
+  scale: 0.8;
+
+  .thumbnailImage {
+    filter: grayscale(1);
+  }
+}
+
+.thumbnailImageClickPgm {
+  position: absolute;
+  height: 150px;
+  top: 10px;
+  z-index: 2;
+  background-color: transparent;
+  right: 5%;
+  width: 90%;
+  border-style: dotted;
+  border-width: 0px;
+  border-left-width: 1px;
+  border-color: #2e2b41;
+  outline: 0;
+}
+
+.text {
+  margin-top: 8px;
+  font-size: 0.7em;
+}

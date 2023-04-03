@@ -1,14 +1,14 @@
 import React from "react"
 import { useSelector } from "react-redux"
-import ThumbnailButton from "./thumbnail-button";
-import ThumbnailPicture from "./thumbnail-picture";
-import TimeCode from "./timeCode";
-import '../../css/thumbnail.css'
-import settingsService from "../../../model/services/settings-service";
-import { HiddenFileInfo, MediaFile } from "../../../model/reducers/media-models";
-import { State } from "../../../model/reducers/index-reducer";
-import appNavigationService from "../../../model/services/app-navigation-service";
-import { state } from "../../../model/reducers/store";
+import ThumbnailButton from "../thumbnail-button";
+import ThumbnailPicture from "../thumbnail-picture/thumbnail-picture";
+import TimeCode from "../time-code/time-code";
+import settingsService from "../../../../model/services/settings-service";
+import { HiddenFileInfo, MediaFile } from "../../../../model/reducers/media-models";
+import { State } from "../../../../model/reducers/index-reducer";
+import appNavigationService from "../../../../model/services/app-navigation-service";
+import { state } from "../../../../model/reducers/store";
+import './image-thumbnail.scss'
 
 interface ImageThumbnailProps {
   file: MediaFile
@@ -28,10 +28,9 @@ export default function ImageThumbnail(props: ImageThumbnailProps): JSX.Element 
           state.media.hiddenFiles
   ) ?? {}
   const isSelected: boolean = settingsService.isThumbnailSelected(props.file.name, state.settings, activeTab)
-  const classNames: string = `thumb ${props.file.name in hiddenFiles ? 'hidden' : ''}`
 
   return (
-    <div className={classNames}>
+    <div className={`thumb ${props.file.name in hiddenFiles ? 'hidden' : ''}`}>
         <ThumbnailPicture fileName={props.file.name} />
         <ThumbnailButton fileName={props.file.name} className="thumbnailImageClickPgm"/>
         {isSelected && (

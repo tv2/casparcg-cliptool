@@ -1,0 +1,20 @@
+.thumbnail-timecode {
+  position: absolute;
+  width: 250px;
+  left: 25px;
+  top: 50px;
+  text-align: left;
+  padding: 0 4px;
+  font-size: 2.8em;
+  color: red;
+  background: #ffffff8c;
+  border-radius: 16px;
+
+  &.text {
+    width: 200px;
+    left: 35px;
+    top: 80px;
+    font-size: 2.1em;
+    padding: 0;
+  }
+}

@@ -5,13 +5,17 @@ import { OperationMode } from '../../../model/reducers/settings-models'
 import appNavigationService from '../../../model/services/app-navigation-service'
 import settingsService from '../../../model/services/settings-service'
 import { OperationModeEditVisibilityFooter } from './operation-mode-edit-visibility-footer/operation-mode-edit-visibility-footer'
+import browserService from '../../services/browser-service'
 
 export function OperationModeFooter(): JSX.Element {
   const activeTab: number = useSelector(
     (state: State) => appNavigationService.getActiveTab(state.appNavigation))  
   const operationMode: OperationMode = useSelector((state: State) =>
     settingsService.getOutputSettings(state.settings, activeTab)?.operationMode)
-
+  
+  if (browserService.isTextView()) {
+    return (<></>)
+  }
   switch (operationMode) {
     case OperationMode.EDIT_VISIBILITY: {
       return <OperationModeEditVisibilityFooter />

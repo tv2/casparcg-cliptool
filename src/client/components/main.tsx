@@ -6,7 +6,7 @@ import appNavigationService from "../../model/services/app-navigation-service"
 import browserService from "../services/browser-service"
 import Tab from "./tab/tab"
 import Tabs from "./tab/tabs/tabs"
-import { Thumbnails } from "./thumbnail/thumbnails"
+import { Thumbnails } from "./thumbnail/thumbnails/thumbnails"
 
 
 // TODO: possibly find a better name

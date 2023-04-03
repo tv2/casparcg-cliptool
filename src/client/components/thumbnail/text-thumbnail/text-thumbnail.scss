@@ -1,0 +1,32 @@
+.thumbnail-text-view {
+  height: 130px;
+  border-width: 2px;
+  border-style: solid;
+  border-color: #2e2b41;
+  width: 95%;
+  margin: 8px;
+}
+
+.selected-thumb {
+  border-color: red;
+}
+
+.thumbnail-text-view-ClickPgm {
+  position: absolute;
+  height: 130px;
+  top: 10px;
+  z-index: 2;
+  background-color: transparent;
+  right: 5%;
+  width: 90%;
+  border-style: dotted;
+  border-width: 0px;
+  border-color: rgba(133, 133, 133, 0.371);
+  outline: 0;
+}
+
+.text-text-view {
+  word-wrap: break-word;
+  margin-top: 8px;
+  font-size: 1.4em;
+}

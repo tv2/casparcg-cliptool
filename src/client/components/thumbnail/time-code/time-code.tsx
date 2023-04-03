@@ -1,10 +1,10 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import mediaService from "../../../model/services/media-service";
-import '../../css/thumbnail.css'
-import appNavigationService from "../../../model/services/app-navigation-service";
-import { State } from "../../../model/reducers/index-reducer";
-import timeService from "../../../model/services/time-service";
+import mediaService from "../../../../model/services/media-service";
+import appNavigationService from "../../../../model/services/app-navigation-service";
+import { State } from "../../../../model/reducers/index-reducer";
+import timeService from "../../../../model/services/time-service";
+import './time-code.scss'
 
 interface TimeCodeProps {
   classNames?: string

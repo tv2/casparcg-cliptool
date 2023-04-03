@@ -1,6 +1,5 @@
 import React from "react"
 import { socket } from "../../util/socketClientHandlers";
-import '../../css/thumbnail.css'
 import appNavigationService from "../../../model/services/app-navigation-service";
 import settingsService from "../../../model/services/settings-service";
 import { OperationMode } from "../../../model/reducers/settings-models";
@@ -9,6 +8,7 @@ import { useSelector } from "react-redux";
 import { State } from "../../../model/reducers/index-reducer";
 import Button from "../shared/button";
 import { ClientToServer } from "../../../model/socket-io-constants";
+import browserService from "../../services/browser-service";
 
 interface ThumbnailButtonProps {
   fileName: string
@@ -29,11 +29,14 @@ export default function ThumbnailButton(props: ThumbnailButtonProps): JSX.Elemen
   )
 }
 
-function triggerOperationModeAction(fileName: string, activeTab: number): void {    
+function triggerOperationModeAction(fileName: string, activeTab: number): void {   
+  if (browserService.isTextView()) {
+    return emitPlayFile(fileName, activeTab)
+  } 
   const operationMode = settingsService.getOutputSettings(state.settings, activeTab)?.operationMode
   switch (operationMode) {
       case OperationMode.EDIT_VISIBILITY: 
-          emitToggleVisibility(fileName)
+          emitToggleVisibility(fileName, activeTab)
           break;
       case OperationMode.CONTROL:
       default:
@@ -42,13 +45,13 @@ function triggerOperationModeAction(fileName: string, activeTab: number): void {
   }
 }
 
-function emitToggleVisibility(fileName: string): void {
+function emitToggleVisibility(fileName: string, activeTab: number): void {
   if (settingsService.isThumbnailSelectedOnAnyOutput(fileName, state.settings)) {
       alert('Unable to hide, as the file is in use somewhere.')
       return
   }
       
-  socket.emit(ClientToServer.TOGGLE_THUMBNAIL_VISIBILITY, appNavigationService.getActiveTab(state.appNavigation), fileName)
+  socket.emit(ClientToServer.TOGGLE_THUMBNAIL_VISIBILITY, activeTab, fileName)
 }
 
 function emitPlayFile(fileName: string, activeTab: number ): void {

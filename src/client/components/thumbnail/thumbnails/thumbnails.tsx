@@ -1,16 +1,15 @@
 import React from 'react'
-import '../../css/thumbnail.css'
-import '../app/app'
-import mediaService from "../../../model/services/media-service";
+import mediaService from "../../../../model/services/media-service";
 import { useSelector } from 'react-redux';
-import ImageThumbnail from './image-thumbnail';
-import TextThumbnail from './text-thumbnail';
-import settingsService from '../../../model/services/settings-service';
-import { OperationMode } from '../../../model/reducers/settings-models';
-import { HiddenFileInfo, MediaFile } from '../../../model/reducers/media-models';
-import { State } from '../../../model/reducers/index-reducer';
-import appNavigationService from '../../../model/services/app-navigation-service';
-import browserService from '../../services/browser-service';
+import ImageThumbnail from '../image-thumbnail/image-thumbnail';
+import TextThumbnail from '../text-thumbnail/text-thumbnail';
+import settingsService from '../../../../model/services/settings-service';
+import { OperationMode } from '../../../../model/reducers/settings-models';
+import { HiddenFileInfo, MediaFile } from '../../../../model/reducers/media-models';
+import { State } from '../../../../model/reducers/index-reducer';
+import appNavigationService from '../../../../model/services/app-navigation-service';
+import browserService from '../../../services/browser-service';
+import './thumbnails.scss'
 
 export function Thumbnails(): JSX.Element {
     const activeTab: number = useSelector(
@@ -25,7 +24,7 @@ export function Thumbnails(): JSX.Element {
         (state: State) => settingsService.getOutputSettings(state.settings, activeTab)
             .operationMode === OperationMode.EDIT_VISIBILITY
     ) ?? false
-    const shownFiles: MediaFile[] = !isInEditVisibilityMode 
+    const shownFiles: MediaFile[] = !isInEditVisibilityMode || browserService.isTextView()
         ? files.filter(({ name }) => !(name in hiddenFiles)) 
         : files
     return (
