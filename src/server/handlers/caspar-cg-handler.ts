@@ -25,7 +25,6 @@ import {
     setManualStart,
     setMix,
     setOperationMode,
-    setSelectedFileName,
     setTabData,
     setWeb,
     updateSettings,
@@ -120,9 +119,6 @@ function processOscMessage(message: any): void {
                         channelIndex
                     )?.selectedFile !== fileName
                 ) {
-                    reduxStore.dispatch(
-                        setSelectedFileName(channelIndex, fileName)
-                    )
                     reduxStore.dispatch(setTime(channelIndex, [0, 0]))
                 }
             }

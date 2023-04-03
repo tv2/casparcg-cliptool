@@ -58,5 +58,5 @@ function emitPlayFile(fileName: string, activeTab: number ): void {
   const event = !settingsService.getOutputSettings(state.settings, activeTab)?.manualStartState 
       ? ClientToServer.PGM_PLAY 
       : ClientToServer.PGM_LOAD
-  socket.emit(event, appNavigationService.getActiveTab(state.appNavigation), fileName)
+  socket.emit(event, activeTab, fileName)
 }

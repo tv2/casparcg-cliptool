@@ -22,6 +22,10 @@ export default function ImageThumbnail(props: ImageThumbnailProps): JSX.Element 
     (state: State) => settingsService
       .getOutputSettings(state.settings, activeTab).selectedFile
   )
+  useSelector(
+    (state: State) => settingsService
+      .getOutputSettings(state.settings, activeTab).loadedFile
+  )
 
   const hiddenFiles: Record<string, HiddenFileInfo> = useSelector(
       (state: State) => 

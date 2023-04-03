@@ -11,6 +11,8 @@ export enum ServerToClient {
     MANUAL_START_STATE_UPDATE = 'manualStartStateUpdate',
     MIX_STATE_UPDATE = 'mixStateUpdate',
     WEB_STATE_UPDATE = 'webStateUpdate',
+    FILE_LOADED_UPDATE = 'fileLoadedUpdate',
+    FILE_SELECTED_UPDATE = 'fileSelectedUpdate',
 }
 
 export enum ClientToServer {

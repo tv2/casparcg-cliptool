@@ -53,6 +53,18 @@ class SettingsService {
         return selectedFileName === thumbnailName
     }
 
+    public isThumbnailLoaded(
+        thumbnailName: string,
+        settingsState: Settings,
+        channelIndex: number
+    ): boolean {
+        const loadedFileName = this.getCleanLoadedFile(
+            this.getOutputSettings(settingsState, channelIndex),
+            settingsState
+        )
+        return loadedFileName === thumbnailName
+    }
+
     public isThumbnailSelectedOnAnyOutput(
         thumbnailName: string,
         settingsState: Settings
@@ -64,17 +76,31 @@ class SettingsService {
         )
     }
 
-    public getCleanSelectedFile(
+    private getCleanSelectedFile(
         output: OutputSettings,
         settingsState: Settings
     ): string {
-        const selectedFileName = output.selectedFile
+        return this.getCleanString(output.selectedFile, settingsState)
+    }
+
+    private getCleanLoadedFile(
+        output: OutputSettings,
+        settingsState: Settings
+    ): string {
+        return this.getCleanString(output.loadedFile, settingsState)
+    }
+
+    private getCleanString(
+        toBeCleaned: string,
+        settingsState: Settings
+    ): string {
+        const fileName = toBeCleaned
             .toUpperCase()
             .replace(/\\/g, '/')
             .replace('//', '/')
             .split('.')
         // Remove system Path e.g.: D:\\media/:
-        const cleanSelectedFileName = selectedFileName[0].replace(
+        const cleanSelectedFileName = fileName[0].replace(
             settingsState.ccgConfig.path?.toUpperCase().replace(/\\/g, '/') +
                 '/',
             ''

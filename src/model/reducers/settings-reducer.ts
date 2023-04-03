@@ -66,6 +66,14 @@ export function settings(
             }
             return nextState
         }
+        case IO.SET_LOADED_FILE_NAME: {
+            if (doesChannelExist(nextState, action)) {
+                return updateAttributeByPartial(state, nextState, action, {
+                    loadedFile: action.filename,
+                })
+            }
+            return nextState
+        }
         case IO.SET_MIX: {
             if (doesChannelExist(nextState, action)) {
                 return updateAttributeByPartial(state, nextState, action, {

@@ -15,6 +15,7 @@ import {
 } from '../../model/reducers/media-actions'
 import {
     setGenerics,
+    setLoadedFileName,
     setLoop,
     setManualStart,
     setMix,
@@ -83,6 +84,22 @@ socket.on(ServerToClient.TIME_TALLY_UPDATE, (data: TimeTallyPayload[]) => {
         }
     })
 })
+
+socket.on(
+    ServerToClient.FILE_LOADED_UPDATE,
+    (channelIndex: number, fileName: string) => {
+        console.log('Received', ServerToClient.FILE_LOADED_UPDATE, fileName)
+        reduxStore.dispatch(setLoadedFileName(channelIndex, fileName))
+    }
+)
+
+socket.on(
+    ServerToClient.FILE_SELECTED_UPDATE,
+    (channelIndex: number, fileName: string) => {
+        console.log('Received', ServerToClient.FILE_SELECTED_UPDATE, fileName)
+        reduxStore.dispatch(setSelectedFileName(channelIndex, fileName))
+    }
+)
 
 socket.on(
     ServerToClient.LOOP_STATE_UPDATE,

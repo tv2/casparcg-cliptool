@@ -21,10 +21,15 @@ export default function TextThumbnail(props: TextThumbnailProps): JSX.Element {
     (state: State) => settingsService.getOutputSettings(state.settings, activeTab)
       .selectedFile
   )
+  useSelector(
+    (state: State) => settingsService.getOutputSettings(state.settings, activeTab)
+      .loadedFile
+  )
   const isSelected: boolean = settingsService.isThumbnailSelected(props.file.name, state.settings, activeTab)
+  const isLoaded: boolean = settingsService.isThumbnailLoaded(props.file.name, state.settings, activeTab)
 
   return (
-    <div className={`thumbnail-text-view ${isSelected ? 'selected-thumb' : ''}`} >
+    <div className={`thumbnail-text-view ${isLoaded ? 'loaded-thumbnail' : isSelected ? 'selected-thumbnail' : ''}`} >
         <ThumbnailButton fileName={props.file.name} className="thumbnail-text-view-ClickPgm" />
         {isSelected && (
             <TimeCode classNames="text"/>

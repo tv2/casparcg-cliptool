@@ -16,10 +16,12 @@ import {
 } from '../../model/reducers/media-actions'
 import {
     setGenerics,
+    setLoadedFileName,
     setLoop,
     setManualStart,
     setMix,
     setOperationMode,
+    setSelectedFileName,
     setWeb,
 } from '../../model/reducers/settings-action'
 import { HiddenFileInfo, MediaFile } from '../../model/reducers/media-models'
@@ -102,12 +104,30 @@ export function socketIoHandlers(socket: any): void {
                 logger.info(
                     `Playing ${fileName} on channel index ${channelIndex}.`
                 )
+                reduxStore.dispatch(setLoadedFileName(channelIndex, ''))
+                socketServer.emit(
+                    ServerToClient.FILE_LOADED_UPDATE,
+                    channelIndex,
+                    ''
+                )
+                reduxStore.dispatch(setSelectedFileName(channelIndex, fileName))
+                socketServer.emit(
+                    ServerToClient.FILE_SELECTED_UPDATE,
+                    channelIndex,
+                    fileName
+                )
             }
         )
         .on(
             ClientToServer.PGM_LOAD,
             (channelIndex: number, fileName: string) => {
                 loadMedia(channelIndex, 9, fileName)
+                reduxStore.dispatch(setLoadedFileName(channelIndex, fileName))
+                socketServer.emit(
+                    ServerToClient.FILE_LOADED_UPDATE,
+                    channelIndex,
+                    fileName
+                )
                 logger.info(
                     `Loading ${fileName} on channel index ${channelIndex}.`
                 )

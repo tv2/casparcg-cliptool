@@ -43,6 +43,7 @@ export interface OutputSettings {
     webState: boolean
     operationMode: OperationMode
     selectedFile: string
+    loadedFile: string
 }
 
 export interface CasparcgSettings {

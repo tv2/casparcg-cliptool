@@ -60,13 +60,18 @@ export default function ControlActions(): JSX.Element {
         />
         {manualStartState && <Button
           className="control-start-button"
-          onClick={() => socket.emit(ClientToServer.PGM_PLAY, activeTab) }
+          onClick={() => emitStart(activeTab) }
           text="START"          
         />}        
       </div> 
     </>
   )
 }
+
+function emitStart(activeTab: number) {
+  socket.emit(ClientToServer.PGM_PLAY, activeTab, settingsService.getOutputSettings(state.settings, activeTab).loadedFile)
+}
+
 
 function emitSetLoopState(activeTab: number): void {
   socket.emit(
