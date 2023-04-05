@@ -62,7 +62,6 @@ class SettingsPersistenceService {
             state.settings
         )
         const stringifiedSettings = JSON.stringify(generics)
-
         persistenceService.saveFile(
             'settings.json',
             stringifiedSettings,
@@ -70,7 +69,7 @@ class SettingsPersistenceService {
                 if (error) {
                     logger.data(error).error('Error writing file:')
                 } else {
-                    logger.data(stringifiedSettings).info('Settings saved')
+                    logger.data(generics).debug('Settings saved')
                 }
             }
         )

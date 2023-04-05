@@ -137,6 +137,7 @@ export function socketIoHandlers(socket: any): void {
             ClientToServer.SET_LOOP_STATE,
             (channelIndex: number, loopState: boolean) => {
                 reduxStore.dispatch(setLoop(channelIndex, loopState))
+                settingsPersistenceService.save()
                 socketServer.emit(
                     ServerToClient.LOOP_STATE_UPDATE,
                     channelIndex,
@@ -167,6 +168,7 @@ export function socketIoHandlers(socket: any): void {
                 reduxStore.dispatch(
                     setManualStart(channelIndex, manualStartState)
                 )
+                settingsPersistenceService.save()
                 socketServer.emit(
                     ServerToClient.MANUAL_START_STATE_UPDATE,
                     channelIndex,
@@ -181,6 +183,7 @@ export function socketIoHandlers(socket: any): void {
             ClientToServer.SET_MIX_STATE,
             (channelIndex: number, mixState: boolean) => {
                 reduxStore.dispatch(setMix(channelIndex, mixState))
+                settingsPersistenceService.save()
                 socketServer.emit(
                     ServerToClient.MIX_STATE_UPDATE,
                     channelIndex,
@@ -195,6 +198,7 @@ export function socketIoHandlers(socket: any): void {
             ClientToServer.SET_WEB_STATE,
             (channelIndex: number, webState: boolean) => {
                 reduxStore.dispatch(setWeb(channelIndex, webState))
+                settingsPersistenceService.save()
                 socketServer.emit(
                     ServerToClient.WEB_STATE_UPDATE,
                     channelIndex,
