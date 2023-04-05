@@ -8,7 +8,6 @@ import Output from "./output/output";
 
 interface OutputsProps {
     outputSettings: OutputSettings[]
-    onOutputSettingsChange: (outputSettings: OutputSettings[]) => void
 }
 
 export default function Outputs(props: OutputsProps): JSX.Element {
@@ -19,23 +18,15 @@ export default function Outputs(props: OutputsProps): JSX.Element {
             {browserService.isChannelView()
                 ? <Output index={browserService.getChannel() - 1}
                     configChannel={state.settings.ccgConfig.channels[browserService.getChannel() - 1]}
-                    outputSettings={props.outputSettings[browserService.getChannel()]} 
-                    setOutputSettings={setOutput}
+                    outputSettings={props.outputSettings[browserService.getChannel()]}                     
                     folders={folders}/>
                 : ccgConfig.channels.map(
                         (item, index) => <Output configChannel={item}
                             index={index}
                             outputSettings={props.outputSettings[index]}
-                            key={index}
-                            setOutputSettings={setOutput} 
+                            key={index}                            
                             folders={folders}/>
                     )}
         </div>
-    )
-
-    function setOutput(output: OutputSettings, index: number): void {
-        const outputsSettingsCopy = [...props.outputSettings]
-        outputsSettingsCopy[index] = output
-        props.onOutputSettingsChange(outputsSettingsCopy)
-    }
+    )    
 }

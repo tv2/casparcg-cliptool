@@ -76,7 +76,7 @@ class SettingsService {
         )
     }
 
-    private getCleanSelectedFile(
+    public getCleanSelectedFile(
         output: OutputSettings,
         settingsState: Settings
     ): string {

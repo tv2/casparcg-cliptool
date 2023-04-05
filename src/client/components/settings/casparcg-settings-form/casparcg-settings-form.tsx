@@ -1,14 +1,14 @@
 import React, { useState } from "react";
-import { CasparcgSettings } from "../../../../model/reducers/settings-models";
 import eventService from "../../../services/event-service";
 import LabelledNumberInput from "../../shared/labelled-number-input";
 import LabelledTextInput from "../../shared/labelled-text-input";
 import './casparcg-settings-form.scss'
 import './../shared-settings.scss'
+import changingSettingsService from "../../../services/changing-settings-service";
+import { CasparcgSettings } from "../../../../model/reducers/settings-models";
 
 interface CasparcgSettingsFormProps {
     settings: CasparcgSettings
-    onSettingsChange: (settings: CasparcgSettings) => void
 }
 
 export default function CasparcgSettingsForm(props: CasparcgSettingsFormProps): JSX.Element {
@@ -62,7 +62,7 @@ export default function CasparcgSettingsForm(props: CasparcgSettingsFormProps): 
         const newIp = eventService.getTextFromEvent(event)
         setIp(newIp)
         settings.ip = newIp
-        props.onSettingsChange(settings)
+        changingSettingsService.saveTemporaryCcgSettingChanges(settings)
     }
 
     function saveTempAmcpPortChange(event: React.ChangeEvent<HTMLInputElement>): void {
@@ -70,7 +70,7 @@ export default function CasparcgSettingsForm(props: CasparcgSettingsFormProps): 
         const newAmcpPort = eventService.getNumberFromEvent(event)
         setAmcpPort(newAmcpPort)
         settings.amcpPort = newAmcpPort
-        props.onSettingsChange(settings)
+        changingSettingsService.saveTemporaryCcgSettingChanges(settings)
     }
 
     function saveTempOscPortChange(event: React.ChangeEvent<HTMLInputElement>): void {
@@ -78,7 +78,7 @@ export default function CasparcgSettingsForm(props: CasparcgSettingsFormProps): 
         const newOscPort = eventService.getNumberFromEvent(event)
         setOscPort(newOscPort)
         settings.oscPort = newOscPort
-        props.onSettingsChange(settings)
+        changingSettingsService.saveTemporaryCcgSettingChanges(settings)
     }
 
     function saveTempDefaultLayerChange(event: React.ChangeEvent<HTMLInputElement>): void {
@@ -86,7 +86,7 @@ export default function CasparcgSettingsForm(props: CasparcgSettingsFormProps): 
         const newDefaultLayer = eventService.getNumberFromEvent(event)
         setDefaultLayer(newDefaultLayer)
         settings.defaultLayer = newDefaultLayer
-        props.onSettingsChange(settings)
+        changingSettingsService.saveTemporaryCcgSettingChanges(settings)
     }
 
     function saveTempTransitionTimeChange(event: React.ChangeEvent<HTMLInputElement>): void {
@@ -94,6 +94,6 @@ export default function CasparcgSettingsForm(props: CasparcgSettingsFormProps): 
         const newTransitionTime = eventService.getNumberFromEvent(event)
         setTransitionTime(newTransitionTime)
         settings.transitionTime = newTransitionTime
-        props.onSettingsChange(settings)
+        changingSettingsService.saveTemporaryCcgSettingChanges(settings)
     }
 }
