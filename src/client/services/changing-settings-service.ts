@@ -7,8 +7,7 @@ import {
 } from '../../model/reducers/settings-models'
 import { reduxStore, state } from '../../model/reducers/store'
 import settingsService from '../../model/services/settings-service'
-import { ClientToServer } from '../../model/socket-io-constants'
-import { socket } from '../util/socketClientHandlers'
+import socketService from './socket-service'
 
 class ChangingSettingsService {
     private temporarySettings: GenericSettings | undefined
@@ -98,7 +97,7 @@ class ChangingSettingsService {
             this.hasChanges() &&
             window.confirm('Changes have been made, do you want to save them?')
         ) {
-            socket.emit(ClientToServer.SET_GENERICS, this.temporarySettings)
+            socketService.emitSetGenericSettings(this.temporarySettings)
             this.toggleSettingsPage()
         }
     }

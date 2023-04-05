@@ -1,6 +1,5 @@
 import React from "react";
 import { state } from "../../../../model/reducers/store";
-import { socket } from "../../../util/socketClientHandlers";
 import { useSelector } from "react-redux";
 import settingsService from "../../../../model/services/settings-service";
 import appNavigationService from "../../../../model/services/app-navigation-service";
@@ -9,10 +8,10 @@ import _ from "lodash";
 import { State } from "../../../../model/reducers/index-reducer";
 import Button from "../../shared/button";
 import browserService from "../../../services/browser-service";
-import { ClientToServer } from "../../../../model/socket-io-constants";
 import './settings-actions.scss'
 import './../shared-settings.scss'
 import changingSettingsService from "../../../services/changing-settings-service";
+import socketService from "../../../services/socket-service";
 
 export default function SettingsActions(): JSX.Element {
   const activeTab: number = useSelector(
@@ -60,15 +59,11 @@ function emitSetOperationModeToEditVisibility(): void {
   const output = settingsService.getOutputSettings(state.settings, activeTab)
   if (output.operationMode !== OperationMode.EDIT_VISIBILITY) {
       toggleSettingsPage()
+      socketService.emitSetOperationModeToEditVisibility(activeTab)
   }
-  socket.emit(
-      ClientToServer.SET_OPERATION_MODE, 
-      activeTab, 
-      output
-          .operationMode !== OperationMode.EDIT_VISIBILITY 
-          ? OperationMode.EDIT_VISIBILITY 
-          : OperationMode.CONTROL
-  )
+  else {
+    socketService.emitSetOperationModeToControl(activeTab)
+  }
 }
 
 function restartCliptool(): void {
@@ -78,7 +73,7 @@ function restartCliptool(): void {
       )
   ) {
       console.log('Restarting server...')
-      socket.emit(ClientToServer.RESTART_SERVER)
+      socketService.emitRestartServer()
   }
 }
 

@@ -1,26 +1,19 @@
 import React from "react";
-import { state } from "../../../../model/reducers/store";
-import { socket } from "../../../util/socketClientHandlers";
 import { useSelector } from "react-redux";
 import settingsService from "../../../../model/services/settings-service";
 import appNavigationService from "../../../../model/services/app-navigation-service";
 import { State } from "../../../../model/reducers/index-reducer";
 import Button from "../../shared/button";
 import browserService from "../../../services/browser-service";
-import { ClientToServer } from "../../../../model/socket-io-constants";
 import './control-actions.scss'
+import socketService from "../../../services/socket-service";
+import { OutputSettings } from "../../../../model/reducers/settings-models";
 
 export default function ControlActions(): JSX.Element {
   const activeTab: number = useSelector(
     (state: State) => appNavigationService.getActiveTab(state.appNavigation))
-  const mixState: boolean = useSelector(
-      (state: State) => settingsService.getOutputSettings(state.settings, activeTab).mixState)
-  const webState: boolean = useSelector(
-      (state: State) => settingsService.getOutputSettings(state.settings, activeTab).webState)
-  const loopState: boolean = useSelector(
-      (state: State) => settingsService.getOutputSettings(state.settings, activeTab).loopState)
-  const manualStartState: boolean = useSelector(
-      (state: State) => settingsService.getOutputSettings(state.settings, activeTab).manualStartState)
+  const outputSettings = useSelector(
+    (state: State) => settingsService.getOutputSettings(state.settings, activeTab))
 
   const buttonWrapperCss = "control-button-background"
   const buttonBaseCss = "control-button"
@@ -30,22 +23,22 @@ export default function ControlActions(): JSX.Element {
         <>
           <div className={buttonWrapperCss}>
             <Button
-              className={`${buttonBaseCss} ${loopState ? 'on' : ''}`}
-              onClick={() => emitSetLoopState(activeTab)}
+              className={`${buttonBaseCss} ${outputSettings.loopState ? 'on' : ''}`}
+              onClick={() => toggleLoopState(activeTab, outputSettings)}
               text="LOOP"
             />
           </div>
           <div className={buttonWrapperCss}>
             <Button
-              className={`${buttonBaseCss} ${mixState ? 'on' : ''}`}
-              onClick={() => emitSetMixState(activeTab)}
+              className={`${buttonBaseCss} ${outputSettings.mixState ? 'on' : ''}`}
+              onClick={() => toggleMixState(activeTab, outputSettings)}
               text="MIX"
             />
           </div>
           <div className={buttonWrapperCss}>
             <Button
-              className={`${buttonBaseCss} ${webState ? 'on' : ''}`}
-              onClick={() => emitSetWebState(activeTab)}
+              className={`${buttonBaseCss} ${outputSettings.webState ? 'on' : ''}`}
+              onClick={() => toggleWebState(activeTab, outputSettings)}
               text="OVERLAY"
             />
           </div>                        
@@ -54,13 +47,13 @@ export default function ControlActions(): JSX.Element {
 
       <div className={buttonWrapperCss}>
         <Button
-          className={`${buttonBaseCss} ${manualStartState ? 'on' : ''}`}
-          onClick={() => emitSetManualStartState(activeTab)}
+          className={`${buttonBaseCss} ${outputSettings.manualStartState ? 'on' : ''}`}
+          onClick={() => toggleManualStartState(activeTab, outputSettings)}
           text="MANUAL"
         />
-        {manualStartState && <Button
+        {outputSettings.manualStartState && <Button
           className="control-start-button"
-          onClick={() => emitStart(activeTab) }
+          onClick={() => playLoadedFile(activeTab, outputSettings) }
           text="START"          
         />}        
       </div> 
@@ -68,39 +61,22 @@ export default function ControlActions(): JSX.Element {
   )
 }
 
-function emitStart(activeTab: number) {
-  socket.emit(ClientToServer.PGM_PLAY, activeTab, settingsService.getOutputSettings(state.settings, activeTab).loadedFile)
+function playLoadedFile(activeTab: number, outputSettings: OutputSettings) {
+  socketService.emitPlayFile(activeTab, outputSettings.loadedFile)
 }
 
-
-function emitSetLoopState(activeTab: number): void {
-  socket.emit(
-      ClientToServer.SET_LOOP_STATE,
-      activeTab,
-      !settingsService.getOutputSettings(state.settings, activeTab).loopState
-  )
+function toggleLoopState(activeTab: number, outputSettings: OutputSettings): void {
+  socketService.emitSetLoopState(activeTab, !outputSettings.loopState)
 }
 
-function emitSetMixState(activeTab: number): void {
-  socket.emit(
-      ClientToServer.SET_MIX_STATE,
-      activeTab,
-      !settingsService.getOutputSettings(state.settings, activeTab).mixState
-  )
+function toggleMixState(activeTab: number, outputSettings: OutputSettings): void {
+  socketService.emitSetMixState(activeTab, !outputSettings.mixState)  
 }
 
-function emitSetWebState(activeTab: number): void {
-  socket.emit(
-      ClientToServer.SET_WEB_STATE,
-      activeTab,
-      !settingsService.getOutputSettings(state.settings, activeTab).webState
-  )
+function toggleWebState(activeTab: number, outputSettings: OutputSettings): void {
+  socketService.emitSetWebState(activeTab, !outputSettings.webState)
 }
 
-function emitSetManualStartState(activeTab: number): void {
-  socket.emit(
-      ClientToServer.SET_MANUAL_START_STATE,
-      activeTab,
-      !settingsService.getOutputSettings(state.settings, activeTab).manualStartState
-  )
+function toggleManualStartState(activeTab: number, outputSettings: OutputSettings): void {
+  socketService.emitSetManualStartState(activeTab, !outputSettings.manualStartState)
 }

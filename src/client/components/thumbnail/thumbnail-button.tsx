@@ -1,14 +1,13 @@
 import React from "react"
-import { socket } from "../../util/socketClientHandlers";
 import appNavigationService from "../../../model/services/app-navigation-service";
 import settingsService from "../../../model/services/settings-service";
-import { OperationMode } from "../../../model/reducers/settings-models";
+import { OperationMode, OutputSettings } from "../../../model/reducers/settings-models";
 import { state } from "../../../model/reducers/store";
 import { useSelector } from "react-redux";
 import { State } from "../../../model/reducers/index-reducer";
 import Button from "../shared/button";
-import { ClientToServer } from "../../../model/socket-io-constants";
 import browserService from "../../services/browser-service";
+import socketService from "../../services/socket-service";
 
 interface ThumbnailButtonProps {
   fileName: string
@@ -33,7 +32,7 @@ function triggerOperationModeAction(fileName: string, activeTab: number): void {
   if (browserService.isTextView()) {
     return emitPlayFile(fileName, activeTab)
   } 
-  const operationMode = settingsService.getOutputSettings(state.settings, activeTab)?.operationMode
+  const operationMode = getOutputSettings(activeTab)?.operationMode
   switch (operationMode) {
       case OperationMode.EDIT_VISIBILITY: 
           emitToggleVisibility(fileName, activeTab)
@@ -49,14 +48,17 @@ function emitToggleVisibility(fileName: string, activeTab: number): void {
   if (settingsService.isThumbnailSelectedOnAnyOutput(fileName, state.settings)) {
       alert('Unable to hide, as the file is in use somewhere.')
       return
-  }
-      
-  socket.emit(ClientToServer.TOGGLE_THUMBNAIL_VISIBILITY, activeTab, fileName)
+  }      
+  socketService.emitToggleThumbnailVisibility(activeTab, fileName)
 }
 
 function emitPlayFile(fileName: string, activeTab: number ): void {
-  const event = !settingsService.getOutputSettings(state.settings, activeTab)?.manualStartState 
-      ? ClientToServer.PGM_PLAY 
-      : ClientToServer.PGM_LOAD
-  socket.emit(event, activeTab, fileName)
+  const eventToFire = !getOutputSettings(activeTab)?.manualStartState 
+      ? socketService.emitPlayFile
+      : socketService.emitLoadFile
+  eventToFire(activeTab, fileName) 
+}
+
+function getOutputSettings(activeTab: number): OutputSettings {
+  return settingsService.getOutputSettings(state.settings, activeTab)
 }

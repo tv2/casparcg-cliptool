@@ -1,11 +1,9 @@
 import React from "react"
-import { ClientToServer } from '../../../../model/socket-io-constants'
-import { socket } from '../../../util/socketClientHandlers'
 import { Footer } from "../footer/footer"
-import { OperationMode } from "../../../../model/reducers/settings-models"
+import './operation-mode-edit-visibility-footer.scss'
+import socketService from "../../../services/socket-service"
 import appNavigationService from "../../../../model/services/app-navigation-service"
 import { state } from "../../../../model/reducers/store"
-import './operation-mode-edit-visibility-footer.scss'
 
 const BUTTON_TEXT = 'Exit Edit Visibility'
 const DESCRIPTION_TEXT = 'You are currently editing the visibility of files.'.toUpperCase()
@@ -26,9 +24,5 @@ export function OperationModeEditVisibilityFooter(): JSX.Element {
 }
 
 function resetOperationMode(): void {
-  socket.emit(
-    ClientToServer.SET_OPERATION_MODE, 
-    appNavigationService.getActiveTab(state.appNavigation), 
-    OperationMode.CONTROL
-  )
+  socketService.emitSetOperationModeToControl(appNavigationService.getActiveTab(state.appNavigation))
 }
