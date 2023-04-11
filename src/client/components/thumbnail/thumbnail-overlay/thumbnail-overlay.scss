@@ -1,4 +1,4 @@
-.thumbnail-timecode {
+.thumbnail-overlay {
   position: absolute;
   width: 250px;
   left: 25px;
@@ -11,7 +11,7 @@
   display: flex;
   justify-content: center;
 
-  &.text {
+  &.text-view {
     width: 200px;
     left: 35px;
     top: 80px;
@@ -20,7 +20,7 @@
   }
 
   &.loaded {
-    color: orange;
+    color: darkgoldenrod;
   }
 
   &.selected {
