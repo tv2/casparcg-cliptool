@@ -32,7 +32,7 @@ export default function TextThumbnail(props: TextThumbnailProps): JSX.Element {
     <div className={`thumbnail-text-view ${isLoaded ? 'loaded-thumbnail' : isSelected ? 'selected-thumbnail' : ''}`} >
         <ThumbnailButton fileName={props.file.name} className="thumbnail-text-view-ClickPgm" />
         {isSelected && (
-            <TimeCode classNames="text"/>
+            <TimeCode classNames="text" fileType={props.file.type}/>
         )}
         <p className="text-text-view">
             {props.file.name

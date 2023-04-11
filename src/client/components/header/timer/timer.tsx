@@ -26,14 +26,16 @@ export default function Time(): JSX.Element {
         (state: State) => mediaService.getOutput(state)?.thumbnailList)
 
     const cleanSelectedFile: string = settingsService.getCleanSelectedFile(settingsOutput, state.settings)    
-    const thumbnailUrl = mediaService.getBase64ThumbnailUrl(cleanSelectedFile, activeTab, state)
+    const thumbnailUrl: string = mediaService.getBase64ThumbnailUrl(cleanSelectedFile, activeTab, state)
+    const playingFileType: string | undefined = mediaOutput?.mediaFiles.find(file => file.name === cleanSelectedFile)?.type
     
     return (
         <div className="app-timer-background">
             <label className="app-header-pgm-counter">
                 {timeService.secondsToTimeCode(
                     mediaOutput?.time,
-                    state.settings.ccgConfig.channels[activeTab]?.videoFormat?.frameRate
+                    state.settings.ccgConfig.channels[activeTab]?.videoFormat?.frameRate,
+                    playingFileType ?? 'UNKNOWN'
                 )}
             </label>
             <img

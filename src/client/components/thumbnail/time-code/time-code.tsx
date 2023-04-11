@@ -8,6 +8,7 @@ import './time-code.scss'
 
 interface TimeCodeProps {
   classNames?: string
+  fileType: string
 }
 
 export default function TimeCode(props: TimeCodeProps): JSX.Element {
@@ -23,7 +24,7 @@ export default function TimeCode(props: TimeCodeProps): JSX.Element {
 
   return (
     <a className={`thumbnail-timecode ${props.classNames ?? ''}`}>        
-        {timeService.secondsToTimeCode(time, frameRate)}            
+        {timeService.secondsToTimeCode(time, frameRate, props.fileType)}            
     </a>
   )
 }

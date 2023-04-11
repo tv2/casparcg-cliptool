@@ -38,7 +38,7 @@ export default function ImageThumbnail(props: ImageThumbnailProps): JSX.Element 
         <ThumbnailPicture fileName={props.file.name} />
         <ThumbnailButton fileName={props.file.name} className="thumbnailImageClickPgm"/>
         {isSelected && (
-            <TimeCode />
+            <TimeCode fileType={props.file.type}/>
         )}
         <p className="text">
             {props.file.name

@@ -1,10 +1,19 @@
+enum FileTypes {
+    VIDEO = 'video',
+    IMAGE = 'image',
+}
+
 class TimeService {
     public secondsToTimeCode(
         timer: [number, number] = [0, 0],
         frameRate: number = 25,
+        fileType: string,
         callerIsClient: boolean = true
     ): string {
-        if (callerIsClient && timer[1] <= 0) {
+        if (
+            (callerIsClient && timer[1] <= 0) ||
+            (callerIsClient && fileType === FileTypes.IMAGE)
+        ) {
             return 'SELECTED'
         }
 
