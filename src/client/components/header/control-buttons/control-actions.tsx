@@ -62,6 +62,9 @@ export default function ControlActions(): JSX.Element {
 }
 
 function playLoadedFile(activeTab: number, outputSettings: OutputSettings) {
+  if (!outputSettings.loadedFile) {
+    return
+  }
   socketService.emitPlayFile(activeTab, outputSettings.loadedFile)
 }
 

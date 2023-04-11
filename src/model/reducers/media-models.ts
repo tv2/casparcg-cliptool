@@ -1,3 +1,8 @@
+export enum FileTypes {
+    VIDEO = 'video',
+    IMAGE = 'image',
+}
+
 export interface HiddenFileInfo {
     changed: number
     size: number

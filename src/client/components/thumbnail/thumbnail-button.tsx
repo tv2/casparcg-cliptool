@@ -8,9 +8,11 @@ import { State } from "../../../model/reducers/index-reducer";
 import Button from "../shared/button";
 import browserService from "../../services/browser-service";
 import socketService from "../../services/socket-service";
+import { FileTypes } from "../../../model/reducers/media-models";
 
 interface ThumbnailButtonProps {
   fileName: string
+  fileType: string
   className: string
 }
 
@@ -22,15 +24,15 @@ export default function ThumbnailButton(props: ThumbnailButtonProps): JSX.Elemen
     <Button
         className={props.className}
         onClick={() => {
-          triggerOperationModeAction(props.fileName, activeTab)
+          triggerOperationModeAction(props.fileName, activeTab, props.fileType)
         }}
     />
   )
 }
 
-function triggerOperationModeAction(fileName: string, activeTab: number): void {   
+function triggerOperationModeAction(fileName: string, activeTab: number, fileType: string): void {   
   if (browserService.isTextView()) {
-    return emitPlayFile(fileName, activeTab)
+    return emitPlayFile(fileName, activeTab, fileType)
   } 
   const operationMode = getOutputSettings(activeTab)?.operationMode
   switch (operationMode) {
@@ -39,7 +41,7 @@ function triggerOperationModeAction(fileName: string, activeTab: number): void {
           break;
       case OperationMode.CONTROL:
       default:
-          emitPlayFile(fileName, activeTab)
+          emitPlayFile(fileName, activeTab, fileType)
           break
   }
 }
@@ -52,11 +54,15 @@ function emitToggleVisibility(fileName: string, activeTab: number): void {
   socketService.emitToggleThumbnailVisibility(activeTab, fileName)
 }
 
-function emitPlayFile(fileName: string, activeTab: number ): void {
-  const eventToFire = !getOutputSettings(activeTab)?.manualStartState 
+function emitPlayFile(fileName: string, activeTab: number, fileType: string ): void {
+  if (fileType === FileTypes.IMAGE) {
+    socketService.emitPlayFile(activeTab, fileName)
+  } else {
+    const eventToFire = !getOutputSettings(activeTab)?.manualStartState 
       ? socketService.emitPlayFile
       : socketService.emitLoadFile
-  eventToFire(activeTab, fileName) 
+    eventToFire(activeTab, fileName)
+  }   
 }
 
 function getOutputSettings(activeTab: number): OutputSettings {

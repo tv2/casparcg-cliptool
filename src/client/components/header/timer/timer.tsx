@@ -25,9 +25,12 @@ export default function Time(): JSX.Element {
     useSelector(
         (state: State) => mediaService.getOutput(state)?.thumbnailList)
 
-    const cleanSelectedFile: string = settingsService.getCleanSelectedFile(settingsOutput, state.settings)    
-    const thumbnailUrl: string = mediaService.getBase64ThumbnailUrl(cleanSelectedFile, activeTab, state)
-    const playingFileType: string | undefined = mediaOutput?.mediaFiles.find(file => file.name === cleanSelectedFile)?.type
+    let cleanFileName: string = settingsService.getCleanSelectedFile(settingsOutput, state.settings)
+    if (!cleanFileName) {
+        cleanFileName = settingsService.getCleanLoadedFile(settingsOutput, state.settings)
+    }
+    const thumbnailUrl: string = mediaService.getBase64ThumbnailUrl(cleanFileName, activeTab, state)
+    const playingFileType: string | undefined = mediaOutput?.mediaFiles.find(file => file.name === cleanFileName)?.type
     
     return (
         <div className="app-timer-background">

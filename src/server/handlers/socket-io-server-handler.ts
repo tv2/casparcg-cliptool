@@ -128,6 +128,12 @@ export function socketIoHandlers(socket: any): void {
                     channelIndex,
                     fileName
                 )
+                reduxStore.dispatch(setSelectedFileName(channelIndex, ''))
+                socketServer.emit(
+                    ServerToClient.FILE_SELECTED_UPDATE,
+                    channelIndex,
+                    ''
+                )
                 logger.info(
                     `Loading ${fileName} on channel index ${channelIndex}.`
                 )

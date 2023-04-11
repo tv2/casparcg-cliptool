@@ -1,7 +1,4 @@
-enum FileTypes {
-    VIDEO = 'video',
-    IMAGE = 'image',
-}
+import { FileTypes } from '../reducers/media-models'
 
 class TimeService {
     public secondsToTimeCode(

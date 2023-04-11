@@ -6,9 +6,10 @@
   text-align: left;
   padding: 0 4px;
   font-size: 2.8em;
-  color: red;
   background: #ffffff8c;
   border-radius: 16px;
+  display: flex;
+  justify-content: center;
 
   &.text {
     width: 200px;
@@ -16,5 +17,13 @@
     top: 80px;
     font-size: 2.1em;
     padding: 0;
+  }
+
+  &.loaded {
+    color: orange;
+  }
+
+  &.selected {
+    color: red;
   }
 }

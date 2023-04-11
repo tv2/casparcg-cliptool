@@ -1,7 +1,7 @@
 import React from "react";
 import { useSelector } from "react-redux"
 import ThumbnailButton from "../thumbnail-button";
-import TimeCode from "../time-code/time-code";
+import SelectedThumbnailOverlay from "../selected-thumbnail-overlay";
 import settingsService from "../../../../model/services/settings-service";
 import { MediaFile } from "../../../../model/reducers/media-models";
 import { State } from "../../../../model/reducers/index-reducer";
@@ -9,6 +9,7 @@ import appNavigationService from "../../../../model/services/app-navigation-serv
 import { state } from "../../../../model/reducers/store";
 import './text-thumbnail.scss'
 import './../shared-thumbnail.scss'
+import LoadedThumbnailOverlay from "../loaded-Thumbnail-overlay";
 
 interface TextThumbnailProps {
   file: MediaFile
@@ -30,9 +31,12 @@ export default function TextThumbnail(props: TextThumbnailProps): JSX.Element {
 
   return (
     <div className={`thumbnail-text-view ${isLoaded ? 'loaded-thumbnail' : isSelected ? 'selected-thumbnail' : ''}`} >
-        <ThumbnailButton fileName={props.file.name} className="thumbnail-text-view-ClickPgm" />
+        <ThumbnailButton fileName={props.file.name} className="thumbnail-text-view-ClickPgm" fileType={props.file.type}/>
         {isSelected && (
-            <TimeCode classNames="text" fileType={props.file.type}/>
+            <SelectedThumbnailOverlay classNames="text" fileType={props.file.type}/>
+        )}
+        {isLoaded && (
+            <LoadedThumbnailOverlay classNames="text" /> 
         )}
         <p className="text-text-view">
             {props.file.name

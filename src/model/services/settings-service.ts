@@ -83,7 +83,7 @@ class SettingsService {
         return this.getCleanString(output.selectedFile, settingsState)
     }
 
-    private getCleanLoadedFile(
+    public getCleanLoadedFile(
         output: OutputSettings,
         settingsState: Settings
     ): string {
