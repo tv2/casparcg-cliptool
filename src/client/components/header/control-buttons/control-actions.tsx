@@ -8,6 +8,7 @@ import browserService from "../../../services/browser-service";
 import './control-actions.scss'
 import socketService from "../../../services/socket-service";
 import { OutputSettings } from "../../../../model/reducers/settings-models";
+import ControlGroup from "../control-group/control-group";
 
 export default function ControlActions(): JSX.Element {
   const activeTab: number = useSelector(
@@ -15,37 +16,36 @@ export default function ControlActions(): JSX.Element {
   const outputSettings = useSelector(
     (state: State) => settingsService.getOutputSettings(state.settings, activeTab))
 
-  const buttonWrapperCss = "control-button-background"
   const buttonBaseCss = "control-button"
   return (
     <>
       {!browserService.isTextView() && (
         <>
-          <div className={buttonWrapperCss}>
+          <ControlGroup>
             <Button
               className={`${buttonBaseCss} ${outputSettings.loopState ? 'on' : ''}`}
               onClick={() => toggleLoopState(activeTab, outputSettings)}
               text="LOOP"
             />
-          </div>
-          <div className={buttonWrapperCss}>
+          </ControlGroup>
+          <ControlGroup>
             <Button
               className={`${buttonBaseCss} ${outputSettings.mixState ? 'on' : ''}`}
               onClick={() => toggleMixState(activeTab, outputSettings)}
               text="MIX"
             />
-          </div>
-          <div className={buttonWrapperCss}>
+          </ControlGroup>
+          <ControlGroup>
             <Button
               className={`${buttonBaseCss} ${outputSettings.webState ? 'on' : ''}`}
               onClick={() => toggleWebState(activeTab, outputSettings)}
               text="OVERLAY"
             />
-          </div>                        
+          </ControlGroup>                        
         </>
     )}
 
-      <div className={buttonWrapperCss}>
+      <ControlGroup>
         <Button
           className={`${buttonBaseCss} ${outputSettings.manualStartState ? 'on' : ''}`}
           onClick={() => toggleManualStartState(activeTab, outputSettings)}
@@ -56,7 +56,7 @@ export default function ControlActions(): JSX.Element {
           onClick={() => playLoadedFile(activeTab, outputSettings) }
           text="START"          
         />}        
-      </div> 
+      </ControlGroup> 
     </>
   )
 }

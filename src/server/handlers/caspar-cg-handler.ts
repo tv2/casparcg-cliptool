@@ -104,7 +104,6 @@ function ccgOSCServer(): void {
 function processOscMessage(message: any): void {
     let channelIndex = getChannelNumber(message.address) - 1
     let layerIndex = getLayerNumber(message.address) - 1
-
     if (message.address.includes('/stage/layer')) {
         if (
             message.address.includes('file/path') &&

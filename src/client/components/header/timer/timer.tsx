@@ -10,8 +10,9 @@ import { Output } from "../../../../model/reducers/media-models";
 import { OutputSettings } from "../../../../model/reducers/settings-models";
 import { State } from "../../../../model/reducers/index-reducer";
 import './timer.scss'
+import ControlGroup from "../control-group/control-group";
 
-export default function Time(): JSX.Element {
+export default function Timer(): JSX.Element {
     const activeTab: number = useSelector(
         (state: State) => appNavigationService.getActiveTab(state.appNavigation))
     const mediaOutput: Output = useSelector(
@@ -33,7 +34,7 @@ export default function Time(): JSX.Element {
     const playingFileType: string | undefined = mediaOutput?.mediaFiles.find(file => file.name === cleanFileName)?.type
     
     return (
-        <div className="app-timer-background">
+        <ControlGroup>
             <label className="app-header-pgm-counter">
                 {timeService.secondsToTimeCode(
                     mediaOutput?.time,
@@ -45,6 +46,6 @@ export default function Time(): JSX.Element {
                 src={thumbnailUrl}
                 className="app-header-pgm-thumbnail-image"
             />
-        </div>
+        </ControlGroup>
     )
 }

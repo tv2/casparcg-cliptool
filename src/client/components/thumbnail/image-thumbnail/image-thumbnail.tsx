@@ -36,9 +36,9 @@ export default function ImageThumbnail(props: ImageThumbnailProps): JSX.Element 
   const isLoaded: boolean = settingsService.isThumbnailLoaded(props.file.name, state.settings, activeTab) 
 
   return (
-    <div className={`thumb ${props.file.name in hiddenFiles ? 'hidden' : ''}`}>
+    <div className={`thumbnail ${props.file.name in hiddenFiles ? 'hidden' : ''}`}>
         <ThumbnailPicture fileName={props.file.name} />
-        <ThumbnailButton fileName={props.file.name} className="thumbnailImageClickPgm" fileType={props.file.type}/>
+        <ThumbnailButton fileName={props.file.name} className="thumbnail-image-click-pgm" fileType={props.file.type}/>
         {isSelected && (
             <SelectedThumbnailOverlay fileType={props.file.type}/>
         )}

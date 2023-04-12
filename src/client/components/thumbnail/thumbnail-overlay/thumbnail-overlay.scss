@@ -3,7 +3,6 @@
   width: 250px;
   left: 25px;
   top: 50px;
-  text-align: left;
   padding: 0 4px;
   font-size: 2.8em;
   background: #ffffff8c;
@@ -12,8 +11,6 @@
   justify-content: center;
 
   &.text-view {
-    width: 200px;
-    left: 35px;
     top: 80px;
     font-size: 2.1em;
     padding: 0;

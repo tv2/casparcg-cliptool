@@ -1,23 +1,7 @@
-.control-button-background {
-  margin-top: 10px;
-  margin-bottom: 10px;
-  margin-left: 20px;
-  height: 115px;
-  background-color: rgb(22, 22, 22);
-  border-width: 0px;
-  border-style: solid;
-  border-color: rgb(63, 63, 63);
-  box-shadow: 6px 6px 6px rgb(34, 34, 34);
-  display: flex;
-  align-items: center;
-}
-
 .control-button {
   font-size: 0.9em;
   width: 108px;
   line-height: 60px;
-  margin-left: 20px;
-  margin-right: 20px;
   color: white;
   font-family: 'Roboto Condensed', sans-serif;
   border-radius: 10px;
@@ -32,7 +16,6 @@
 
 .control-start-button {
   margin-left: 12px;
-  margin-right: 12px;
   margin-top: 5px;
   font-size: 1.2em;
   width: 108px;

@@ -1,12 +1,12 @@
-.thumb.hidden {
+.thumbnail.hidden {
   scale: 0.8;
 
-  .thumbnailImage {
+  .thumbnail-image {
     filter: grayscale(1);
   }
 }
 
-.thumbnailImageClickPgm {
+.thumbnail-image-click-pgm {
   position: absolute;
   height: 150px;
   top: 10px;

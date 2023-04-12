@@ -18,6 +18,10 @@
   overflow-x: auto;
   overflow-y: hidden;
 
+  & > * {
+    flex: 0 0;
+  }
+
   &::-webkit-scrollbar {
     height: 6px;
     background-color: transparent;
@@ -27,22 +31,6 @@
     height: 6px;
     background-color: grey;
   }
-}
-
-.app-reload-setup-background {
-  margin-left: 20px;
-  margin-top: 10px;
-  margin-bottom: 10px;
-  width: 170px;
-  height: 115px;
-  background-color: rgb(22, 22, 22);
-  border-width: 0px;
-  border-style: solid;
-  border-color: rgb(63, 63, 63);
-  box-shadow: 6px 6px 6px rgb(34, 34, 34);
-  display: flex;
-  align-items: center;
-  justify-content: space-evenly
 }
 
 .app-settings-button {

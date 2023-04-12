@@ -1,28 +1,29 @@
 import React from 'react'
 import { state } from '../../../../model/reducers/store'
 
-import Time from '../timer/timer'
+import Timer from '../timer/timer'
 import ControlActions from '../control-buttons/control-actions'
 import browserService from '../../../services/browser-service'
 import Button from '../../shared/button'
 import './header.scss'
 import changingSettingsService from '../../../services/changing-settings-service'
+import ControlGroup from '../control-group/control-group'
 
 export default function Header(): JSX.Element {  
     return (
         <header className="app-header">
             <div className="app-header__controls">
                 {!browserService.isTextView() && (
-                    <div className="app-reload-setup-background">
+                    <ControlGroup>
                         <Button
                             className="app-settings-button"
                             onClick={() => emitToggleSettingsVisibility()}
                             text="SETTINGS"
                         />
-                    </div>
+                    </ControlGroup>
                 )}
 
-                <Time />
+                <Timer />
                 <ControlActions />
             </div>                        
         </header>

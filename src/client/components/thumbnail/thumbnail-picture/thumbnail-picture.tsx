@@ -23,6 +23,6 @@ export default function ThumbnailPicture(props: ThumbnailPictureProps): JSX.Elem
 
   //TODO: split ternary to multiple lines
   return (
-      <img src={url} className={`thumbnailImage ${isLoaded ? 'loaded-thumbnail' : isSelected ? 'selected-thumbnail' : ''}`} />
+      <img src={url} className={`thumbnail-image ${isLoaded ? 'loaded-thumbnail' : isSelected ? 'selected-thumbnail' : ''}`} />
   )
 }
