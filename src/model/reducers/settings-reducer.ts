@@ -10,7 +10,6 @@ function defaultSettingsReducerState(): Settings {
             channels: [],
             path: '',
         },
-        tabData: [],
         generics: generics,
     }
 }
@@ -38,10 +37,6 @@ export function settings(
             ]
             config.path = action.path
             nextState.ccgConfig = config
-            return nextState
-        }
-        case IO.SET_TAB_DATA: {
-            nextState.tabData = [...action.tabData]
             return nextState
         }
         case IO.SET_GENERICS: {

@@ -4,7 +4,6 @@ export enum ServerToClient {
     THUMBNAIL_UPDATE = 'thumbUpdate',
     HIDDEN_FILES_UPDATE = 'hiddenUpdate',
     FOLDERS_UPDATE = 'foldersUpdate',
-    TAB_DATA_UPDATE = 'tabDataUpdate',
     SETTINGS_UPDATE = 'settingsUpdate',
     LOOP_STATE_UPDATE = 'loopStateUpdate',
     OPERATION_MODE_UPDATE = 'operationModeUpdate',

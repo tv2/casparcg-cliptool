@@ -15,7 +15,6 @@ import {
     setMix,
     setOperationMode,
     setSelectedFileName,
-    setTabData,
     updateSettings,
 } from '../../model/reducers/settings-action'
 import { ARG_CONSTANTS } from './extract-args'
@@ -133,5 +132,4 @@ socket.on(ServerToClient.SETTINGS_UPDATE, (settings: Settings) => {
     reduxStore.dispatch(
         updateSettings(settings.ccgConfig.channels, settings.ccgConfig.path)
     )
-    reduxStore.dispatch(setTabData(settings.tabData.length))
 })

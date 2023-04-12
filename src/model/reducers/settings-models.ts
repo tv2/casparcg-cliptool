@@ -7,12 +7,11 @@ export enum OperationMode {
 
 export interface Settings {
     ccgConfig: CcgConfig
-    tabData: TabData[]
     generics: GenericSettings
 }
 
-export interface TabData {
-    key: number
+export interface TabInfo {
+    index: number
     title: string
 }
 

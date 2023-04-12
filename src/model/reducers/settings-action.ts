@@ -1,9 +1,6 @@
-import settingsService from '../services/settings-service'
-import { GenericSettings, OperationMode, TabData } from './settings-models'
-import { state } from './store'
+import { GenericSettings, OperationMode } from './settings-models'
 
 export const UPDATE_SETTINGS = 'updateSettings'
-export const SET_TAB_DATA = 'setTabData'
 export const SET_GENERICS = 'setGenerics'
 export const SET_SCALING = 'setScaling'
 export const SET_LOOP = 'setLoop'
@@ -23,33 +20,6 @@ export function updateSettings(
         channels,
         path,
     }
-}
-
-export function setTabData(amountOfTabs: number): {
-    type: string
-    tabData: TabData[]
-} {
-    return {
-        type: SET_TAB_DATA,
-        tabData: createTabData(amountOfTabs),
-    }
-}
-function createTabData(amountOfTabs: number): TabData[] {
-    return Array(amountOfTabs)
-        .fill({})
-        .map(({}, index) => {
-            const output = settingsService.getOutputSettings(
-                state.settings,
-                index
-            )
-            return {
-                key: index,
-                title:
-                    output && output.label
-                        ? output.label
-                        : `Output ${index + 1}`,
-            }
-        })
 }
 
 export function setGenerics(generics: GenericSettings): {

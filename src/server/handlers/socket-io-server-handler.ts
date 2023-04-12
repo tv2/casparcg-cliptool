@@ -308,7 +308,6 @@ function getMetadata(file: MediaFile): HiddenFileInfo {
 }
 
 export function initializeClient(): void {
-    socketServer.emit(ServerToClient.TAB_DATA_UPDATE, state.settings.tabData)
     let timeTallyData: TimeTallyPayload[] = []
     const selectedFiles: string[] = []
     settingsService

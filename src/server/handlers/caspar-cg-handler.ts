@@ -25,7 +25,6 @@ import {
     setManualStart,
     setMix,
     setOperationMode,
-    setTabData,
     setWeb,
     updateSettings,
 } from '../../model/reducers/settings-action'
@@ -138,7 +137,6 @@ function dispatchConfig(config: any): void {
     logger.data(config.channels).info('CasparCG Config : ')
     reduxStore.dispatch(setNumberOfOutputs(config.channels.length))
     reduxStore.dispatch(updateSettings(config.channels, config.paths.mediaPath))
-    reduxStore.dispatch(setTabData(config.channels.length))
     config.channels.forEach(({}, index: number) => {
         const genericSettings = settingsService.getGenericSettings(
             state.settings

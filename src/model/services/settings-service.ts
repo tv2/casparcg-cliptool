@@ -1,7 +1,9 @@
+import { Media } from '../reducers/media-models'
 import {
     GenericSettings,
     OutputSettings,
     Settings,
+    TabInfo,
 } from '../reducers/settings-models'
 import {
     defaultOutputSettingsState,
@@ -23,18 +25,34 @@ class SettingsService {
             outputSettings: Array(8).fill(defaultOutputSettingsState),
         }
     }
-    getOutputSettings(
+
+    public getTabInfo(settingsState: Settings, mediaState: Media): TabInfo[] {
+        return Array(mediaState.outputs.length)
+            .fill({})
+            .map(({}, index) => {
+                const output = this.getOutputSettings(settingsState, index)
+                return {
+                    index,
+                    title:
+                        output && output.label
+                            ? output.label
+                            : `Output ${index + 1}`,
+                }
+            })
+    }
+
+    public getOutputSettings(
         settingsState: Settings,
         channelIndex: number
     ): OutputSettings {
         return settingsState.generics.outputSettings[channelIndex]
     }
 
-    getGenericSettings(settingsState: Settings): GenericSettings {
+    public getGenericSettings(settingsState: Settings): GenericSettings {
         return settingsState.generics
     }
 
-    getDefaultGenericSettings(): GenericSettings {
+    public getDefaultGenericSettings(): GenericSettings {
         const parsed = NewGenericSettings.safeParse({})
         return parsed.success
             ? (parsed.data as GenericSettings)

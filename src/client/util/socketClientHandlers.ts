@@ -21,7 +21,6 @@ import {
     setMix,
     setOperationMode,
     setSelectedFileName,
-    setTabData,
     setWeb,
     updateSettings,
 } from '../../model/reducers/settings-action'
@@ -140,5 +139,4 @@ socket.on(ServerToClient.SETTINGS_UPDATE, (payload: Settings) => {
     reduxStore.dispatch(
         updateSettings(payload.ccgConfig.channels, payload.ccgConfig.path)
     )
-    reduxStore.dispatch(setTabData(payload.tabData.length))
 })
