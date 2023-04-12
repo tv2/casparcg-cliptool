@@ -1,4 +1,4 @@
-import { FileTypes } from '../reducers/media-models'
+import { FileType } from '../reducers/media-models'
 
 class TimeService {
     public secondsToTimeCode(
@@ -7,9 +7,13 @@ class TimeService {
         fileType: string,
         callerIsClient: boolean = true
     ): string {
+        if (fileType === FileType.VIDEO && timer[0] === 0 && timer[1] === 0) {
+            //console.log('Invalid Time', fileType, timer)
+            return ''
+        }
         if (
             (callerIsClient && timer[1] <= 0) ||
-            (callerIsClient && fileType === FileTypes.IMAGE)
+            (callerIsClient && fileType === FileType.IMAGE)
         ) {
             return 'SELECTED'
         }

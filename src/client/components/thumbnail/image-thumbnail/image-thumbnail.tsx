@@ -33,7 +33,7 @@ export default function ImageThumbnail(props: ImageThumbnailProps): JSX.Element 
           state.media.hiddenFiles
   ) ?? {}
   const isSelected: boolean = settingsService.isThumbnailSelected(props.file.name, state.settings, activeTab)
-  const isLoaded: boolean = settingsService.isThumbnailLoaded(props.file.name, state.settings, activeTab) 
+  const isLoaded: boolean = settingsService.isThumbnailLoaded(props.file.name, state.settings, activeTab)
 
   return (
     <div className={`thumbnail ${props.file.name in hiddenFiles ? 'hidden' : ''}`}>

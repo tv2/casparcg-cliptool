@@ -21,10 +21,12 @@ export default function SelectedThumbnailOverlay(props: SelectedThumbnailOverlay
         return videoFormat ? videoFormat.frameRate : 25
       }
   )
-
-  return (
-    <ThumbnailOverlay classNames={`selected ${props.classNames ?? ''}`}>        
-        {timeService.secondsToTimeCode(time, frameRate, props.fileType)}            
+  
+  const timeText: string = timeService.secondsToTimeCode(time, frameRate, props.fileType)
+  return timeText 
+  ? <ThumbnailOverlay classNames={`selected ${props.classNames ?? ''}`}>        
+        {timeText}            
     </ThumbnailOverlay>
-  )
+  : <></>
+  
 }

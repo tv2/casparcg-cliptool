@@ -39,7 +39,7 @@ import {
     ClientToServer,
     GET_SETTINGS,
     ServerToClient,
-    TimeTallyPayload,
+    TimeSelectedFilePayload,
 } from '../../model/socket-io-constants'
 
 export function socketIoHandlers(socket: any): void {
@@ -110,6 +110,7 @@ export function socketIoHandlers(socket: any): void {
                     channelIndex,
                     ''
                 )
+                settingsPersistenceService.save()
                 reduxStore.dispatch(setSelectedFileName(channelIndex, fileName))
                 socketServer.emit(
                     ServerToClient.FILE_SELECTED_UPDATE,
@@ -134,6 +135,7 @@ export function socketIoHandlers(socket: any): void {
                     channelIndex,
                     ''
                 )
+                settingsPersistenceService.save()
                 logger.info(
                     `Loading ${fileName} on channel index ${channelIndex}.`
                 )
@@ -308,7 +310,7 @@ function getMetadata(file: MediaFile): HiddenFileInfo {
 }
 
 export function initializeClient(): void {
-    let timeTallyData: TimeTallyPayload[] = []
+    let timeTallyData: TimeSelectedFilePayload[] = []
     const selectedFiles: string[] = []
     settingsService
         .getGenericSettings(state.settings)
@@ -344,7 +346,7 @@ export function initializeClient(): void {
     mediaService.getOutputs(state).forEach((output, channelIndex) => {
         timeTallyData[channelIndex] = {
             time: output.time,
-            tally: selectedFiles[channelIndex],
+            selectedFile: selectedFiles[channelIndex],
         }
         socketServer.emit(ServerToClient.TIME_TALLY_UPDATE, timeTallyData)
         socketServer.emit(

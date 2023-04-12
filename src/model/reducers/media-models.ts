@@ -1,4 +1,4 @@
-export enum FileTypes {
+export enum FileType {
     VIDEO = 'video',
     IMAGE = 'image',
 }

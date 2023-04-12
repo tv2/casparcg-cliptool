@@ -8,7 +8,7 @@ import { State } from "../../../model/reducers/index-reducer";
 import Button from "../shared/button";
 import browserService from "../../services/browser-service";
 import socketService from "../../services/socket-service";
-import { FileTypes } from "../../../model/reducers/media-models";
+import { FileType } from "../../../model/reducers/media-models";
 
 interface ThumbnailButtonProps {
   fileName: string
@@ -55,7 +55,7 @@ function emitToggleVisibility(fileName: string, activeTab: number): void {
 }
 
 function emitPlayFile(fileName: string, activeTab: number, fileType: string ): void {
-  if (fileType === FileTypes.IMAGE) {
+  if (fileType === FileType.IMAGE) {
     socketService.emitPlayFile(activeTab, fileName)
   } else {
     const eventToFire = !getOutputSettings(activeTab)?.manualStartState 

@@ -1,7 +1,7 @@
 .selected-thumbnail {
-  border-color: red;
+  border-color: var(--selected-color);
 }
 
 .loaded-thumbnail {
-  border-color: darkgoldenrod;
+  border-color: var(--loaded-color);
 }

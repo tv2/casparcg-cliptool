@@ -39,7 +39,7 @@ import {
     isFolderNameEqual,
 } from '../utils/ccg-handler-utils'
 import { logger } from '../utils/logger'
-import { playOverlay } from '../utils/ccg-load-play'
+import { loadMedia, playOverlay } from '../utils/ccg-load-play'
 import { OperationMode } from '../../model/reducers/settings-models'
 import settingsService from '../../model/services/settings-service'
 import osService from '../../model/services/os-service'
@@ -47,7 +47,7 @@ import mediaService from '../../model/services/media-service'
 import hiddenFilesPersistenceService from '../services/hidden-files-persistence-service'
 import {
     ServerToClient,
-    TimeTallyPayload,
+    TimeSelectedFilePayload,
 } from '../../model/socket-io-constants'
 
 let waitingForCCGResponse: boolean = false
@@ -105,29 +105,44 @@ function processOscMessage(message: any): void {
     let channelIndex = getChannelNumber(message.address) - 1
     let layerIndex = getLayerNumber(message.address) - 1
     if (message.address.includes('/stage/layer')) {
-        if (
-            message.address.includes('file/path') &&
-            !message.address.includes('keyer')
-        ) {
-            if (layerIndex === 9) {
-                let fileName = message.args[0]
-                if (
-                    settingsService.getOutputSettings(
-                        state.settings,
-                        channelIndex
-                    )?.selectedFile !== fileName
-                ) {
-                    reduxStore.dispatch(setTime(channelIndex, [0, 0]))
-                }
+        processPathOscSegment(message, layerIndex, channelIndex)
+        processTimeOscSegment(message, channelIndex)
+    }
+}
+
+function processPathOscSegment(
+    message: any,
+    layerIndex: number,
+    channelIndex: number
+) {
+    if (
+        message.address.includes('file/path') &&
+        !message.address.includes('keyer')
+    ) {
+        if (layerIndex === 9) {
+            let fileName = message.args[0]
+            if (
+                settingsService.getOutputSettings(state.settings, channelIndex)
+                    ?.selectedFile !== fileName
+            ) {
+                //console.log('Path Processing', message)
+                //reduxStore.dispatch(setTime(channelIndex, [0, 0]))
             }
         }
-        if (message.address.includes('file/time')) {
-            reduxStore.dispatch(
-                setTime(channelIndex, [
-                    parseFloat(message.args[0]),
-                    parseFloat(message.args[1]),
-                ])
-            )
+    }
+}
+
+function processTimeOscSegment(message: any, channelIndex: number) {
+    //console.log('Time Processing', message)
+    if (message.address.includes('file/time')) {
+        const newTime: [number, number] = [
+            parseFloat(message.args[0]),
+            parseFloat(message.args[1]),
+        ]
+        const oldTime = mediaService.getOutput(state, channelIndex).time
+        if (newTime[0] !== oldTime[0] || newTime[1] !== oldTime[1]) {
+            //console.log('New', newTime, message)
+            reduxStore.dispatch(setTime(channelIndex, newTime))
         }
     }
 }
@@ -140,6 +155,11 @@ function dispatchConfig(config: any): void {
         const genericSettings = settingsService.getGenericSettings(
             state.settings
         )
+        const loadedFile = genericSettings.outputSettings[index].loadedFile
+        if (loadedFile) {
+            logger.info(`Re-loaded ${loadedFile} on channel index ${index}.`)
+            loadMedia(index, 9, loadedFile)
+        }
         reduxStore.dispatch(
             setLoop(
                 index,
@@ -222,20 +242,21 @@ function ccgAMPHandler(): void {
 
 async function startTimerControlledServices(): Promise<void> {
     //Update of timeleft is set to a default 40ms (same as 25FPS)
-    let data: TimeTallyPayload[] = []
-
-    setInterval(() => {
+    let data: TimeSelectedFilePayload[] = []
+    reduxStore.subscribe(() => {
         mediaService
             .getOutputs(state)
             .forEach((output: Output, index: number) => {
                 data[index] = {
                     time: output.time,
-                    tally: settingsService.getOutputSettings(
+                    selectedFile: settingsService.getOutputSettings(
                         state.settings,
                         index
                     ).selectedFile,
                 }
             })
+    })
+    setInterval(() => {
         socketServer.emit(ServerToClient.TIME_TALLY_UPDATE, data)
     }, 40)
 

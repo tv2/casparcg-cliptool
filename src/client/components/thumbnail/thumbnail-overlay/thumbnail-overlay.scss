@@ -17,10 +17,10 @@
   }
 
   &.loaded {
-    color: darkgoldenrod;
+    color: var(--loaded-color);
   }
 
   &.selected {
-    color: red;
+    color: var(--selected-color);
   }
 }

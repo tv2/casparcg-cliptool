@@ -1,7 +1,7 @@
 import { state, reduxStore } from '../../model/reducers/store'
 import {
     ServerToClient,
-    TimeTallyPayload,
+    TimeSelectedFilePayload,
 } from '../../model/socket-io-constants'
 
 import io from 'socket.io-client'
@@ -32,6 +32,7 @@ import {
     ThumbnailFile,
 } from '../../model/reducers/media-models'
 import settingsService from '../../model/services/settings-service'
+import mediaService from '../../model/services/media-service'
 
 export const socket = io()
 
@@ -72,17 +73,29 @@ socket.on(
     }
 )
 
-socket.on(ServerToClient.TIME_TALLY_UPDATE, (data: TimeTallyPayload[]) => {
-    data.forEach((channel, index) => {
-        reduxStore.dispatch(setTime(index, channel.time))
-        if (
-            settingsService.getOutputSettings(state.settings, index)
-                .selectedFile !== channel.tally
-        ) {
-            reduxStore.dispatch(setSelectedFileName(index, channel.tally))
-        }
-    })
-})
+socket.on(
+    ServerToClient.TIME_TALLY_UPDATE,
+    (data: TimeSelectedFilePayload[]) => {
+        data.forEach((channel, index) => {
+            const oldTime = mediaService.getOutput(state, index).time
+            if (
+                channel.time[0] !== oldTime[0] ||
+                channel.time[1] !== oldTime[1]
+            ) {
+                reduxStore.dispatch(setTime(index, channel.time))
+                console.log('New Time', channel)
+                if (
+                    settingsService.getOutputSettings(state.settings, index)
+                        .selectedFile !== channel.selectedFile
+                ) {
+                    reduxStore.dispatch(
+                        setSelectedFileName(index, channel.selectedFile)
+                    )
+                }
+            }
+        })
+    }
+)
 
 socket.on(
     ServerToClient.FILE_LOADED_UPDATE,

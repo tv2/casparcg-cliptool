@@ -31,7 +31,7 @@ export enum ClientToServer {
 export const GET_SETTINGS = 'getSettings'
 
 // Payload types:
-export interface TimeTallyPayload {
+export interface TimeSelectedFilePayload {
     time: [number, number]
-    tally: string
+    selectedFile: string
 }

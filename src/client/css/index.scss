@@ -8,6 +8,9 @@ body {
     padding: 0;
     font-family: sans-serif;
     overflow: hidden;
+
+    --loaded-color: green;
+    --selected-color: red;
 }
 
 #root {
