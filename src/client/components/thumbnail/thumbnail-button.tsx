@@ -1,10 +1,7 @@
 import React from "react"
-import appNavigationService from "../../../model/services/app-navigation-service";
 import settingsService from "../../../model/services/settings-service";
 import { OperationMode, OutputSettings } from "../../../model/reducers/settings-models";
 import { state } from "../../../model/reducers/store";
-import { useSelector } from "react-redux";
-import { State } from "../../../model/reducers/index-reducer";
 import Button from "../shared/button";
 import browserService from "../../services/browser-service";
 import socketService from "../../services/socket-service";
@@ -14,17 +11,15 @@ interface ThumbnailButtonProps {
   fileName: string
   fileType: string
   className: string
+  activeTab: number
 }
 
 export default function ThumbnailButton(props: ThumbnailButtonProps): JSX.Element {
-  const activeTab: number = useSelector(
-    (state: State) => appNavigationService.getActiveTab(state.appNavigation))
-
   return (
     <Button
         className={props.className}
         onClick={() => {
-          triggerOperationModeAction(props.fileName, activeTab, props.fileType)
+          triggerOperationModeAction(props.fileName, props.activeTab, props.fileType)
         }}
     />
   )

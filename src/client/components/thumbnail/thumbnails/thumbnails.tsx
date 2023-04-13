@@ -28,12 +28,12 @@ export function Thumbnails(): JSX.Element {
         ? files.filter(({ name }) => !(name in hiddenFiles)) 
         : files
     return (
-        <div className="flexBoxes">
+        <div className="thumbnails-region">
             {shownFiles.map((file: MediaFile) => (
-                <div className="boxComponent" key={file.name}>
+                <div className="thumbnail-wrapper" key={file.name}>
                     {browserService.isTextView()
-                        ? <TextThumbnail file={file} />
-                        : <ImageThumbnail file={file} />}
+                        ? <TextThumbnail file={file} activeTab={activeTab}/>
+                        : <ImageThumbnail file={file} activeTab={activeTab}/>}
                 </div>
             ))}
         </div>

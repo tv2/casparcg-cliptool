@@ -6,10 +6,10 @@ import appNavigationService from '../../../model/services/app-navigation-service
 import settingsService from '../../../model/services/settings-service'
 import { OperationModeEditVisibilityFooter } from './operation-mode-edit-visibility-footer/operation-mode-edit-visibility-footer'
 import browserService from '../../services/browser-service'
+import { state } from '../../../model/reducers/store'
 
 export function OperationModeFooter(): JSX.Element {
-  const activeTab: number = useSelector(
-    (state: State) => appNavigationService.getActiveTab(state.appNavigation))  
+  const activeTab: number = appNavigationService.getActiveTab(state.appNavigation)
   const operationMode: OperationMode = useSelector((state: State) =>
     settingsService.getOutputSettings(state.settings, activeTab)?.operationMode)
   

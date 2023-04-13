@@ -4,18 +4,15 @@ import ThumbnailButton from "../thumbnail-button";
 import ThumbnailPicture from "../thumbnail-picture/thumbnail-picture";
 import { HiddenFileInfo, MediaFile } from "../../../../model/reducers/media-models";
 import { State } from "../../../../model/reducers/index-reducer";
-import appNavigationService from "../../../../model/services/app-navigation-service";
 import './image-thumbnail.scss'
 import ThumbnailOverlayDisplay from "../thumbnail-overlay-display";
 
 interface ImageThumbnailProps {
   file: MediaFile
+  activeTab: number
 }
 
 export default function ImageThumbnail(props: ImageThumbnailProps): JSX.Element {
-  const activeTab: number = useSelector(
-    (state: State) => appNavigationService.getActiveTab(state.appNavigation)
-  )
   const hiddenFiles: Record<string, HiddenFileInfo> = useSelector(
       (state: State) => 
           state.media.hiddenFiles
@@ -24,8 +21,8 @@ export default function ImageThumbnail(props: ImageThumbnailProps): JSX.Element 
   return (
     <div className={`thumbnail ${props.file.name in hiddenFiles ? 'hidden' : ''}`}>
         <ThumbnailPicture fileName={props.file.name} />
-        <ThumbnailButton fileName={props.file.name} className="thumbnail-image-click-pgm" fileType={props.file.type}/>
-        <ThumbnailOverlayDisplay activeTab={activeTab} file={props.file} />
+        <ThumbnailButton fileName={props.file.name} className="thumbnail-image-click-pgm" fileType={props.file.type} activeTab={props.activeTab}/>
+        <ThumbnailOverlayDisplay activeTab={props.activeTab} file={props.file} />
         <p className="text">
             {props.file.name
                 .substring(props.file.name.lastIndexOf('/') + 1)

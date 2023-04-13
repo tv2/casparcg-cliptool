@@ -40,6 +40,6 @@ export function App(): JSX.Element {
     )
 }
 
-function setOutput(tab: number): void {
-    reduxStore.dispatch(setActiveTab(tab))
+function setOutput(tabIndex: number): void {
+    reduxStore.dispatch(setActiveTab(tabIndex))
 }

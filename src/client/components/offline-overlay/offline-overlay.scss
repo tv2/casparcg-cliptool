@@ -1,6 +1,6 @@
-.app-header-server-offline {
-  position: absolute;
-  top: 50vh;
-  left: 35vw;
+.offline-overlay {
+  top: 50%;
   font-size: 5vh;
+  position: relative;
+  display: inline-block;
 }

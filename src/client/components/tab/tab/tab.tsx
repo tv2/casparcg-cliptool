@@ -8,7 +8,7 @@ import './tab.scss'
 
 export interface TabProps {
   title: string
-  selectedTab: number
+  activeTab: number
   tabIndex: number
   totalTabs: number
 }
@@ -16,7 +16,7 @@ export interface TabProps {
 export default function Tab(props: TabProps): JSX.Element {
   // TODO: add CSS to have 'Swipeable' fill available height.
   return (
-    <Swipeable className="tab" onSwipe={(direction) => onValidSwipe(direction, props.selectedTab, props.totalTabs)} 
+    <Swipeable className="tab" onSwipe={(direction) => onValidSwipe(direction, props.activeTab, props.totalTabs)} 
         role="tabpanel"> 
       <Thumbnails/> 
     </Swipeable>

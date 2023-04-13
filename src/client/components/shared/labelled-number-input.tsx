@@ -5,7 +5,7 @@ interface LabelledNumberInputProps {
   value: number
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void
   description: string
-  numberUnit?: string
+  unit?: string
   labelClassName?: string
   inputClassName?: string
 }
@@ -18,7 +18,7 @@ export default function LabelledNumberInput(props: LabelledNumberInputProps): JS
         value={props.value} 
         onChange={props.onChange}
         className={props.inputClassName}/>
-      {props.numberUnit ?? ''}
+      {props.unit ?? ''}
     </Label>
   )
 }

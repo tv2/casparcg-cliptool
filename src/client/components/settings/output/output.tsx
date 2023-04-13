@@ -108,14 +108,14 @@ export default function Output(props: OutputProps): JSX.Element {
                             description="SCALE X :"
                             value={scaleX}
                             onChange={saveTempScaleXChange}
-                            numberUnit='px'
+                            unit='px'
                         />
                         <LabelledNumberInput 
                             labelClassName={fieldCss}
                             description="SCALE Y :"
                             value={scaleY}
                             onChange={saveTempScaleYChange}
-                            numberUnit='px'
+                            unit='px'
                         />
                     </>
                 )}
