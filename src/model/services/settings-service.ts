@@ -64,23 +64,23 @@ class SettingsService {
         settingsState: Settings,
         channelIndex: number
     ): boolean {
-        const selectedFileName = this.getCleanSelectedFile(
+        const selectedFileName = this.getCleanSelectedFileName(
             this.getOutputSettings(settingsState, channelIndex),
             settingsState
         )
         return selectedFileName === thumbnailName
     }
 
-    public isThumbnailLoaded(
+    public isThumbnailCued(
         thumbnailName: string,
         settingsState: Settings,
         channelIndex: number
     ): boolean {
-        const loadedFileName = this.getCleanLoadedFile(
+        const cuedFileName = this.getCleanCuedFileName(
             this.getOutputSettings(settingsState, channelIndex),
             settingsState
         )
-        return loadedFileName === thumbnailName
+        return cuedFileName === thumbnailName
     }
 
     public isThumbnailSelectedOnAnyOutput(
@@ -89,23 +89,23 @@ class SettingsService {
     ): boolean {
         return this.getGenericSettings(settingsState).outputSettings.some(
             (output) =>
-                this.getCleanSelectedFile(output, settingsState) ===
+                this.getCleanSelectedFileName(output, settingsState) ===
                 thumbnailName
         )
     }
 
-    public getCleanSelectedFile(
+    public getCleanSelectedFileName(
         output: OutputSettings,
         settingsState: Settings
     ): string {
-        return this.getCleanString(output.selectedFile, settingsState)
+        return this.getCleanString(output.selectedFileName, settingsState)
     }
 
-    public getCleanLoadedFile(
+    public getCleanCuedFileName(
         output: OutputSettings,
         settingsState: Settings
     ): string {
-        return this.getCleanString(output.loadedFile, settingsState)
+        return this.getCleanString(output.cuedFileName, settingsState)
     }
 
     private getCleanString(

@@ -9,7 +9,7 @@ export const SET_WEB = 'setWeb'
 export const SET_MANUAL_START = 'setManualStart'
 export const SET_OPERATION_MODE = 'setOperationMode'
 export const SET_SELECTED_FILE_NAME = 'setSelectedFileName'
-export const SET_LOADED_FILE_NAME = 'setLoadedFileName'
+export const SET_CUED_FILE_NAME = 'setCuedFileName'
 
 export function updateSettings(
     channels: any,
@@ -109,12 +109,12 @@ export function setSelectedFileName(
     }
 }
 
-export function setLoadedFileName(
+export function setCuedFileName(
     channelIndex: number,
     filename: string
 ): { type: string; channelIndex: number; filename: string } {
     return {
-        type: SET_LOADED_FILE_NAME,
+        type: SET_CUED_FILE_NAME,
         channelIndex: channelIndex,
         filename: filename,
     }

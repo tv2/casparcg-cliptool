@@ -16,21 +16,21 @@ export default function Timer(): JSX.Element {
     const activeTab: number = useSelector(
         (state: State) => appNavigationService.getActiveTab(state.appNavigation))
     const mediaOutput: Output = useSelector(
-        (state: State) => mediaService.getOutput(state))
+        (state: State) => mediaService.getOutput(state.media, activeTab))
     const settingsOutput: OutputSettings = useSelector(
         (state: State) => settingsService.getOutputSettings(state.settings, activeTab))
     useSelector(
-        (state: State) => settingsService.getOutputSettings(state.settings, activeTab).selectedFile)
+        (state: State) => settingsService.getOutputSettings(state.settings, activeTab).selectedFileName)
     useSelector(
-        (state: State) => mediaService.getOutput(state)?.time[0])
+        (state: State) => mediaService.getOutput(state.media, activeTab)?.time[0])
     useSelector(
-        (state: State) => mediaService.getOutput(state)?.thumbnailList)
+        (state: State) => mediaService.getOutput(state.media, activeTab)?.thumbnailList)
 
-    let cleanFileName: string = settingsService.getCleanSelectedFile(settingsOutput, state.settings)
+    let cleanFileName: string = settingsService.getCleanSelectedFileName(settingsOutput, state.settings)
     if (!cleanFileName) {
-        cleanFileName = settingsService.getCleanLoadedFile(settingsOutput, state.settings)
+        cleanFileName = settingsService.getCleanCuedFileName(settingsOutput, state.settings)
     }
-    const thumbnailUrl: string = mediaService.getBase64ThumbnailUrl(cleanFileName, activeTab, state)
+    const thumbnailUrl: string = mediaService.getBase64ThumbnailUrl(cleanFileName, activeTab, state.media)
     const playingFileType: string | undefined = mediaOutput?.mediaFiles.find(file => file.name === cleanFileName)?.type
     
     return (

@@ -14,8 +14,8 @@ export const defaultOutputSettingsState: OutputSettings = {
     webState: false,
     webUrl: '',
     operationMode: OperationMode.CONTROL,
-    selectedFile: '',
-    loadedFile: '',
+    selectedFileName: '',
+    cuedFileName: '',
 }
 
 const operationModeSchema = z.nativeEnum(OperationMode)
@@ -32,8 +32,8 @@ const outputSettingsSchema = z.object({
     manualStartState: z.boolean().default(false),
     webState: z.boolean().default(false),
     operationMode: operationModeSchema.default(OperationMode.CONTROL),
-    selectedFile: z.string().default(''),
-    loadedFile: z.string().default(''),
+    selectedFileName: z.string().default(''),
+    cuedFileName: z.string().default(''),
 })
 
 const ccgSettingsSchema = z.object({

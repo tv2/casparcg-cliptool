@@ -16,7 +16,7 @@ import {
 } from '../../model/reducers/media-actions'
 import {
     setGenerics,
-    setLoadedFileName,
+    setCuedFileName,
     setLoop,
     setManualStart,
     setMix,
@@ -59,7 +59,7 @@ export function socketIoHandlers(socket: any): void {
                     settingsService
                         .getGenericSettings(state.settings)
                         .outputSettings.some(
-                            (output) => output.selectedFile === fileName
+                            (output) => output.selectedFileName === fileName
                         )
                 ) {
                     return
@@ -104,14 +104,14 @@ export function socketIoHandlers(socket: any): void {
                 logger.info(
                     `Playing ${fileName} on channel index ${channelIndex}.`
                 )
-                reduxStore.dispatch(setLoadedFileName(channelIndex, ''))
+                reduxStore.dispatch(setCuedFileName(channelIndex, ''))
                 socketServer.emit(
-                    ServerToClient.FILE_LOADED_UPDATE,
+                    ServerToClient.FILE_CUED_UPDATE,
                     channelIndex,
                     ''
                 )
-                settingsPersistenceService.save()
                 reduxStore.dispatch(setSelectedFileName(channelIndex, fileName))
+                settingsPersistenceService.save()
                 socketServer.emit(
                     ServerToClient.FILE_SELECTED_UPDATE,
                     channelIndex,
@@ -123,9 +123,9 @@ export function socketIoHandlers(socket: any): void {
             ClientToServer.PGM_LOAD,
             (channelIndex: number, fileName: string) => {
                 loadMedia(channelIndex, 9, fileName)
-                reduxStore.dispatch(setLoadedFileName(channelIndex, fileName))
+                reduxStore.dispatch(setCuedFileName(channelIndex, fileName))
                 socketServer.emit(
-                    ServerToClient.FILE_LOADED_UPDATE,
+                    ServerToClient.FILE_CUED_UPDATE,
                     channelIndex,
                     fileName
                 )
@@ -296,7 +296,7 @@ function findFile(
     channelIndex: number
 ): MediaFile | undefined {
     return mediaService
-        .getOutput(state, channelIndex)
+        .getOutput(state.media, channelIndex)
         .mediaFiles.find(
             (file) => file.name.toUpperCase() === fileName.toUpperCase()
         )
@@ -316,7 +316,7 @@ export function initializeClient(): void {
         .getGenericSettings(state.settings)
         .outputSettings.forEach(
             (output: OutputSettings, channelIndex: number) => {
-                selectedFiles.push(output.selectedFile)
+                selectedFiles.push(output.selectedFileName)
                 socketServer.emit(
                     ServerToClient.LOOP_STATE_UPDATE,
                     channelIndex,
@@ -343,10 +343,10 @@ export function initializeClient(): void {
                 )
             }
         )
-    mediaService.getOutputs(state).forEach((output, channelIndex) => {
+    mediaService.getOutputs(state.media).forEach((output, channelIndex) => {
         timeTallyData[channelIndex] = {
             time: output.time,
-            selectedFile: selectedFiles[channelIndex],
+            selectedFileName: selectedFiles[channelIndex],
         }
         socketServer.emit(ServerToClient.TIME_TALLY_UPDATE, timeTallyData)
         socketServer.emit(
@@ -364,7 +364,7 @@ export function initializeClient(): void {
 }
 
 function cleanUpMediaFiles(): void {
-    mediaService.getOutputs(state).forEach(({}, channelIndex: number) => {
+    mediaService.getOutputs(state.media).forEach(({}, channelIndex: number) => {
         reduxStore.dispatch(updateMediaFiles(channelIndex, []))
         reduxStore.dispatch(updateThumbnailFileList(channelIndex, []))
         assignThumbNailListToOutputs()

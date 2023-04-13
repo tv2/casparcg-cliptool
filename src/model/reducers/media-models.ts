@@ -7,19 +7,19 @@ export interface HiddenFileInfo {
     changed: number
     size: number
 }
-interface File extends HiddenFileInfo {
+export interface FileInfo extends HiddenFileInfo {
     name: string
     type: string
 }
 
-export interface MediaFile extends File {
+export interface MediaFile extends FileInfo {
     frames: number
     frameTime: string
     frameRate: number
     duration: number
 }
 
-export interface ThumbnailFile extends File {
+export interface ThumbnailFile extends FileInfo {
     thumbnail: string
 }
 export interface Media {

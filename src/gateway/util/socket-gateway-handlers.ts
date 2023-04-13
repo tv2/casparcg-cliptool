@@ -24,7 +24,7 @@ import { OperationMode, Settings } from '../../model/reducers/settings-models'
 import settingsService from '../../model/services/settings-service'
 import {
     ServerToClient,
-    TimeTallyPayload,
+    TimeSelectedFilePayload,
 } from '../../model/socket-io-constants'
 
 logger.info(`Connecting Socket to: ${ARG_CONSTANTS.clipToolHost}`)
@@ -82,17 +82,22 @@ socket.on(
     }
 )
 
-socket.on(ServerToClient.TIME_TALLY_UPDATE, (data: TimeTallyPayload[]) => {
-    data.forEach((channel, index) => {
-        reduxStore.dispatch(setTime(index, channel.time))
-        if (
-            settingsService.getOutputSettings(state.settings, index)
-                .selectedFile !== channel.tally
-        ) {
-            reduxStore.dispatch(setSelectedFileName(index, channel.tally))
-        }
-    })
-})
+socket.on(
+    ServerToClient.TIME_TALLY_UPDATE,
+    (data: TimeSelectedFilePayload[]) => {
+        data.forEach((channel, index) => {
+            reduxStore.dispatch(setTime(index, channel.time))
+            if (
+                settingsService.getOutputSettings(state.settings, index)
+                    .selectedFileName !== channel.selectedFileName
+            ) {
+                reduxStore.dispatch(
+                    setSelectedFileName(index, channel.selectedFileName)
+                )
+            }
+        })
+    }
+)
 
 socket.on(
     ServerToClient.LOOP_STATE_UPDATE,

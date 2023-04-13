@@ -1,7 +1,6 @@
 import React from "react";
 import { useSelector } from "react-redux"
 import ThumbnailButton from "../thumbnail-button";
-import SelectedThumbnailOverlay from "../selected-thumbnail-overlay";
 import settingsService from "../../../../model/services/settings-service";
 import { MediaFile } from "../../../../model/reducers/media-models";
 import { State } from "../../../../model/reducers/index-reducer";
@@ -9,7 +8,7 @@ import appNavigationService from "../../../../model/services/app-navigation-serv
 import { state } from "../../../../model/reducers/store";
 import './text-thumbnail.scss'
 import './../shared-thumbnail.scss'
-import LoadedThumbnailOverlay from "../loaded-Thumbnail-overlay";
+import ThumbnailOverlayDisplay from "../thumbnail-overlay-display";
 
 interface TextThumbnailProps {
   file: MediaFile
@@ -20,24 +19,19 @@ export default function TextThumbnail(props: TextThumbnailProps): JSX.Element {
     (state: State) => appNavigationService.getActiveTab(state.appNavigation))
   useSelector(
     (state: State) => settingsService.getOutputSettings(state.settings, activeTab)
-      .selectedFile
+      .selectedFileName
   )
   useSelector(
     (state: State) => settingsService.getOutputSettings(state.settings, activeTab)
-      .loadedFile
+      .cuedFileName
   )
   const isSelected: boolean = settingsService.isThumbnailSelected(props.file.name, state.settings, activeTab)
-  const isLoaded: boolean = settingsService.isThumbnailLoaded(props.file.name, state.settings, activeTab)
+  const isCued: boolean = settingsService.isThumbnailCued(props.file.name, state.settings, activeTab)
 
   return (
-    <div className={`thumbnail-text-view ${isLoaded ? 'loaded-thumbnail' : isSelected ? 'selected-thumbnail' : ''}`} >
-        <ThumbnailButton fileName={props.file.name} className="thumbnail-text-view-ClickPgm" fileType={props.file.type}/>
-        {isSelected && (
-            <SelectedThumbnailOverlay classNames="text-view" fileType={props.file.type}/>
-        )}
-        {isLoaded && (
-            <LoadedThumbnailOverlay classNames="text-view" /> 
-        )}
+    <div className={`thumbnail-text-view ${isCued ? 'cued-thumbnail' : isSelected ? 'selected-thumbnail' : ''}`} >
+        <ThumbnailButton fileName={props.file.name} className="thumbnail-text-view-ClickPgm" fileType={props.file.type}/>        
+        <ThumbnailOverlayDisplay classNames="text-view" activeTab={activeTab} file={props.file} />        
         <p className="text-text-view">
             {props.file.name
                 .substring(props.file.name.lastIndexOf('/') + 1)

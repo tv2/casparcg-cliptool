@@ -10,7 +10,7 @@ export enum ServerToClient {
     MANUAL_START_STATE_UPDATE = 'manualStartStateUpdate',
     MIX_STATE_UPDATE = 'mixStateUpdate',
     WEB_STATE_UPDATE = 'webStateUpdate',
-    FILE_LOADED_UPDATE = 'fileLoadedUpdate',
+    FILE_CUED_UPDATE = 'fileCuedUpdate',
     FILE_SELECTED_UPDATE = 'fileSelectedUpdate',
 }
 
@@ -33,5 +33,5 @@ export const GET_SETTINGS = 'getSettings'
 // Payload types:
 export interface TimeSelectedFilePayload {
     time: [number, number]
-    selectedFile: string
+    selectedFileName: string
 }

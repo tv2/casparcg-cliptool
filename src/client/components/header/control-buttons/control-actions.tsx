@@ -53,7 +53,7 @@ export default function ControlActions(): JSX.Element {
         />
         {outputSettings.manualStartState && <Button
           className="control-start-button"
-          onClick={() => playLoadedFile(activeTab, outputSettings) }
+          onClick={() => playCuedFile(activeTab, outputSettings) }
           text="START"          
         />}        
       </ControlGroup> 
@@ -61,11 +61,11 @@ export default function ControlActions(): JSX.Element {
   )
 }
 
-function playLoadedFile(activeTab: number, outputSettings: OutputSettings) {
-  if (!outputSettings.loadedFile) {
+function playCuedFile(activeTab: number, outputSettings: OutputSettings) {
+  if (!outputSettings.cuedFileName) {
     return
   }
-  socketService.emitPlayFile(activeTab, outputSettings.loadedFile)
+  socketService.emitPlayFile(activeTab, outputSettings.cuedFileName)
 }
 
 function toggleLoopState(activeTab: number, outputSettings: OutputSettings): void {

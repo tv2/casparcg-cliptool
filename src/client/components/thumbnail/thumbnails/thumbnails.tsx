@@ -15,7 +15,7 @@ export function Thumbnails(): JSX.Element {
     const activeTab: number = useSelector(
         (state: State) => appNavigationService.getActiveTab(state.appNavigation))   
     const files: MediaFile[] = useSelector(
-        (state: State) => mediaService.getOutput(state)?.mediaFiles ?? []
+        (state: State) => mediaService.getOutput(state.media, activeTab)?.mediaFiles ?? []
     )
     const hiddenFiles: Record<string, HiddenFileInfo> = useSelector(
         (state: State) => state.media.hiddenFiles

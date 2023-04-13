@@ -15,7 +15,7 @@ import {
 } from '../../model/reducers/media-actions'
 import {
     setGenerics,
-    setLoadedFileName,
+    setCuedFileName,
     setLoop,
     setManualStart,
     setMix,
@@ -77,30 +77,29 @@ socket.on(
     ServerToClient.TIME_TALLY_UPDATE,
     (data: TimeSelectedFilePayload[]) => {
         data.forEach((channel, index) => {
-            const oldTime = mediaService.getOutput(state, index).time
+            const oldTime = mediaService.getOutput(state.media, index).time
             if (
                 channel.time[0] !== oldTime[0] ||
                 channel.time[1] !== oldTime[1]
             ) {
-                reduxStore.dispatch(setTime(index, channel.time))
-                console.log('New Time', channel)
                 if (
                     settingsService.getOutputSettings(state.settings, index)
-                        .selectedFile !== channel.selectedFile
+                        .selectedFileName !== channel.selectedFileName
                 ) {
                     reduxStore.dispatch(
-                        setSelectedFileName(index, channel.selectedFile)
+                        setSelectedFileName(index, channel.selectedFileName)
                     )
                 }
+                reduxStore.dispatch(setTime(index, channel.time))
             }
         })
     }
 )
 
 socket.on(
-    ServerToClient.FILE_LOADED_UPDATE,
+    ServerToClient.FILE_CUED_UPDATE,
     (channelIndex: number, fileName: string) => {
-        reduxStore.dispatch(setLoadedFileName(channelIndex, fileName))
+        reduxStore.dispatch(setCuedFileName(channelIndex, fileName))
     }
 )
 

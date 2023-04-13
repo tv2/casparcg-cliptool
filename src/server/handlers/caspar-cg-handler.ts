@@ -32,7 +32,6 @@ import { initializeClient } from './socket-io-server-handler'
 import {
     extractFoldersList,
     getChannelNumber,
-    getLayerNumber,
     hasThumbnailListChanged,
     isAlphaFile,
     isDeepCompareEqual,
@@ -103,47 +102,42 @@ function ccgOSCServer(): void {
 
 function processOscMessage(message: any): void {
     let channelIndex = getChannelNumber(message.address) - 1
-    let layerIndex = getLayerNumber(message.address) - 1
     if (message.address.includes('/stage/layer')) {
-        processPathOscSegment(message, layerIndex, channelIndex)
+        processOscProducerSegment(message, channelIndex)
         processTimeOscSegment(message, channelIndex)
     }
 }
 
-function processPathOscSegment(
-    message: any,
-    layerIndex: number,
-    channelIndex: number
-) {
-    if (
-        message.address.includes('file/path') &&
-        !message.address.includes('keyer')
-    ) {
-        if (layerIndex === 9) {
-            let fileName = message.args[0]
-            if (
-                settingsService.getOutputSettings(state.settings, channelIndex)
-                    ?.selectedFile !== fileName
-            ) {
-                //console.log('Path Processing', message)
-                //reduxStore.dispatch(setTime(channelIndex, [0, 0]))
-            }
+enum MessageSegment {
+    TIME = 'file/time',
+    PRODUCER = 'foreground/producer',
+}
+
+function processOscProducerSegment(message: any, channelIndex: number): void {
+    if (message.address.includes(MessageSegment.PRODUCER)) {
+        const playingFileType: string = message.args[0]
+        if (playingFileType === 'image') {
+            setNewTime(channelIndex, [0, 0])
         }
     }
 }
 
-function processTimeOscSegment(message: any, channelIndex: number) {
-    //console.log('Time Processing', message)
-    if (message.address.includes('file/time')) {
+function processTimeOscSegment(message: any, channelIndex: number): void {
+    if (message.address.includes(MessageSegment.TIME)) {
         const newTime: [number, number] = [
             parseFloat(message.args[0]),
             parseFloat(message.args[1]),
         ]
-        const oldTime = mediaService.getOutput(state, channelIndex).time
-        if (newTime[0] !== oldTime[0] || newTime[1] !== oldTime[1]) {
-            //console.log('New', newTime, message)
-            reduxStore.dispatch(setTime(channelIndex, newTime))
+        if (!(newTime[0] === 0 && newTime[1] === 0)) {
+            setNewTime(channelIndex, newTime)
         }
+    }
+}
+
+function setNewTime(channelIndex: number, newTime: [number, number]) {
+    const oldTime = mediaService.getOutput(state.media, channelIndex).time
+    if (newTime[0] !== oldTime[0] || newTime[1] !== oldTime[1]) {
+        reduxStore.dispatch(setTime(channelIndex, newTime))
     }
 }
 
@@ -155,10 +149,10 @@ function dispatchConfig(config: any): void {
         const genericSettings = settingsService.getGenericSettings(
             state.settings
         )
-        const loadedFile = genericSettings.outputSettings[index].loadedFile
-        if (loadedFile) {
-            logger.info(`Re-loaded ${loadedFile} on channel index ${index}.`)
-            loadMedia(index, 9, loadedFile)
+        const cuedFileName = genericSettings.outputSettings[index].cuedFileName
+        if (cuedFileName) {
+            logger.info(`Re-loaded ${cuedFileName} on channel index ${index}.`)
+            loadMedia(index, 9, cuedFileName)
         }
         reduxStore.dispatch(
             setLoop(
@@ -245,14 +239,14 @@ async function startTimerControlledServices(): Promise<void> {
     let data: TimeSelectedFilePayload[] = []
     reduxStore.subscribe(() => {
         mediaService
-            .getOutputs(state)
+            .getOutputs(state.media)
             .forEach((output: Output, index: number) => {
                 data[index] = {
                     time: output.time,
-                    selectedFile: settingsService.getOutputSettings(
+                    selectedFileName: settingsService.getOutputSettings(
                         state.settings,
                         index
-                    ).selectedFile,
+                    ).selectedFileName,
                 }
             })
     })
@@ -311,7 +305,7 @@ async function loadFileList(): Promise<void> {
             )
 
             mediaService
-                .getOutputs(state)
+                .getOutputs(state.media)
                 .forEach(({}, outputIndex: number) => {
                     outputExtractFiles(payload.response.data, outputIndex)
                 })
@@ -332,7 +326,10 @@ function outputExtractFiles(allFiles: MediaFile[], outputIndex: number): void {
             ) && !isAlphaFile(file.name)
         )
     })
-    const mediaFiles = mediaService.getOutput(state, outputIndex).mediaFiles
+    const mediaFiles = mediaService.getOutput(
+        state.media,
+        outputIndex
+    ).mediaFiles
     if (!isDeepCompareEqual(mediaFiles, outputMedia)) {
         logger.info(`Media files changed for output: ${outputIndex}`)
         reduxStore.dispatch(updateMediaFiles(outputIndex, outputMedia))
@@ -380,7 +377,7 @@ async function loadThumbNailImage(
 }
 
 export function assignThumbNailListToOutputs(): void {
-    mediaService.getOutputs(state).forEach(({}, channelIndex: number) => {
+    mediaService.getOutputs(state.media).forEach(({}, channelIndex: number) => {
         let outputMedia = thumbNailList.filter((thumbnail: ThumbnailFile) => {
             return isFolderNameEqual(
                 thumbnail?.name,
@@ -389,7 +386,7 @@ export function assignThumbNailListToOutputs(): void {
             )
         })
         const outputThumbnailList = mediaService.getOutput(
-            state,
+            state.media,
             channelIndex
         ).thumbnailList
         if (!isDeepCompareEqual(outputThumbnailList, outputMedia)) {

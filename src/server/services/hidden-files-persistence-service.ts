@@ -83,7 +83,7 @@ class HiddenFilesPersistenceService {
         const outputs: OutputSettings[] = settingsService.getGenericSettings(
             state.settings
         ).outputSettings
-        return outputs.some((output) => output.selectedFile in hiddenFiles)
+        return outputs.some((output) => output.selectedFileName in hiddenFiles)
     }
 
     private clearInvalidHiddenFiles(
@@ -96,8 +96,8 @@ class HiddenFilesPersistenceService {
             state.settings
         ).outputSettings
         outputs.forEach((output) => {
-            if (output.selectedFile in hiddenFiles) {
-                delete hiddenFiles[output.selectedFile]
+            if (output.selectedFileName in hiddenFiles) {
+                delete hiddenFiles[output.selectedFileName]
             }
         })
         return hiddenFiles

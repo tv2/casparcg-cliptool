@@ -17,9 +17,9 @@ export default function ThumbnailPicture(props: ThumbnailPictureProps): JSX.Elem
   const activeTab: number = useSelector(
     (state: State) => appNavigationService.getActiveTab(state.appNavigation))
 
-  const url: string = mediaService.getBase64ThumbnailUrl(props.fileName, activeTab || 0, state)
+  const url: string = mediaService.getBase64ThumbnailUrl(props.fileName, activeTab || 0, state.media)
   const isSelected: boolean = settingsService.isThumbnailSelected(props.fileName, state.settings, activeTab)
-  const isLoaded: boolean = settingsService.isThumbnailLoaded(props.fileName, state.settings, activeTab)
+  const isLoaded: boolean = settingsService.isThumbnailCued(props.fileName, state.settings, activeTab)
 
   //TODO: split ternary to multiple lines
   return (

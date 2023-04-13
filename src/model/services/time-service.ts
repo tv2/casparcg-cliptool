@@ -7,10 +7,6 @@ class TimeService {
         fileType: string,
         callerIsClient: boolean = true
     ): string {
-        if (fileType === FileType.VIDEO && timer[0] === 0 && timer[1] === 0) {
-            //console.log('Invalid Time', fileType, timer)
-            return ''
-        }
         if (
             (callerIsClient && timer[1] <= 0) ||
             (callerIsClient && fileType === FileType.IMAGE)

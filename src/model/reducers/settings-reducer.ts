@@ -56,15 +56,15 @@ export function settings(
         case IO.SET_SELECTED_FILE_NAME: {
             if (doesChannelExist(nextState, action)) {
                 return updateAttributeByPartial(state, nextState, action, {
-                    selectedFile: action.filename,
+                    selectedFileName: action.filename,
                 })
             }
             return nextState
         }
-        case IO.SET_LOADED_FILE_NAME: {
+        case IO.SET_CUED_FILE_NAME: {
             if (doesChannelExist(nextState, action)) {
                 return updateAttributeByPartial(state, nextState, action, {
-                    loadedFile: action.filename,
+                    cuedFileName: action.filename,
                 })
             }
             return nextState

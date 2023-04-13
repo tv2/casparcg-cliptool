@@ -1,26 +1,26 @@
-import { State } from '../reducers/index-reducer'
-import { Output as Output, ThumbnailFile } from '../reducers/media-models'
-import appNavigationService from './app-navigation-service'
+import {
+    FileInfo,
+    FileType,
+    Media,
+    Output as Output,
+    ThumbnailFile,
+} from '../reducers/media-models'
 
 class MediaService {
-    public getOutput(state: State, channelIndex: number = -1): Output {
-        const activeTab: number =
-            channelIndex === -1
-                ? appNavigationService.getActiveTab(state.appNavigation)
-                : channelIndex
-        return state.media.outputs[activeTab]
+    public getOutput(media: Media, channelIndex: number): Output {
+        return media.outputs[channelIndex]
     }
 
-    public getOutputs(store: State): Output[] {
-        return store.media.outputs
+    public getOutputs(media: Media): Output[] {
+        return media.outputs
     }
 
     public getBase64ThumbnailUrl(
         fileName: string,
         channelIndex: number,
-        state: State
+        media: Media
     ): string {
-        const output = this.getOutput(state, channelIndex)
+        const output = this.getOutput(media, channelIndex)
         if (!output || !output.thumbnailList) {
             return ''
         }
@@ -29,6 +29,31 @@ class MediaService {
                 item.name.toUpperCase() === fileName.toUpperCase()
         )
         return thumbnailFile?.thumbnail ?? ''
+    }
+
+    public getSelectedFile(
+        cleanFileName: string,
+        media: Media,
+        channelIndex: number
+    ): FileInfo | undefined {
+        return media.outputs[channelIndex].mediaFiles.find(
+            (predicate) => predicate.name === cleanFileName
+        )
+    }
+
+    public isValidFile(file: FileInfo, time: [number, number]): boolean {
+        return (
+            this.isValidImageFile(file, time) ||
+            this.isValidVideoFile(file, time)
+        )
+    }
+
+    private isValidImageFile(file: FileInfo, time: [number, number]): boolean {
+        return file.type === FileType.IMAGE && time[0] === 0 && time[1] === 0
+    }
+
+    private isValidVideoFile(file: FileInfo, time: [number, number]): boolean {
+        return file.type === FileType.VIDEO && !(time[0] === 0 && time[1] === 0)
     }
 }
 

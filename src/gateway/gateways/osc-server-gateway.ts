@@ -57,7 +57,7 @@ export function oscServerGateway(): void {
                         {
                             type: 's',
                             value: JSON.stringify(
-                                mediaService.getOutput(state, channel - 1)
+                                mediaService.getOutput(state.media, channel - 1)
                                     .mediaFiles
                             ),
                         },

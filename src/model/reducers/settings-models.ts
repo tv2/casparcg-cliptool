@@ -41,8 +41,8 @@ export interface OutputSettings {
     manualStartState: boolean
     webState: boolean
     operationMode: OperationMode
-    selectedFile: string
-    loadedFile: string
+    selectedFileName: string
+    cuedFileName: string
 }
 
 export interface CasparcgSettings {
