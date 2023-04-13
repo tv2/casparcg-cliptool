@@ -75,6 +75,7 @@ class SettingsPersistenceService {
         )
     }
 
+    // Checks if the loaded file has the structure of Cliptool version 2.14 and below.
     private isPreviousStructure(loadedFile: any): {
         success: boolean
         parsed: PreviousGenericSettings | undefined
@@ -89,6 +90,7 @@ class SettingsPersistenceService {
         return { success: false, parsed: undefined }
     }
 
+    // Checks if the loaded file has the structure of Cliptool version 2.15 and above.
     private isNewStructure(loadedFile: any): {
         success: boolean
         parsed: GenericSettings | undefined

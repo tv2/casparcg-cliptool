@@ -19,10 +19,11 @@ export default function ThumbnailPicture(props: ThumbnailPictureProps): JSX.Elem
 
   const url: string = mediaService.getBase64ThumbnailUrl(props.fileName, activeTab || 0, state.media)
   const isSelected: boolean = settingsService.isThumbnailSelected(props.fileName, state.settings, activeTab)
-  const isLoaded: boolean = settingsService.isThumbnailCued(props.fileName, state.settings, activeTab)
+  const isCued: boolean = settingsService.isThumbnailCued(props.fileName, state.settings, activeTab)
 
-  //TODO: split ternary to multiple lines
+  const isSelectedClass = isSelected ? 'selected-thumbnail' : ''
+  const chosenClass = isCued ? 'cued-thumbnail' : isSelectedClass
   return (
-      <img src={url} className={`thumbnail-image ${isLoaded ? 'cued-thumbnail' : isSelected ? 'selected-thumbnail' : ''}`} />
+      <img src={url} className={`thumbnail-image ${chosenClass}`} />
   )
 }
