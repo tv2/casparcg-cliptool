@@ -45,7 +45,7 @@ function emitToggleVisibility(fileName: string, activeTab: number): void {
   if (settingsService.isThumbnailSelectedOnAnyOutput(fileName, state.settings)) {
       alert('Unable to hide, as the file is in use somewhere.')
       return
-  }      
+  }
   socketService.emitToggleThumbnailVisibility(activeTab, fileName)
 }
 
@@ -54,9 +54,9 @@ function emitPlayFile(fileName: string, activeTab: number, fileType: string ): v
     socketService.emitPlayFile(activeTab, fileName)
   } else {
     const eventToFire = !getOutputSettings(activeTab)?.manualStartState 
-      ? socketService.emitPlayFile
-      : socketService.emitLoadFile
-    eventToFire(activeTab, fileName)
+      ? () => socketService.emitPlayFile(activeTab, fileName)
+      : () => socketService.emitLoadFile(activeTab, fileName)
+    eventToFire()
   }   
 }
 

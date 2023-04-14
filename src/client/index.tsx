@@ -4,12 +4,11 @@ import ReactDom from 'react-dom'
 
 import { Provider as ReduxProvider } from 'react-redux'
 import { reduxStore, state } from '../model/reducers/store'
-import { socket } from './util/socketClientHandlers'
 import { App } from './components/app/app'
+import clientHandlerService from './services/client-handler-service'
 
 console.log('Redux initialized :', state)
-
-console.log('Socket Initialized', socket)
+console.log('Socket Initialized', clientHandlerService.getSocket())
 
 ReactDom.render(
     <ReduxProvider store={reduxStore}>
