@@ -49,8 +49,8 @@ import {
     TimeSelectedFilePayload,
 } from '../../model/socket-io-constants'
 
-let waitingForCCGResponse: boolean = false
-let previousThumbnailFileList: ThumbnailFile[] = []
+let waitingForCcgResponse: boolean = false
+let previousThumbnails: ThumbnailFile[] = []
 let thumbnails: ThumbnailFile[] = []
 
 //Communication with CasparCG consists of 2 parts:
@@ -221,7 +221,7 @@ function ccgAMPHandler(): void {
                 .getCasparCGConfig()
                 .then((config) => {
                     dispatchConfig(config)
-                    waitingForCCGResponse = false
+                    waitingForCcgResponse = false
                     loadInitialOverlay()
                 })
                 .catch((error) =>
@@ -231,10 +231,15 @@ function ccgAMPHandler(): void {
         .catch((error) =>
             logger.data(error).error('No connection to CasparCG ')
         )
-    startTimerControlledServices()
+    startIntervalOperations()
 }
 
-async function startTimerControlledServices(): Promise<void> {
+function startIntervalOperations(): void {
+    startTimeEmitInterval()
+    startFileChangesPollingInterval()
+}
+
+function startTimeEmitInterval() {
     //Update of timeleft is set to a default 40ms (same as 25FPS)
     let data: TimeSelectedFilePayload[] = []
     reduxStore.subscribe(() => {
@@ -253,45 +258,54 @@ async function startTimerControlledServices(): Promise<void> {
     setInterval(() => {
         socketServer.emit(ServerToClient.TIME_TALLY_UPDATE, data)
     }, 40)
+}
 
-    //Check media files on server:
-    await loadCcgMedia()
-    loadFileList()
+async function startFileChangesPollingInterval(): Promise<void> {
+    await pollFileChanges()
     setInterval(() => {
-        if (!waitingForCCGResponse) {
-            waitingForCCGResponse = true
-            loadCcgMedia().then((items: ThumbnailFile[]) => {
-                thumbnails = items
-                waitingForCCGResponse = false
+        if (!waitingForCcgResponse) {
+            waitingForCcgResponse = true
+            pollFileChanges().then(() => {
+                waitingForCcgResponse = false
             })
         }
-        loadFileList()
     }, 3000)
 }
 
-async function loadCcgMedia(): Promise<ThumbnailFile[]> {
-    let thumbnailFiles: any = await ccgConnection.thumbnailList()
+async function pollFileChanges(): Promise<void> {
+    const newThumbnails = await loadCcgThumbnails()
+    if (newThumbnails.hasChanges) {
+        thumbnails = newThumbnails.thumbnails
+        assignThumbnailsToOutputs()
+    }
+    await loadFileList()
+}
 
+async function loadCcgThumbnails(): Promise<{
+    thumbnails: ThumbnailFile[]
+    hasChanges: boolean
+}> {
+    const thumbnailFiles: any = await ccgConnection.thumbnailList()
+    let newThumbnails: ThumbnailFile[] = thumbnails
+    let hasChanges = false
     if (
         hasThumbnailListChanged(
             thumbnailFiles.response.data,
-            previousThumbnailFileList
+            previousThumbnails
         )
     ) {
-        previousThumbnailFileList = thumbnailFiles.response.data
-        thumbnails = []
+        previousThumbnails = thumbnailFiles.response.data
+        newThumbnails = []
+        hasChanges = true
         for await (const thumbnailFile of thumbnailFiles.response.data) {
             await loadThumbnailImage(thumbnailFile).then(
                 (thumbnailImage: ThumbnailFile) => {
-                    thumbnails.push(thumbnailImage)
+                    newThumbnails.push(thumbnailImage)
                 }
             )
         }
-        assignThumbnailListToOutputs()
-
-        await loadFileList()
     }
-    return thumbnails
+    return { thumbnails: newThumbnails, hasChanges: hasChanges }
 }
 
 async function loadFileList(): Promise<void> {
@@ -377,7 +391,7 @@ async function loadThumbnailImage(
     }
 }
 
-export function assignThumbnailListToOutputs(): void {
+export function assignThumbnailsToOutputs(): void {
     mediaService.getOutputs(state.media).forEach(({}, channelIndex: number) => {
         const outputMedia = thumbnails.filter((thumbnail: ThumbnailFile) => {
             return isFolderNameEqual(
