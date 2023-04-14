@@ -26,8 +26,8 @@ function updateChannelConfigWithVideoFormat(
 export function settings(
     state: Settings = defaultSettingsReducerState(),
     action: any
-) {
-    let nextState = { ...state }
+): Settings {
+    let nextState: Settings = { ...state }
 
     switch (action.type) {
         case IO.UPDATE_SETTINGS: {
@@ -106,7 +106,6 @@ export function settings(
     }
 }
 
-// TODO: get help moving to reducerService.
 function updateAttributeByPartial(
     originalState: Settings,
     nextState: Settings,

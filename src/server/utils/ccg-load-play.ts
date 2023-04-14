@@ -8,7 +8,7 @@ export function playMedia(
     channelIndex: number,
     layerIndex: number,
     fileName: string
-) {
+): void {
     scale(channelIndex, layerIndex)
     ccgConnection.play(
         channelIndex + 1,
@@ -23,7 +23,7 @@ export function mixMedia(
     channelIndex: number,
     layerIndex: number,
     fileName: string
-) {
+): void {
     scale(channelIndex, layerIndex)
 
     ccgConnection.play(
@@ -41,7 +41,7 @@ export function loadMedia(
     channelIndex: number,
     layerIndex: number,
     fileName: string
-) {
+): void {
     scale(channelIndex, layerIndex)
 
     ccgConnection.load(
@@ -57,7 +57,7 @@ export function playOverlay(
     channelIndex: number,
     layerIndex: number,
     fileName: string
-) {
+): void {
     if (!fileName) {
         return
     }
@@ -68,7 +68,7 @@ export function playOverlay(
     ccgConnection.playHtmlPage(channelIndex + 1, layerIndex + 1)
 }
 
-export function stopOverlay(channelIndex: number, layerIndex: number) {
+export function stopOverlay(channelIndex: number, layerIndex: number): void {
     ccgConnection.stop(channelIndex + 1, layerIndex + 1)
 }
 

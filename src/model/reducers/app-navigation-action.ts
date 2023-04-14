@@ -22,7 +22,7 @@ export function setConnectionStatus(isConnected: boolean): {
     }
 }
 
-export function toggleShowSettings(): { type: string } {
+export function toggleSettings(): { type: string } {
     return {
         type: TOGGLE_SHOW_SETTINGS,
     }

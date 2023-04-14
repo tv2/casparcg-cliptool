@@ -51,7 +51,7 @@ import {
 
 let waitingForCCGResponse: boolean = false
 let previousThumbnailFileList: ThumbnailFile[] = []
-let thumbNailList: ThumbnailFile[] = []
+let thumbnails: ThumbnailFile[] = []
 
 //Communication with CasparCG consists of 2 parts:
 //1. An AMCP connection for receiving media info and sending commands
@@ -134,7 +134,7 @@ function processTimeOscSegment(message: any, channelIndex: number): void {
     }
 }
 
-function setNewTime(channelIndex: number, newTime: [number, number]) {
+function setNewTime(channelIndex: number, newTime: [number, number]): void {
     const oldTime = mediaService.getOutput(state.media, channelIndex).time
     if (newTime[0] !== oldTime[0] || newTime[1] !== oldTime[1]) {
         reduxStore.dispatch(setTime(channelIndex, newTime))
@@ -261,7 +261,7 @@ async function startTimerControlledServices(): Promise<void> {
         if (!waitingForCCGResponse) {
             waitingForCCGResponse = true
             loadCcgMedia().then((items: ThumbnailFile[]) => {
-                thumbNailList = items
+                thumbnails = items
                 waitingForCCGResponse = false
             })
         }
@@ -279,17 +279,19 @@ async function loadCcgMedia(): Promise<ThumbnailFile[]> {
         )
     ) {
         previousThumbnailFileList = thumbnailFiles.response.data
-        thumbNailList = []
-        for await (const thumbFile of thumbnailFiles.response.data) {
-            await loadThumbNailImage(thumbFile).then((thumbImage: any) => {
-                thumbNailList.push(thumbImage)
-            })
+        thumbnails = []
+        for await (const thumbnailFile of thumbnailFiles.response.data) {
+            await loadThumbnailImage(thumbnailFile).then(
+                (thumbnailImage: ThumbnailFile) => {
+                    thumbnails.push(thumbnailImage)
+                }
+            )
         }
-        assignThumbNailListToOutputs()
+        assignThumbnailListToOutputs()
 
         await loadFileList()
     }
-    return thumbNailList
+    return thumbnails
 }
 
 async function loadFileList(): Promise<void> {
@@ -362,23 +364,22 @@ function checkHiddenFilesChanged(files: MediaFile[]): void {
     }
 }
 
-async function loadThumbNailImage(
+async function loadThumbnailImage(
     element: ThumbnailFile
 ): Promise<ThumbnailFile> {
-    let thumbnail = await ccgConnection.thumbnailRetrieve(element.name)
-    let receivedThumbnail: ThumbnailFile = {
+    const thumbnail = await ccgConnection.thumbnailRetrieve(element.name)
+    return {
         name: element.name,
         changed: element.changed,
         size: element.size,
         type: element.type,
         thumbnail: thumbnail.response.data,
     }
-    return receivedThumbnail
 }
 
-export function assignThumbNailListToOutputs(): void {
+export function assignThumbnailListToOutputs(): void {
     mediaService.getOutputs(state.media).forEach(({}, channelIndex: number) => {
-        let outputMedia = thumbNailList.filter((thumbnail: ThumbnailFile) => {
+        const outputMedia = thumbnails.filter((thumbnail: ThumbnailFile) => {
             return isFolderNameEqual(
                 thumbnail?.name,
                 settingsService.getOutputSettings(state.settings, channelIndex)

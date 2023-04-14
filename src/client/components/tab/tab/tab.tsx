@@ -22,7 +22,7 @@ export default function Tab(props: TabProps): JSX.Element {
   )
 }
 
-function onValidSwipe(direction: SwipeDirection, selectedTab: number, totalTabs: number) {
+function onValidSwipe(direction: SwipeDirection, selectedTab: number, totalTabs: number): void {
   const nextTab = swipeService.getNextTab(selectedTab, direction)
   if (!swipeService.isValidTab(nextTab, totalTabs)) {
     return

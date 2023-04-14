@@ -18,8 +18,8 @@ function defaultOutputs(amount: number): Output[] {
     })
 }
 
-export function media(state: Media = defaultMediaState(), action: any) {
-    let nextState = { ...state }
+export function media(state: Media = defaultMediaState(), action: any): Media {
+    let nextState: Media = { ...state }
     switch (action.type) {
         case IO.SET_NUMBER_OF_OUTPUTS:
             nextState.outputs = defaultOutputs(action.amount)
@@ -72,7 +72,6 @@ export function media(state: Media = defaultMediaState(), action: any) {
     }
 }
 
-// TODO: get help moving to reducerService.
 function updateAttributeByPartial(
     originalState: Media,
     nextState: Media,

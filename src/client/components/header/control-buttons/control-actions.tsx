@@ -61,7 +61,7 @@ export default function ControlActions(): JSX.Element {
   )
 }
 
-function playCuedFile(activeTab: number, outputSettings: OutputSettings) {
+function playCuedFile(activeTab: number, outputSettings: OutputSettings): void {
   if (!outputSettings.cuedFileName) {
     return
   }

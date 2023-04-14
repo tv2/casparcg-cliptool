@@ -25,7 +25,7 @@ import {
     setWeb,
 } from '../../model/reducers/settings-action'
 import { HiddenFileInfo, MediaFile } from '../../model/reducers/media-models'
-import { assignThumbNailListToOutputs } from './caspar-cg-handler'
+import { assignThumbnailListToOutputs } from './caspar-cg-handler'
 import settingsService from '../../model/services/settings-service'
 import mediaService from '../../model/services/media-service'
 import {
@@ -367,6 +367,6 @@ function cleanUpMediaFiles(): void {
     mediaService.getOutputs(state.media).forEach(({}, channelIndex: number) => {
         reduxStore.dispatch(updateMediaFiles(channelIndex, []))
         reduxStore.dispatch(updateThumbnailFileList(channelIndex, []))
-        assignThumbNailListToOutputs()
+        assignThumbnailListToOutputs()
     })
 }

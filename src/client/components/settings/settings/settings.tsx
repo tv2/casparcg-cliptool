@@ -21,9 +21,6 @@ export function Settings(): JSX.Element {
             changingSettingsService.resetStateHandler()
         }
     }, [])
-    useEffect(() => {
-        changingSettingsService.saveTemporarySettingChanges(settings)
-    }, [settings])
     return (
         <div className="settings-body">
             <p className="settings-header">SETTINGS :</p>

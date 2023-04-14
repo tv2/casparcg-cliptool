@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import { TOGGLE_SHOW_SETTINGS } from '../../model/reducers/app-navigation-action'
+import { toggleSettings } from '../../model/reducers/app-navigation-action'
 import {
     CasparcgSettings,
     GenericSettings,
@@ -31,7 +31,7 @@ class ChangingSettingsService {
     }
 
     /**
-     * To be used from an 'useEffect' listening for changes to the state object that was supplied to the first argument of the {@link ChangingSettingsService.initStateHandler} function.
+     * To be used from an 'useEffect' listening for changes to the state object that was supplied to the first argument of the {@link changingSettingsService.initStateHandler | Init function}.
      *
      * @param settings - The new value of the state value.
      */
@@ -56,6 +56,7 @@ class ChangingSettingsService {
     ): void {
         if (this.setTemporarySettings) {
             this.setTemporarySettings(settings)
+            this.temporarySettings = settings
         }
     }
 
@@ -125,9 +126,7 @@ class ChangingSettingsService {
     }
 
     public toggleSettingsPage(): void {
-        reduxStore.dispatch({
-            type: TOGGLE_SHOW_SETTINGS,
-        })
+        reduxStore.dispatch(toggleSettings())
     }
 }
 

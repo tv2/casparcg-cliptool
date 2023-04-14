@@ -16,8 +16,8 @@ function defaultAppNavigationReducerState(): AppNavigation {
 export function appNavigation(
     state: AppNavigation = defaultAppNavigationReducerState(),
     action: any
-) {
-    let nextState = { ...state }
+): AppNavigation {
+    let nextState: AppNavigation = { ...state }
 
     switch (action.type) {
         case AppNav.SET_ACTIVE_TAB:
