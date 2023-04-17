@@ -27,8 +27,8 @@ export default function TextThumbnail(props: TextThumbnailProps): JSX.Element {
   const isCued: boolean = settingsService.isThumbnailCued(props.file.name, state.settings, props.activeTab)
 
   return (
-    <div className={`thumbnail-text-view ${isCued ? 'cued-thumbnail' : isSelected ? 'selected-thumbnail' : ''}`} >
-        <ThumbnailButton fileName={props.file.name} className="thumbnail-text-view-click-pgm" fileType={props.file.type} activeTab={props.activeTab}/>        
+    <div className={`text-thumbnail ${isCued ? 'cued-thumbnail' : isSelected ? 'selected-thumbnail' : ''}`} >
+        <ThumbnailButton fileName={props.file.name} className="text-thumbnail-click-pgm" fileType={props.file.type} activeTab={props.activeTab}/>        
         <ThumbnailOverlayDisplay classNames="text-view" activeTab={props.activeTab} file={props.file} />        
         <p className="text-text-view">
             {props.file.name
