@@ -1,0 +1,24 @@
+.c-thumbnail-button {
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  height: 100%;
+  border-color: #2e2b41;
+  border-width: 4px;
+  border-style: solid;
+  display: flex;
+
+  &.selected-thumbnail {
+    border-color: var(--selected-color);
+  }
+
+  &.cued-thumbnail {
+    border-color: var(--cued-color);
+  }
+}
+
+.c-thumbnail-button__button {
+  background-color: transparent;
+  width: 100%;
+  border-color: #2e2b41;
+}

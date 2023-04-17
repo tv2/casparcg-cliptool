@@ -1,12 +1,13 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import { State } from "../../../model/reducers/index-reducer";
-import settingsService from "../../../model/services/settings-service";
-import mediaService from "../../../model/services/media-service";
-import { MediaFile } from "../../../model/reducers/media-models";
-import { state } from "../../../model/reducers/store";
-import SelectedThumbnailOverlay from "./selected-thumbnail-overlay";
-import CuedThumbnailOverlay from "./cued-thumbnail-overlay";
+import { State } from "../../../../model/reducers/index-reducer";
+import settingsService from "../../../../model/services/settings-service";
+import mediaService from "../../../../model/services/media-service";
+import { MediaFile } from "../../../../model/reducers/media-models";
+import { state } from "../../../../model/reducers/store";
+import SelectedThumbnailOverlay from "../selected-thumbnail-overlay";
+import CuedThumbnailOverlay from "../cued-thumbnail-overlay";
+import './thumbnail-overlay-display.scss'
 
 interface ThumbnailOverlayDisplayProps {
   classNames?: string
@@ -37,13 +38,13 @@ export default function ThumbnailOverlayDisplay(props: ThumbnailOverlayDisplayPr
   }
 
   return (
-  <>
+  <div className="c-thumbnail-overlay-display">
       {(isSelected && isValidFile) && (
           <SelectedThumbnailOverlay classNames={props.classNames ?? ''} fileType={props.file.type} time={time}/>
       )}
       {isCued && (
           <CuedThumbnailOverlay classNames={props.classNames ?? ''}/> 
       )}
-  </>  
+  </div>  
   )
 }

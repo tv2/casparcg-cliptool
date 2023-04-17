@@ -18,8 +18,7 @@ export default function Header(): JSX.Element {
                         <Button
                             className="app-settings-button"
                             onClick={() => emitToggleSettingsVisibility()}
-                            text="SETTINGS"
-                        />
+                        >SETTINGS</Button>
                     </ControlGroup>
                 )}
 

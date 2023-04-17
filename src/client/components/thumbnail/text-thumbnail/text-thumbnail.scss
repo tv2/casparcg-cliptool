@@ -7,22 +7,17 @@
   margin: 8px;
 }
 
-.text-thumbnail-click-pgm {
-  position: absolute;
-  height: 130px;
-  top: 10px;
-  z-index: 2;
-  background-color: transparent;
-  right: 5%;
-  width: 90%;
-  border-style: dotted;
-  border-width: 0px;
-  border-color: rgba(133, 133, 133, 0.371);
-  outline: 0;
+.text-thumbnail__button {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  top: 15%;
+  height: 100%;
 }
 
 .text-text-view {
   word-wrap: break-word;
-  margin-top: 8px;
+  margin: 0;
   font-size: 1.4em;
+  color: white;
 }

@@ -1,24 +1,13 @@
-.image-thumbnail.hidden {
-  scale: 0.8;
+.image-thumbnail {
+  margin: 8px;
 
-  .thumbnail-image {
-    filter: grayscale(1);
+  &.hidden {
+    scale: 0.8;
+  
+    .thumbnail-picture {
+      filter: grayscale(1);
+    }
   }
-}
-
-.image-thumbnail-click-pgm {
-  position: absolute;
-  height: 150px;
-  top: 10px;
-  z-index: 2;
-  background-color: transparent;
-  right: 5%;
-  width: 90%;
-  border-style: dotted;
-  border-width: 0px;
-  border-left-width: 1px;
-  border-color: #2e2b41;
-  outline: 0;
 }
 
 .text {

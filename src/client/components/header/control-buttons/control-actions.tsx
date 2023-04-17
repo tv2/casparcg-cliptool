@@ -25,22 +25,19 @@ export default function ControlActions(): JSX.Element {
             <Button
               className={`${buttonBaseCss} ${outputSettings.loopState ? 'on' : ''}`}
               onClick={() => toggleLoopState(activeTab, outputSettings)}
-              text="LOOP"
-            />
+            >LOOP</Button>
           </ControlGroup>
           <ControlGroup>
             <Button
               className={`${buttonBaseCss} ${outputSettings.mixState ? 'on' : ''}`}
               onClick={() => toggleMixState(activeTab, outputSettings)}
-              text="MIX"
-            />
+            >MIX</Button>
           </ControlGroup>
           <ControlGroup>
             <Button
               className={`${buttonBaseCss} ${outputSettings.webState ? 'on' : ''}`}
               onClick={() => toggleWebState(activeTab, outputSettings)}
-              text="OVERLAY"
-            />
+             >OVERLAY</Button>
           </ControlGroup>                        
         </>
     )}
@@ -49,13 +46,11 @@ export default function ControlActions(): JSX.Element {
         <Button
           className={`${buttonBaseCss} ${outputSettings.manualStartState ? 'on' : ''}`}
           onClick={() => toggleManualStartState(activeTab, outputSettings)}
-          text="MANUAL"
-        />
+        >MANUAL</Button>
         {outputSettings.manualStartState && <Button
           className="control-start-button"
           onClick={() => playCuedFile(activeTab, outputSettings) }
-          text="START"          
-        />}        
+        >START</Button>}        
       </ControlGroup> 
     </>
   )

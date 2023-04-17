@@ -25,18 +25,18 @@ export default function SettingsActions(): JSX.Element {
       <div className="settings-channel-form">
         <Button className={buttonCss} 
           onClick={() => saveSettings()} 
-          text='SAVE SETTINGS'/>
+        >SAVE SETTINGS</Button>
         <Button className={buttonCss}
           onClick={() => discardSettings()} 
-          text={changingSettingsService.hasChanges() ? 'DISCARD CHANGES' : 'CLOSE SETTINGS'}/>
+        > {changingSettingsService.hasChanges() ? 'DISCARD CHANGES' : 'CLOSE SETTINGS'} </Button>
         <Button className={`${buttonCss} ${operationMode === OperationMode.EDIT_VISIBILITY ? 'on' : ''}`} 
           onClick={() => emitSetOperationModeToEditVisibility()} 
-          text="EDIT VISIBILITY"/>
+        >EDIT VISIBILITY</Button>
         
         {!browserService.isChannelView() && (
           <Button className={buttonCss} 
             onClick={() => restartCliptool()} 
-            text="RESTART CLIPTOOL"/>
+           >RESTART CLIPTOOL</Button>
         )}
     </div>
   )
