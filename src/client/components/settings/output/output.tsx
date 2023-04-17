@@ -2,9 +2,9 @@ import React, { useState } from "react"
 import { CcgConfigChannel, OutputSettings } from "../../../../model/reducers/settings-models"
 import eventService from "../../../services/event-service"
 import Label from "../../shared/label"
-import LabelledCheckboxInput from "../../shared/labelled-checkbox-input"
-import LabelledNumberInput from "../../shared/labelled-number-input"
-import LabelledTextInput from "../../shared/labelled-text-input"
+import LabelledCheckboxInput from "../../shared/labelled-checkbox-input/labelled-checkbox-input"
+import LabelledNumberInput from "../../shared/labelled-number-input/labelled-number-input"
+import LabelledTextInput from "../../shared/labelled-text-input/labelled-text-input"
 import './output.scss'
 import './../shared-settings.scss'
 import changingSettingsService from "../../../services/changing-settings-service"

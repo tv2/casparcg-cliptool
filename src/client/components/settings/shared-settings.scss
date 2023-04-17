@@ -21,35 +21,3 @@
   border-style: solid;
   border-color: rgb(34, 34, 34);
 }
-
-input {
-  &[type='text'] {
-    text-align: left;
-    margin: 5px;
-    font-size: 1.1em;
-    border: 1px solid rgb(104, 104, 104);
-    background-color: rgb(87, 86, 86);
-    color: white;
-    border-radius: 0;
-    -webkit-appearance: none;
-  }
-
-  &[type='number'] {
-    text-align: right;
-    width: 120px;
-    margin: 5px;
-    font-size: 1.1em;
-    border: 1px solid rgb(104, 104, 104);
-    background-color: rgb(87, 86, 86);
-    color: white;
-    border-radius: 0;
-    -webkit-appearance: none;
-  }
-
-  &[type='checkbox'] {
-    text-align: right;
-    width: 25px;
-    height: 25px;
-    margin: 5px;
-  }
-}

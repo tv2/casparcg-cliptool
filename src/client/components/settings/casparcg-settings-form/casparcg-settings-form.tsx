@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import eventService from "../../../services/event-service";
-import LabelledNumberInput from "../../shared/labelled-number-input";
-import LabelledTextInput from "../../shared/labelled-text-input";
+import LabelledNumberInput from "../../shared/labelled-number-input/labelled-number-input";
+import LabelledTextInput from "../../shared/labelled-text-input/labelled-text-input";
 import './casparcg-settings-form.scss'
 import './../shared-settings.scss'
 import changingSettingsService from "../../../services/changing-settings-service";

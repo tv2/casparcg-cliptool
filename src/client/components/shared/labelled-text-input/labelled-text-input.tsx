@@ -1,5 +1,6 @@
 import React from "react"
-import Label from "./label"
+import Label from "../label"
+import './labelled-text-input.scss'
 
 interface LabelledTextInputProps {
   value: string
@@ -10,13 +11,17 @@ interface LabelledTextInputProps {
 }
 
 export default function LabelledTextInput(props: LabelledTextInputProps): JSX.Element {
+  const inputClassNames = [
+    'c-labelled-text-input',
+    props.inputClassName ?? ''
+  ].join('')
   return (
-    <Label className={props.labelClassName} 
+    <Label className={props.labelClassName ?? ''} 
       description={props.description}>
       <input type="text" 
         value={props.value} 
         onChange={props.onChange}
-        className={props.inputClassName}/>
+        className={inputClassNames}/>
     </Label>
   )
 }

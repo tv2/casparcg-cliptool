@@ -1,5 +1,6 @@
 import React from "react"
-import Label from "./label"
+import Label from "../label"
+import './labelled-number-input.scss'
 
 interface LabelledNumberInputProps {
   value: number
@@ -11,13 +12,17 @@ interface LabelledNumberInputProps {
 }
 
 export default function LabelledNumberInput(props: LabelledNumberInputProps): JSX.Element {
+  const inputClassNames = [
+    'c-labelled-number-input',
+    props.inputClassName ?? ''
+  ].join('')
   return (
     <Label className={props.labelClassName} 
       description={props.description}>
       <input type="number" 
         value={props.value} 
         onChange={props.onChange}
-        className={props.inputClassName}/>
+        className={inputClassNames}/>
       {props.unit ?? ''}
     </Label>
   )
