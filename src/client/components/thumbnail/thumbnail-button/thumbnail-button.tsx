@@ -16,7 +16,8 @@ interface ThumbnailButtonProps {
   fileType: string
   activeTab: number
   children?: React.ReactNode
-  classNames?: string
+  buttonClassNames?: string
+  wrapperClassNames?: string
 }
 
 export default function ThumbnailButton(props: ThumbnailButtonProps): JSX.Element {
@@ -38,9 +39,9 @@ export default function ThumbnailButton(props: ThumbnailButtonProps): JSX.Elemen
   const chosenClass = isCued ? 'cued-thumbnail' : isSelectedClass
 
   return (
-    <div className={`c-thumbnail-button ${chosenClass}`}>
+    <div className={`c-thumbnail-button ${props.wrapperClassNames ?? ''} ${chosenClass}`}>
       <Button
-          className={`c-thumbnail-button__button ${props.classNames ?? ''}`}
+          className={`c-thumbnail-button__button ${props.buttonClassNames ?? ''}`}
           onClick={() => {
             triggerOperationModeAction(props.fileName, props.activeTab, props.fileType)
           }}

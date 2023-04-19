@@ -11,9 +11,14 @@ interface TextThumbnailProps {
 
 export default function TextThumbnail(props: TextThumbnailProps): JSX.Element {
   return (
-    <div className="text-thumbnail" >
-        <ThumbnailButton fileName={props.file.name} classNames="text-thumbnail__button" fileType={props.file.type} activeTab={props.activeTab}>
-          <p className="text-text-view">
+    <div className="c-text-thumbnail" >
+        <ThumbnailButton 
+          fileName={props.file.name} 
+          wrapperClassNames="c-text-thumbnail__wrapper" 
+          buttonClassNames="c-text-thumbnail__button" 
+          fileType={props.file.type} 
+          activeTab={props.activeTab}>
+          <p className="c-text-thumbnail__text">
               {props.file.name
                   .substring(props.file.name.lastIndexOf('/') + 1)
                   .slice(-45)}

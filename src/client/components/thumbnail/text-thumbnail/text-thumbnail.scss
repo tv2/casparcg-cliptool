@@ -1,21 +1,27 @@
-.text-thumbnail {
+.c-text-thumbnail {
   height: 130px;
   border-width: 2px;
   border-style: solid;
   border-color: #2e2b41;
-  width: 95%;
   margin: 8px;
+  display: flex;
+  position: relative;
 }
 
-.text-thumbnail__button {
+.c-text-thumbnail__wrapper {
+  width: 100%;
+}
+
+.c-text-thumbnail__button {
   position: relative;
-  display: flex;
   justify-content: center;
-  top: 15%;
   height: 100%;
 }
 
-.text-text-view {
+.c-text-thumbnail__text {
+  top: 10%;
+  height: fit-content;
+  position: relative;
   word-wrap: break-word;
   margin: 0;
   font-size: 1.4em;
