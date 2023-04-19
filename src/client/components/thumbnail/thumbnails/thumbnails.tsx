@@ -30,7 +30,7 @@ export function Thumbnails(): JSX.Element {
     return (
         <div className="thumbnails-region">
             {shownFiles.map((file: MediaFile) => (
-                <div className="thumbnail-wrapper" key={file.name}>
+                <div className={`thumbnail-wrapper ${file.name in hiddenFiles ? 'hidden' : ''}`} key={file.name}>
                     {browserService.isTextView()
                         ? <TextThumbnail file={file} activeTab={activeTab}/>
                         : <ImageThumbnail file={file} activeTab={activeTab}/>}

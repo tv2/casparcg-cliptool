@@ -1,13 +1,7 @@
 .image-thumbnail {
   margin: 8px;
 
-  &.hidden {
-    scale: 0.8;
-  
-    .thumbnail-picture {
-      filter: grayscale(1);
-    }
-  }
+ 
 }
 
 .text {
