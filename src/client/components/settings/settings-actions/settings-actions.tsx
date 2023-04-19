@@ -19,7 +19,7 @@ export default function SettingsActions(): JSX.Element {
   const operationMode = useSelector(
     (state: State) => settingsService.getOutputSettings(state.settings, activeTab)?.operationMode)
   
-  const buttonCss = "save-button"
+  const buttonCss = "c-settings-actions"
 
   return (
       <div className="settings-channel-form">

@@ -10,7 +10,7 @@
   background-color: grey;
 
   &.on {
-    background-color: rgb(28, 115, 165);
+    background-color: var(--active-color);
   }
 }
 

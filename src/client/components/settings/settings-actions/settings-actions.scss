@@ -1,4 +1,4 @@
-.save-button {
+.c-settings-actions {
   margin: 20px;
   font-size: 1.1em;
   line-height: 300%;
@@ -8,8 +8,9 @@
   border-radius: 8px;
   border-width: 2px;
   outline: 0;
+  padding: 5px;
 
   &.on {
-    background-color: rgb(28, 115, 165);
+    background-color: var(--active-color);
   }
 }
