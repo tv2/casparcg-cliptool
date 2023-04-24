@@ -2,16 +2,19 @@
   display: flex;
   justify-content: center;
   align-items: center;
-}
 
-.operation-mode-edit-visibility-footer__text {
-  color: #4175e6;
-  font-size: 35px;
-  text-align: center;
-}
+  &__text {
+    color: #4175e6;
+    font-size: 35px;
+    text-align: center;
+  }
 
-.operation-mode-edit-visibility-footer__controls button {
-  margin-left: 10px;
-  background-color: #808080;
-  top: 25%;
+  &__button {
+    margin-left: 10px;
+    background-color: #808080;
+    color: white;
+    padding: 5px;
+    border-radius: 10px;
+    border-width: 0;
+  }
 }

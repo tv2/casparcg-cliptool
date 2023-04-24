@@ -4,19 +4,18 @@ import './operation-mode-edit-visibility-footer.scss'
 import socketService from "../../../services/socket-service"
 import appNavigationService from "../../../../model/services/app-navigation-service"
 import { state } from "../../../../model/reducers/store"
+import Button from "../../shared/button"
 
-const BUTTON_TEXT = 'Exit Edit Visibility'
-const DESCRIPTION_TEXT = 'You are currently editing the visibility of files.'.toUpperCase()
 
 export function OperationModeEditVisibilityFooter(): JSX.Element {
   return (        
       <Footer>
         <div className="operation-mode-edit-visibility-footer">
           <div className="operation-mode-edit-visibility-footer__text">
-            { DESCRIPTION_TEXT }
+            { 'You are currently editing the visibility of files.'.toUpperCase() }
           </div>
           <div className="operation-mode-edit-visibility-footer__controls">
-            <button onClick={ resetOperationMode }>{ BUTTON_TEXT }</button>
+            <Button onClick={ resetOperationMode } classNames="operation-mode-edit-visibility-footer__button" >Exit Edit Visibility</Button>
           </div>
         </div>
       </Footer>

@@ -9,13 +9,12 @@ import browserService from '../../services/browser-service'
 import { state } from '../../../model/reducers/store'
 
 export function OperationModeFooter(): JSX.Element {
-  const activeTab: number = appNavigationService.getActiveTab(state.appNavigation)
-  const operationMode: OperationMode = useSelector((state: State) =>
-    settingsService.getOutputSettings(state.settings, activeTab)?.operationMode)
-  
   if (browserService.isTextView()) {
     return (<></>)
   }
+  const activeTab: number = appNavigationService.getActiveTab(state.appNavigation)
+  const operationMode: OperationMode | undefined = useSelector((state: State) =>
+    settingsService.getOutputSettings(state.settings, activeTab)?.operationMode) 
   switch (operationMode) {
     case OperationMode.EDIT_VISIBILITY: {
       return <OperationModeEditVisibilityFooter />
