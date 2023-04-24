@@ -1,13 +1,13 @@
 import React from "react";
 import './control-group.scss'
 
-interface ControlGroupProps {
+interface ActionGroupProps {
   children: React.ReactNode
 }
 
-export default function ControlGroup(props: ControlGroupProps): JSX.Element {
+export default function ActionGroup(props: ActionGroupProps): JSX.Element {
   return (
-  <div className="control-background">
+  <div className="c-action-background">
     {props.children}
   </div>
   )

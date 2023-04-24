@@ -8,7 +8,7 @@ import browserService from "../../../services/browser-service";
 import './control-actions.scss'
 import socketService from "../../../services/socket-service";
 import { OutputSettings } from "../../../../model/reducers/settings-models";
-import ControlGroup from "../control-group/control-group";
+import ActionGroup from "../control-group/control-group";
 
 export default function ControlActions(): JSX.Element {
   const activeTab: number = useSelector(
@@ -21,28 +21,28 @@ export default function ControlActions(): JSX.Element {
     <>
       {!browserService.isTextView() && (
         <>
-          <ControlGroup>
+          <ActionGroup>
             <Button
               className={`${buttonBaseCss} ${outputSettings.loopState ? 'on' : ''}`}
               onClick={() => toggleLoopState(activeTab, outputSettings)}
             >LOOP</Button>
-          </ControlGroup>
-          <ControlGroup>
+          </ActionGroup>
+          <ActionGroup>
             <Button
               className={`${buttonBaseCss} ${outputSettings.mixState ? 'on' : ''}`}
               onClick={() => toggleMixState(activeTab, outputSettings)}
             >MIX</Button>
-          </ControlGroup>
-          <ControlGroup>
+          </ActionGroup>
+          <ActionGroup>
             <Button
               className={`${buttonBaseCss} ${outputSettings.webState ? 'on' : ''}`}
               onClick={() => toggleWebState(activeTab, outputSettings)}
              >OVERLAY</Button>
-          </ControlGroup>                        
+          </ActionGroup>                        
         </>
     )}
 
-      <ControlGroup>
+      <ActionGroup>
         <Button
           className={`${buttonBaseCss} ${outputSettings.manualStartState ? 'on' : ''}`}
           onClick={() => toggleManualStartState(activeTab, outputSettings)}
@@ -51,7 +51,7 @@ export default function ControlActions(): JSX.Element {
           className="control-start-button"
           onClick={() => playCuedFile(activeTab, outputSettings) }
         >START</Button>}        
-      </ControlGroup> 
+      </ActionGroup> 
     </>
   )
 }

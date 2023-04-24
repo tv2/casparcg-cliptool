@@ -1,20 +1,20 @@
 import { FileType } from '../reducers/media-models'
 
 class TimeService {
-    public secondsToTimeCode(
-        timer: [number, number] = [0, 0],
+    public durationToTimeCode(
+        durations: [number, number] = [0, 0],
         frameRate: number = 25,
         fileType: string,
         callerIsClient: boolean = true
     ): string {
         if (
-            (callerIsClient && timer[1] <= 0) ||
+            (callerIsClient && durations[1] <= 0) ||
             (callerIsClient && fileType === FileType.IMAGE)
         ) {
             return 'SELECTED'
         }
 
-        const time = Math.max(0, timer[1] - timer[0])
+        const time = Math.max(0, durations[1] - durations[0])
         if (time === 0) {
             return callerIsClient ? '****END****' : '00:00:00.00'
         }

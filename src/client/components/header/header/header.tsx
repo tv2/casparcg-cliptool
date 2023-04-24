@@ -7,19 +7,19 @@ import browserService from '../../../services/browser-service'
 import Button from '../../shared/button'
 import './header.scss'
 import changingSettingsService from '../../../services/changing-settings-service'
-import ControlGroup from '../control-group/control-group'
+import ActionGroup from '../control-group/control-group'
 
 export default function Header(): JSX.Element {  
     return (
         <header className="app-header">
             <div className="app-header__controls">
                 {!browserService.isTextView() && (
-                    <ControlGroup>
+                    <ActionGroup>
                         <Button
                             className="app-settings-button"
                             onClick={() => emitToggleSettingsVisibility()}
                         >SETTINGS</Button>
-                    </ControlGroup>
+                    </ActionGroup>
                 )}
 
                 <Timer />

@@ -6,11 +6,11 @@ import mediaService from "../../../../model/services/media-service";
 import appNavigationService from "../../../../model/services/app-navigation-service";
 import settingsService from "../../../../model/services/settings-service";
 import timeService from "../../../../model/services/time-service";
-import { Output } from "../../../../model/reducers/media-models";
+import { FileType, Output } from "../../../../model/reducers/media-models";
 import { OutputSettings } from "../../../../model/reducers/settings-models";
 import { State } from "../../../../model/reducers/index-reducer";
 import './timer.scss'
-import ControlGroup from "../control-group/control-group";
+import ActionGroup from "../control-group/control-group";
 
 export default function Timer(): JSX.Element {
     const activeTab: number = useSelector(
@@ -31,21 +31,21 @@ export default function Timer(): JSX.Element {
         cleanFileName = settingsService.getCleanCuedFileName(settingsOutput, state.settings)
     }
     const thumbnailUrl: string = mediaService.getBase64ThumbnailUrl(cleanFileName, activeTab, state.media)
-    const playingFileType: string | undefined = mediaOutput?.mediaFiles.find(file => file.name === cleanFileName)?.type
+    const playingFileType: string = mediaOutput?.mediaFiles.find(file => file.name === cleanFileName)?.type ?? FileType.UNKNOWN
     
     return (
-        <ControlGroup>
-            <label className="app-header-pgm-counter">
-                {timeService.secondsToTimeCode(
-                    mediaOutput?.time,
+        <ActionGroup>
+            <label className="c-timer-timer">
+                {timeService.durationToTimeCode(
+                    mediaOutput ? mediaOutput.time : [0, 0],
                     state.settings.ccgConfig.channels[activeTab]?.videoFormat?.frameRate,
-                    playingFileType ?? 'UNKNOWN'
+                    playingFileType
                 )}
             </label>
             <img
                 src={thumbnailUrl}
-                className="app-header-pgm-thumbnail-image"
+                className="c-timer-thumbnail"
             />
-        </ControlGroup>
+        </ActionGroup>
     )
 }

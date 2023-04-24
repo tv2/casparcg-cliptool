@@ -1,6 +1,7 @@
 export enum FileType {
     VIDEO = 'video',
     IMAGE = 'image',
+    UNKNOWN = 'unknown,',
 }
 
 export interface HiddenFileInfo {
