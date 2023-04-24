@@ -8,7 +8,7 @@ import browserService from "../../../services/browser-service";
 import './control-actions.scss'
 import socketService from "../../../services/socket-service";
 import { OutputSettings } from "../../../../model/reducers/settings-models";
-import ActionGroup from "../control-group/control-group";
+import ActionGroup from "../control-group/action-group";
 
 export default function ControlActions(): JSX.Element {
   const activeTab: number = useSelector(
@@ -16,7 +16,7 @@ export default function ControlActions(): JSX.Element {
   const outputSettings = useSelector(
     (state: State) => settingsService.getOutputSettings(state.settings, activeTab))
 
-  const buttonBaseCss = "control-button"
+  const buttonBaseCss = "control-action-base control-action"
   return (
     <>
       {!browserService.isTextView() && (
@@ -48,7 +48,7 @@ export default function ControlActions(): JSX.Element {
           onClick={() => toggleManualStartState(activeTab, outputSettings)}
         >MANUAL</Button>
         {outputSettings.manualStartState && <Button
-          className="control-start-button"
+          className="control-action-base control-action-start-button"
           onClick={() => playCuedFile(activeTab, outputSettings) }
         >START</Button>}        
       </ActionGroup> 

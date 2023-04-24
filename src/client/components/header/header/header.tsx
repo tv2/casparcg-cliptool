@@ -7,7 +7,7 @@ import browserService from '../../../services/browser-service'
 import Button from '../../shared/button'
 import './header.scss'
 import changingSettingsService from '../../../services/changing-settings-service'
-import ActionGroup from '../control-group/control-group'
+import ActionGroup from '../control-group/action-group'
 
 export default function Header(): JSX.Element {  
     return (

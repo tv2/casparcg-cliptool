@@ -7,7 +7,7 @@ interface ActionGroupProps {
 
 export default function ActionGroup(props: ActionGroupProps): JSX.Element {
   return (
-  <div className="c-action-background">
+  <div className="c-action-group">
     {props.children}
   </div>
   )
