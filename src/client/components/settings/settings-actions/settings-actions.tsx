@@ -12,6 +12,7 @@ import './settings-actions.scss'
 import './../shared-settings.scss'
 import changingSettingsService from "../../../services/changing-settings-service";
 import socketService from "../../../services/socket-service";
+import Switch from "../../shared/switch/switch";
 
 export default function SettingsActions(): JSX.Element {
   const activeTab: number = useSelector(
@@ -23,18 +24,18 @@ export default function SettingsActions(): JSX.Element {
 
   return (
       <div className="settings-channel-form">
-        <Button className={buttonCss} 
+        <Button classNames={buttonCss} 
           onClick={() => saveSettings()} 
         >SAVE SETTINGS</Button>
-        <Button className={buttonCss}
+        <Button classNames={buttonCss}
           onClick={() => discardSettings()} 
         > {changingSettingsService.hasChanges() ? 'DISCARD CHANGES' : 'CLOSE SETTINGS'} </Button>
-        <Button className={`${buttonCss} ${operationMode === OperationMode.EDIT_VISIBILITY ? 'on' : ''}`} 
-          onClick={() => emitSetOperationModeToEditVisibility()} 
-        >EDIT VISIBILITY</Button>
+        <Switch classNames={buttonCss} checked={operationMode === OperationMode.EDIT_VISIBILITY} 
+          onChange={() => emitSetOperationModeToEditVisibility()} 
+        >EDIT VISIBILITY</Switch>
         
         {!browserService.isChannelView() && (
-          <Button className={buttonCss} 
+          <Button classNames={buttonCss} 
             onClick={() => restartCliptool()} 
            >RESTART CLIPTOOL</Button>
         )}

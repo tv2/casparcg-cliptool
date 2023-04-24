@@ -41,7 +41,7 @@ export default function ThumbnailButton(props: ThumbnailButtonProps): JSX.Elemen
   return (
     <div className={`c-thumbnail-button ${props.wrapperClassNames ?? ''} ${chosenClass}`}>
       <Button
-          className={`c-thumbnail-button__button ${props.buttonClassNames ?? ''}`}
+          classNames={`c-thumbnail-button__button ${props.buttonClassNames ?? ''}`}
           onClick={() => {
             triggerOperationModeAction(props.fileName, props.activeTab, props.fileType)
           }}

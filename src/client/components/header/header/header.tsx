@@ -16,7 +16,7 @@ export default function Header(): JSX.Element {
                 {!browserService.isTextView() && (
                     <ActionGroup>
                         <Button
-                            className="app-settings-button"
+                            classNames="app-settings-button"
                             onClick={() => emitToggleSettingsVisibility()}
                         >SETTINGS</Button>
                     </ActionGroup>

@@ -1,5 +1,5 @@
 import React from "react";
-import './control-group.scss'
+import './action-group.scss'
 
 interface ActionGroupProps {
   children: React.ReactNode

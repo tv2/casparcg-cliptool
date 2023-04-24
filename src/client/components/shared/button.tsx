@@ -2,7 +2,7 @@ import React from "react";
 
 interface ButtonProps {
   onClick: () => void
-  className?: string
+  classNames?: string
   children?: React.ReactNode
 
 }
@@ -10,7 +10,7 @@ interface ButtonProps {
 export default function Button(props: ButtonProps): JSX.Element {
 
   return (
-    <div onClick={props.onClick} className={props.className}>
+    <div onClick={props.onClick} className={props.classNames}>
       {props.children ?? ''}
     </div>
   )
