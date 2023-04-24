@@ -8,7 +8,7 @@ import Main from "./main"
 export default function ComponentDecider() {    
     const isConnected: boolean = useSelector(
         (state: State) => state.appNavigation.isConnected)
-    const isSettingsOpen = useSelector((state: State) => state.appNavigation.isSettingsOpen)
+    const isSettingsOpen: boolean = useSelector((state: State) => state.appNavigation.isSettingsOpen)
 
     if (!isConnected) {
       return (<OfflineOverlay />)

@@ -11,7 +11,7 @@ import ComponentDecider from '../component-decider'
 export function App(): JSX.Element {
 
     if (browserService.isChannelView()) {
-        setOutput(browserService.getChannel() - 1)
+        setOutput(browserService.getChannel())
     }   
 
     return (

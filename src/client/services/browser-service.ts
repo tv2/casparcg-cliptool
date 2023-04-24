@@ -43,7 +43,7 @@ class BrowserService {
         return this.view.selected === SelectedView.CHANNEL
     }
     public getChannel(): number {
-        return this.view.channel
+        return this.view.channel - 1
     }
 }
 

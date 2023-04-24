@@ -16,8 +16,8 @@ export default function Outputs(props: OutputsProps): JSX.Element {
     return (
         <div>
             {browserService.isChannelView()
-                ? <Output index={browserService.getChannel() - 1}
-                    configChannel={state.settings.ccgConfig.channels[browserService.getChannel() - 1]}
+                ? <Output index={browserService.getChannel()}
+                    configChannel={state.settings.ccgConfig.channels[browserService.getChannel()]}
                     outputSettings={props.outputSettings[browserService.getChannel()]}                     
                     folders={folders}/>
                 : ccgConfig.channels.map(
