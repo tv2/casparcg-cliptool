@@ -8,7 +8,7 @@ import browserService from "../../../services/browser-service";
 import './control-actions.scss'
 import socketService from "../../../services/socket-service";
 import { OutputSettings } from "../../../../model/reducers/settings-models";
-import ActionGroup from "../control-group/action-group";
+import ActionGroup from "../action-group/action-group";
 
 export default function ControlActions(): JSX.Element {
   const activeTab: number = useSelector(

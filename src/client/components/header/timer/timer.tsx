@@ -10,7 +10,7 @@ import { FileType, Output } from "../../../../model/reducers/media-models";
 import { OutputSettings } from "../../../../model/reducers/settings-models";
 import { State } from "../../../../model/reducers/index-reducer";
 import './timer.scss'
-import ActionGroup from "../control-group/action-group";
+import ActionGroup from "../action-group/action-group";
 
 export default function Timer(): JSX.Element {
     const activeTab: number = useSelector(
