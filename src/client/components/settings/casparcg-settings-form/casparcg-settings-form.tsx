@@ -24,7 +24,7 @@ export default function CasparcgSettingsForm(props: CasparcgSettingsFormProps): 
             <div className="settings-channel-form">
                 <LabelledTextInput
                     labelClassName={fieldCss}
-                    description="OVERLAY URL :"
+                    description="IP ADDRESS :"
                     value={ip}
                     onChange={saveTempIpChange}
                 />
