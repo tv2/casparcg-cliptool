@@ -1,5 +1,9 @@
 import { z } from 'zod'
-import { OperationMode, OutputSettings } from '../reducers/settings-models'
+import {
+    CasparcgSettings,
+    OperationMode,
+    OutputSettings,
+} from '../reducers/settings-models'
 import arrayService from '../services/array-service'
 
 export const defaultOutputSettingsState: OutputSettings = {
@@ -16,6 +20,14 @@ export const defaultOutputSettingsState: OutputSettings = {
     operationMode: OperationMode.CONTROL,
     selectedFileName: '',
     cuedFileName: '',
+}
+
+export const defaultCcgSettingsState: CasparcgSettings = {
+    transitionTime: 16,
+    ip: '0.0.0.0',
+    amcpPort: 5250,
+    defaultLayer: 10,
+    oscPort: 5253,
 }
 
 const operationModeSchema = z.nativeEnum(OperationMode)
@@ -46,7 +58,7 @@ const ccgSettingsSchema = z.object({
 
 // Schema for Cliptool version 2.15 and above.
 export const NewGenericSettings = z.object({
-    ccgSettings: ccgSettingsSchema,
+    ccgSettings: ccgSettingsSchema.default(defaultCcgSettingsState),
     outputSettings: z
         .array(outputSettingsSchema)
         .default(arrayService.fillWithDefault([], defaultOutputSettingsState))

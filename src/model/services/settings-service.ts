@@ -6,6 +6,7 @@ import {
     TabInfo,
 } from '../reducers/settings-models'
 import {
+    defaultCcgSettingsState,
     defaultOutputSettingsState,
     NewGenericSettings,
 } from '../schemas/new-settings-schema'
@@ -15,13 +16,7 @@ class SettingsService {
 
     constructor() {
         this.fallBackDefaultSettings = {
-            ccgSettings: {
-                transitionTime: 16,
-                ip: '0.0.0.0',
-                amcpPort: 5250,
-                defaultLayer: 5253,
-                oscPort: 10,
-            },
+            ccgSettings: defaultCcgSettingsState,
             outputSettings: Array(8).fill(defaultOutputSettingsState),
         }
     }
