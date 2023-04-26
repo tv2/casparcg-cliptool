@@ -39,9 +39,9 @@ export default function ThumbnailButton(props: ThumbnailButtonProps): JSX.Elemen
   const chosenClass = isCued ? 'cued-thumbnail' : isSelectedClass
 
   return (
-    <div className={`c-thumbnail-button ${props.wrapperClassNames ?? ''} ${chosenClass}`}>
+    <div className={`c-thumbnail-button ${props.wrapperClassNames ?? ''} ${chosenClass}`.trimEnd()}>
       <Button
-          classNames={`c-thumbnail-button__button ${props.buttonClassNames ?? ''}`}
+          classNames={`c-thumbnail-button__button ${props.buttonClassNames ?? ''}`.trimEnd()}
           onClick={() => {
             triggerOperationModeAction(props.fileName, props.activeTab, props.fileType)
           }}

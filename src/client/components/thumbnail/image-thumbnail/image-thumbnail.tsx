@@ -19,7 +19,7 @@ export default function ImageThumbnail(props: ImageThumbnailProps): JSX.Element 
   ) ?? {}
 
   return (
-    <div className={`image-thumbnail ${props.file.name in hiddenFiles ? 'hidden' : ''}`}>
+    <div className={`image-thumbnail ${props.file.name in hiddenFiles ? 'hidden' : ''}`.trimEnd()}>
         <ThumbnailButton fileName={props.file.name} fileType={props.file.type} activeTab={props.activeTab}> 
           <ThumbnailPicture fileName={props.file.name} />
           <ThumbnailOverlayDisplay activeTab={props.activeTab} file={props.file} />     

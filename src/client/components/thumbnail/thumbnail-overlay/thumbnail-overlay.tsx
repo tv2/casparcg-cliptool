@@ -8,7 +8,7 @@ interface ThumbnailOverlayProps {
 
 export default function ThumbnailOverlay(props: ThumbnailOverlayProps): JSX.Element {
   return (
-    <a className={`thumbnail-overlay ${props.classNames ?? ''}`}>
+    <a className={`thumbnail-overlay ${props.classNames ?? ''}`.trimEnd()}>
       {props.children}
     </a>
   )

@@ -12,7 +12,7 @@ interface SwitchProps {
 export default function Switch(props: SwitchProps): JSX.Element {
  return (
   <Button 
-    classNames={`${props.classNames ?? 'c-switch'} ${props.checked ? 'on' : ''}`} 
+    classNames={`${props.classNames ?? 'c-switch'} ${props.checked ? 'on' : ''}`.trimEnd()} 
     onClick={() => props.onChange(props.checked)}>
     {props.children}
   </Button>

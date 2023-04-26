@@ -42,7 +42,7 @@ export default function ControlActions(): JSX.Element {
         </>
     )}
 
-      <ActionGroup>
+      <ActionGroup classNames="control-action-last">
         <Switch
           checked={outputSettings.manualStartState}
           onChange={(isChecked) => toggleManualStartState(activeTab, !isChecked)}

@@ -19,7 +19,7 @@ export default function SelectedThumbnailOverlay(props: SelectedThumbnailOverlay
       }
   )
   return (
-    <ThumbnailOverlay classNames={`selected ${props.classNames ?? ''}`}>        
+    <ThumbnailOverlay classNames={`selected ${props.classNames ?? ''}`.trimEnd()}>        
       {timeService.durationToTimeCode(props.time, frameRate, props.fileType)}            
     </ThumbnailOverlay>
   )

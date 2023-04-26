@@ -7,7 +7,7 @@ interface CuedThumbnailOverlayProps {
 
 export default function CuedThumbnailOverlay(props: CuedThumbnailOverlayProps): JSX.Element {
   return (
-    <ThumbnailOverlay classNames={`cued ${props.classNames ?? ''}`}>
+    <ThumbnailOverlay classNames={`cued ${props.classNames ?? ''}`.trimEnd()}>
       CUED     
     </ThumbnailOverlay>
   )
