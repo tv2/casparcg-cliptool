@@ -135,7 +135,11 @@ function processTimeOscSegment(message: any, channelIndex: number): void {
 }
 
 function setNewTime(channelIndex: number, newTime: [number, number]): void {
-    const oldTime = mediaService.getOutput(state.media, channelIndex).time
+    const output = mediaService.getOutput(state.media, channelIndex)
+    if (!output) {
+        return
+    }
+    const oldTime = output.time
     if (newTime[0] !== oldTime[0] || newTime[1] !== oldTime[1]) {
         reduxStore.dispatch(setTime(channelIndex, newTime))
     }
