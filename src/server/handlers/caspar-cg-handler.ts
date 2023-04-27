@@ -285,7 +285,18 @@ async function loadCcgThumbnails(): Promise<{
     thumbnails: ThumbnailFile[]
     hasChanges: boolean
 }> {
-    const thumbnailFiles: any = await ccgConnection.thumbnailList()
+    const thumbnailFiles: any = await ccgConnection
+        .thumbnailList()
+        .catch((reason) => {
+            logger
+                .data(reason)
+                .warn(
+                    'Caught failed attempt to retrieve thumbnails from CasparCG, with the reason:'
+                )
+        })
+    if (!thumbnailFiles) {
+        return { thumbnails: previousThumbnails, hasChanges: false }
+    }
     let newThumbnails: ThumbnailFile[] = thumbnails
     let hasChanges = false
     if (
@@ -328,7 +339,11 @@ async function loadFileList(): Promise<void> {
             checkHiddenFilesChanged(payload.response.data)
         })
         .catch((error) => {
-            logger.data(error).error('Error receiving file list :')
+            logger
+                .data(error)
+                .warn(
+                    'Caught failed attempt to retrieve file list from CasparCG, with the reason:'
+                )
         })
 }
 
