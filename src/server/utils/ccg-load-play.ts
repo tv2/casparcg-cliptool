@@ -1,4 +1,3 @@
-const MIX_DURATION = 16
 import { state } from '../../model/reducers/store'
 import { ccgConnection } from '../handlers/caspar-cg-handler'
 import { Enum as CcgEnum } from 'casparcg-connection'
@@ -33,7 +32,8 @@ export function mixMedia(
         settingsService.getOutputSettings(state.settings, channelIndex)
             .loopState || false,
         CcgEnum.Transition.MIX,
-        MIX_DURATION
+        settingsService.getGenericSettings(state.settings).ccgSettings
+            .transitionTime
     )
 }
 
