@@ -78,7 +78,9 @@ function ampClientConnection(socketClient: Socket) {
                         ccgCh =
                             parseInt(ampMessage.ampCmdData.split('Vtr')[1]) || 1
                         chStatus[ccgCh - 1].workingFolder =
-                            reduxState.media[0].folderList[0] || ''
+                            reduxState.settings[0].generics.outputFolders[
+                                ccgCh - 1
+                            ]
                         deliveredClipList = filterMediaFilesToAMP(
                             reduxState.media[0].output[ccgCh - 1]?.mediaFiles ||
                                 [],
@@ -114,7 +116,7 @@ function ampClientConnection(socketClient: Socket) {
         let statusCommandsType61 = false
         switch (message.ampCmdData.slice(0, 6)) {
             case AmpReceiveCommandTypes.STATUS_SENSE_61200F:
-                console.log(ccgCh, ': Status Sense :', message.ampCmdData)
+                // console.log(ccgCh, ': Status Sense :', message.ampCmdData)
                 writeCache.push(statusSenseResponse(chStatus[ccgCh - 1]))
                 statusCommandsType61 = true
                 break
@@ -154,7 +156,7 @@ function ampClientConnection(socketClient: Socket) {
                 setTimeout(() => {
                     chStatus[ccgCh - 1].playing = false
                 }, 500)
-                socket.emit('play', ccgCh - 1)
+                socket.emit(IO.PGM_PLAY, ccgCh - 1)
                 writeCache.push('1001')
                 break
             case AmpReceiveCommandTypes.GET_DEVICE_TYPE_0011:
@@ -221,17 +223,13 @@ function ampClientConnection(socketClient: Socket) {
                     reduxState.media[0].output[ccgCh - 1]?.mediaFiles || [],
                     chStatus[ccgCh - 1].workingFolder
                 )
-                console.log(
-                    ccgCh,
-                    ' : Num of Clips :' + deliveredClipList.length + 1
-                )
+                // The +1 is for some reason expected by the GV mixer??
+                const formattedNumberOfClips = (deliveredClipList.length + 1)
+                    .toString(16)
+                    .padStart(4, '0')
+                console.log(ccgCh, ' : Num of Clips :' + formattedNumberOfClips)
 
-                writeCache.push(
-                    '82260002' +
-                        (deliveredClipList.length + 1)
-                            .toString(16)
-                            .padStart(4, '0')
-                )
+                writeCache.push('82260002' + formattedNumberOfClips)
                 break
             case AmpReceiveCommandTypes.GET_CLIP_LIST_A115:
                 console.log(ccgCh, ': GetClipList :', message.ampCmdData)
@@ -250,18 +248,13 @@ function ampClientConnection(socketClient: Socket) {
                 }
                 break
             case AmpReceiveCommandTypes.GET_FIRST_CLIP_ID_A214:
-                console.log(
-                    ccgCh,
-                    ': Get first clip ID :',
+                const firstClip =
                     reduxState.media[0].output[ccgCh - 1]?.mediaFiles[0]
-                )
+                        ?.name || 'no_clip'
 
+                console.log(ccgCh, ': Get first clip ID :', firstClip)
                 writeCache.push(
-                    convertTextIntoResponseCommand(
-                        '8a14',
-                        reduxState.media[0].output[ccgCh - 1]?.mediaFiles[0]
-                            .name || ' '
-                    )
+                    convertTextIntoResponseCommand('8a14', firstClip)
                 )
                 break
             case AmpReceiveCommandTypes.CUE_FILE_AA18:
@@ -276,12 +269,21 @@ function ampClientConnection(socketClient: Socket) {
                     setTimeout(() => {
                         chStatus[ccgCh - 1].cueing = false
                     }, 500)
-                    socket.emit(
-                        IO.PGM_LOAD,
-                        ccgCh - 1,
+                    const newFullClipName = (
                         chStatus[ccgCh - 1].workingFolder +
-                            '/' +
-                            receivedClipName
+                        '/' +
+                        receivedClipName
+                    ).toUpperCase()
+                    reduxState.media[0].output[ccgCh - 1]?.mediaFiles.forEach(
+                        (mediaFile: IMediaFile) => {
+                            if (mediaFile.name === newFullClipName) {
+                                socket.emit(
+                                    IO.PGM_LOAD,
+                                    ccgCh - 1,
+                                    newFullClipName
+                                )
+                            }
+                        }
                     )
                 }
                 if (chStatus[ccgCh - 1].cueing) {
@@ -317,7 +319,7 @@ function ampClientConnection(socketClient: Socket) {
                 writeCache.push('1001')
                 break
             case AmpReceiveCommandTypes.ID_CHANGED_LIST_A012:
-                console.log(ccgCh, ': A012, response :  82130000')
+                // console.log(ccgCh, ': A012, response :  82130000')
                 writeCache.push('82130000')
                 break
             case AmpReceiveCommandTypes.ID_LOADED_A016:
