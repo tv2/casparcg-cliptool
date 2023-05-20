@@ -52,9 +52,9 @@ export function convertArrayIntoReponseCommand(
     }
 
     command += commandType
-    // Add 4 for the length of the length and the length of the command
-    command += (length * 2 + 4).toString(16).padStart(4, '0')
-    command += (length * 2).toString(16).padStart(4, '0')
+    // Add 2 for the length of the length and the length of the command
+    command += (length + 2).toString(16).padStart(4, '0')
+    command += length.toString(16).padStart(4, '0')
     for (let i = 0; i < numberOfAddedItems && i < arr.length; i++) {
         command += arr[i].length.toString(16).padStart(4, '0')
         command += asciiToHex(arr[i])

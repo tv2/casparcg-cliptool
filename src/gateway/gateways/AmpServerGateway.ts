@@ -80,7 +80,7 @@ function ampClientConnection(socketClient: Socket) {
                         chStatus[ccgCh - 1].workingFolder =
                             reduxState.settings[0].generics.outputFolders[
                                 ccgCh - 1
-                            ]
+                            ] || 'default'
                         deliveredClipList = filterMediaFilesToAMP(
                             reduxState.media[0].output[ccgCh - 1]?.mediaFiles ||
                                 [],
