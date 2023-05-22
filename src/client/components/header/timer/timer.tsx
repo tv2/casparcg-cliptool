@@ -32,15 +32,17 @@ export default function Timer(): JSX.Element {
     }
     const thumbnailUrl: string = mediaService.getBase64ThumbnailUrl(cleanFileName, activeTab, state.media)
     const playingFileType: string = mediaOutput?.mediaFiles.find(file => file.name === cleanFileName)?.type ?? FileType.UNKNOWN
+
+    const durationTimeCode = timeService.durationToTimeCode(
+        mediaOutput ? mediaOutput.time : [0, 0],
+        state.settings.ccgConfig.channels[activeTab]?.videoFormat?.frameRate,
+        playingFileType
+    )
     
     return (
         <ActionGroup>
             <label className="c-timer-timer">
-                {timeService.durationToTimeCode(
-                    mediaOutput ? mediaOutput.time : [0, 0],
-                    state.settings.ccgConfig.channels[activeTab]?.videoFormat?.frameRate,
-                    playingFileType
-                )}
+                {durationTimeCode}
             </label>
             <img
                 src={thumbnailUrl}

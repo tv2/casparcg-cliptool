@@ -1,15 +1,15 @@
 import React from 'react'
 import Button from '../button'
-import './switch.scss'
+import './toggle.scss'
 
-interface SwitchProps {
+interface ToggleProps {
   onChange: (isChecked: Boolean) => void
   checked: boolean
   classNames?: string
   children?: React.ReactNode
 }
 
-export default function Switch(props: SwitchProps): JSX.Element {
+export default function Toggle(props: ToggleProps): JSX.Element {
  return (
   <Button 
     classNames={`${props.classNames ?? 'c-switch'} ${props.checked ? 'on' : ''}`.trimEnd()} 

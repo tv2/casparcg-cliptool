@@ -5,7 +5,7 @@ import { OperationModeFooter } from '../footer/operation-mode-footer'
 import Header from '../header/header/header'
 import browserService from '../../services/browser-service'
 import './app.scss'
-import ComponentDecider from '../component-decider'
+import Body from '../body/body'
 
 
 export function App(): JSX.Element {
@@ -16,7 +16,7 @@ export function App(): JSX.Element {
         <div className="app">
             <Header />
             <div className="app-body">
-                <ComponentDecider/>
+                <Body/>
             </div>
             <OperationModeFooter />
         </div>

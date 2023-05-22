@@ -17,10 +17,12 @@ export default function SelectedThumbnailOverlay(props: SelectedThumbnailOverlay
         const videoFormat = state.settings.ccgConfig.channels[appNavigationService.getActiveTab(state.appNavigation)]?.videoFormat
         return videoFormat ? videoFormat.frameRate : 25
       }
-  )
+    )
+
+  const durationTimeCode = timeService.durationToTimeCode(props.time, frameRate, props.fileType)
   return (
     <ThumbnailOverlay classNames={`selected ${props.classNames ?? ''}`.trimEnd()}>        
-      {timeService.durationToTimeCode(props.time, frameRate, props.fileType)}            
+      {durationTimeCode}            
     </ThumbnailOverlay>
   )
   

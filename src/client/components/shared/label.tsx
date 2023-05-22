@@ -8,7 +8,7 @@ interface LabelProps {
 
 export default function Label(props: LabelProps): JSX.Element {
   return (
-    <label className={props.className} >
+    <label className={props.className ?? ''} >
       {props.description}
       <br/>
       {props.children}

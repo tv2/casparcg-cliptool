@@ -8,9 +8,8 @@ interface ButtonProps {
 }
 
 export default function Button(props: ButtonProps): JSX.Element {
-
   return (
-    <div onClick={props.onClick} className={props.classNames}>
+    <div onClick={props.onClick} className={props.classNames ?? ''}>
       {props.children ?? ''}
     </div>
   )

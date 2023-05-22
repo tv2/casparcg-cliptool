@@ -17,7 +17,7 @@ export default function LabelledNumberInput(props: LabelledNumberInputProps): JS
     props.inputClassName ?? ''
   ].join('')
   return (
-    <Label className={props.labelClassName} 
+    <Label className={props.labelClassName ?? ''} 
       description={props.description}>
       <input type="number" 
         value={props.value} 

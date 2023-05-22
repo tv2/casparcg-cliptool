@@ -53,7 +53,7 @@ export default function CasparcgSettingsForm(props: CasparcgSettingsFormProps): 
                     onChange={saveTempTransitionTimeChange}
                 />
             </div>
-            <hr />
+            <hr/>
         </form>
     )
     

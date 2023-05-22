@@ -7,30 +7,23 @@ interface SwipeableProps {
   role?: React.AriaRole
   onSwipe: (direction: SwipeDirection) => void
   children: React.ReactNode
-  disallowSwipe?: boolean
 }
 
 export default function Swipeable(props: SwipeableProps): JSX.Element {
-  const [touchStart, setTouchStart] = useState<Point | null>(null)
-  const [touchEnd, setTouchEnd] = useState<Point | null>(null)
+  const [touchStart, setTouchStart] = useState<Point>()
+  const [touchEnd, setTouchEnd] = useState<Point>()
 
   function onTouchStart(event: React.TouchEvent<HTMLDivElement>): void {
-    if (props.disallowSwipe) {
-      return
-    }
-    setTouchEnd(null)
+    setTouchEnd(undefined)
     setTouchStart(swipeService.getEventPoint(event))
   }
 
   function onTouchMove(event: React.TouchEvent<HTMLDivElement>): void {
-    if (props.disallowSwipe) {
-      return
-    }
     setTouchEnd(swipeService.getEventPoint(event))
   }
 
   function onTouchEnd(): void {
-    if (!touchStart || !touchEnd || props.disallowSwipe){
+    if (!touchStart || !touchEnd){
       return
     }
     if (!swipeService.isValidSwipe(touchStart, touchEnd)) {
@@ -41,7 +34,7 @@ export default function Swipeable(props: SwipeableProps): JSX.Element {
   }
 
   return (
-    <div className={props.className} 
+    <div className={props.className ?? ''} 
       role={props.role}
       onTouchStart={onTouchStart}
       onTouchMove={onTouchMove}

@@ -16,7 +16,7 @@ export default function LabelledCheckboxInput(props: LabelledCheckboxInputProps)
     props.inputClassName ?? ''
   ].join('')
   return (
-    <Label className={props.labelClassName} 
+    <Label className={props.labelClassName ?? ''} 
       description={props.description}>
       <input type="checkbox" 
         checked={props.value} 

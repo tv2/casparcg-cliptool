@@ -29,7 +29,7 @@ export default function Output(props: OutputProps): JSX.Element {
     const [scaleY, setScaleY] = useState(props.outputSettings.scaleY)
 
     const fieldCss: string = 'settings-input-field'
-    const tickCss: string = 'settings-tick-field'
+    const checkboxCss: string = 'settings-checkbox-field'
     return (    
         props.outputSettings &&         
             <form className="settings-channel-form">
@@ -67,25 +67,25 @@ export default function Output(props: OutputProps): JSX.Element {
                 </Label>
                 <LabelledCheckboxInput
                     description="LOOP :"
-                    labelClassName={tickCss}
+                    labelClassName={checkboxCss}
                     value={loopState}
                     onChange={saveTempLoopChange}
                 />
                 <LabelledCheckboxInput
                     description="MIX :"
-                    labelClassName={tickCss}
+                    labelClassName={checkboxCss}
                     value={mixState}
                     onChange={saveTempMixChange}
                 />
                 <LabelledCheckboxInput
                     description="MANUAL :"
-                    labelClassName={tickCss}
+                    labelClassName={checkboxCss}
                     value={manualStartState}
                     onChange={saveTempManualChange}
                 />
                 <LabelledCheckboxInput
                     description="OVERLAY :"
-                    labelClassName={tickCss}
+                    labelClassName={checkboxCss}
                     value={webState}
                     onChange={saveTempWebStateChange}
                 />
@@ -97,7 +97,7 @@ export default function Output(props: OutputProps): JSX.Element {
                 />
                 <LabelledCheckboxInput
                     description="SCALE :"
-                    labelClassName={tickCss}
+                    labelClassName={checkboxCss}
                     value={shouldScale}
                     onChange={saveTempShouldScaleChange}
                 />

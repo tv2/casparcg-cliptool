@@ -9,7 +9,7 @@ import './control-actions.scss'
 import socketService from "../../../services/socket-service";
 import { OutputSettings } from "../../../../model/reducers/settings-models";
 import ActionGroup from "../action-group/action-group";
-import Switch from "../../shared/switch/switch";
+import Toggle from "../../shared/switch/toggle";
 
 export default function ControlActions(): JSX.Element {
   const activeTab: number = useSelector(
@@ -22,35 +22,40 @@ export default function ControlActions(): JSX.Element {
       {!browserService.isTextView() && (
         <>
           <ActionGroup>
-            <Switch
+            <Toggle
               checked={outputSettings.loopState}
-              onChange={(isChecked) => toggleLoopState(activeTab, !isChecked)}
-            >LOOP</Switch>
+              onChange={(isChecked) => toggleLoopState(activeTab, !isChecked)}>
+                LOOP
+            </Toggle>
           </ActionGroup>
           <ActionGroup>
-            <Switch
+            <Toggle
               checked={outputSettings.mixState}
-              onChange={(isChecked) => toggleMixState(activeTab, !isChecked)}
-            >MIX</Switch>
+              onChange={(isChecked) => toggleMixState(activeTab, !isChecked)}>
+                MIX
+            </Toggle>
           </ActionGroup>
           <ActionGroup>
-            <Switch
+            <Toggle
               checked={outputSettings.webState}
-              onChange={(isChecked) => toggleWebState(activeTab, !isChecked)}
-             >OVERLAY</Switch>
+              onChange={(isChecked) => toggleWebState(activeTab, !isChecked)}>
+                OVERLAY
+             </Toggle>
           </ActionGroup>                        
         </>
     )}
 
       <ActionGroup classNames="control-action-last">
-        <Switch
+        <Toggle
           checked={outputSettings.manualStartState}
-          onChange={(isChecked) => toggleManualStartState(activeTab, !isChecked)}
-        >MANUAL</Switch>
+          onChange={(isChecked) => toggleManualStartState(activeTab, !isChecked)}>
+            MANUAL
+        </Toggle>
         {outputSettings.manualStartState && <Button
           classNames="control-action-start-button"
-          onClick={() => playCuedFile(activeTab, outputSettings) }
-        >START</Button>}        
+          onClick={() => playCuedFile(activeTab, outputSettings) }>
+            START
+        </Button>}        
       </ActionGroup> 
     </>
   )
