@@ -1,13 +1,13 @@
 import React, { useState } from "react"
 import { CcgConfigChannel, OutputSettings } from "../../../../model/reducers/settings-models"
 import eventService from "../../../services/event-service"
-import Label from "../../shared/label"
-import LabelledCheckboxInput from "../../shared/labelled-checkbox-input/labelled-checkbox-input"
-import LabelledNumberInput from "../../shared/labelled-number-input/labelled-number-input"
-import LabelledTextInput from "../../shared/labelled-text-input/labelled-text-input"
+import CheckboxInput from "../../shared/checkbox-input/checkbox-input"
+import NumberInput from "../../shared/number-input/number-input"
+import TextInput from "../../shared/text-input/text-input"
 import './output.scss'
 import './../shared-settings.scss'
 import changingSettingsService from "../../../services/changing-settings-service"
+import Label from "../../shared/label/label"
 
 interface OutputProps {
   configChannel: CcgConfigChannel
@@ -36,8 +36,8 @@ export default function Output(props: OutputProps): JSX.Element {
                 <label className="settings-channel-header">
                     OUTPUT {props.index + 1} :
                 </label>
-                <LabelledTextInput
-                    labelClassName={fieldCss}
+                <TextInput
+                    wrapperClassName={fieldCss}
                     description="LABEL :"
                     value={label}
                     onChange={saveTempOutputLabelChange}
@@ -65,53 +65,53 @@ export default function Output(props: OutputProps): JSX.Element {
                     description="FORMAT :">
                     { props.configChannel.videoMode }
                 </Label>
-                <LabelledCheckboxInput
+                <CheckboxInput
                     description="LOOP :"
-                    labelClassName={checkboxCss}
+                    wrapperClassName={checkboxCss}
                     value={loopState}
                     onChange={saveTempLoopChange}
                 />
-                <LabelledCheckboxInput
+                <CheckboxInput
                     description="MIX :"
-                    labelClassName={checkboxCss}
+                    wrapperClassName={checkboxCss}
                     value={mixState}
                     onChange={saveTempMixChange}
                 />
-                <LabelledCheckboxInput
+                <CheckboxInput
                     description="MANUAL :"
-                    labelClassName={checkboxCss}
+                    wrapperClassName={checkboxCss}
                     value={manualStartState}
                     onChange={saveTempManualChange}
                 />
-                <LabelledCheckboxInput
+                <CheckboxInput
                     description="OVERLAY :"
-                    labelClassName={checkboxCss}
+                    wrapperClassName={checkboxCss}
                     value={webState}
                     onChange={saveTempWebStateChange}
                 />
-                <LabelledTextInput
-                    labelClassName={fieldCss}
+                <TextInput
+                    wrapperClassName={fieldCss}
                     description="OVERLAY URL :"
                     value={webUrl}
                     onChange={saveTempWebUrlChange}
                 />
-                <LabelledCheckboxInput
+                <CheckboxInput
                     description="SCALE :"
-                    labelClassName={checkboxCss}
+                    wrapperClassName={checkboxCss}
                     value={shouldScale}
                     onChange={saveTempShouldScaleChange}
                 />
                 {shouldScale && (
                     <>
-                        <LabelledNumberInput 
-                            labelClassName={fieldCss}
+                        <NumberInput 
+                            wrapperClassName={fieldCss}
                             description="SCALE X :"
                             value={scaleX}
                             onChange={saveTempScaleXChange}
                             unit='px'
                         />
-                        <LabelledNumberInput 
-                            labelClassName={fieldCss}
+                        <NumberInput 
+                            wrapperClassName={fieldCss}
                             description="SCALE Y :"
                             value={scaleY}
                             onChange={saveTempScaleYChange}

@@ -12,7 +12,7 @@ interface ToggleProps {
 export default function Toggle(props: ToggleProps): JSX.Element {
  return (
   <Button 
-    classNames={`${props.classNames ?? 'c-switch'} ${props.checked ? 'on' : ''}`.trimEnd()} 
+    classNames={`${props.classNames ?? 'c-switch'} ${props.checked ? 'on' : ''}`} 
     onClick={() => props.onChange(props.checked)}>
     {props.children}
   </Button>

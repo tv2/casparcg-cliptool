@@ -8,7 +8,7 @@ interface ActionGroupProps {
 
 export default function ActionGroup(props: ActionGroupProps): JSX.Element {
   return (
-  <div className={`c-action-group ${props.classNames ?? ''}`.trimEnd()}>
+  <div className={`c-action-group ${props.classNames ?? ''}`}>
     {props.children}
   </div>
   )

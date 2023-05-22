@@ -43,7 +43,7 @@ export default function ThumbnailOverlayDisplay(props: ThumbnailOverlayDisplayPr
           <SelectedThumbnailOverlay classNames={props.classNames ?? ''} fileType={props.file.type} time={time}/>
       )}
       {isCued && (
-          <ThumbnailOverlay classNames={`cued ${props.classNames ?? ''}`.trimEnd()}>
+          <ThumbnailOverlay classNames={`cued ${props.classNames ?? ''}`}>
             CUED     
           </ThumbnailOverlay>
       )}

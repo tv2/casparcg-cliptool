@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import eventService from "../../../services/event-service";
-import LabelledNumberInput from "../../shared/labelled-number-input/labelled-number-input";
-import LabelledTextInput from "../../shared/labelled-text-input/labelled-text-input";
+import NumberInput from "../../shared/number-input/number-input";
+import TextInput from "../../shared/text-input/text-input";
 import './casparcg-settings-form.scss'
 import './../shared-settings.scss'
 import changingSettingsService from "../../../services/changing-settings-service";
@@ -22,32 +22,32 @@ export default function CasparcgSettingsForm(props: CasparcgSettingsFormProps): 
     return (
         <form className="settings-form">
             <div className="settings-channel-form">
-                <LabelledTextInput
-                    labelClassName={fieldCss}
+                <TextInput
+                    wrapperClassName={fieldCss}
                     description="IP ADDRESS :"
                     value={ip}
                     onChange={saveTempIpChange}
                 />
-                <LabelledNumberInput 
-                    labelClassName={fieldCss}
+                <NumberInput 
+                    wrapperClassName={fieldCss}
                     description="AMCP PORT :"
                     value={amcpPort}
                     onChange={saveTempAmcpPortChange}
                 />
-                <LabelledNumberInput 
-                    labelClassName={fieldCss}
+                <NumberInput 
+                    wrapperClassName={fieldCss}
                     description="OSC PORT (into ClipTool) :"
                     value={oscPort}
                     onChange={saveTempOscPortChange}
                 />
-                <LabelledNumberInput 
-                    labelClassName={fieldCss}
+                <NumberInput 
+                    wrapperClassName={fieldCss}
                     description="DEFAULT LAYER :"
                     value={defaultLayer}
                     onChange={saveTempDefaultLayerChange}
                 />
-                <LabelledNumberInput 
-                    labelClassName={fieldCss}
+                <NumberInput 
+                    wrapperClassName={fieldCss}
                     description="TRANSITION TIME :"
                     value={transitionTime}
                     onChange={saveTempTransitionTimeChange}
