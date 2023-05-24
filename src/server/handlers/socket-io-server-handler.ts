@@ -215,23 +215,11 @@ export function socketIoHandlers(socket: any): void {
                         channelIndex
                     ).webState
                 )
-                if (
-                    settingsService.getOutputSettings(
-                        state.settings,
-                        channelIndex
-                    ).webState
-                ) {
-                    const webUrl = settingsService.getOutputSettings(
-                        state.settings,
-                        channelIndex
-                    ).webUrl
-                    playOverlay(channelIndex, 10, webUrl)
-                    logger.info(
-                        `Overlay playing ${webUrl} on channel index ${channelIndex}.`
-                    )
-                } else {
-                    stopOverlay(channelIndex, 10)
-                }
+                const outputSettings = settingsService.getOutputSettings(
+                    state.settings,
+                    channelIndex
+                )
+                updateOverlayPlayingState(channelIndex, outputSettings)
             }
         )
         .on(ClientToServer.SET_GENERICS, (generics: GenericSettings) => {
@@ -241,10 +229,30 @@ export function socketIoHandlers(socket: any): void {
             settingsPersistenceService.save()
             socketServer.emit(ServerToClient.SETTINGS_UPDATE, state.settings)
             cleanUpMediaFiles()
+            state.settings.generics.outputSettings.forEach(
+                (outputSettings, channelIndex) => {
+                    updateOverlayPlayingState(channelIndex, outputSettings)
+                }
+            )
         })
         .on(ClientToServer.RESTART_SERVER, () => {
             process.exit(0)
         })
+}
+
+function updateOverlayPlayingState(
+    channelIndex: number,
+    outputSettings: OutputSettings
+): void {
+    if (outputSettings.webState) {
+        const webUrl = outputSettings.webUrl
+        playOverlay(channelIndex, 10, webUrl)
+        logger.info(
+            `Overlay playing ${webUrl} on channel index ${channelIndex}.`
+        )
+    } else {
+        stopOverlay(channelIndex, 10)
+    }
 }
 
 type HiddenFiles = Record<string, HiddenFileInfo>
