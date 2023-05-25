@@ -224,16 +224,25 @@ export function socketIoHandlers(socket: any): void {
         )
         .on(ClientToServer.SET_GENERICS, (generics: GenericSettings) => {
             logger.data(generics).trace('Save Settings')
+            state.settings.generics.outputSettings.forEach(
+                (outputSettings, channelIndex) => {
+                    const currentChangedOutputSetitngs =
+                        generics.outputSettings[channelIndex]
+                    if (
+                        outputSettings.webState !==
+                            currentChangedOutputSetitngs.webState ||
+                        outputSettings.webUrl !==
+                            currentChangedOutputSetitngs.webUrl
+                    ) {
+                        updateOverlayPlayingState(channelIndex, outputSettings)
+                    }
+                }
+            )
             logger.info('Updating and storing generic settings server side.')
             reduxStore.dispatch(setGenerics(generics))
             settingsPersistenceService.save()
             socketServer.emit(ServerToClient.SETTINGS_UPDATE, state.settings)
             cleanUpMediaFiles()
-            state.settings.generics.outputSettings.forEach(
-                (outputSettings, channelIndex) => {
-                    updateOverlayPlayingState(channelIndex, outputSettings)
-                }
-            )
         })
         .on(ClientToServer.RESTART_SERVER, () => {
             process.exit(0)

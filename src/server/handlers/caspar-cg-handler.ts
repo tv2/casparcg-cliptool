@@ -327,6 +327,11 @@ async function loadFileList(): Promise<void> {
     ccgConnection
         .cls() //AMCP list media files
         .then((payload) => {
+            if (payload.response.data.length === 0) {
+                logger.warn(
+                    'Received no files from CasparCG when requesting them. Are the media folder empty or the path misconfigured?'
+                )
+            }
             reduxStore.dispatch(
                 updateFolders(extractFoldersList(payload.response.data))
             )
