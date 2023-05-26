@@ -21,6 +21,7 @@ import {
 } from '../../model/reducers/media-models'
 
 import {
+    setGenerics,
     setLoop,
     setManualStart,
     setMix,
@@ -48,6 +49,7 @@ import {
     ServerToClient,
     TimeSelectedFilePayload,
 } from '../../model/socket-io-constants'
+import settingsPersistenceService from '../services/settings-persistence-service'
 
 let waitingForCcgResponse: boolean = false
 let previousThumbnails: ThumbnailFile[] = []
@@ -265,24 +267,31 @@ function startTimeEmitInterval() {
 }
 
 async function startFileChangesPollingInterval(): Promise<void> {
-    await pollFileChanges()
+    await pollThumbnailChanges()
     setInterval(() => {
         if (!waitingForCcgResponse) {
             waitingForCcgResponse = true
             pollFileChanges().then(() => {
-                waitingForCcgResponse = false
+                pollThumbnailChanges().then(() => {
+                    waitingForCcgResponse = false
+                })
             })
         }
     }, 3000)
 }
 
 async function pollFileChanges(): Promise<void> {
+    logger.trace('Polling for File Changes.')
+    await loadFileList()
+}
+
+async function pollThumbnailChanges(): Promise<void> {
+    logger.trace('Polling for Thumbnail Changes.')
     const newThumbnails = await loadCcgThumbnails()
     if (newThumbnails.hasChanges) {
         thumbnails = newThumbnails.thumbnails
         assignThumbnailsToOutputs()
     }
-    await loadFileList()
 }
 
 async function loadCcgThumbnails(): Promise<{
@@ -339,12 +348,8 @@ async function loadFileList(): Promise<void> {
                 ServerToClient.FOLDERS_UPDATE,
                 state.media.folders
             )
-
-            mediaService
-                .getOutputs(state.media)
-                .forEach(({}, outputIndex: number) => {
-                    outputExtractFiles(payload.response.data, outputIndex)
-                })
+            extractFilesToOutputs(payload.response.data)
+            fixInvalidUsedPathsInSettings(payload.response.data)
             checkHiddenFilesChanged(payload.response.data)
         })
         .catch((error) => {
@@ -356,7 +361,50 @@ async function loadFileList(): Promise<void> {
         })
 }
 
-function outputExtractFiles(allFiles: MediaFile[], outputIndex: number): void {
+function extractFilesToOutputs(allFiles: MediaFile[]): void {
+    const outputs = mediaService.getOutputs(state.media)
+    if (outputs.length !== state.settings.ccgConfig.channels.length) {
+        logger.warn(
+            `Expected '${state.settings.ccgConfig.channels.length}' Outputs but had '${outputs.length}'`
+        )
+    }
+    outputs.forEach((output: Output, outputIndex: number) => {
+        outputExtractFiles(allFiles, outputIndex, output)
+    })
+}
+
+function fixInvalidUsedPathsInSettings(allFiles: MediaFile[]): void {
+    const fixedPaths = settingsService
+        .getAllOutputSettings(state.settings)
+        .map((outputSettings) => {
+            return settingsService.fixInvalidUsedPaths(
+                allFiles,
+                outputSettings,
+                state.media
+            )
+        })
+    if (
+        !isDeepCompareEqual(
+            settingsService.getAllOutputSettings(state.settings),
+            fixedPaths
+        )
+    ) {
+        logger.warn(
+            'Removing some invalid paths from settings, that likely exist due to folders/files being deleted while off.'
+        )
+        const genericSettings = { ...state.settings.generics }
+        genericSettings.outputSettings = fixedPaths
+        reduxStore.dispatch(setGenerics(genericSettings))
+        assignThumbnailsToOutputs()
+        settingsPersistenceService.save()
+    }
+}
+
+function outputExtractFiles(
+    allFiles: MediaFile[],
+    outputIndex: number,
+    output: Output
+): void {
     let outputMedia = allFiles.filter((file) => {
         return (
             isFolderNameEqual(
@@ -366,10 +414,7 @@ function outputExtractFiles(allFiles: MediaFile[], outputIndex: number): void {
             ) && !isAlphaFile(file.name)
         )
     })
-    const mediaFiles = mediaService.getOutput(
-        state.media,
-        outputIndex
-    ).mediaFiles
+    const mediaFiles = output.mediaFiles
     if (!isDeepCompareEqual(mediaFiles, outputMedia)) {
         logger.info(`Media files changed for output: ${outputIndex}`)
         reduxStore.dispatch(updateMediaFiles(outputIndex, outputMedia))
@@ -416,29 +461,32 @@ async function loadThumbnailImage(
 }
 
 export function assignThumbnailsToOutputs(): void {
-    mediaService.getOutputs(state.media).forEach(({}, channelIndex: number) => {
-        const outputMedia = thumbnails.filter((thumbnail: ThumbnailFile) => {
-            return isFolderNameEqual(
-                thumbnail?.name,
-                settingsService.getOutputSettings(state.settings, channelIndex)
-                    .folder
+    mediaService
+        .getOutputs(state.media)
+        .forEach((output: Output, channelIndex: number) => {
+            const outputMedia = thumbnails.filter(
+                (thumbnail: ThumbnailFile) => {
+                    return isFolderNameEqual(
+                        thumbnail?.name,
+                        settingsService.getOutputSettings(
+                            state.settings,
+                            channelIndex
+                        ).folder
+                    )
+                }
             )
+            const outputThumbnailList = output.thumbnailList
+            if (!isDeepCompareEqual(outputThumbnailList, outputMedia)) {
+                reduxStore.dispatch(
+                    updateThumbnailFileList(channelIndex, outputMedia)
+                )
+                socketServer.emit(
+                    ServerToClient.THUMBNAIL_UPDATE,
+                    channelIndex,
+                    outputMedia
+                )
+            }
         })
-        const outputThumbnailList = mediaService.getOutput(
-            state.media,
-            channelIndex
-        ).thumbnailList
-        if (!isDeepCompareEqual(outputThumbnailList, outputMedia)) {
-            reduxStore.dispatch(
-                updateThumbnailFileList(channelIndex, outputMedia)
-            )
-            socketServer.emit(
-                ServerToClient.THUMBNAIL_UPDATE,
-                channelIndex,
-                outputMedia
-            )
-        }
-    })
 }
 
 export function casparCgClient(): void {

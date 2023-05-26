@@ -1,4 +1,4 @@
-import { Media } from '../reducers/media-models'
+import { Media, MediaFile } from '../reducers/media-models'
 import {
     GenericSettings,
     OutputSettings,
@@ -41,6 +41,38 @@ class SettingsService {
         channelIndex: number
     ): OutputSettings {
         return settingsState.generics.outputSettings[channelIndex]
+    }
+
+    public fixInvalidUsedPaths(
+        allFiles: MediaFile[],
+        originalOutputSettings: OutputSettings,
+        mediaState: Media
+    ): OutputSettings {
+        const outputSettings = { ...originalOutputSettings }
+        if (
+            outputSettings.selectedFileName === '' &&
+            outputSettings.cuedFileName === '' &&
+            outputSettings.folder === ''
+        ) {
+            return outputSettings
+        }
+        const pathExist = allFiles.find((file) => {
+            file.name === outputSettings.cuedFileName ||
+                file.name === outputSettings.selectedFileName
+        })
+        if (!pathExist) {
+            outputSettings.cuedFileName = ''
+            outputSettings.selectedFileName = ''
+        }
+        if (!mediaState.folders.includes(outputSettings.folder)) {
+            outputSettings.folder = ''
+        }
+
+        return outputSettings
+    }
+
+    public getAllOutputSettings(settingsState: Settings): OutputSettings[] {
+        return settingsState.generics.outputSettings
     }
 
     public getGenericSettings(settingsState: Settings): GenericSettings {
