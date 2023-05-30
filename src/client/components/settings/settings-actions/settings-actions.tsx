@@ -74,7 +74,7 @@ function emitSetOperationModeToEditVisibility(): void {
 function restartCliptool(): void {
   if (
       window.confirm(
-          'Restarting server will stop all outputs, are you sure?'
+          'Are you sure you want to restart Cliptool?'
       )
   ) {
       console.log('Restarting server...')
