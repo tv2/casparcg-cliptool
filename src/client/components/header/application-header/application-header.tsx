@@ -1,28 +1,28 @@
 import React from 'react'
 import { state } from '../../../../model/reducers/store'
 
-import Timer from '../timer/timer'
+import TimerThumbnail from '../timer-thumbnail/timer-thumbnail'
 import ControlActions from '../control-actions/control-actions'
 import browserService from '../../../services/browser-service'
 import Button from '../../shared/button'
-import './header.scss'
+import './application-header.scss'
 import changingSettingsService from '../../../services/changing-settings-service'
-import ActionGroup from '../action-group/action-group'
+import Group from '../group/group'
 
-export default function Header(): JSX.Element {  
+export default function ApplicationHeader(): JSX.Element {  
     return (
         <header className="app-header">
             <div className="app-header__controls">
                 {!browserService.isTextView() && (
-                    <ActionGroup>
+                    <Group>
                         <Button
-                            classNames="app-settings-button"
+                            className="app-settings-button"
                             onClick={() => emitToggleSettingsVisibility()}
                         >SETTINGS</Button>
-                    </ActionGroup>
+                    </Group>
                 )}
 
-                <Timer />
+                <TimerThumbnail />
                 <ControlActions />
             </div>                        
         </header>
@@ -30,7 +30,7 @@ export default function Header(): JSX.Element {
 }
 
 function emitToggleSettingsVisibility(): void {
-    if (!state.appNavigation.isSettingsOpen) {
+    if (!state.appNavigation.isSettingsVisible) {
         changingSettingsService.toggleSettingsPage()
     } else {
         changingSettingsService.discardSettings()

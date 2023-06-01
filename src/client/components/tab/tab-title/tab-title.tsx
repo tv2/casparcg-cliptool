@@ -1,5 +1,5 @@
 import React from "react"
-import { setActiveTab } from "../../../../model/reducers/app-navigation-action"
+import { setActiveTabIndex } from "../../../../model/reducers/app-navigation-action"
 import { reduxStore } from "../../../../model/reducers/store"
 import './tab-title.scss'
 
@@ -25,6 +25,6 @@ export default function TabTitle(props: TabTitleProps): JSX.Element {
 
 function setActiveOutput(tab: number, isSelected: boolean): void {
   if (!isSelected) {
-    reduxStore.dispatch(setActiveTab(tab))
+    reduxStore.dispatch(setActiveTabIndex(tab))
   }
 }

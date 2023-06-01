@@ -1,8 +1,8 @@
 import { AppNavigation } from '../reducers/app-navigation-reducer'
 
 class AppNavigationService {
-    public getActiveTab(navigationState: AppNavigation): number {
-        return navigationState.activeTab
+    public getActiveTabIndex(navigationState: AppNavigation): number {
+        return navigationState.activeTabIndex
     }
 }
 

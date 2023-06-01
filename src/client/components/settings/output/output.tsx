@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React from "react"
 import { CcgConfigChannel, OutputSettings } from "../../../../model/reducers/settings-models"
 import eventService from "../../../services/event-service"
 import CheckboxInput from "../../shared/checkbox-input/checkbox-input"
@@ -17,16 +17,16 @@ interface OutputProps {
 }
 
 export default function Output(props: OutputProps): JSX.Element {
-    const [label, setLabel] = useState(props.outputSettings.label)
-    const [folder, setFolder] = useState(props.outputSettings.folder)
-    const [loopState, setLoopState] = useState(props.outputSettings.loopState)
-    const [mixState, setMixState] = useState(props.outputSettings.mixState)
-    const [manualStartState, setManualStartState] = useState(props.outputSettings.manualStartState)
-    const [webState, setWebState] = useState(props.outputSettings.webState)
-    const [webUrl, setWebUrl] = useState(props.outputSettings.webUrl)
-    const [shouldScale, setShouldScale] = useState(props.outputSettings.shouldScale)
-    const [scaleX, setScaleX] = useState(props.outputSettings.scaleX)
-    const [scaleY, setScaleY] = useState(props.outputSettings.scaleY)
+    const label = props.outputSettings.label
+    const folder = props.outputSettings.folder
+    const loopState = props.outputSettings.loopState
+    const mixState = props.outputSettings.mixState
+    const manualStartState = props.outputSettings.manualStartState
+    const webState = props.outputSettings.webState
+    const webUrl = props.outputSettings.webUrl
+    const shouldScale = props.outputSettings.shouldScale
+    const scaleX = props.outputSettings.scaleX
+    const scaleY = props.outputSettings.scaleY
 
     const fieldCss: string = 'settings-input-field'
     const checkboxCss: string = 'settings-checkbox-field'
@@ -37,7 +37,7 @@ export default function Output(props: OutputProps): JSX.Element {
                     OUTPUT {props.index + 1} :
                 </label>
                 <TextInput
-                    wrapperClassName={fieldCss}
+                    className={fieldCss}
                     description="LABEL :"
                     value={label}
                     onChange={saveTempOutputLabelChange}
@@ -51,13 +51,11 @@ export default function Output(props: OutputProps): JSX.Element {
                         value={ folder }
                     >
                         {props.folders.map(
-                            (path: string, folderIndex: number) => {
-                                return (
+                            (path: string, folderIndex: number) => (
                                     <option key={folderIndex} value={path}>
                                         {path}
                                     </option>
-                                )
-                            }
+                                )                            
                         )}
                     </select>
                 </Label>
@@ -67,51 +65,51 @@ export default function Output(props: OutputProps): JSX.Element {
                 </Label>
                 <CheckboxInput
                     description="LOOP :"
-                    wrapperClassName={checkboxCss}
+                    className={checkboxCss}
                     value={loopState}
                     onChange={saveTempLoopChange}
                 />
                 <CheckboxInput
                     description="MIX :"
-                    wrapperClassName={checkboxCss}
+                    className={checkboxCss}
                     value={mixState}
                     onChange={saveTempMixChange}
                 />
                 <CheckboxInput
                     description="MANUAL :"
-                    wrapperClassName={checkboxCss}
+                    className={checkboxCss}
                     value={manualStartState}
                     onChange={saveTempManualChange}
                 />
                 <CheckboxInput
                     description="OVERLAY :"
-                    wrapperClassName={checkboxCss}
+                    className={checkboxCss}
                     value={webState}
                     onChange={saveTempWebStateChange}
                 />
                 <TextInput
-                    wrapperClassName={fieldCss}
+                    className={fieldCss}
                     description="OVERLAY URL :"
                     value={webUrl}
                     onChange={saveTempWebUrlChange}
                 />
                 <CheckboxInput
                     description="SCALE :"
-                    wrapperClassName={checkboxCss}
+                    className={checkboxCss}
                     value={shouldScale}
                     onChange={saveTempShouldScaleChange}
                 />
                 {shouldScale && (
                     <>
                         <NumberInput 
-                            wrapperClassName={fieldCss}
+                            className={fieldCss}
                             description="SCALE X :"
                             value={scaleX}
                             onChange={saveTempScaleXChange}
                             unit='px'
                         />
                         <NumberInput 
-                            wrapperClassName={fieldCss}
+                            className={fieldCss}
                             description="SCALE Y :"
                             value={scaleY}
                             onChange={saveTempScaleYChange}
@@ -124,70 +122,60 @@ export default function Output(props: OutputProps): JSX.Element {
 
     function saveTempOutputLabelChange(event: React.ChangeEvent<HTMLInputElement>): void {
         const newLabel = eventService.getTextFromEvent(event)
-        setLabel(newLabel)
         props.outputSettings.label = newLabel
         changingSettingsService.saveTemporaryOutputSettingChange(props.outputSettings, props.index)
     }
     
     function saveTempLoopChange(event: React.ChangeEvent<HTMLInputElement>): void {
         const newLoop = eventService.getCheckedFromEvent(event)
-        setLoopState(newLoop)
         props.outputSettings.loopState = newLoop
         changingSettingsService.saveTemporaryOutputSettingChange(props.outputSettings, props.index)
     }
     
     function saveTempMixChange(event: React.ChangeEvent<HTMLInputElement>): void {
         const newMix = eventService.getCheckedFromEvent(event)
-        setMixState(newMix)
         props.outputSettings.mixState = newMix
         changingSettingsService.saveTemporaryOutputSettingChange(props.outputSettings, props.index)
     }
 
     function saveTempManualChange(event: React.ChangeEvent<HTMLInputElement>): void {
         const newManual = eventService.getCheckedFromEvent(event)
-        setManualStartState(newManual)
         props.outputSettings.manualStartState = newManual
         changingSettingsService.saveTemporaryOutputSettingChange(props.outputSettings, props.index)
     }
     
     function saveTempShouldScaleChange(event: React.ChangeEvent<HTMLInputElement>): void {
         const newShouldScale = eventService.getCheckedFromEvent(event)
-        setShouldScale(newShouldScale)
         props.outputSettings.shouldScale = newShouldScale
         changingSettingsService.saveTemporaryOutputSettingChange(props.outputSettings, props.index)
     }
     
     function saveTempScaleXChange(event: React.ChangeEvent<HTMLInputElement>): void {
         const newScaleX = eventService.getNumberFromEvent(event)
-        setScaleX(newScaleX)
         props.outputSettings.scaleX = newScaleX
         changingSettingsService.saveTemporaryOutputSettingChange(props.outputSettings, props.index)
     }
     
     function saveTempScaleYChange(event: React.ChangeEvent<HTMLInputElement>): void {
         const newScaleY = eventService.getNumberFromEvent(event)
-        setScaleY(newScaleY)
         props.outputSettings.scaleY = newScaleY
         changingSettingsService.saveTemporaryOutputSettingChange(props.outputSettings, props.index)
     }
     
     function saveTempWebStateChange(event: React.ChangeEvent<HTMLInputElement>): void {
         const newWebState = eventService.getCheckedFromEvent(event)
-        setWebState(newWebState)
         props.outputSettings.webState = newWebState
         changingSettingsService.saveTemporaryOutputSettingChange(props.outputSettings, props.index)
     }
 
     function saveTempWebUrlChange(event: React.ChangeEvent<HTMLInputElement>): void {
         const newWebUrl = eventService.getTextFromEvent(event)
-        setWebUrl(newWebUrl)
         props.outputSettings.webUrl = newWebUrl
         changingSettingsService.saveTemporaryOutputSettingChange(props.outputSettings, props.index)
     }
     
     function saveTempTabMediaFolderChange(event: React.ChangeEvent<HTMLSelectElement>): void {
         const newFolder = event.target.value
-        setFolder(newFolder)
         props.outputSettings.folder = newFolder
         changingSettingsService.saveTemporaryOutputSettingChange(props.outputSettings, props.index)
     }    

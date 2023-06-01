@@ -8,78 +8,78 @@ import browserService from "../../../services/browser-service";
 import './control-actions.scss'
 import socketService from "../../../services/socket-service";
 import { OutputSettings } from "../../../../model/reducers/settings-models";
-import ActionGroup from "../action-group/action-group";
+import Group from "../group/group";
 import Toggle from "../../shared/switch/toggle";
 
 export default function ControlActions(): JSX.Element {
-  const activeTab: number = useSelector(
-    (state: State) => appNavigationService.getActiveTab(state.appNavigation))
+  const activeTabIndex: number = useSelector(
+    (state: State) => appNavigationService.getActiveTabIndex(state.appNavigation))
   const outputSettings = useSelector(
-    (state: State) => settingsService.getOutputSettings(state.settings, activeTab))
+    (state: State) => settingsService.getOutputSettings(state.settings, activeTabIndex))
 
   return (
     <>
       {!browserService.isTextView() && (
         <>
-          <ActionGroup>
+          <Group>
             <Toggle
               checked={outputSettings.loopState}
-              onChange={(isChecked) => toggleLoopState(activeTab, !isChecked)}>
+              onChange={(isChecked) => toggleLoopState(activeTabIndex, !isChecked)}>
                 LOOP
             </Toggle>
-          </ActionGroup>
-          <ActionGroup>
+          </Group>
+          <Group>
             <Toggle
               checked={outputSettings.mixState}
-              onChange={(isChecked) => toggleMixState(activeTab, !isChecked)}>
+              onChange={(isChecked) => toggleMixState(activeTabIndex, !isChecked)}>
                 MIX
             </Toggle>
-          </ActionGroup>
-          <ActionGroup>
+          </Group>
+          <Group>
             <Toggle
               checked={outputSettings.webState}
-              onChange={(isChecked) => toggleWebState(activeTab, !isChecked)}>
+              onChange={(isChecked) => toggleWebState(activeTabIndex, !isChecked)}>
                 OVERLAY
              </Toggle>
-          </ActionGroup>                        
+          </Group>                        
         </>
     )}
 
-      <ActionGroup classNames="control-action-last">
+      <Group className="control-action-last">
         <Toggle
           checked={outputSettings.manualStartState}
-          onChange={(isChecked) => toggleManualStartState(activeTab, !isChecked)}>
+          onChange={(isChecked) => toggleManualStartState(activeTabIndex, !isChecked)}>
             MANUAL
         </Toggle>
         {outputSettings.manualStartState && <Button
-          classNames="control-action-start-button"
-          onClick={() => playCuedFile(activeTab, outputSettings) }>
+          className="control-action-start-button"
+          onClick={() => playCuedFile(activeTabIndex, outputSettings) }>
             START
         </Button>}        
-      </ActionGroup> 
+      </Group> 
     </>
   )
 }
 
-function playCuedFile(activeTab: number, outputSettings: OutputSettings): void {
+function playCuedFile(activeTabIndex: number, outputSettings: OutputSettings): void {
   if (!outputSettings.cuedFileName) {
     return
   }
-  socketService.emitPlayFile(activeTab, outputSettings.cuedFileName)
+  socketService.emitPlayFile(activeTabIndex, outputSettings.cuedFileName)
 }
 
-function toggleLoopState(activeTab: number, isChecked: boolean): void {
-  socketService.emitSetLoopState(activeTab, isChecked)
+function toggleLoopState(activeTabIndex: number, isChecked: boolean): void {
+  socketService.emitSetLoopState(activeTabIndex, isChecked)
 }
 
-function toggleMixState(activeTab: number, isChecked: boolean): void {
-  socketService.emitSetMixState(activeTab, isChecked)  
+function toggleMixState(activeTabIndex: number, isChecked: boolean): void {
+  socketService.emitSetMixState(activeTabIndex, isChecked)  
 }
 
-function toggleWebState(activeTab: number, isChecked: boolean): void {
-  socketService.emitSetWebState(activeTab, isChecked)
+function toggleWebState(activeTabIndex: number, isChecked: boolean): void {
+  socketService.emitSetWebState(activeTabIndex, isChecked)
 }
 
-function toggleManualStartState(activeTab: number, isChecked: boolean): void {
-  socketService.emitSetManualStartState(activeTab, isChecked)
+function toggleManualStartState(activeTabIndex: number, isChecked: boolean): void {
+  socketService.emitSetManualStartState(activeTabIndex, isChecked)
 }

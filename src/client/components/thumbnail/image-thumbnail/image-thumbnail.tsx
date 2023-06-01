@@ -9,7 +9,7 @@ import ThumbnailOverlayDisplay from "../thumbnail-overlay-display/thumbnail-over
 
 interface ImageThumbnailProps {
   file: MediaFile
-  activeTab: number
+  activeTabIndex: number
 }
 
 export default function ImageThumbnail(props: ImageThumbnailProps): JSX.Element {
@@ -20,9 +20,9 @@ export default function ImageThumbnail(props: ImageThumbnailProps): JSX.Element 
 
   return (
     <div className={`image-thumbnail ${props.file.name in hiddenFiles ? 'hidden' : ''}`}>
-        <ThumbnailButton fileName={props.file.name} fileType={props.file.type} activeTab={props.activeTab}> 
+        <ThumbnailButton fileName={props.file.name} fileType={props.file.type} activeTabIndex={props.activeTabIndex}> 
           <ThumbnailPicture fileName={props.file.name} />
-          <ThumbnailOverlayDisplay activeTab={props.activeTab} file={props.file} />     
+          <ThumbnailOverlayDisplay activeTabIndex={props.activeTabIndex} file={props.file} />     
         </ThumbnailButton>        
         <p className="text">
             {props.file.name

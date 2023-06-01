@@ -57,7 +57,7 @@ const ccgSettingsSchema = z.object({
 })
 
 // Schema for Cliptool version 2.15 and above.
-export const NewGenericSettings = z.object({
+export const newGenericSettingsSchema = z.object({
     ccgSettings: ccgSettingsSchema.default(defaultCcgSettingsState),
     outputSettings: z
         .array(outputSettingsSchema)

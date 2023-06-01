@@ -13,8 +13,8 @@ interface TabsProps {
 }
 
 export default function Tabs(props: TabsProps): JSX.Element {   
-  const selectedTab: number = 
-    useSelector((state: State) => appNavigationService.getActiveTab(state.appNavigation))
+  const activeTabIndex: number = 
+    useSelector((state: State) => appNavigationService.getActiveTabIndex(state.appNavigation))
 
   return (
     <div className="tabs">
@@ -25,11 +25,11 @@ export default function Tabs(props: TabsProps): JSX.Element {
               return
             }
             const childProps = child.props as any as TabProps
-            return (<TabTitle key={index} title={childProps.title} tabIndex={index} selectedTab={selectedTab}/>)
+            return (<TabTitle key={index} title={childProps.title} tabIndex={index} selectedTab={activeTabIndex}/>)
           })}        
         </div>
       </div>
-      {Array.isArray(props.children) ? props.children[selectedTab] : props.children}
+      {Array.isArray(props.children) ? props.children[activeTabIndex] : props.children}
     </div>
   )
 }

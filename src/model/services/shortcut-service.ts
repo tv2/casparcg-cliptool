@@ -18,7 +18,7 @@ class ShortcutService {
         //Convert event.keyCode to letter:
         let keyPressed = String.fromCharCode(event.keyCode)
 
-        if (state.appNavigation.isSettingsOpen) {
+        if (state.appNavigation.isSettingsVisible) {
             keyPressed = ''
         }
 

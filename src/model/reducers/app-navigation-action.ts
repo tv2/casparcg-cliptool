@@ -1,13 +1,13 @@
-export const SET_ACTIVE_TAB = 'setActiveTab'
+export const SET_ACTIVE_TAB_INDEX = 'setActiveTabIndex'
 export const SET_CONNECTION_STATUS = 'setConnectionStatus'
 export const TOGGLE_SHOW_SETTINGS = 'toggleShowSettings'
 
-export function setActiveTab(tabIndex: number): {
+export function setActiveTabIndex(tabIndex: number): {
     type: string
     tabIndex: number
 } {
     return {
-        type: SET_ACTIVE_TAB,
+        type: SET_ACTIVE_TAB_INDEX,
         tabIndex: tabIndex,
     }
 }

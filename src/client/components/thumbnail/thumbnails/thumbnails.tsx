@@ -12,16 +12,16 @@ import browserService from '../../../services/browser-service';
 import './thumbnails.scss'
 
 export function Thumbnails(): JSX.Element {
-    const activeTab: number = useSelector(
-        (state: State) => appNavigationService.getActiveTab(state.appNavigation))   
+    const activeTabIndex: number = useSelector(
+        (state: State) => appNavigationService.getActiveTabIndex(state.appNavigation))   
     const files: MediaFile[] = useSelector(
-        (state: State) => mediaService.getOutput(state.media, activeTab)?.mediaFiles ?? []
+        (state: State) => mediaService.getOutput(state.media, activeTabIndex)?.mediaFiles ?? []
     )
     const hiddenFiles: Record<string, HiddenFileInfo> = useSelector(
         (state: State) => state.media.hiddenFiles
     ) ?? {}
     const isInEditVisibilityMode: boolean = useSelector(
-        (state: State) => settingsService.getOutputSettings(state.settings, activeTab)
+        (state: State) => settingsService.getOutputSettings(state.settings, activeTabIndex)
             .operationMode === OperationMode.EDIT_VISIBILITY
     ) ?? false
     const shownFiles: MediaFile[] = !isInEditVisibilityMode || browserService.isTextView()
@@ -32,8 +32,8 @@ export function Thumbnails(): JSX.Element {
             {shownFiles.map((file: MediaFile) => (
                 <div className="thumbnail-wrapper" key={file.name}>
                     {browserService.isTextView()
-                        ? <TextThumbnail file={file} activeTab={activeTab}/>
-                        : <ImageThumbnail file={file} activeTab={activeTab}/>}
+                        ? <TextThumbnail file={file} activeTabIndex={activeTabIndex}/>
+                        : <ImageThumbnail file={file} activeTabIndex={activeTabIndex}/>}
                 </div>
             ))}
         </div>

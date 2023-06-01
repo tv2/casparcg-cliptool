@@ -5,14 +5,14 @@ import './toggle.scss'
 interface ToggleProps {
   onChange: (isChecked: Boolean) => void
   checked: boolean
-  classNames?: string
+  className?: string
   children?: React.ReactNode
 }
 
 export default function Toggle(props: ToggleProps): JSX.Element {
  return (
   <Button 
-    classNames={`${props.classNames ?? 'c-switch'} ${props.checked ? 'on' : ''}`} 
+    className={`${props.className ?? 'c-switch'} ${props.checked ? 'on' : ''}`} 
     onClick={() => props.onChange(props.checked)}>
     {props.children}
   </Button>

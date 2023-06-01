@@ -12,10 +12,10 @@ interface ThumbnailPictureProps {
 }
 
 export default function ThumbnailPicture(props: ThumbnailPictureProps): JSX.Element {
-  const activeTab: number = useSelector(
-    (state: State) => appNavigationService.getActiveTab(state.appNavigation))
+  const activeTabIndex: number = useSelector(
+    (state: State) => appNavigationService.getActiveTabIndex(state.appNavigation))
 
-  const url: string = mediaService.getBase64ThumbnailUrl(props.fileName, activeTab || 0, state.media)
+  const url: string = mediaService.getBase64ThumbnailUrl(props.fileName, activeTabIndex || 0, state.media)
 
   return (
       <img src={url} className="thumbnail-picture"/>

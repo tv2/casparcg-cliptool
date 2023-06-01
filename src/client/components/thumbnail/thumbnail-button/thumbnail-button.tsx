@@ -14,36 +14,36 @@ import './thumbnail-button.scss'
 interface ThumbnailButtonProps {
   fileName: string
   fileType: string
-  activeTab: number
+  activeTabIndex: number
   children?: React.ReactNode
-  buttonClassNames?: string
-  wrapperClassNames?: string
+  buttonClassName?: string
+  wrapperClassName?: string
 }
 
 export default function ThumbnailButton(props: ThumbnailButtonProps): JSX.Element {
-  const activeTab: number = useSelector(
-    (state: State) => appNavigationService.getActiveTab(state.appNavigation))
+  const activeTabIndex: number = useSelector(
+    (state: State) => appNavigationService.getActiveTabIndex(state.appNavigation))
   useSelector(
-    (state: State) => settingsService.getOutputSettings(state.settings, props.activeTab)
+    (state: State) => settingsService.getOutputSettings(state.settings, props.activeTabIndex)
       .selectedFileName
   )
   useSelector(
-    (state: State) => settingsService.getOutputSettings(state.settings, props.activeTab)
+    (state: State) => settingsService.getOutputSettings(state.settings, props.activeTabIndex)
       .cuedFileName
     )
   
-  const isSelected: boolean = settingsService.isThumbnailSelected(props.fileName, state.settings, activeTab)
-  const isCued: boolean = settingsService.isThumbnailCued(props.fileName, state.settings, activeTab)
+  const isSelected: boolean = settingsService.isThumbnailSelected(props.fileName, state.settings, activeTabIndex)
+  const isCued: boolean = settingsService.isMediaCued(props.fileName, state.settings, activeTabIndex)
 
   const isSelectedClass = isSelected ? 'selected-thumbnail' : ''
   const chosenClass = isCued ? 'cued-thumbnail' : isSelectedClass
 
   return (
-    <div className={`c-thumbnail-button ${props.wrapperClassNames ?? ''} ${chosenClass}`}>
+    <div className={`c-thumbnail-button ${props.wrapperClassName ?? ''} ${chosenClass}`}>
       <Button
-          classNames={`c-thumbnail-button__button ${props.buttonClassNames ?? ''}`}
+          className={`c-thumbnail-button__button ${props.buttonClassName ?? ''}`}
           onClick={() => {
-            triggerOperationModeAction(props.fileName, props.activeTab, props.fileType)
+            triggerOperationModeAction(props.fileName, props.activeTabIndex, props.fileType)
           }}
       > 
         {props.children ?? ''}
@@ -52,41 +52,41 @@ export default function ThumbnailButton(props: ThumbnailButtonProps): JSX.Elemen
   )
 }
 
-function triggerOperationModeAction(fileName: string, activeTab: number, fileType: string): void {   
+function triggerOperationModeAction(fileName: string, activeTabIndex: number, fileType: string): void {   
   if (browserService.isTextView()) {
-    return emitPlayFile(fileName, activeTab, fileType)
+    return emitPlayFile(fileName, activeTabIndex, fileType)
   } 
-  const operationMode = getOutputSettings(activeTab)?.operationMode
+  const operationMode = getOutputSettings(activeTabIndex)?.operationMode
   switch (operationMode) {
       case OperationMode.EDIT_VISIBILITY: 
-          emitToggleVisibility(fileName, activeTab)
+          emitToggleVisibility(fileName, activeTabIndex)
           break;
       case OperationMode.CONTROL:
       default:
-          emitPlayFile(fileName, activeTab, fileType)
+          emitPlayFile(fileName, activeTabIndex, fileType)
           break
   }
 }
 
-function emitToggleVisibility(fileName: string, activeTab: number): void {
+function emitToggleVisibility(fileName: string, activeTabIndex: number): void {
   if (settingsService.isThumbnailSelectedOnAnyOutput(fileName, state.settings)) {
       alert('Unable to hide, as the file is in use somewhere.')
       return
   }
-  socketService.emitToggleThumbnailVisibility(activeTab, fileName)
+  socketService.emitToggleThumbnailVisibility(activeTabIndex, fileName)
 }
 
-function emitPlayFile(fileName: string, activeTab: number, fileType: string ): void {
+function emitPlayFile(fileName: string, activeTabIndex: number, fileType: string ): void {
   if (fileType === FileType.IMAGE) {
-    socketService.emitPlayFile(activeTab, fileName)
+    socketService.emitPlayFile(activeTabIndex, fileName)
   } else {
-    const eventToFire = !getOutputSettings(activeTab)?.manualStartState 
-      ? () => socketService.emitPlayFile(activeTab, fileName)
-      : () => socketService.emitLoadFile(activeTab, fileName)
+    const eventToFire = !getOutputSettings(activeTabIndex)?.manualStartState 
+      ? () => socketService.emitPlayFile(activeTabIndex, fileName)
+      : () => socketService.emitLoadFile(activeTabIndex, fileName)
     eventToFire()
   }   
 }
 
-function getOutputSettings(activeTab: number): OutputSettings {
-  return settingsService.getOutputSettings(state.settings, activeTab)
+function getOutputSettings(activeTabIndex: number): OutputSettings {
+  return settingsService.getOutputSettings(state.settings, activeTabIndex)
 }

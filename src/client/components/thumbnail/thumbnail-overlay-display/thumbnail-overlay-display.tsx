@@ -10,8 +10,8 @@ import './thumbnail-overlay-display.scss'
 import ThumbnailOverlay from "../thumbnail-overlay/thumbnail-overlay";
 
 interface ThumbnailOverlayDisplayProps {
-  classNames?: string
-  activeTab: number
+  className?: string
+  activeTabIndex: number
   file: MediaFile
 }
 
@@ -19,19 +19,19 @@ export default function ThumbnailOverlayDisplay(props: ThumbnailOverlayDisplayPr
   
   useSelector(
     (state: State) => settingsService
-      .getOutputSettings(state.settings, props.activeTab).selectedFileName
+      .getOutputSettings(state.settings, props.activeTabIndex).selectedFileName
   )
   useSelector(
     (state: State) => settingsService
-      .getOutputSettings(state.settings, props.activeTab).cuedFileName
+      .getOutputSettings(state.settings, props.activeTabIndex).cuedFileName
   )
 
   const time: [number, number] = useSelector(
-    (state: State) => mediaService.getOutput(state.media, props.activeTab).time
+    (state: State) => mediaService.getOutput(state.media, props.activeTabIndex).time
   )
   
-  const isSelected: boolean = settingsService.isThumbnailSelected(props.file.name, state.settings, props.activeTab)
-  const isCued: boolean = settingsService.isThumbnailCued(props.file.name, state.settings, props.activeTab)
+  const isSelected: boolean = settingsService.isThumbnailSelected(props.file.name, state.settings, props.activeTabIndex)
+  const isCued: boolean = settingsService.isMediaCued(props.file.name, state.settings, props.activeTabIndex)
   let isValidFile: boolean = false
   if (isSelected) {
     isValidFile = mediaService.isValidFile(props.file, time)
@@ -40,10 +40,10 @@ export default function ThumbnailOverlayDisplay(props: ThumbnailOverlayDisplayPr
   return (
   <div className="c-thumbnail-overlay-display">
       {(isSelected && isValidFile) && (
-          <SelectedThumbnailOverlay classNames={props.classNames ?? ''} fileType={props.file.type} time={time}/>
+          <SelectedThumbnailOverlay className={props.className ?? ''} fileType={props.file.type} time={time}/>
       )}
       {isCued && (
-          <ThumbnailOverlay classNames={`cued ${props.classNames ?? ''}`}>
+          <ThumbnailOverlay className={`cued ${props.className ?? ''}`}>
             CUED     
           </ThumbnailOverlay>
       )}

@@ -6,7 +6,7 @@ import timeService from "../../../model/services/time-service";
 import ThumbnailOverlay from "./thumbnail-overlay/thumbnail-overlay";
 
 interface SelectedThumbnailOverlayProps {
-  classNames?: string
+  className?: string
   fileType: string
   time: [number, number]
 }
@@ -14,14 +14,14 @@ interface SelectedThumbnailOverlayProps {
 export default function SelectedThumbnailOverlay(props: SelectedThumbnailOverlayProps): JSX.Element {
   const frameRate: number = useSelector(
       (state: State) => {
-        const videoFormat = state.settings.ccgConfig.channels[appNavigationService.getActiveTab(state.appNavigation)]?.videoFormat
+        const videoFormat = state.settings.ccgConfig.channels[appNavigationService.getActiveTabIndex(state.appNavigation)]?.videoFormat
         return videoFormat ? videoFormat.frameRate : 25
       }
     )
 
   const durationTimeCode = timeService.durationToTimeCode(props.time, frameRate, props.fileType)
   return (
-    <ThumbnailOverlay classNames={`selected ${props.classNames ?? ''}`}>        
+    <ThumbnailOverlay className={`selected ${props.className ?? ''}`}>        
       {durationTimeCode}            
     </ThumbnailOverlay>
   )

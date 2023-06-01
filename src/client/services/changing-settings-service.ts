@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import { toggleSettings } from '../../model/reducers/app-navigation-action'
+import { toggleSettings as toggleSettingsVisibility } from '../../model/reducers/app-navigation-action'
 import {
     CasparcgSettings,
     GenericSettings,
@@ -11,9 +11,15 @@ import socketService from './socket-service'
 
 class ChangingSettingsService {
     private temporarySettings: GenericSettings | undefined
+    private hasChanges: boolean
     private setTemporarySettings:
         | React.Dispatch<React.SetStateAction<GenericSettings | undefined>>
         | undefined
+
+    constructor() {
+        this.hasChanges = false
+        this.updateHasChanges()
+    }
 
     public initStateHandler(
         init: GenericSettings | undefined,
@@ -41,22 +47,30 @@ class ChangingSettingsService {
         this.temporarySettings = settings
     }
 
+    private updateHasChanges(): void {
+        this.hasChanges = !_.isEqual(
+            this.temporarySettings,
+            settingsService.getGenericSettings(state.settings)
+        )
+    }
+
     public saveTemporaryCcgSettingChanges(ccgSettings: CasparcgSettings): void {
         if (!this.temporarySettings) {
             return
         }
-        this.updateStateTemporarySettings({
+        this.updateTemporarySettings({
             ...this.temporarySettings,
             ccgSettings,
         })
     }
 
-    private updateStateTemporarySettings(
+    private updateTemporarySettings(
         settings: GenericSettings | undefined
     ): void {
         if (this.setTemporarySettings) {
             this.setTemporarySettings(settings)
             this.temporarySettings = settings
+            this.updateHasChanges()
         }
     }
 
@@ -66,7 +80,7 @@ class ChangingSettingsService {
         if (!this.temporarySettings) {
             return
         }
-        this.updateStateTemporarySettings({
+        this.updateTemporarySettings({
             ...this.temporarySettings,
             outputSettings,
         })
@@ -85,7 +99,7 @@ class ChangingSettingsService {
     }
 
     public saveClone(settings: GenericSettings): void {
-        this.updateStateTemporarySettings(this.deepClone(settings))
+        this.updateTemporarySettings(this.deepClone(settings))
     }
 
     private deepClone<T>(value: T): T {
@@ -95,7 +109,7 @@ class ChangingSettingsService {
     public saveSettings(): void {
         if (
             this.temporarySettings &&
-            this.hasChanges() &&
+            this.getHasChanges() &&
             window.confirm('Changes have been made, do you want to save them?')
         ) {
             socketService.emitSetGenericSettings(this.temporarySettings)
@@ -107,26 +121,23 @@ class ChangingSettingsService {
         if (
             !this.temporarySettings ||
             (this.temporarySettings &&
-                this.hasChanges() &&
+                this.getHasChanges() &&
                 !window.confirm(
                     'Changes have been made, are you sure you want to discard them?'
                 ))
         ) {
             return
         }
-        this.updateStateTemporarySettings(undefined)
+        this.updateTemporarySettings(undefined)
         this.toggleSettingsPage()
     }
 
-    public hasChanges(): boolean {
-        return !_.isEqual(
-            this.temporarySettings,
-            settingsService.getGenericSettings(state.settings)
-        )
+    public getHasChanges(): boolean {
+        return this.hasChanges
     }
 
     public toggleSettingsPage(): void {
-        reduxStore.dispatch(toggleSettings())
+        reduxStore.dispatch(toggleSettingsVisibility())
     }
 }
 

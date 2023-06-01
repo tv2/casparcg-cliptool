@@ -12,17 +12,17 @@ import settingsService from "../../model/services/settings-service"
 
 // TODO: possibly find a better name
 export default function Main(): JSX.Element {
-  const tabInfo: TabInfo[] = useSelector((state: State) => settingsService.getTabInfo(state.settings, state.media))
-  const activeTab: number = useSelector((state: State) => appNavigationService.getActiveTab(state.appNavigation))
+  const tabs: TabInfo[] = useSelector((state: State) => settingsService.getTabInfo(state.settings, state.media))
+  const activeTabIndex: number = useSelector((state: State) => appNavigationService.getActiveTabIndex(state.appNavigation))
   
   return browserService.isChannelView() 
     ? <Thumbnails/> 
     : <Tabs >
-        {tabInfo.map((data, index) => 
+        {tabs.map((data, index) => 
             <Tab title={data.title} 
                 key={data.index} 
-                activeTab={activeTab} 
-                totalTabs={tabInfo.length} 
+                activeTabIndex={activeTabIndex} 
+                totalTabs={tabs.length} 
                 tabIndex={index}/>
         )}
     </Tabs>

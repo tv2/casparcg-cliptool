@@ -12,8 +12,8 @@ interface BrowserSelectedView {
 class BrowserService {
     private view: BrowserSelectedView
 
-    constructor() {
-        const search = new URLSearchParams(window.location.search)
+    constructor(searchQuery: string) {
+        const search = new URLSearchParams(searchQuery)
         if (search.has(SelectedView.TEXT)) {
             this.view = {
                 selected: SelectedView.TEXT,
@@ -21,7 +21,7 @@ class BrowserService {
             }
         } else if (search.has(SelectedView.CHANNEL)) {
             const channel = search.get(SelectedView.CHANNEL)
-            const specificChannel = channel ? parseInt(channel) || 0 : 0
+            const specificChannel = channel ? Math.max(parseInt(channel), 1) : 1
             this.view = {
                 selected: SelectedView.CHANNEL,
                 channel: specificChannel,
@@ -36,16 +36,21 @@ class BrowserService {
     public isOrdinaryView(): boolean {
         return this.view.selected === SelectedView.ORDINARY
     }
+
     public isTextView(): boolean {
         return this.view.selected === SelectedView.TEXT
     }
+
     public isChannelView(): boolean {
         return this.view.selected === SelectedView.CHANNEL
     }
+
     public getChannel(): number {
         return this.view.channel - 1
     }
 }
 
-const browserService: BrowserService = new BrowserService()
+const browserService: BrowserService = new BrowserService(
+    window.location.search
+)
 export default browserService

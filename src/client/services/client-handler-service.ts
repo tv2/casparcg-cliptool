@@ -34,15 +34,15 @@ import {
 } from '../../model/socket-io-constants'
 
 class ClientHandlerService {
-    socket: SocketIOClient.Socket
+    private socket: SocketIOClient.Socket
 
     constructor() {
         this.socket = io()
-        this.initConnectionEvents()
-        this.initServerEvents()
+        this.initConnectionEventsListeners()
+        this.initServerEventsListeners()
     }
 
-    private initConnectionEvents(): void {
+    private initConnectionEventsListeners(): void {
         this.socket.on('connect', () => {
             reduxStore.dispatch(setConnectionStatus(true))
             console.log('CONNECTED TO CLIPTOOL SERVER')
@@ -53,7 +53,7 @@ class ClientHandlerService {
         })
     }
 
-    private initServerEvents(): void {
+    private initServerEventsListeners(): void {
         this.socket.on(
             ServerToClient.MEDIA_UPDATE,
             (channelIndex: number, payload: MediaFile[]) =>
@@ -125,7 +125,6 @@ class ClientHandlerService {
         payload: MediaFile[]
     ): void {
         reduxStore.dispatch(updateMediaFiles(channelIndex, payload))
-        console.log('Client state :', state)
     }
 
     private processFoldersUpdateEvent(payload: string[]) {
@@ -145,8 +144,10 @@ class ClientHandlerService {
         reduxStore.dispatch(updateHiddenFiles(hiddenFiles))
     }
 
-    private processTimeTallyUpdateEvent(data: TimeSelectedFilePayload[]): void {
-        data.forEach((channel, index) =>
+    private processTimeTallyUpdateEvent(
+        payloads: TimeSelectedFilePayload[]
+    ): void {
+        payloads.forEach((channel, index) =>
             this.processSingleTimeTallyPayload(channel, index)
         )
     }
@@ -156,17 +157,26 @@ class ClientHandlerService {
         index: number
     ): void {
         const oldTime = mediaService.getOutput(state.media, index).time
-        if (channel.time[0] !== oldTime[0] || channel.time[1] !== oldTime[1]) {
-            if (
-                settingsService.getOutputSettings(state.settings, index)
-                    .selectedFileName !== channel.selectedFileName
-            ) {
-                reduxStore.dispatch(
-                    setSelectedFileName(index, channel.selectedFileName)
-                )
-            }
-            reduxStore.dispatch(setTime(index, channel.time))
+        if (!this.hasTimeChanged(oldTime, channel.time)) {
+            return
         }
+
+        if (
+            settingsService.getOutputSettings(state.settings, index)
+                .selectedFileName !== channel.selectedFileName
+        ) {
+            reduxStore.dispatch(
+                setSelectedFileName(index, channel.selectedFileName)
+            )
+        }
+        reduxStore.dispatch(setTime(index, channel.time))
+    }
+
+    private hasTimeChanged(
+        oldtime: [number, number],
+        newTime: [number, number]
+    ): boolean {
+        return newTime[0] !== oldtime[0] || newTime[1] !== oldtime[1]
     }
 
     private processFileCuedUpdateEvent(

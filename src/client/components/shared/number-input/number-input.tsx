@@ -7,13 +7,12 @@ interface NumberInputProps {
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void
   description?: string
   unit?: string
-  wrapperClassName?: string
-  inputClassName?: string
+  className?: string
 }
 
 export default function NumberInput(props: NumberInputProps): JSX.Element {
   return (
-    <div className={`${props.wrapperClassName ?? ''}`}>
+    <div className={`${props.className ?? ''}`}>
       {props.description ? (
         <label className="label">
           {props.description}
@@ -22,7 +21,7 @@ export default function NumberInput(props: NumberInputProps): JSX.Element {
       <input type="number" 
         value={props.value} 
         onChange={props.onChange}
-        className={`c-number-input ${props.inputClassName ?? ''}`}/>
+        className='c-number-input'/>
       {props.unit ?? ''}
     </div>
   )

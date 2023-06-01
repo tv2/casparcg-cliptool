@@ -15,30 +15,30 @@ import socketService from "../../../services/socket-service";
 import Toggle from "../../shared/switch/toggle";
 
 export default function SettingsActions(): JSX.Element {
-  const activeTab: number = useSelector(
-    (state: State) => appNavigationService.getActiveTab(state.appNavigation))
+  const activeTabIndex: number = useSelector(
+    (state: State) => appNavigationService.getActiveTabIndex(state.appNavigation))
   const operationMode = useSelector(
-    (state: State) => settingsService.getOutputSettings(state.settings, activeTab)?.operationMode)
+    (state: State) => settingsService.getOutputSettings(state.settings, activeTabIndex)?.operationMode)
   
   const buttonCss = "save-button"
 
   return (
       <div className="settings-channel-form">
-        <Button classNames={buttonCss} 
+        <Button className={buttonCss} 
           onClick={() => saveSettings()}>
             SAVE SETTINGS
         </Button>
-        <Button classNames={buttonCss}
+        <Button className={buttonCss}
           onClick={() => discardSettings()}>
-          {changingSettingsService.hasChanges() ? 'DISCARD CHANGES' : 'CLOSE SETTINGS'} 
+          {changingSettingsService.getHasChanges() ? 'DISCARD CHANGES' : 'CLOSE SETTINGS'} 
         </Button>
-        <Toggle classNames={buttonCss} checked={operationMode === OperationMode.EDIT_VISIBILITY} 
+        <Toggle className={buttonCss} checked={operationMode === OperationMode.EDIT_VISIBILITY} 
           onChange={() => emitSetOperationModeToEditVisibility()}>
             EDIT VISIBILITY
         </Toggle>
         
         {!browserService.isChannelView() && (
-          <Button classNames={buttonCss} 
+          <Button className={buttonCss} 
             onClick={() => restartCliptool()}>
               RESTART CLIPTOOL
            </Button>
@@ -60,14 +60,14 @@ function toggleSettingsPage(): void {
 }
 
 function emitSetOperationModeToEditVisibility(): void {
-  const activeTab: number = appNavigationService.getActiveTab(state.appNavigation)
-  const output = settingsService.getOutputSettings(state.settings, activeTab)
+  const activeTabIndex: number = appNavigationService.getActiveTabIndex(state.appNavigation)
+  const output = settingsService.getOutputSettings(state.settings, activeTabIndex)
   if (output.operationMode !== OperationMode.EDIT_VISIBILITY) {
       toggleSettingsPage()
-      socketService.emitSetOperationModeToEditVisibility(activeTab)
+      socketService.emitSetOperationModeToEditVisibility(activeTabIndex)
   }
   else {
-    socketService.emitSetOperationModeToControl(activeTab)
+    socketService.emitSetOperationModeToControl(activeTabIndex)
   }
 }
 

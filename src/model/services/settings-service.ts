@@ -8,7 +8,7 @@ import {
 import {
     defaultCcgSettingsState,
     defaultOutputSettingsState,
-    NewGenericSettings,
+    newGenericSettingsSchema,
 } from '../schemas/new-settings-schema'
 
 class SettingsService {
@@ -24,16 +24,16 @@ class SettingsService {
     public getTabInfo(settingsState: Settings, mediaState: Media): TabInfo[] {
         return Array(mediaState.outputs.length)
             .fill({})
-            .map(({}, index) => {
-                const output = this.getOutputSettings(settingsState, index)
-                return {
-                    index,
-                    title:
-                        output && output.label
-                            ? output.label
-                            : `Output ${index + 1}`,
-                }
-            })
+            .map(({}, index) => this.buildTabInfoForIndex(settingsState, index))
+    }
+
+    private buildTabInfoForIndex(settingsState: Settings, index: number) {
+        const output = this.getOutputSettings(settingsState, index)
+        return {
+            index,
+            title:
+                output && output.label ? output.label : `Output ${index + 1}`,
+        }
     }
 
     public getOutputSettings(
@@ -48,7 +48,7 @@ class SettingsService {
     }
 
     public getDefaultGenericSettings(): GenericSettings {
-        const parsed = NewGenericSettings.safeParse({})
+        const parsed = newGenericSettingsSchema.safeParse({})
         return parsed.success
             ? (parsed.data as GenericSettings)
             : this.fallBackDefaultSettings
@@ -66,8 +66,8 @@ class SettingsService {
         return selectedFileName === thumbnailName
     }
 
-    public isThumbnailCued(
-        thumbnailName: string,
+    public isMediaCued(
+        fileName: string,
         settingsState: Settings,
         channelIndex: number
     ): boolean {
@@ -75,7 +75,7 @@ class SettingsService {
             this.getOutputSettings(settingsState, channelIndex),
             settingsState
         )
-        return cuedFileName === thumbnailName
+        return cuedFileName === fileName
     }
 
     public isThumbnailSelectedOnAnyOutput(
@@ -113,12 +113,11 @@ class SettingsService {
             .replace('//', '/')
             .split('.')
         // Remove system Path e.g.: D:\\media/:
-        const cleanSelectedFileName = fileName[0].replace(
+        return fileName[0].replace(
             settingsState.ccgConfig.path?.toUpperCase().replace(/\\/g, '/') +
                 '/',
             ''
         )
-        return cleanSelectedFileName
     }
 }
 

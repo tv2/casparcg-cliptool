@@ -6,7 +6,7 @@ import { ClientToServer } from '../../model/socket-io-constants'
 import clientHandlerService from './client-handler-service'
 
 class SocketService {
-    socket: SocketIOClient.Socket
+    private socket: SocketIOClient.Socket
 
     constructor() {
         this.socket = clientHandlerService.getSocket()

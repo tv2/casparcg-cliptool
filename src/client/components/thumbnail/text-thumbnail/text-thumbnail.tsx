@@ -6,7 +6,7 @@ import ThumbnailOverlayDisplay from "../thumbnail-overlay-display/thumbnail-over
 
 interface TextThumbnailProps {
   file: MediaFile
-  activeTab: number
+  activeTabIndex: number
 }
 
 export default function TextThumbnail(props: TextThumbnailProps): JSX.Element {
@@ -14,17 +14,17 @@ export default function TextThumbnail(props: TextThumbnailProps): JSX.Element {
     <div className="c-text-thumbnail" >
         <ThumbnailButton 
           fileName={props.file.name} 
-          wrapperClassNames="c-text-thumbnail__wrapper" 
-          buttonClassNames="c-text-thumbnail__button" 
+          wrapperClassName="c-text-thumbnail__wrapper" 
+          buttonClassName="c-text-thumbnail__button" 
           fileType={props.file.type} 
-          activeTab={props.activeTab}>
+          activeTabIndex={props.activeTabIndex}>
           <p className="c-text-thumbnail__text">
               {props.file.name
                   .substring(props.file.name.lastIndexOf('/') + 1)
                   .slice(-45)}
           </p>
         </ThumbnailButton>        
-        <ThumbnailOverlayDisplay classNames="text-view" activeTab={props.activeTab} file={props.file} />        
+        <ThumbnailOverlayDisplay className="text-view" activeTabIndex={props.activeTabIndex} file={props.file} />        
         
     </div>
   )

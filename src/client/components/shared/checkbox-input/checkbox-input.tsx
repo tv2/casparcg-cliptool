@@ -6,13 +6,12 @@ interface CheckboxInputProps {
   value: boolean
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void
   description?: string
-  wrapperClassName?: string
-  inputClassName?: string
+  className?: string
 }
 
 export default function CheckboxInput(props: CheckboxInputProps): JSX.Element { 
   return (
-    <div className={`${props.wrapperClassName ?? ''}`}>
+    <div className={`${props.className ?? ''}`}>
       {props.description ? (
         <label className="label">
           {props.description}
@@ -21,7 +20,7 @@ export default function CheckboxInput(props: CheckboxInputProps): JSX.Element {
       <input type="checkbox" 
         checked={props.value} 
         onChange={props.onChange}
-        className={`c-checkbox-input ${props.inputClassName ?? ''}`} />
+        className='c-checkbox-input' />
     </div>
   )
 }
