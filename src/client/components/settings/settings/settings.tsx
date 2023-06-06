@@ -17,9 +17,7 @@ export function Settings(): JSX.Element {
     useEffect(() => {  
         changingSettingsService.initStateHandler(settings, setSettings)
         changingSettingsService.saveClone(settingsService.getGenericSettings(state.settings))
-        return () => {
-            changingSettingsService.resetStateHandler()
-        }
+        return () => changingSettingsService.resetStateHandler()        
     }, [])
     return (
         <div className="settings-body">

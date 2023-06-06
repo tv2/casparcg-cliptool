@@ -6,6 +6,7 @@ import { HiddenFileInfo, MediaFile } from "../../../../model/reducers/media-mode
 import { State } from "../../../../model/reducers/index-reducer";
 import './image-thumbnail.scss'
 import ThumbnailOverlayDisplay from "../thumbnail-overlay-display/thumbnail-overlay-display";
+import { FileNameDisplay } from "../file-name-display/file-name-display";
 
 interface ImageThumbnailProps {
   file: MediaFile
@@ -24,11 +25,7 @@ export default function ImageThumbnail(props: ImageThumbnailProps): JSX.Element 
           <ThumbnailPicture fileName={props.file.name} />
           <ThumbnailOverlayDisplay activeTabIndex={props.activeTabIndex} file={props.file} />     
         </ThumbnailButton>        
-        <p className="text">
-            {props.file.name
-                .substring(props.file.name.lastIndexOf('/') + 1)
-                .slice(-45)}
-        </p>
+        <FileNameDisplay className="text" fileName={props.file.name}/>            
     </div>
   )
 }

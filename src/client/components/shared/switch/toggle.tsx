@@ -6,7 +6,7 @@ interface ToggleProps {
   onChange: (isChecked: Boolean) => void
   checked: boolean
   className?: string
-  children?: React.ReactNode
+  children?: string
 }
 
 export default function Toggle(props: ToggleProps): JSX.Element {

@@ -1,7 +1,7 @@
 import React from "react"
 import { CcgConfigChannel, OutputSettings } from "../../../../model/reducers/settings-models"
 import eventService from "../../../services/event-service"
-import CheckboxInput from "../../shared/checkbox-input/checkbox-input"
+import Checkbox from "../../shared/checkbox/checkbox"
 import NumberInput from "../../shared/number-input/number-input"
 import TextInput from "../../shared/text-input/text-input"
 import './output.scss'
@@ -63,28 +63,28 @@ export default function Output(props: OutputProps): JSX.Element {
                     description="FORMAT :">
                     { props.configChannel.videoMode }
                 </Label>
-                <CheckboxInput
+                <Checkbox
                     description="LOOP :"
                     className={checkboxCss}
-                    value={loopState}
+                    checked={loopState}
                     onChange={saveTempLoopChange}
                 />
-                <CheckboxInput
+                <Checkbox
                     description="MIX :"
                     className={checkboxCss}
-                    value={mixState}
+                    checked={mixState}
                     onChange={saveTempMixChange}
                 />
-                <CheckboxInput
+                <Checkbox
                     description="MANUAL :"
                     className={checkboxCss}
-                    value={manualStartState}
+                    checked={manualStartState}
                     onChange={saveTempManualChange}
                 />
-                <CheckboxInput
+                <Checkbox
                     description="OVERLAY :"
                     className={checkboxCss}
-                    value={webState}
+                    checked={webState}
                     onChange={saveTempWebStateChange}
                 />
                 <TextInput
@@ -93,10 +93,10 @@ export default function Output(props: OutputProps): JSX.Element {
                     value={webUrl}
                     onChange={saveTempWebUrlChange}
                 />
-                <CheckboxInput
+                <Checkbox
                     description="SCALE :"
                     className={checkboxCss}
-                    value={shouldScale}
+                    checked={shouldScale}
                     onChange={saveTempShouldScaleChange}
                 />
                 {shouldScale && (

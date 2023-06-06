@@ -20,7 +20,7 @@ export default function SettingsActions(): JSX.Element {
   const operationMode = useSelector(
     (state: State) => settingsService.getOutputSettings(state.settings, activeTabIndex)?.operationMode)
   
-  const buttonCss = "save-button"
+  const buttonCss = "c-settings-actions-button"
 
   return (
       <div className="settings-channel-form">
@@ -33,7 +33,7 @@ export default function SettingsActions(): JSX.Element {
           {changingSettingsService.getHasChanges() ? 'DISCARD CHANGES' : 'CLOSE SETTINGS'} 
         </Button>
         <Toggle className={buttonCss} checked={operationMode === OperationMode.EDIT_VISIBILITY} 
-          onChange={() => emitSetOperationModeToEditVisibility()}>
+          onChange={() => setOperationModeToEditVisibility()}>
             EDIT VISIBILITY
         </Toggle>
         
@@ -59,7 +59,7 @@ function toggleSettingsPage(): void {
   changingSettingsService.toggleSettingsPage()
 }
 
-function emitSetOperationModeToEditVisibility(): void {
+function setOperationModeToEditVisibility(): void {
   const activeTabIndex: number = appNavigationService.getActiveTabIndex(state.appNavigation)
   const output = settingsService.getOutputSettings(state.settings, activeTabIndex)
   if (output.operationMode !== OperationMode.EDIT_VISIBILITY) {

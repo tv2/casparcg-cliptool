@@ -1,15 +1,15 @@
 import React from "react"
-import './checkbox-input.scss'
+import './checkbox.scss'
 import '../label/label.scss'
 
-interface CheckboxInputProps {
-  value: boolean
+interface CheckboxProps {
+  checked: boolean
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void
   description?: string
   className?: string
 }
 
-export default function CheckboxInput(props: CheckboxInputProps): JSX.Element { 
+export default function Checkbox(props: CheckboxProps): JSX.Element { 
   return (
     <div className={`${props.className ?? ''}`}>
       {props.description ? (
@@ -18,9 +18,9 @@ export default function CheckboxInput(props: CheckboxInputProps): JSX.Element {
         </label>
       ) : ''}
       <input type="checkbox" 
-        checked={props.value} 
+        checked={props.checked} 
         onChange={props.onChange}
-        className='c-checkbox-input' />
+        className='c-checkbox' />
     </div>
   )
 }

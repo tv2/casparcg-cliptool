@@ -2,7 +2,6 @@ import React from "react"
 import settingsService from "../../../../model/services/settings-service";
 import { OperationMode, OutputSettings } from "../../../../model/reducers/settings-models";
 import { state } from "../../../../model/reducers/store";
-import Button from "../../shared/button";
 import browserService from "../../../services/browser-service";
 import socketService from "../../../services/socket-service";
 import { FileType } from "../../../../model/reducers/media-models";
@@ -40,14 +39,14 @@ export default function ThumbnailButton(props: ThumbnailButtonProps): JSX.Elemen
 
   return (
     <div className={`c-thumbnail-button ${props.wrapperClassName ?? ''} ${chosenClass}`}>
-      <Button
+      <div
           className={`c-thumbnail-button__button ${props.buttonClassName ?? ''}`}
           onClick={() => {
             triggerOperationModeAction(props.fileName, props.activeTabIndex, props.fileType)
           }}
       > 
         {props.children ?? ''}
-      </Button>
+      </div>
     </div>
   )
 }
