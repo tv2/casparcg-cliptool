@@ -2,16 +2,16 @@ import React from "react";
 import eventService from "../../../services/event-service";
 import NumberInput from "../../shared/number-input/number-input";
 import TextInput from "../../shared/text-input/text-input";
-import './casparcg-settings-form.scss'
+import './casparcg-settings.scss'
 import './../shared-settings.scss'
 import changingSettingsService from "../../../services/changing-settings-service";
 import { CasparcgSettings } from "../../../../model/reducers/settings-models";
 
-interface CasparcgSettingsFormProps {
+interface CasparcgSettingsForm {
     settings: CasparcgSettings
 }
 
-export default function CasparcgSettingsForm(props: CasparcgSettingsFormProps): JSX.Element {
+export default function CasparcgSettings(props: CasparcgSettingsForm): JSX.Element {
     const ip = props.settings.ip
     const amcpPort = props.settings.amcpPort
     const oscPort = props.settings.oscPort

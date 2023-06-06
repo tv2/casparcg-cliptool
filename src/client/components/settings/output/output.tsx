@@ -51,8 +51,8 @@ export default function Output(props: OutputProps): JSX.Element {
                         value={ folder }
                     >
                         {props.folders.map(
-                            (path: string, folderIndex: number) => (
-                                    <option key={folderIndex} value={path}>
+                            (path: string) => (
+                                    <option key={path} value={path}>
                                         {path}
                                     </option>
                                 )                            

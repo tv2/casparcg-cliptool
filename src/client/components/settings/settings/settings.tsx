@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux'
 import settingsService from '../../../../model/services/settings-service'
 import { State } from '../../../../model/reducers/index-reducer'
 import { state } from '../../../../model/reducers/store'
-import CasparcgSettingsForm from '../casparcg-settings-form/casparcg-settings-form'
+import CasparcgSettings from '../casparcg-settings/casparcg-settings'
 import browserService from '../../../services/browser-service'
 import './settings.scss'
 import changingSettingsService from '../../../services/changing-settings-service'
@@ -26,7 +26,7 @@ export function Settings(): JSX.Element {
             <p className="settings-header">SETTINGS :</p>
             <SettingsActions/>
             <hr/>
-            {!browserService.isChannelView() && settings && <CasparcgSettingsForm settings={settings.ccgSettings}/> }
+            {!browserService.isChannelView() && settings && <CasparcgSettings settings={settings.ccgSettings}/> }
             {settings && <Outputs outputSettings={settings.outputSettings}/>}
         </div>
     )

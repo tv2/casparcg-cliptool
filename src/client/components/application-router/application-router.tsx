@@ -2,7 +2,7 @@ import { useSelector } from "react-redux"
 import { State } from "../../../model/reducers/index-reducer"
 import React from "react"
 import { Settings } from "../settings/settings/settings"
-import Main from "../main"
+import TabPanel from "../tab-panel"
 import './application-router.scss'
 
 
@@ -17,5 +17,5 @@ export default function ApplicationRouter() {
     if (isSettingsVisible) {
       return (<Settings />)
     }
-    return (<Main />)
+    return (<TabPanel />)
 }
