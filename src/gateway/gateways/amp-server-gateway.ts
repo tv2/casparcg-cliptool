@@ -3,8 +3,8 @@ import { createServer } from 'net'
 import { socket as socketio } from '../util/socket-gateway-handlers'
 
 import { logger } from '../util/logger-gateway'
-import osService from '../../model/services/os-service'
-import { ClientToServer } from '../../model/socket-io-constants'
+import osService from '../../shared/services/os-service'
+import { ClientToServer } from '../../shared/socket-io-constants'
 
 export function ampServerGateway(): void {
     console.log('Initializing AMP server')
@@ -32,7 +32,7 @@ export function ampServerGateway(): void {
                 logger.info('AMP Client disconnected')
             })
     }).listen(3811)
-    let ipAddresses = osService.getThisMachineIpAddresses()
+    let ipAddresses = osService.getIpAddresses()
     ipAddresses.forEach((address) => {
         logger.info(`AMP Host Listening for TCP at ${address}:3811.`)
     })

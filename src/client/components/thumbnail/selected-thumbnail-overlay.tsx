@@ -1,17 +1,17 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import appNavigationService from "../../../model/services/app-navigation-service";
-import { State } from "../../../model/reducers/index-reducer";
-import timeService from "../../../model/services/time-service";
-import ThumbnailOverlay from "./thumbnail-overlay/thumbnail-overlay";
+import CardOverlay from "./card-overlay/card-overlay";
+import timeService from "../../../shared/services/time-service";
+import appNavigationService from "../../../shared/services/app-navigation-service";
+import { State } from "../../../shared/reducers/index-reducer";
 
-interface SelectedThumbnailOverlayProps {
+interface SelectedCardOverlayProps {
   className?: string
   fileType: string
   time: [number, number]
 }
 
-export default function SelectedThumbnailOverlay(props: SelectedThumbnailOverlayProps): JSX.Element {
+export default function SelectedCardOverlay(props: SelectedCardOverlayProps): JSX.Element {
   const frameRate: number = useSelector(
       (state: State) => {
         const videoFormat = state.settings.ccgConfig.channels[appNavigationService.getActiveTabIndex(state.appNavigation)]?.videoFormat
@@ -21,9 +21,9 @@ export default function SelectedThumbnailOverlay(props: SelectedThumbnailOverlay
 
   const durationTimeCode = timeService.durationToTimeCode(props.time, frameRate, props.fileType)
   return (
-    <ThumbnailOverlay className={`selected ${props.className ?? ''}`}>        
+    <CardOverlay className={`selected ${props.className ?? ''}`}>        
       {durationTimeCode}            
-    </ThumbnailOverlay>
+    </CardOverlay>
   )
   
 }

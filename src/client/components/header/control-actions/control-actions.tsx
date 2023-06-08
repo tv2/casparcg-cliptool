@@ -1,15 +1,16 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import settingsService from "../../../../model/services/settings-service";
-import appNavigationService from "../../../../model/services/app-navigation-service";
-import { State } from "../../../../model/reducers/index-reducer";
+import settingsService from "../../../../shared/services/settings-service";
+import appNavigationService from "../../../../shared/services/app-navigation-service";
+import { State } from "../../../../shared/reducers/index-reducer";
 import Button from "../../shared/button";
 import browserService from "../../../services/browser-service";
 import './control-actions.scss'
-import socketService from "../../../services/socket-service";
-import { OutputSettings } from "../../../../model/reducers/settings-models";
+import { OutputSettings } from "../../../../shared/models/settings-models";
 import Group from "../group/group";
-import Toggle from "../../shared/switch/toggle";
+import Toggle from "../../shared/switch/switch";
+import backendPlayApi from "../../../services/backend-play-api";
+import backendSettingApi from "../../../services/backend-settings-api";
 
 export default function ControlActions(): JSX.Element {
   const activeTabIndex: number = useSelector(
@@ -65,21 +66,21 @@ function playCuedFile(activeTabIndex: number, outputSettings: OutputSettings): v
   if (!outputSettings.cuedFileName) {
     return
   }
-  socketService.emitPlayFile(activeTabIndex, outputSettings.cuedFileName)
+  backendPlayApi.emitPlayFile(activeTabIndex, outputSettings.cuedFileName)
 }
 
 function toggleLoopState(activeTabIndex: number, isChecked: boolean): void {
-  socketService.emitSetLoopState(activeTabIndex, isChecked)
+  backendSettingApi.emitSetLoopState(activeTabIndex, isChecked)
 }
 
 function toggleMixState(activeTabIndex: number, isChecked: boolean): void {
-  socketService.emitSetMixState(activeTabIndex, isChecked)  
+  backendSettingApi.emitSetMixState(activeTabIndex, isChecked)  
 }
 
 function toggleWebState(activeTabIndex: number, isChecked: boolean): void {
-  socketService.emitSetWebState(activeTabIndex, isChecked)
+  backendSettingApi.emitSetWebState(activeTabIndex, isChecked)
 }
 
 function toggleManualStartState(activeTabIndex: number, isChecked: boolean): void {
-  socketService.emitSetManualStartState(activeTabIndex, isChecked)
+  backendSettingApi.emitSetManualStartState(activeTabIndex, isChecked)
 }

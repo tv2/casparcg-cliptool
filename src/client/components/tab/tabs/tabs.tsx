@@ -3,7 +3,9 @@ import TabTitle from "../tab-title/tab-title"
 import './tabs.scss'
 import Swipeable from "../../shared/swipeable"
 import { useSelector } from "react-redux"
-import { State } from "../../../../model/reducers/index-reducer"
+import { reduxStore } from "../../../../shared/store"
+import { setActiveTabIndex } from "../../../../shared/actions/app-navigation-action"
+import { State } from "../../../../shared/reducers/index-reducer"
 
 
 interface TabsProps {
@@ -17,12 +19,20 @@ export default function Tabs(props: TabsProps): JSX.Element {
   return (
     <div className="tabs">
       <div className='tabs-bar' role='tablist'>
-        <div className='tabs-bar__tabs'>
+        <div className='tabs-bar__tab-titles'>
           {React.Children.map(props.children, (child, index) => {
             if (!React.isValidElement(child)) {
               return
             }
-            return (<TabTitle key={index} title={props.titles[index]} tabIndex={index}/>)
+            const isSelected = activeTabIndex === index
+            const title = props.titles[index]
+            return (
+              <TabTitle 
+                key={title} 
+                title={title} 
+                isSelected={isSelected} 
+                onClick={() => setActiveOutput(index, isSelected)}/>
+              )
           })}        
         </div>
       </div>
@@ -35,4 +45,10 @@ export default function Tabs(props: TabsProps): JSX.Element {
         : props.children}
     </div>
   )
+}
+
+function setActiveOutput(tabIndex: number, isSelected: boolean): void {
+  if (!isSelected) {
+    reduxStore.dispatch(setActiveTabIndex(tabIndex))
+  }
 }

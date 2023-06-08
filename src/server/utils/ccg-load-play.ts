@@ -1,7 +1,7 @@
-import { state } from '../../model/reducers/store'
+import { state } from '../../shared/store'
 import { ccgConnection } from '../handlers/caspar-cg-handler'
 import { Enum as CcgEnum } from 'casparcg-connection'
-import settingsService from '../../model/services/settings-service'
+import settingsService from '../../shared/services/settings-service'
 
 export function playMedia(
     channelIndex: number,

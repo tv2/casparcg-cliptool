@@ -1,9 +1,9 @@
 import { useSelector } from "react-redux"
-import { State } from "../../../model/reducers/index-reducer"
 import React from "react"
 import { Settings } from "../settings/settings/settings"
 import TabPanel from "../tab-panel"
 import './application-router.scss'
+import { State } from "../../../shared/reducers/index-reducer"
 
 
 export default function ApplicationRouter() {    

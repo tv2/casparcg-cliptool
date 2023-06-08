@@ -1,6 +1,6 @@
 import React from 'react'
-import { reduxStore } from '../../../model/reducers/store'
-import { setActiveTabIndex } from '../../../model/reducers/app-navigation-action'
+import { reduxStore } from '../../../shared/store'
+import { setActiveTabIndex } from '../../../shared/actions/app-navigation-action'
 import { OperationModeFooter } from '../footer/operation-mode-footer'
 import ApplicationHeader from '../header/application-header/application-header'
 import browserService from '../../services/browser-service'

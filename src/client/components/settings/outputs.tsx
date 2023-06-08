@@ -1,9 +1,9 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import { State } from "../../../model/reducers/index-reducer";
-import { CcgConfigChannel, OutputSettings } from "../../../model/reducers/settings-models";
 import browserService from "../../services/browser-service";
 import Output from "./output/output";
+import { State } from "../../../shared/reducers/index-reducer";
+import { CaspercgConfigChannel, OutputSettings } from "../../../shared/models/settings-models";
 
 interface OutputsProps {
     outputSettings: OutputSettings[]
@@ -37,7 +37,7 @@ export default function Outputs(props: OutputsProps): JSX.Element {
         )
     }
 
-    function buildSingleOutput(outputSettings: OutputSettings, configChannel: CcgConfigChannel, outputIndex: number): JSX.Element {
+    function buildSingleOutput(outputSettings: OutputSettings, configChannel: CaspercgConfigChannel, outputIndex: number): JSX.Element {
         return (
             <Output 
                 index={outputIndex}

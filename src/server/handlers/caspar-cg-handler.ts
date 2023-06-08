@@ -2,7 +2,7 @@
 import osc from 'osc' //Using OSC fork from PieceMeta/osc.js as it has excluded hardware serialport support and thereby is crossplatform
 
 import { CasparCG } from 'casparcg-connection'
-import { state, reduxStore } from '../../model/reducers/store'
+import { state, reduxStore } from '../../shared/store'
 import {
     setNumberOfOutputs,
     setTime,
@@ -10,7 +10,7 @@ import {
     updateMediaFiles,
     updateThumbnailFileList,
     updateHiddenFiles,
-} from '../../model/reducers/media-actions'
+} from '../../shared/actions/media-actions'
 
 import { socketServer } from './express-handler'
 import {
@@ -18,7 +18,7 @@ import {
     MediaFile,
     Output,
     ThumbnailFile,
-} from '../../model/reducers/media-models'
+} from '../../shared/models/media-models'
 
 import {
     setLoop,
@@ -27,7 +27,7 @@ import {
     setOperationMode,
     setWeb,
     updateSettings,
-} from '../../model/reducers/settings-action'
+} from '../../shared/actions/settings-action'
 import { initializeClient } from './socket-io-server-handler'
 import {
     extractFoldersList,
@@ -39,15 +39,15 @@ import {
 } from '../utils/ccg-handler-utils'
 import { logger } from '../utils/logger'
 import { loadMedia, playOverlay } from '../utils/ccg-load-play'
-import { OperationMode } from '../../model/reducers/settings-models'
-import settingsService from '../../model/services/settings-service'
-import osService from '../../model/services/os-service'
-import mediaService from '../../model/services/media-service'
+import { OperationMode } from '../../shared/models/settings-models'
+import settingsService from '../../shared/services/settings-service'
+import osService from '../../shared/services/os-service'
+import mediaService from '../../shared/services/media-service'
 import hiddenFilesPersistenceService from '../services/hidden-files-persistence-service'
 import {
     ServerToClient,
     TimeSelectedFilePayload,
-} from '../../model/socket-io-constants'
+} from '../../shared/socket-io-constants'
 
 let waitingForCcgResponse: boolean = false
 let previousThumbnails: ThumbnailFile[] = []
@@ -75,7 +75,7 @@ function ccgOSCServer(): void {
 
     oscConnection
         .on('ready', () => {
-            let ipAddresses = osService.getThisMachineIpAddresses()
+            let ipAddresses = osService.getIpAddresses()
 
             logger.info('Listening for OSC over UDP.')
             ipAddresses.forEach((address) =>

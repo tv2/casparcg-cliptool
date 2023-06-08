@@ -1,5 +1,4 @@
 import React from 'react'
-import { state } from '../../../../model/reducers/store'
 
 import TimerThumbnail from '../timer-thumbnail/timer-thumbnail'
 import ControlActions from '../control-actions/control-actions'
@@ -8,6 +7,7 @@ import Button from '../../shared/button'
 import './application-header.scss'
 import changingSettingsService from '../../../services/changing-settings-service'
 import Group from '../group/group'
+import { state } from '../../../../shared/store'
 
 export default function ApplicationHeader(): JSX.Element {  
     return (

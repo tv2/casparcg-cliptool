@@ -1,11 +1,11 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
-import { State } from '../../../model/reducers/index-reducer'
-import { OperationMode } from '../../../model/reducers/settings-models'
-import appNavigationService from '../../../model/services/app-navigation-service'
-import settingsService from '../../../model/services/settings-service'
 import { EditVisibilityFooter } from './edit-visibility-footer/edit-visibility-footer'
 import browserService from '../../services/browser-service'
+import appNavigationService from '../../../shared/services/app-navigation-service'
+import { State } from '../../../shared/reducers/index-reducer'
+import { OperationMode } from '../../../shared/models/settings-models'
+import settingsService from '../../../shared/services/settings-service'
 
 export function OperationModeFooter(): JSX.Element {
   if (browserService.isTextView()) {

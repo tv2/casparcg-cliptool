@@ -1,12 +1,12 @@
-import { setGenerics } from '../../model/reducers/settings-action'
+import { setGenerics } from '../../shared/actions/settings-action'
 import {
     GenericSettings,
     OperationMode,
-} from '../../model/reducers/settings-models'
-import { state, reduxStore } from '../../model/reducers/store'
-import { NewGenericSettings } from '../../model/schemas/new-settings-schema'
-import { PreviousGenericSettings } from '../../model/schemas/old-settings-schema'
-import settingsService from '../../model/services/settings-service'
+} from '../../shared/models/settings-models'
+import { state, reduxStore } from '../../shared/store'
+import { newGenericSettingsSchema } from '../../shared/schemas/new-settings-schema'
+import { PreviousGenericSettings } from '../../shared/schemas/old-settings-schema'
+import settingsService from '../../shared/services/settings-service'
 import { logger } from '../utils/logger'
 import persistenceService from './persistence-service'
 
@@ -95,7 +95,7 @@ class SettingsPersistenceService {
         success: boolean
         parsed: GenericSettings | undefined
     } {
-        const parsed = NewGenericSettings.safeParse(loadedFile)
+        const parsed = newGenericSettingsSchema.safeParse(loadedFile)
         if (parsed.success) {
             logger.info('Loaded settings as new structure.')
             return { success: true, parsed: parsed.data as GenericSettings }

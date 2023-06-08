@@ -1,13 +1,13 @@
 import _ from 'lodash'
-import { toggleSettings as toggleSettingsVisibility } from '../../model/reducers/app-navigation-action'
+import { toggleSettingsVisibility } from '../../shared/actions/app-navigation-action'
+import backendSettingApi from './backend-settings-api'
 import {
     CasparcgSettings,
     GenericSettings,
     OutputSettings,
-} from '../../model/reducers/settings-models'
-import { reduxStore, state } from '../../model/reducers/store'
-import settingsService from '../../model/services/settings-service'
-import socketService from './socket-service'
+} from '../../shared/models/settings-models'
+import settingsService from '../../shared/services/settings-service'
+import { reduxStore, state } from '../../shared/store'
 
 class ChangingSettingsService {
     private temporarySettings: GenericSettings | undefined
@@ -112,7 +112,7 @@ class ChangingSettingsService {
             this.getHasChanges() &&
             window.confirm('Changes have been made, do you want to save them?')
         ) {
-            socketService.emitSetGenericSettings(this.temporarySettings)
+            backendSettingApi.emitSetGenericSettings(this.temporarySettings)
             this.toggleSettingsPage()
         }
     }

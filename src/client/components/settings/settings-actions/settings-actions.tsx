@@ -1,18 +1,18 @@
 import React from "react";
-import { state } from "../../../../model/reducers/store";
 import { useSelector } from "react-redux";
-import settingsService from "../../../../model/services/settings-service";
-import appNavigationService from "../../../../model/services/app-navigation-service";
-import { OperationMode } from "../../../../model/reducers/settings-models";
 import _ from "lodash";
-import { State } from "../../../../model/reducers/index-reducer";
 import Button from "../../shared/button";
 import browserService from "../../../services/browser-service";
 import './settings-actions.scss'
 import './../shared-settings.scss'
 import changingSettingsService from "../../../services/changing-settings-service";
-import socketService from "../../../services/socket-service";
-import Toggle from "../../shared/switch/toggle";
+import Toggle from "../../shared/switch/switch";
+import backendOperationApi from "../../../services/backend-operation-api";
+import appNavigationService from "../../../../shared/services/app-navigation-service";
+import { State } from "../../../../shared/reducers/index-reducer";
+import settingsService from "../../../../shared/services/settings-service";
+import { OperationMode } from "../../../../shared/models/settings-models";
+import { state } from "../../../../shared/store";
 
 export default function SettingsActions(): JSX.Element {
   const activeTabIndex: number = useSelector(
@@ -64,10 +64,10 @@ function setOperationModeToEditVisibility(): void {
   const output = settingsService.getOutputSettings(state.settings, activeTabIndex)
   if (output.operationMode !== OperationMode.EDIT_VISIBILITY) {
       toggleSettingsPage()
-      socketService.emitSetOperationModeToEditVisibility(activeTabIndex)
+      backendOperationApi.emitSetOperationModeToEditVisibility(activeTabIndex)
   }
   else {
-    socketService.emitSetOperationModeToControl(activeTabIndex)
+    backendOperationApi.emitSetOperationModeToControl(activeTabIndex)
   }
 }
 
@@ -78,7 +78,7 @@ function restartCliptool(): void {
       )
   ) {
       console.log('Restarting server...')
-      socketService.emitRestartServer()
+      backendOperationApi.emitRestartServer()
   }
 }
 

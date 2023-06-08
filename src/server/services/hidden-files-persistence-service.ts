@@ -1,12 +1,12 @@
-import { updateHiddenFiles } from '../../model/reducers/media-actions'
-import { HiddenFileInfo } from '../../model/reducers/media-models'
-import { state, reduxStore } from '../../model/reducers/store'
+import { updateHiddenFiles } from '../../shared/actions/media-actions'
+import { HiddenFileInfo } from '../../shared/models/media-models'
+import { state, reduxStore } from '../../shared/store'
 import { socketServer } from '../handlers/express-handler'
 import { logger } from '../utils/logger'
 import persistenceService from './persistence-service'
-import settingsService from '../../model/services/settings-service'
-import { OutputSettings } from '../../model/reducers/settings-models'
-import { ServerToClient } from '../../model/socket-io-constants'
+import settingsService from '../../shared/services/settings-service'
+import { OutputSettings } from '../../shared/models/settings-models'
+import { ServerToClient } from '../../shared/socket-io-constants'
 
 class HiddenFilesPersistenceService {
     public load(): void {

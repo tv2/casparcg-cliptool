@@ -1,10 +1,10 @@
 import React from "react"
 import { Footer } from "../footer/footer"
 import './edit-visibility-footer.scss'
-import socketService from "../../../services/socket-service"
-import appNavigationService from "../../../../model/services/app-navigation-service"
-import { state } from "../../../../model/reducers/store"
 import Button from "../../shared/button"
+import backendOperationApi from "../../../services/backend-operation-api"
+import { state } from "../../../../shared/store"
+import appNavigationService from "../../../../shared/services/app-navigation-service"
 
 
 export function EditVisibilityFooter(): JSX.Element {
@@ -23,5 +23,5 @@ export function EditVisibilityFooter(): JSX.Element {
 }
 
 function resetOperationMode(): void {
-  socketService.emitSetOperationModeToControl(appNavigationService.getActiveTabIndex(state.appNavigation))
+  backendOperationApi.emitSetOperationModeToControl(appNavigationService.getActiveTabIndex(state.appNavigation))
 }

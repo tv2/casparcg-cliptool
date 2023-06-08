@@ -1,14 +1,14 @@
 // @ts-ignore
 import osc from 'osc' //Using OSC fork from PieceMeta/osc.js as it has excluded hardware serialport support and thereby is crossplatform
 
-import { state } from '../../model/reducers/store'
+import { state } from '../../shared/store'
 import { socket } from '../util/socket-gateway-handlers'
 
 import * as OSC from './osc-constants'
 import { ARG_CONSTANTS } from '../util/extract-args'
-import osService from '../../model/services/os-service'
-import mediaService from '../../model/services/media-service'
-import { ClientToServer } from '../../model/socket-io-constants'
+import osService from '../../shared/services/os-service'
+import mediaService from '../../shared/services/media-service'
+import { ClientToServer } from '../../shared/socket-io-constants'
 
 export function oscServerGateway(): void {
     console.log('Initializing OSC server')
@@ -19,7 +19,7 @@ export function oscServerGateway(): void {
 
     oscConnection
         .on('ready', () => {
-            let ipAddresses = osService.getThisMachineIpAddresses()
+            let ipAddresses = osService.getIpAddresses()
 
             console.log('Listening for OSC over UDP.')
             ipAddresses.forEach((address) => {

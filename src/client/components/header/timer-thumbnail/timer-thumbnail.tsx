@@ -1,16 +1,15 @@
 import React from "react"
 import { useSelector } from "react-redux"
-import { state } from "../../../../model/reducers/store";
-import mediaService from "../../../../model/services/media-service";
-
-import appNavigationService from "../../../../model/services/app-navigation-service";
-import settingsService from "../../../../model/services/settings-service";
-import timeService from "../../../../model/services/time-service";
-import { FileType, Output } from "../../../../model/reducers/media-models";
-import { OutputSettings } from "../../../../model/reducers/settings-models";
-import { State } from "../../../../model/reducers/index-reducer";
 import './timer-thumbnail.scss'
 import Group from "../group/group";
+import { State } from "../../../../shared/reducers/index-reducer";
+import appNavigationService from "../../../../shared/services/app-navigation-service";
+import { FileType, Output } from "../../../../shared/models/media-models";
+import { OutputSettings } from "../../../../shared/models/settings-models";
+import settingsService from "../../../../shared/services/settings-service";
+import { state } from "../../../../shared/store";
+import mediaService from "../../../../shared/services/media-service";
+import timeService from "../../../../shared/services/time-service";
 
 export default function TimerThumbnail(): JSX.Element {
     const activeTabIndex: number = useSelector(

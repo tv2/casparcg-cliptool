@@ -1,7 +1,7 @@
 import React, { useEffect } from "react"
 import { useState } from "react"
-import { setActiveTabIndex } from "../../../model/reducers/app-navigation-action"
-import { reduxStore } from "../../../model/reducers/store"
+import { reduxStore } from "../../../shared/store"
+import { setActiveTabIndex } from "../../../shared/actions/app-navigation-action"
 
 const MIN_SWIPE_DISTANCE = 50
 const MAX_SWIPE_SLOPE = 0.5

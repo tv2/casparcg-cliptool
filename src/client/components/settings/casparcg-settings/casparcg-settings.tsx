@@ -1,11 +1,10 @@
 import React from "react";
-import eventService from "../../../services/event-service";
 import NumberInput from "../../shared/number-input/number-input";
 import TextInput from "../../shared/text-input/text-input";
 import './casparcg-settings.scss'
 import './../shared-settings.scss'
 import changingSettingsService from "../../../services/changing-settings-service";
-import { CasparcgSettings } from "../../../../model/reducers/settings-models";
+import { CasparcgSettings } from "../../../../shared/models/settings-models";
 
 interface CasparcgSettingsForm {
     settings: CasparcgSettings
@@ -58,31 +57,31 @@ export default function CasparcgSettings(props: CasparcgSettingsForm): JSX.Eleme
     )
     
     function saveTempIpChange(event: React.ChangeEvent<HTMLInputElement>): void {
-        const newIp = eventService.getTextFromEvent(event)
+        const newIp = event.target.value
         props.settings.ip = newIp
         changingSettingsService.saveTemporaryCcgSettingChanges(props.settings)
     }
 
     function saveTempAmcpPortChange(event: React.ChangeEvent<HTMLInputElement>): void {
-        const newAmcpPort = eventService.getNumberFromEvent(event)
+        const newAmcpPort = Number(event.target.value)
         props.settings.amcpPort = newAmcpPort
         changingSettingsService.saveTemporaryCcgSettingChanges(props.settings)
     }
 
     function saveTempOscPortChange(event: React.ChangeEvent<HTMLInputElement>): void {
-        const newOscPort = eventService.getNumberFromEvent(event)
+        const newOscPort = Number(event.target.value)
         props.settings.oscPort = newOscPort
         changingSettingsService.saveTemporaryCcgSettingChanges(props.settings)
     }
 
     function saveTempDefaultLayerChange(event: React.ChangeEvent<HTMLInputElement>): void {
-        const newDefaultLayer = eventService.getNumberFromEvent(event)
+        const newDefaultLayer = Number(event.target.value)
         props.settings.defaultLayer = newDefaultLayer
         changingSettingsService.saveTemporaryCcgSettingChanges(props.settings)
     }
 
     function saveTempTransitionTimeChange(event: React.ChangeEvent<HTMLInputElement>): void {
-        const newTransitionTime = eventService.getNumberFromEvent(event)
+        const newTransitionTime = Number(event.target.value)
         props.settings.transitionTime = newTransitionTime
         changingSettingsService.saveTemporaryCcgSettingChanges(props.settings)
     }

@@ -1,4 +1,4 @@
-import { state, reduxStore } from '../../model/reducers/store'
+import { state, reduxStore } from '../../shared/store'
 
 import {
     setTime,
@@ -6,7 +6,7 @@ import {
     updateThumbnailFileList,
     updateFolders,
     setNumberOfOutputs,
-} from '../../model/reducers/media-actions'
+} from '../../shared/actions/media-actions'
 
 import {
     setGenerics,
@@ -16,16 +16,16 @@ import {
     setOperationMode,
     setSelectedFileName,
     updateSettings,
-} from '../../model/reducers/settings-action'
+} from '../../shared/actions/settings-action'
 import { ARG_CONSTANTS } from './extract-args'
 import { logger } from './logger-gateway'
-import { MediaFile, ThumbnailFile } from '../../model/reducers/media-models'
-import { OperationMode, Settings } from '../../model/reducers/settings-models'
-import settingsService from '../../model/services/settings-service'
+import { MediaFile, ThumbnailFile } from '../../shared/models/media-models'
+import { OperationMode, Settings } from '../../shared/models/settings-models'
+import settingsService from '../../shared/services/settings-service'
 import {
     ServerToClient,
     TimeSelectedFilePayload,
-} from '../../model/socket-io-constants'
+} from '../../shared/socket-io-constants'
 
 logger.info(`Connecting Socket to: ${ARG_CONSTANTS.clipToolHost}`)
 

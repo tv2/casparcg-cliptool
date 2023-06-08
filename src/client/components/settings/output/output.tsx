@@ -1,6 +1,4 @@
 import React from "react"
-import { CcgConfigChannel, OutputSettings } from "../../../../model/reducers/settings-models"
-import eventService from "../../../services/event-service"
 import Checkbox from "../../shared/checkbox/checkbox"
 import NumberInput from "../../shared/number-input/number-input"
 import TextInput from "../../shared/text-input/text-input"
@@ -8,9 +6,10 @@ import './output.scss'
 import './../shared-settings.scss'
 import changingSettingsService from "../../../services/changing-settings-service"
 import Label from "../../shared/label/label"
+import { CaspercgConfigChannel, OutputSettings } from "../../../../shared/models/settings-models"
 
 interface OutputProps {
-  configChannel: CcgConfigChannel
+  configChannel: CaspercgConfigChannel
   index: number
   outputSettings: OutputSettings
   folders: string[]
@@ -121,55 +120,55 @@ export default function Output(props: OutputProps): JSX.Element {
     )
 
     function saveTempOutputLabelChange(event: React.ChangeEvent<HTMLInputElement>): void {
-        const newLabel = eventService.getTextFromEvent(event)
+        const newLabel = event.target.value
         props.outputSettings.label = newLabel
         changingSettingsService.saveTemporaryOutputSettingChange(props.outputSettings, props.index)
     }
     
     function saveTempLoopChange(event: React.ChangeEvent<HTMLInputElement>): void {
-        const newLoop = eventService.getCheckedFromEvent(event)
+        const newLoop = event.target.checked
         props.outputSettings.loopState = newLoop
         changingSettingsService.saveTemporaryOutputSettingChange(props.outputSettings, props.index)
     }
     
     function saveTempMixChange(event: React.ChangeEvent<HTMLInputElement>): void {
-        const newMix = eventService.getCheckedFromEvent(event)
+        const newMix = event.target.checked
         props.outputSettings.mixState = newMix
         changingSettingsService.saveTemporaryOutputSettingChange(props.outputSettings, props.index)
     }
 
     function saveTempManualChange(event: React.ChangeEvent<HTMLInputElement>): void {
-        const newManual = eventService.getCheckedFromEvent(event)
+        const newManual = event.target.checked
         props.outputSettings.manualStartState = newManual
         changingSettingsService.saveTemporaryOutputSettingChange(props.outputSettings, props.index)
     }
     
     function saveTempShouldScaleChange(event: React.ChangeEvent<HTMLInputElement>): void {
-        const newShouldScale = eventService.getCheckedFromEvent(event)
+        const newShouldScale = event.target.checked
         props.outputSettings.shouldScale = newShouldScale
         changingSettingsService.saveTemporaryOutputSettingChange(props.outputSettings, props.index)
     }
     
     function saveTempScaleXChange(event: React.ChangeEvent<HTMLInputElement>): void {
-        const newScaleX = eventService.getNumberFromEvent(event)
+        const newScaleX = Number(event.target.value)
         props.outputSettings.scaleX = newScaleX
         changingSettingsService.saveTemporaryOutputSettingChange(props.outputSettings, props.index)
     }
     
     function saveTempScaleYChange(event: React.ChangeEvent<HTMLInputElement>): void {
-        const newScaleY = eventService.getNumberFromEvent(event)
+        const newScaleY = Number(event.target.value)
         props.outputSettings.scaleY = newScaleY
         changingSettingsService.saveTemporaryOutputSettingChange(props.outputSettings, props.index)
     }
     
     function saveTempWebStateChange(event: React.ChangeEvent<HTMLInputElement>): void {
-        const newWebState = eventService.getCheckedFromEvent(event)
+        const newWebState = event.target.checked
         props.outputSettings.webState = newWebState
         changingSettingsService.saveTemporaryOutputSettingChange(props.outputSettings, props.index)
     }
 
     function saveTempWebUrlChange(event: React.ChangeEvent<HTMLInputElement>): void {
-        const newWebUrl = eventService.getTextFromEvent(event)
+        const newWebUrl = event.target.value
         props.outputSettings.webUrl = newWebUrl
         changingSettingsService.saveTemporaryOutputSettingChange(props.outputSettings, props.index)
     }

@@ -1,4 +1,4 @@
-import { state, reduxStore } from '../../model/reducers/store'
+import { state, reduxStore } from '../../shared/store'
 import { logger } from '../utils/logger'
 
 import { socketServer } from './express-handler'
@@ -13,7 +13,7 @@ import {
     updateMediaFiles,
     updateThumbnailFileList,
     updateHiddenFiles,
-} from '../../model/reducers/media-actions'
+} from '../../shared/actions/media-actions'
 import {
     setGenerics,
     setCuedFileName,
@@ -23,16 +23,16 @@ import {
     setOperationMode,
     setSelectedFileName,
     setWeb,
-} from '../../model/reducers/settings-action'
-import { HiddenFileInfo, MediaFile } from '../../model/reducers/media-models'
+} from '../../shared/actions/settings-action'
+import { HiddenFileInfo, MediaFile } from '../../shared/models/media-models'
 import { assignThumbnailsToOutputs } from './caspar-cg-handler'
-import settingsService from '../../model/services/settings-service'
-import mediaService from '../../model/services/media-service'
+import settingsService from '../../shared/services/settings-service'
+import mediaService from '../../shared/services/media-service'
 import {
     GenericSettings,
     OperationMode,
     OutputSettings,
-} from '../../model/reducers/settings-models'
+} from '../../shared/models/settings-models'
 import settingsPersistenceService from '../services/settings-persistence-service'
 import hiddenFilesPersistenceService from '../services/hidden-files-persistence-service'
 import {
@@ -40,7 +40,7 @@ import {
     GET_SETTINGS,
     ServerToClient,
     TimeSelectedFilePayload,
-} from '../../model/socket-io-constants'
+} from '../../shared/socket-io-constants'
 
 export function socketIoHandlers(socket: any): void {
     logger.info('SETTING UP SOCKET IO MAIN HANDLERS')
