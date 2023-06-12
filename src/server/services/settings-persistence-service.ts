@@ -12,62 +12,61 @@ import persistenceService from './persistence-service'
 
 class SettingsPersistenceService {
     load(): void {
-        const defaultGenerics = settingsService.getDefaultGenericSettings()
         try {
-            const settingsFromFile = JSON.parse(
+            const rawSettings: unknown = JSON.parse(
                 persistenceService.loadFile('settings.json')
             )
-            let settings: GenericSettings | null = null
-            let hasStructureBeenCorrected = false
-            const isOld = this.isPreviousStructure(settingsFromFile)
-            if (isOld.success && isOld.parsed) {
-                logger.warn(
-                    'Old settings structure detected - updating it to the new structure.'
-                )
-                settings = this.getCorrectedStructureFromOld(isOld.parsed)
-                hasStructureBeenCorrected = true
-            } else {
-                const isNew = this.isNewStructure(settingsFromFile)
-                if (isNew.success && isNew.parsed) {
-                    settings = isNew.parsed
-                } else {
-                    logger
-                        .data(settingsFromFile)
-                        .error(
-                            'Failed to parse settings from file, using default!'
-                        )
-                    settings = defaultGenerics
-                }
-            }
-
-            logger.data(settingsFromFile).info('File loaded with settings:')
+            let settings: GenericSettings = this.getSettings(rawSettings)
+            logger.data(rawSettings).info('File loaded with settings:')
             reduxStore.dispatch(setGenerics(settings))
-            if (hasStructureBeenCorrected) {
-                logger.info(
-                    'New Settings structure generated, saving Settings...'
-                )
-                this.save()
-            }
         } catch (error) {
             logger.warn(
                 'Settings not found, or not yet stored, dispatching defaults, and saving it.'
             )
-            reduxStore.dispatch(setGenerics(defaultGenerics))
+            reduxStore.dispatch(
+                setGenerics(settingsService.getDefaultGenericSettings())
+            )
             this.save()
         }
     }
 
-    public save(): void {
-        const generics: GenericSettings = settingsService.getGenericSettings(
-            state.settings
-        )
+    private getSettings(rawSettings: unknown): GenericSettings {
+        const isOldStructure = this.isPreviousStructure(rawSettings)
+        if (isOldStructure.success && isOldStructure.parsed) {
+            logger.warn(
+                'Old settings structure detected ' +
+                    '- updating it to the new structure.'
+            )
+            const correctedSettings = this.getCorrectedStructureFromOld(
+                isOldStructure.parsed
+            )
+            logger.info('New Settings structure generated, saving Settings...')
+            this.save(correctedSettings)
+            return correctedSettings
+        }
+
+        const isNewStructure = this.isNewStructure(rawSettings)
+        if (isNewStructure.success && isNewStructure.parsed) {
+            return isNewStructure.parsed
+        }
+
+        logger
+            .data(rawSettings)
+            .error('Failed to parse settings from file, using default!')
+        return settingsService.getDefaultGenericSettings()
+    }
+
+    public save(genericSettings?: GenericSettings): void {
+        const generics: GenericSettings = genericSettings
+            ? genericSettings
+            : settingsService.getGenericSettings(state.settings)
         const stringifiedSettings = JSON.stringify(generics)
         persistenceService.saveFile(
             'settings.json',
             stringifiedSettings,
-            (error: any) => {
-                if (error) {
-                    logger.data(error).error('Error writing file:')
+            (message: any) => {
+                if (message) {
+                    logger.data(message).error('Error writing file:')
                 } else {
                     logger.data(generics).debug('Settings saved')
                 }
@@ -76,11 +75,11 @@ class SettingsPersistenceService {
     }
 
     // Checks if the loaded file has the structure of Cliptool version 2.14 and below.
-    private isPreviousStructure(loadedFile: any): {
+    private isPreviousStructure(rawSettings: any): {
         success: boolean
         parsed: PreviousGenericSettings | undefined
     } {
-        const parsed = PreviousGenericSettings.safeParse(loadedFile)
+        const parsed = PreviousGenericSettings.safeParse(rawSettings)
         if (parsed.success) {
             return { success: true, parsed: parsed.data }
         }
@@ -91,11 +90,11 @@ class SettingsPersistenceService {
     }
 
     // Checks if the loaded file has the structure of Cliptool version 2.15 and above.
-    private isNewStructure(loadedFile: any): {
+    private isNewStructure(rawSettings: any): {
         success: boolean
         parsed: GenericSettings | undefined
     } {
-        const parsed = newGenericSettingsSchema.safeParse(loadedFile)
+        const parsed = newGenericSettingsSchema.safeParse(rawSettings)
         if (parsed.success) {
             logger.info('Loaded settings as new structure.')
             return { success: true, parsed: parsed.data as GenericSettings }
@@ -129,7 +128,7 @@ class SettingsPersistenceService {
             output.loopState = old.startupLoopState[index] ?? false
             output.mixState = old.startupMixState[index] ?? false
             output.manualStartState =
-                old.startupManualStartState[index] ?? false
+                old.startupManualstartState[index] ?? false
             output.webState = old.startupWebState[index] ?? false
             output.operationMode =
                 (old.startupOperationMode[index] as string as OperationMode) ??

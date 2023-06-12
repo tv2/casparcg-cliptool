@@ -44,9 +44,10 @@ export function updateThumbnailFileList(
     }
 }
 
-export function updateHiddenFiles(
-    hiddenFiles: Record<string, HiddenFileInfo>
-): { type: string; hiddenFiles: Record<string, HiddenFileInfo> } {
+export function updateHiddenFiles(hiddenFiles: HiddenFiles): {
+    type: string
+    hiddenFiles: HiddenFiles
+} {
     return {
         type: UPDATE_HIDDEN_FILES,
         hiddenFiles: hiddenFiles,

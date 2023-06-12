@@ -54,7 +54,7 @@ export const PreviousGenericSettings = z.object({
         .transform((transform) =>
             arrayService.fillWithDefault(transform, false)
         ),
-    startupManualStartState: z
+    startupManualstartState: z
         .boolean()
         .array()
         .transform((transform) =>

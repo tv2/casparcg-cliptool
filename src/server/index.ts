@@ -12,7 +12,6 @@ serverInit()
 casparCgClient()
 
 process.on('unhandledRejection', (error) => processUnhandledRejection(error))
-
 function processUnhandledRejection(error: unknown) {
     logger.data(error).error('Caught Unhandled Rejection Error: ')
     throw error

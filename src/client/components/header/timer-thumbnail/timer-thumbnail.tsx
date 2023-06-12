@@ -9,7 +9,7 @@ import { OutputSettings } from "../../../../shared/models/settings-models";
 import settingsService from "../../../../shared/services/settings-service";
 import { state } from "../../../../shared/store";
 import mediaService from "../../../../shared/services/media-service";
-import timeService from "../../../../shared/services/time-service";
+import clientTimeService from "../../../services/client-time-service";
 
 export default function TimerThumbnail(): JSX.Element {
     const activeTabIndex: number = useSelector(
@@ -32,7 +32,7 @@ export default function TimerThumbnail(): JSX.Element {
     const thumbnailUrl: string = mediaService.getBase64ThumbnailUrl(cleanFileName, activeTabIndex, state.media)
     const playingFileType: string = mediaOutput?.mediaFiles.find(file => file.name === cleanFileName)?.type ?? FileType.UNKNOWN
 
-    const durationTimeCode = timeService.durationToTimeCode(
+    const durationTimeCode = clientTimeService.convertDurationToTimeCode(
         mediaOutput ? mediaOutput.time : [0, 0],
         state.settings.ccgConfig.channels[activeTabIndex]?.videoFormat?.frameRate,
         playingFileType

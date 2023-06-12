@@ -16,18 +16,19 @@ interface ImageMediaCardProps {
 }
 
 export default function ImageMediaCard(props: ImageMediaCardProps): JSX.Element {
-  const hiddenFiles: Record<string, HiddenFileInfo> = useSelector(
+  const hiddenFiles: HiddenFiles = useSelector(
       (state: State) => 
           state.media.hiddenFiles
   )
   const activeTabIndex: number = useSelector(
     (state: State) => appNavigationService.getActiveTabIndex(state.appNavigation))
   const url: string = mediaService.getBase64ThumbnailUrl(props.file.name, activeTabIndex || 0, state.media)
+  const isHidden: boolean = props.file.name in hiddenFiles
 
   return (
-    <div className={`c-image-media-card ${props.file.name in hiddenFiles ? 'hidden' : ''}`}>
+    <div className={`c-image-media-card ${isHidden ? 'hidden' : ''}`}>
         <MediaCard fileName={props.file.name} fileType={props.file.type} activeTabIndex={props.activeTabIndex}> 
-          <img src={url} className="c-image-media-card__image"/>
+          <img src={url} className={`c-image-media-card__image ${isHidden ? 'grayscale' : ''}`}/>
           <CardOverlayDisplay activeTabIndex={props.activeTabIndex} file={props.file} />     
         </MediaCard>        
         <FileNameDisplay className="text" fileName={props.file.name}/>            

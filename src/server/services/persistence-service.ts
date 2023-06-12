@@ -8,13 +8,18 @@ class PersistanceService {
 
     public saveFile(
         fileName: string,
-        file: string,
-        onError: (error: any) => void
+        fileContent: string,
+        onCompletion: (message: any) => void
     ): void {
         if (!fs.existsSync('storage')) {
             fs.mkdirSync('storage')
         }
-        fs.writeFile(path.resolve('storage', fileName), file, 'utf8', onError)
+        fs.writeFile(
+            path.resolve('storage', fileName),
+            fileContent,
+            'utf8',
+            onCompletion
+        )
     }
 }
 

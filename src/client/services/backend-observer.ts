@@ -1,9 +1,8 @@
 import {
-    ServerToClient,
+    ServerToClientCommand,
     TimeSelectedFilePayload,
 } from '../../shared/socket-io-constants'
 import { setConnectionStatus } from '../../shared/actions/app-navigation-action'
-import socketService from './socket-service'
 import { reduxStore, state } from '../../shared/store'
 import { OperationMode, Settings } from '../../shared/models/settings-models'
 import mediaService from '../../shared/services/media-service'
@@ -32,14 +31,20 @@ import {
     setWeb,
     updateSettings,
 } from '../../shared/actions/settings-action'
+import socketService from './socket-service'
 
 class BackendObserver {
     private socket: SocketIOClient.Socket
 
-    constructor() {
-        this.socket = socketService.getSocket()
+    constructor(socket: SocketIOClient.Socket) {
+        this.socket = socket
         this.initConnectionEventsListeners()
         this.initServerEventsListeners()
+    }
+
+    public startBackendObserver(): void {
+        console.log('Socket Initialized', socketService.getSocket())
+        console.log('BackendObserver: Monitoring messages from socket...')
     }
 
     private initConnectionEventsListeners(): void {
@@ -55,68 +60,70 @@ class BackendObserver {
 
     private initServerEventsListeners(): void {
         this.socket.on(
-            ServerToClient.MEDIA_UPDATE,
+            ServerToClientCommand.MEDIA_UPDATE,
             (channelIndex: number, payload: MediaFile[]) =>
                 this.processMediaUpdateEvent(channelIndex, payload)
         )
-        this.socket.on(ServerToClient.FOLDERS_UPDATE, (payload: string[]) =>
-            this.processFoldersUpdateEvent(payload)
+        this.socket.on(
+            ServerToClientCommand.FOLDERS_UPDATE,
+            (payload: string[]) => this.processFoldersUpdateEvent(payload)
         )
         this.socket.on(
-            ServerToClient.THUMBNAIL_UPDATE,
+            ServerToClientCommand.THUMBNAIL_UPDATE,
             (channelIndex: number, payload: ThumbnailFile[]) =>
                 this.processThumbnailUpdateEvent(channelIndex, payload)
         )
         this.socket.on(
-            ServerToClient.HIDDEN_FILES_UPDATE,
-            (hiddenFiles: Record<string, HiddenFileInfo>) =>
+            ServerToClientCommand.HIDDEN_FILES_UPDATE,
+            (hiddenFiles: HiddenFiles) =>
                 this.processHiddenFilesUpdateEvent(hiddenFiles)
         )
         this.socket.on(
-            ServerToClient.TIME_TALLY_UPDATE,
+            ServerToClientCommand.TIME_TALLY_UPDATE,
             (data: TimeSelectedFilePayload[]) =>
                 this.processTimeTallyUpdateEvent(data)
         )
         this.socket.on(
-            ServerToClient.FILE_CUED_UPDATE,
+            ServerToClientCommand.FILE_CUED_UPDATE,
             (channelIndex: number, fileName: string) =>
                 this.processFileCuedUpdateEvent(channelIndex, fileName)
         )
         this.socket.on(
-            ServerToClient.FILE_SELECTED_UPDATE,
+            ServerToClientCommand.FILE_SELECTED_UPDATE,
             (channelIndex: number, fileName: string) =>
                 this.processFileSelectedUpdateEvent(channelIndex, fileName)
         )
         this.socket.on(
-            ServerToClient.LOOP_STATE_UPDATE,
+            ServerToClientCommand.LOOP_STATE_UPDATE,
             (channelIndex: number, loop: boolean) =>
                 this.processLoopStateUpdateEvent(channelIndex, loop)
         )
         this.socket.on(
-            ServerToClient.OPERATION_MODE_UPDATE,
+            ServerToClientCommand.OPERATION_MODE_UPDATE,
             (channelIndex: number, mode: OperationMode) =>
                 this.processOperationStateUpdateEvent(channelIndex, mode)
         )
         this.socket.on(
-            ServerToClient.MIX_STATE_UPDATE,
+            ServerToClientCommand.MIX_STATE_UPDATE,
             (channelIndex: number, mix: boolean) =>
                 this.processMixStateUpdateEvent(channelIndex, mix)
         )
         this.socket.on(
-            ServerToClient.WEB_STATE_UPDATE,
+            ServerToClientCommand.WEB_STATE_UPDATE,
             (channelIndex: number, web: boolean) =>
                 this.processWebStateUpdateEvent(channelIndex, web)
         )
         this.socket.on(
-            ServerToClient.MANUAL_START_STATE_UPDATE,
+            ServerToClientCommand.MANUAL_START_STATE_UPDATE,
             (channelIndex: number, manualStart: boolean) =>
                 this.processManualStartStateUpdateEvent(
                     channelIndex,
                     manualStart
                 )
         )
-        this.socket.on(ServerToClient.SETTINGS_UPDATE, (payload: Settings) =>
-            this.processSettingsUpdateEvent(payload)
+        this.socket.on(
+            ServerToClientCommand.SETTINGS_UPDATE,
+            (payload: Settings) => this.processSettingsUpdateEvent(payload)
         )
     }
 
@@ -138,9 +145,7 @@ class BackendObserver {
         reduxStore.dispatch(updateThumbnailFileList(channelIndex, payload))
     }
 
-    private processHiddenFilesUpdateEvent(
-        hiddenFiles: Record<string, HiddenFileInfo>
-    ): void {
+    private processHiddenFilesUpdateEvent(hiddenFiles: HiddenFiles): void {
         reduxStore.dispatch(updateHiddenFiles(hiddenFiles))
     }
 
@@ -239,5 +244,7 @@ class BackendObserver {
     }
 }
 
-const backendObserver: BackendObserver = new BackendObserver()
+const backendObserver: BackendObserver = new BackendObserver(
+    socketService.getSocket()
+)
 export default backendObserver

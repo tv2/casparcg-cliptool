@@ -15,6 +15,7 @@ import {
 import { socketServer } from './express-handler'
 import {
     HiddenFileInfo,
+    HiddenFiles,
     MediaFile,
     Output,
     ThumbnailFile,
@@ -45,7 +46,7 @@ import osService from '../../shared/services/os-service'
 import mediaService from '../../shared/services/media-service'
 import hiddenFilesPersistenceService from '../services/hidden-files-persistence-service'
 import {
-    ServerToClient,
+    ServerToClientCommand,
     TimeSelectedFilePayload,
 } from '../../shared/socket-io-constants'
 
@@ -191,7 +192,7 @@ function dispatchConfig(config: any): void {
         )
     })
     logger.info(`Number of Channels: ${config.channels.length}`)
-    socketServer.emit(ServerToClient.SETTINGS_UPDATE, state.settings)
+    socketServer.emit(ServerToClientCommand.SETTINGS_UPDATE, state.settings)
     initializeClient()
 }
 
@@ -260,7 +261,7 @@ function startTimeEmitInterval() {
             })
     })
     setInterval(() => {
-        socketServer.emit(ServerToClient.TIME_TALLY_UPDATE, data)
+        socketServer.emit(ServerToClientCommand.TIME_TALLY_UPDATE, data)
     }, 40)
 }
 
@@ -336,7 +337,7 @@ async function loadFileList(): Promise<void> {
                 updateFolders(extractFoldersList(payload.response.data))
             )
             socketServer.emit(
-                ServerToClient.FOLDERS_UPDATE,
+                ServerToClientCommand.FOLDERS_UPDATE,
                 state.media.folders
             )
 
@@ -373,13 +374,17 @@ function outputExtractFiles(allFiles: MediaFile[], outputIndex: number): void {
     if (!isDeepCompareEqual(mediaFiles, outputMedia)) {
         logger.info(`Media files changed for output: ${outputIndex}`)
         reduxStore.dispatch(updateMediaFiles(outputIndex, outputMedia))
-        socketServer.emit(ServerToClient.MEDIA_UPDATE, outputIndex, outputMedia)
+        socketServer.emit(
+            ServerToClientCommand.MEDIA_UPDATE,
+            outputIndex,
+            outputMedia
+        )
     }
 }
 
 function checkHiddenFilesChanged(files: MediaFile[]): void {
     let needsUpdating = false
-    const hiddenFiles: Record<string, HiddenFileInfo> = state.media.hiddenFiles
+    const hiddenFiles: HiddenFiles = state.media.hiddenFiles
     for (const key in hiddenFiles) {
         const hiddenFileInfo: HiddenFileInfo = hiddenFiles[key]
         const file = files.find((predicate) => predicate.name == key)
@@ -397,8 +402,11 @@ function checkHiddenFilesChanged(files: MediaFile[]): void {
             .data(hiddenFiles)
             .debug('Hidden files was updated from external changes:')
         reduxStore.dispatch(updateHiddenFiles(hiddenFiles))
-        socketServer.emit(ServerToClient.HIDDEN_FILES_UPDATE, hiddenFiles)
-        hiddenFilesPersistenceService.save()
+        socketServer.emit(
+            ServerToClientCommand.HIDDEN_FILES_UPDATE,
+            hiddenFiles
+        )
+        hiddenFilesPersistenceService.save(hiddenFiles)
     }
 }
 
@@ -433,7 +441,7 @@ export function assignThumbnailsToOutputs(): void {
                 updateThumbnailFileList(channelIndex, outputMedia)
             )
             socketServer.emit(
-                ServerToClient.THUMBNAIL_UPDATE,
+                ServerToClientCommand.THUMBNAIL_UPDATE,
                 channelIndex,
                 outputMedia
             )

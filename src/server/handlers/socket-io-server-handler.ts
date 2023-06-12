@@ -24,7 +24,11 @@ import {
     setSelectedFileName,
     setWeb,
 } from '../../shared/actions/settings-action'
-import { HiddenFileInfo, MediaFile } from '../../shared/models/media-models'
+import {
+    HiddenFileInfo,
+    HiddenFiles,
+    MediaFile,
+} from '../../shared/models/media-models'
 import { assignThumbnailsToOutputs } from './caspar-cg-handler'
 import settingsService from '../../shared/services/settings-service'
 import mediaService from '../../shared/services/media-service'
@@ -36,24 +40,27 @@ import {
 import settingsPersistenceService from '../services/settings-persistence-service'
 import hiddenFilesPersistenceService from '../services/hidden-files-persistence-service'
 import {
-    ClientToServer,
+    ClientToServerCommand,
     GET_SETTINGS,
-    ServerToClient,
+    ServerToClientCommand,
     TimeSelectedFilePayload,
 } from '../../shared/socket-io-constants'
 
 export function socketIoHandlers(socket: any): void {
     logger.info('SETTING UP SOCKET IO MAIN HANDLERS')
 
-    socketServer.emit(ServerToClient.SETTINGS_UPDATE, state.settings)
+    socketServer.emit(ServerToClientCommand.SETTINGS_UPDATE, state.settings)
     initializeClient()
 
     socket
         .on(GET_SETTINGS, () => {
-            socketServer.emit(ServerToClient.SETTINGS_UPDATE, state.settings)
+            socketServer.emit(
+                ServerToClientCommand.SETTINGS_UPDATE,
+                state.settings
+            )
         })
         .on(
-            ClientToServer.TOGGLE_THUMBNAIL_VISIBILITY,
+            ClientToServerCommand.TOGGLE_THUMBNAIL_VISIBILITY,
             (channelIndex: number, fileName: string) => {
                 if (
                     settingsService
@@ -73,10 +80,10 @@ export function socketIoHandlers(socket: any): void {
                         hiddenFiles
                     )
                     reduxStore.dispatch(updateHiddenFiles(updatedHiddenFiles))
-                    hiddenFilesPersistenceService.save()
+                    hiddenFilesPersistenceService.save(updatedHiddenFiles)
 
                     socketServer.emit(
-                        ServerToClient.HIDDEN_FILES_UPDATE,
+                        ServerToClientCommand.HIDDEN_FILES_UPDATE,
                         updatedHiddenFiles
                     )
                 } catch (error) {
@@ -89,7 +96,7 @@ export function socketIoHandlers(socket: any): void {
             }
         )
         .on(
-            ClientToServer.PGM_PLAY,
+            ClientToServerCommand.PGM_PLAY,
             (channelIndex: number, fileName: string) => {
                 if (
                     !settingsService.getOutputSettings(
@@ -106,32 +113,32 @@ export function socketIoHandlers(socket: any): void {
                 )
                 reduxStore.dispatch(setCuedFileName(channelIndex, ''))
                 socketServer.emit(
-                    ServerToClient.FILE_CUED_UPDATE,
+                    ServerToClientCommand.FILE_CUED_UPDATE,
                     channelIndex,
                     ''
                 )
                 reduxStore.dispatch(setSelectedFileName(channelIndex, fileName))
                 settingsPersistenceService.save()
                 socketServer.emit(
-                    ServerToClient.FILE_SELECTED_UPDATE,
+                    ServerToClientCommand.FILE_SELECTED_UPDATE,
                     channelIndex,
                     fileName
                 )
             }
         )
         .on(
-            ClientToServer.PGM_LOAD,
+            ClientToServerCommand.PGM_LOAD,
             (channelIndex: number, fileName: string) => {
                 loadMedia(channelIndex, 9, fileName)
                 reduxStore.dispatch(setCuedFileName(channelIndex, fileName))
                 socketServer.emit(
-                    ServerToClient.FILE_CUED_UPDATE,
+                    ServerToClientCommand.FILE_CUED_UPDATE,
                     channelIndex,
                     fileName
                 )
                 reduxStore.dispatch(setSelectedFileName(channelIndex, ''))
                 socketServer.emit(
-                    ServerToClient.FILE_SELECTED_UPDATE,
+                    ServerToClientCommand.FILE_SELECTED_UPDATE,
                     channelIndex,
                     ''
                 )
@@ -142,12 +149,12 @@ export function socketIoHandlers(socket: any): void {
             }
         )
         .on(
-            ClientToServer.SET_LOOP_STATE,
+            ClientToServerCommand.SET_LOOP_STATE,
             (channelIndex: number, loopState: boolean) => {
                 reduxStore.dispatch(setLoop(channelIndex, loopState))
                 settingsPersistenceService.save()
                 socketServer.emit(
-                    ServerToClient.LOOP_STATE_UPDATE,
+                    ServerToClientCommand.LOOP_STATE_UPDATE,
                     channelIndex,
                     settingsService.getOutputSettings(
                         state.settings,
@@ -157,11 +164,11 @@ export function socketIoHandlers(socket: any): void {
             }
         )
         .on(
-            ClientToServer.SET_OPERATION_MODE,
+            ClientToServerCommand.SET_OPERATION_MODE,
             (channelIndex: number, mode: OperationMode) => {
                 reduxStore.dispatch(setOperationMode(channelIndex, mode))
                 socketServer.emit(
-                    ServerToClient.OPERATION_MODE_UPDATE,
+                    ServerToClientCommand.OPERATION_MODE_UPDATE,
                     channelIndex,
                     settingsService.getOutputSettings(
                         state.settings,
@@ -171,14 +178,14 @@ export function socketIoHandlers(socket: any): void {
             }
         )
         .on(
-            ClientToServer.SET_MANUAL_START_STATE,
+            ClientToServerCommand.SET_MANUAL_START_STATE,
             (channelIndex: number, manualStartState: boolean) => {
                 reduxStore.dispatch(
                     setManualStart(channelIndex, manualStartState)
                 )
                 settingsPersistenceService.save()
                 socketServer.emit(
-                    ServerToClient.MANUAL_START_STATE_UPDATE,
+                    ServerToClientCommand.MANUAL_START_STATE_UPDATE,
                     channelIndex,
                     settingsService.getOutputSettings(
                         state.settings,
@@ -188,12 +195,12 @@ export function socketIoHandlers(socket: any): void {
             }
         )
         .on(
-            ClientToServer.SET_MIX_STATE,
+            ClientToServerCommand.SET_MIX_STATE,
             (channelIndex: number, mixState: boolean) => {
                 reduxStore.dispatch(setMix(channelIndex, mixState))
                 settingsPersistenceService.save()
                 socketServer.emit(
-                    ServerToClient.MIX_STATE_UPDATE,
+                    ServerToClientCommand.MIX_STATE_UPDATE,
                     channelIndex,
                     settingsService.getOutputSettings(
                         state.settings,
@@ -203,12 +210,12 @@ export function socketIoHandlers(socket: any): void {
             }
         )
         .on(
-            ClientToServer.SET_WEB_STATE,
+            ClientToServerCommand.SET_WEB_STATE,
             (channelIndex: number, webState: boolean) => {
                 reduxStore.dispatch(setWeb(channelIndex, webState))
                 settingsPersistenceService.save()
                 socketServer.emit(
-                    ServerToClient.WEB_STATE_UPDATE,
+                    ServerToClientCommand.WEB_STATE_UPDATE,
                     channelIndex,
                     settingsService.getOutputSettings(
                         state.settings,
@@ -222,7 +229,7 @@ export function socketIoHandlers(socket: any): void {
                 updateOverlayPlayingState(channelIndex, outputSettings)
             }
         )
-        .on(ClientToServer.SET_GENERICS, (generics: GenericSettings) => {
+        .on(ClientToServerCommand.SET_GENERICS, (generics: GenericSettings) => {
             logger.data(generics).trace('Save Settings')
             state.settings.generics.outputSettings.forEach(
                 (outputSettings, channelIndex) => {
@@ -241,10 +248,13 @@ export function socketIoHandlers(socket: any): void {
             logger.info('Updating and storing generic settings server side.')
             reduxStore.dispatch(setGenerics(generics))
             settingsPersistenceService.save()
-            socketServer.emit(ServerToClient.SETTINGS_UPDATE, state.settings)
+            socketServer.emit(
+                ServerToClientCommand.SETTINGS_UPDATE,
+                state.settings
+            )
             cleanUpMediaFiles()
         })
-        .on(ClientToServer.RESTART_SERVER, () => {
+        .on(ClientToServerCommand.RESTART_SERVER, () => {
             process.exit(0)
         })
 }
@@ -264,7 +274,6 @@ function updateOverlayPlayingState(
     }
 }
 
-type HiddenFiles = Record<string, HiddenFileInfo>
 function toggleHiddenFile(
     fileName: string,
     channelIndex: number,
@@ -290,11 +299,11 @@ function hideFile(
     channelIndex: number,
     hiddenFiles: HiddenFiles
 ): HiddenFiles {
-    const hiddenFile = buildHiddenFileMetadataFromFileName(
+    const hiddenFileInfo: HiddenFileInfo = buildHiddenFileMetadataFromFileName(
         fileName,
         channelIndex
     )
-    return { ...hiddenFiles, [fileName]: hiddenFile }
+    return { ...hiddenFiles, [fileName]: hiddenFileInfo }
 }
 
 function buildHiddenFileMetadataFromFileName(
@@ -335,27 +344,27 @@ export function initializeClient(): void {
             (output: OutputSettings, channelIndex: number) => {
                 selectedFiles.push(output.selectedFileName)
                 socketServer.emit(
-                    ServerToClient.LOOP_STATE_UPDATE,
+                    ServerToClientCommand.LOOP_STATE_UPDATE,
                     channelIndex,
                     output.loopState
                 )
                 socketServer.emit(
-                    ServerToClient.OPERATION_MODE_UPDATE,
+                    ServerToClientCommand.OPERATION_MODE_UPDATE,
                     channelIndex,
                     output.operationMode
                 )
                 socketServer.emit(
-                    ServerToClient.MIX_STATE_UPDATE,
+                    ServerToClientCommand.MIX_STATE_UPDATE,
                     channelIndex,
                     output.mixState
                 )
                 socketServer.emit(
-                    ServerToClient.MANUAL_START_STATE_UPDATE,
+                    ServerToClientCommand.MANUAL_START_STATE_UPDATE,
                     channelIndex,
                     output.manualStartState
                 )
                 socketServer.emit(
-                    ServerToClient.HIDDEN_FILES_UPDATE,
+                    ServerToClientCommand.HIDDEN_FILES_UPDATE,
                     state.media.hiddenFiles
                 )
             }
@@ -365,19 +374,22 @@ export function initializeClient(): void {
             time: output.time,
             selectedFileName: selectedFiles[channelIndex],
         }
-        socketServer.emit(ServerToClient.TIME_TALLY_UPDATE, timeTallyData)
         socketServer.emit(
-            ServerToClient.THUMBNAIL_UPDATE,
+            ServerToClientCommand.TIME_TALLY_UPDATE,
+            timeTallyData
+        )
+        socketServer.emit(
+            ServerToClientCommand.THUMBNAIL_UPDATE,
             channelIndex,
             output.thumbnailList
         )
         socketServer.emit(
-            ServerToClient.MEDIA_UPDATE,
+            ServerToClientCommand.MEDIA_UPDATE,
             channelIndex,
             output.mediaFiles
         )
     })
-    socketServer.emit(ServerToClient.TIME_TALLY_UPDATE, timeTallyData)
+    socketServer.emit(ServerToClientCommand.TIME_TALLY_UPDATE, timeTallyData)
 }
 
 function cleanUpMediaFiles(): void {

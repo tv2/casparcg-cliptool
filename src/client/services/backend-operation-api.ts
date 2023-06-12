@@ -1,5 +1,5 @@
 import { OperationMode } from '../../shared/models/settings-models'
-import { ClientToServer } from '../../shared/socket-io-constants'
+import { ClientToServerCommand } from '../../shared/socket-io-constants'
 import socketService from './socket-service'
 
 class BackendOperationApi {
@@ -11,7 +11,7 @@ class BackendOperationApi {
 
     public emitSetOperationModeToControl(outputIndex: number) {
         this.socket.emit(
-            ClientToServer.SET_OPERATION_MODE,
+            ClientToServerCommand.SET_OPERATION_MODE,
             outputIndex,
             OperationMode.CONTROL
         )
@@ -19,7 +19,7 @@ class BackendOperationApi {
 
     public emitSetOperationModeToEditVisibility(outputIndex: number) {
         this.socket.emit(
-            ClientToServer.SET_OPERATION_MODE,
+            ClientToServerCommand.SET_OPERATION_MODE,
             outputIndex,
             OperationMode.EDIT_VISIBILITY
         )
@@ -30,14 +30,14 @@ class BackendOperationApi {
         fileName: string
     ) {
         this.socket.emit(
-            ClientToServer.TOGGLE_THUMBNAIL_VISIBILITY,
+            ClientToServerCommand.TOGGLE_THUMBNAIL_VISIBILITY,
             fileOriginOutputIndex,
             fileName
         )
     }
 
     public emitRestartServer() {
-        this.socket.emit(ClientToServer.RESTART_SERVER)
+        this.socket.emit(ClientToServerCommand.RESTART_SERVER)
     }
 }
 

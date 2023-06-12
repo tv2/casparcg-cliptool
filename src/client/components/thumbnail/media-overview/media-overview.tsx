@@ -6,7 +6,7 @@ import browserService from '../../../services/browser-service';
 import './media-overview.scss'
 import appNavigationService from '../../../../shared/services/app-navigation-service';
 import { State } from '../../../../shared/reducers/index-reducer';
-import { HiddenFileInfo, MediaFile } from '../../../../shared/models/media-models';
+import { HiddenFiles, MediaFile } from '../../../../shared/models/media-models';
 import mediaService from '../../../../shared/services/media-service';
 import settingsService from '../../../../shared/services/settings-service';
 import { OperationMode } from '../../../../shared/models/settings-models';
@@ -17,7 +17,7 @@ export function MediaOverview(): JSX.Element {
     const files: MediaFile[] = useSelector(
         (state: State) => mediaService.getOutput(state.media, activeTabIndex)?.mediaFiles ?? []
     )
-    const hiddenFiles: Record<string, HiddenFileInfo> = useSelector(
+    const hiddenFiles: HiddenFiles = useSelector(
         (state: State) => state.media.hiddenFiles
     ) ?? {}
     const isInEditVisibilityMode: boolean = useSelector(
@@ -38,7 +38,7 @@ export function MediaOverview(): JSX.Element {
     )
 }
 
-function getShownFiles(files: MediaFile[], isInEditVisibilityMode: boolean, hiddenFiles: Record<string, HiddenFileInfo>): MediaFile[] {
+function getShownFiles(files: MediaFile[], isInEditVisibilityMode: boolean, hiddenFiles: HiddenFiles): MediaFile[] {
     return  !isInEditVisibilityMode || browserService.isTextView()
         ? files.filter(({ name }) => !(name in hiddenFiles)) 
         : files

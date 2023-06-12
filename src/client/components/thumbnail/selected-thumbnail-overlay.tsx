@@ -1,9 +1,9 @@
 import React from "react";
 import { useSelector } from "react-redux";
 import CardOverlay from "./card-overlay/card-overlay";
-import timeService from "../../../shared/services/time-service";
 import appNavigationService from "../../../shared/services/app-navigation-service";
 import { State } from "../../../shared/reducers/index-reducer";
+import clientTimeService from "../../services/client-time-service";
 
 interface SelectedCardOverlayProps {
   className?: string
@@ -19,7 +19,7 @@ export default function SelectedCardOverlay(props: SelectedCardOverlayProps): JS
       }
     )
 
-  const durationTimeCode = timeService.durationToTimeCode(props.time, frameRate, props.fileType)
+  const durationTimeCode = clientTimeService.convertDurationToTimeCode(props.time, frameRate, props.fileType)
   return (
     <CardOverlay className={`selected ${props.className ?? ''}`}>        
       {durationTimeCode}            

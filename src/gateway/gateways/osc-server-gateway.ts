@@ -8,7 +8,7 @@ import * as OSC from './osc-constants'
 import { ARG_CONSTANTS } from '../util/extract-args'
 import osService from '../../shared/services/os-service'
 import mediaService from '../../shared/services/media-service'
-import { ClientToServer } from '../../shared/socket-io-constants'
+import { ClientToServerCommand } from '../../shared/socket-io-constants'
 
 export function oscServerGateway(): void {
     console.log('Initializing OSC server')
@@ -36,14 +36,14 @@ export function oscServerGateway(): void {
             if (checkOscCommand(message.address, OSC.PGM_PLAY)) {
                 console.log(`PLAY ${message.address} ${message.args[0]}`)
                 socket.emit(
-                    ClientToServer.PGM_PLAY,
+                    ClientToServerCommand.PGM_PLAY,
                     channel - 1,
                     message.args[0]
                 )
             } else if (checkOscCommand(message.address, OSC.PGM_CUE)) {
                 console.log(`LOAD ${message.address} ${message.args[0]}`)
                 socket.emit(
-                    ClientToServer.PGM_LOAD,
+                    ClientToServerCommand.PGM_LOAD,
                     channel - 1,
                     message.args[0]
                 )

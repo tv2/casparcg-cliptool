@@ -4,6 +4,8 @@ export enum FileType {
     UNKNOWN = 'unknown,',
 }
 
+export type HiddenFiles = Record<string, HiddenFileInfo>
+
 export interface HiddenFileInfo {
     changed: number
     size: number
@@ -26,7 +28,7 @@ export interface ThumbnailFile extends FileInfo {
 export interface Media {
     outputs: Output[]
     folders: string[]
-    hiddenFiles: Record<string, HiddenFileInfo>
+    hiddenFiles: HiddenFiles
 }
 
 export interface Output {
