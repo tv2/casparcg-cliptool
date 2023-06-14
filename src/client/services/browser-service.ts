@@ -15,36 +15,44 @@ class BrowserService {
 
     constructor(searchQuery: string) {
         const search = new URLSearchParams(searchQuery)
+        this.view = this.getCurrentSelectedView(search)
+    }
+
+    private getCurrentSelectedView(
+        search: URLSearchParams
+    ): BrowserSelectedView {
+        if (search.has(SelectedView.TEXT) && search.has(SelectedView.CHANNEL)) {
+            return {
+                selected: SelectedView.TEXT_CHANNEL,
+                channel: this.getQueryChannel(search),
+            }
+        }
+
         if (search.has(SelectedView.TEXT)) {
-            if (search.has(SelectedView.CHANNEL)) {
-                const channel = search.get(SelectedView.CHANNEL)
-                const specificChannel = channel
-                    ? Math.max(parseInt(channel), 1)
-                    : 1
-                this.view = {
-                    selected: SelectedView.TEXT_CHANNEL,
-                    channel: specificChannel,
-                }
-            } else {
-                this.view = {
-                    selected: SelectedView.TEXT,
-                    channel: 0,
-                }
-            }
-        } else if (search.has(SelectedView.CHANNEL)) {
-            const channel = search.get(SelectedView.CHANNEL)
-            const specificChannel = channel ? Math.max(parseInt(channel), 1) : 1
-            this.view = {
-                selected: SelectedView.CHANNEL,
-                channel: specificChannel,
-            }
-        } else {
-            this.view = {
-                selected: SelectedView.ORDINARY,
+            return {
+                selected: SelectedView.TEXT,
                 channel: 0,
             }
         }
+
+        if (search.has(SelectedView.CHANNEL)) {
+            return {
+                selected: SelectedView.CHANNEL,
+                channel: this.getQueryChannel(search),
+            }
+        }
+
+        return {
+            selected: SelectedView.ORDINARY,
+            channel: 0,
+        }
     }
+
+    private getQueryChannel(search: URLSearchParams): number {
+        const channel = search.get(SelectedView.CHANNEL)
+        return channel ? Math.max(parseInt(channel), 1) : 1
+    }
+
     public isOrdinaryView(): boolean {
         return this.view.selected === SelectedView.ORDINARY
     }
