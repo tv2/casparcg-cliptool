@@ -1,8 +1,4 @@
-import {
-    HiddenFileInfo,
-    MediaFile,
-    ThumbnailFile,
-} from './../models/media-models'
+import { HiddenFiles, MediaFile, ThumbnailFile } from './../models/media-models'
 
 export const UPDATE_MEDIA_FILES = 'updateMediaFiles'
 export const UPDATE_THUMBNAIL_LIST = 'updateThumbnailList'

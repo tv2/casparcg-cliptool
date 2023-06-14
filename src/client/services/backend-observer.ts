@@ -16,7 +16,7 @@ import {
     updateThumbnailFileList,
 } from '../../shared/actions/media-actions'
 import {
-    HiddenFileInfo,
+    HiddenFiles,
     MediaFile,
     ThumbnailFile,
 } from '../../shared/models/media-models'
