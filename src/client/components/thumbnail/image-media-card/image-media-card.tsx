@@ -6,7 +6,6 @@ import CardOverlayDisplay from "../card-overlay-display/card-overlay-display";
 import { FileNameDisplay } from "../file-name-display/file-name-display";
 import { HiddenFiles, MediaFile } from "../../../../shared/models/media-models";
 import { State } from "../../../../shared/reducers/index-reducer";
-import appNavigationService from "../../../../shared/services/app-navigation-service";
 import mediaService from "../../../../shared/services/media-service";
 import { state } from "../../../../shared/store";
 
@@ -20,9 +19,7 @@ export default function ImageMediaCard(props: ImageMediaCardProps): JSX.Element 
       (state: State) => 
           state.media.hiddenFiles
   )
-  const activeTabIndex: number = useSelector(
-    (state: State) => appNavigationService.getActiveTabIndex(state.appNavigation))
-  const url: string = mediaService.getBase64ThumbnailUrl(props.file.name, activeTabIndex || 0, state.media)
+  const url: string = mediaService.getBase64ThumbnailUrl(props.file.name, props.activeTabIndex || 0, state.media)
   const isHidden: boolean = props.file.name in hiddenFiles
 
   return (
