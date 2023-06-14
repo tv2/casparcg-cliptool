@@ -16,7 +16,7 @@ class HiddenFilesPersistenceService {
                 persistenceService.loadFile('hiddenFiles.json')
             )
             const isInvalidHiddenFiles: boolean =
-                this.hasSelectedHiddenFiles(hiddenFiles)
+                this.hasSelectedOrCuedHiddenFiles(hiddenFiles)
 
             if (isInvalidHiddenFiles) {
                 this.cleanAndUpdateReduxState(hiddenFiles)
@@ -74,18 +74,22 @@ class HiddenFilesPersistenceService {
 
     private getCleanHiddenFiles(originalHiddenFiles: HiddenFiles): HiddenFiles {
         const isInvalidHiddenFiles: boolean =
-            this.hasSelectedHiddenFiles(originalHiddenFiles)
+            this.hasSelectedOrCuedHiddenFiles(originalHiddenFiles)
         const cleanHiddenFiles: HiddenFiles = isInvalidHiddenFiles
             ? this.getValidHiddenFiles(originalHiddenFiles)
             : originalHiddenFiles
         return cleanHiddenFiles
     }
 
-    private hasSelectedHiddenFiles(hiddenFiles: HiddenFiles): boolean {
+    private hasSelectedOrCuedHiddenFiles(hiddenFiles: HiddenFiles): boolean {
         const outputs: OutputSettings[] = settingsService.getGenericSettings(
             state.settings
         ).outputSettings
-        return outputs.some((output) => output.selectedFileName in hiddenFiles)
+        return outputs.some(
+            (output) =>
+                output.selectedFileName in hiddenFiles ||
+                output.cuedFileName in hiddenFiles
+        )
     }
 
     private getValidHiddenFiles(originalHiddenFiles: HiddenFiles): HiddenFiles {

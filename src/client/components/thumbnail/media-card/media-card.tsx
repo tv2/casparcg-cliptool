@@ -69,7 +69,8 @@ function triggerOperationModeAction(fileName: string, activeTabIndex: number, fi
 }
 
 function toggleVisibility(fileName: string, activeTabIndex: number): void {
-  if (settingsService.isThumbnailSelectedOnAnyOutput(fileName, state.settings)) {
+  if (settingsService.isCardSelectedOnAnyOutput(fileName, state.settings) 
+    || settingsService.isCardCuedOnAnyOutput(fileName, state.settings)) {
       alert('Unable to hide, as the file is in use somewhere.')
       return
   }

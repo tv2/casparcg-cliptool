@@ -4,7 +4,7 @@ import MediaCard from "../media-card/media-card";
 import './image-media-card.scss'
 import CardOverlayDisplay from "../card-overlay-display/card-overlay-display";
 import { FileNameDisplay } from "../file-name-display/file-name-display";
-import { HiddenFileInfo, MediaFile } from "../../../../shared/models/media-models";
+import { HiddenFiles, MediaFile } from "../../../../shared/models/media-models";
 import { State } from "../../../../shared/reducers/index-reducer";
 import appNavigationService from "../../../../shared/services/app-navigation-service";
 import mediaService from "../../../../shared/services/media-service";

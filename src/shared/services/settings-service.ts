@@ -78,14 +78,24 @@ class SettingsService {
         return cuedFileName === fileName
     }
 
-    public isThumbnailSelectedOnAnyOutput(
-        thumbnailName: string,
+    public isCardSelectedOnAnyOutput(
+        fileName: string,
         settingsState: Settings
     ): boolean {
         return this.getGenericSettings(settingsState).outputSettings.some(
             (output) =>
                 this.getCleanSelectedFileName(output, settingsState) ===
-                thumbnailName
+                fileName
+        )
+    }
+
+    public isCardCuedOnAnyOutput(
+        fileName: string,
+        settingsState: Settings
+    ): boolean {
+        return this.getGenericSettings(settingsState).outputSettings.some(
+            (output) =>
+                this.getCleanCuedFileName(output, settingsState) === fileName
         )
     }
 
