@@ -16,7 +16,7 @@ class SettingsPersistenceService {
             const rawSettings: unknown = JSON.parse(
                 persistenceService.loadFile('settings.json')
             )
-            let settings: GenericSettings = this.getSettings(rawSettings)
+            let settings: GenericSettings = this.parseSettings(rawSettings)
             logger.data(rawSettings).info('File loaded with settings:')
             reduxStore.dispatch(setGenerics(settings))
         } catch (error) {
@@ -30,7 +30,7 @@ class SettingsPersistenceService {
         }
     }
 
-    private getSettings(rawSettings: unknown): GenericSettings {
+    private parseSettings(rawSettings: unknown): GenericSettings {
         const isOldStructure = this.isPreviousStructure(rawSettings)
         if (isOldStructure.success && isOldStructure.parsed) {
             logger.warn(

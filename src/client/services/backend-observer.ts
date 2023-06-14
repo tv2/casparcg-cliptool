@@ -61,8 +61,7 @@ class BackendObserver {
     private initServerEventsListeners(): void {
         this.socket.on(
             ServerToClientCommand.MEDIA_UPDATE,
-            (channelIndex: number, payload: MediaFile[]) =>
-                this.processMediaUpdateEvent(channelIndex, payload)
+            this.processMediaUpdateEvent.bind(this)
         )
         this.socket.on(
             ServerToClientCommand.FOLDERS_UPDATE,

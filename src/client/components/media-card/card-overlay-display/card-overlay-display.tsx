@@ -1,6 +1,6 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import SelectedCardOverlay from "../selected-thumbnail-overlay";
+import SelectedCardOverlay from "../selected-card-overlay";
 import './card-overlay-display.scss'
 import CardOverlay from "../card-overlay/card-overlay";
 import settingsService from "../../../../shared/services/settings-service";

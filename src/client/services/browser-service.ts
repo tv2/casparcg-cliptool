@@ -1,5 +1,5 @@
 enum SelectedView {
-    ORDINARY = 'ordinary',
+    THUMBNAIL = 'thumbnail',
     TEXT = 'textview',
     CHANNEL = 'channel',
     TEXT_CHANNEL = 'text-channel-view',
@@ -10,7 +10,8 @@ interface BrowserSelectedView {
     channel: number
 }
 
-class BrowserService {
+export class BrowserService {
+    static readonly instance = new BrowserService(window.location.search)
     private view: BrowserSelectedView
 
     constructor(searchQuery: string) {
@@ -43,7 +44,7 @@ class BrowserService {
         }
 
         return {
-            selected: SelectedView.ORDINARY,
+            selected: SelectedView.THUMBNAIL,
             channel: 0,
         }
     }
@@ -53,8 +54,8 @@ class BrowserService {
         return channel ? Math.max(parseInt(channel), 1) : 1
     }
 
-    public isOrdinaryView(): boolean {
-        return this.view.selected === SelectedView.ORDINARY
+    public isThumbnailView(): boolean {
+        return this.view.selected === SelectedView.THUMBNAIL
     }
 
     public isTextView(): boolean {
