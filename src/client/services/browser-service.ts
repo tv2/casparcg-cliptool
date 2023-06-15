@@ -76,8 +76,3 @@ export class BrowserService {
         return this.view.channel - 1
     }
 }
-
-const browserService: BrowserService = new BrowserService(
-    window.location.search
-)
-export default browserService

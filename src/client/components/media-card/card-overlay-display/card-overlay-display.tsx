@@ -3,10 +3,10 @@ import { useSelector } from "react-redux";
 import SelectedCardOverlay from "../selected-card-overlay";
 import './card-overlay-display.scss'
 import CardOverlay from "../card-overlay/card-overlay";
-import settingsService from "../../../../shared/services/settings-service";
+import { SettingsService } from "../../../../shared/services/settings-service";
 import { State } from "../../../../shared/reducers/index-reducer";
 import { MediaFile } from "../../../../shared/models/media-models";
-import mediaService from "../../../../shared/services/media-service";
+import { MediaService } from "../../../../shared/services/media-service";
 import { state } from "../../../../shared/store";
 
 interface CardOverlayDisplayProps {
@@ -18,21 +18,21 @@ interface CardOverlayDisplayProps {
 export default function CardOverlayDisplay(props: CardOverlayDisplayProps): JSX.Element {
   
   useSelector(
-    (state: State) => settingsService
+    (state: State) => SettingsService.instance
       .getOutputSettings(state.settings, props.activeTabIndex).selectedFileName
   )
   useSelector(
-    (state: State) => settingsService
+    (state: State) => SettingsService.instance
       .getOutputSettings(state.settings, props.activeTabIndex).cuedFileName
   )
 
   const time: [number, number] = useSelector(
-    (state: State) => mediaService.getOutput(state.media, props.activeTabIndex).time
+    (state: State) => MediaService.instance.getOutput(state.media, props.activeTabIndex).time
   )
   
-  const isSelected: boolean = settingsService.isThumbnailSelected(props.file.name, state.settings, props.activeTabIndex)
-  const isCued: boolean = settingsService.isMediaCued(props.file.name, state.settings, props.activeTabIndex)
-  const isValidFile: boolean = isSelected ? mediaService.isValidFile(props.file, time) : false
+  const isSelected: boolean = SettingsService.instance.isThumbnailSelected(props.file.name, state.settings, props.activeTabIndex)
+  const isCued: boolean = SettingsService.instance.isMediaCued(props.file.name, state.settings, props.activeTabIndex)
+  const isValidFile: boolean = isSelected ? MediaService.instance.isValidFile(props.file, time) : false
 
   return (
   <div className="c-card-overlay-display">

@@ -6,7 +6,8 @@ import {
     ThumbnailFile,
 } from '../models/media-models'
 
-class MediaService {
+export class MediaService {
+    static readonly instance = new MediaService()
     public getOutput(media: Media, channelIndex: number): Output {
         return media.outputs[channelIndex]
     }
@@ -56,6 +57,3 @@ class MediaService {
         return file.type === FileType.VIDEO && !(time[0] === 0 && time[1] === 0)
     }
 }
-
-const mediaService: MediaService = new MediaService()
-export default mediaService

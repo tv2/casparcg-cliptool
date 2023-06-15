@@ -2,7 +2,7 @@ import React from 'react'
 
 import TimerThumbnail from '../timer-thumbnail/timer-thumbnail'
 import ControlActions from '../control-actions/control-actions'
-import browserService from '../../../services/browser-service'
+import { BrowserService } from '../../../services/browser-service'
 import Button from '../../shared/button'
 import './application-header.scss'
 import Group from '../group/group'
@@ -13,7 +13,7 @@ export default function ApplicationHeader(): JSX.Element {
     return (
         <header className='app-header'>
             <div className="app-header__controls">
-                {!browserService.isTextView() && (
+                {!BrowserService.instance.isTextView() && (
                     <Group>
                         <Button
                             className="app-settings-button"

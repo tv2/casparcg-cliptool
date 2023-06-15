@@ -2,7 +2,7 @@ import { state } from '../store'
 
 // Unused currently, but Kasper says use of the original 'handleShortcuts', should be re-implemented in the future.
 // Because of this, the code is being kept - now as a service on the model level, to eliminate duplication.
-class ShortcutService {
+export class ShortcutService {
     ccgLoadPlay: any
     constructor(ccgLoadPlay: any) {
         this.ccgLoadPlay = ccgLoadPlay
@@ -43,5 +43,3 @@ class ShortcutService {
         }
     }
 }
-
-export default ShortcutService

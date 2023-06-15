@@ -3,17 +3,18 @@ import { HiddenFiles } from '../../shared/models/media-models'
 import { state, reduxStore } from '../../shared/store'
 import { socketServer } from '../handlers/express-handler'
 import { logger } from '../utils/logger'
-import persistenceService from './persistence-service'
-import settingsService from '../../shared/services/settings-service'
+import { PersistenceService } from './persistence-service'
+import { SettingsService } from '../../shared/services/settings-service'
 import { OutputSettings } from '../../shared/models/settings-models'
 import { ServerToClientCommand } from '../../shared/socket-io-constants'
 import _ from 'lodash'
 
-class HiddenFilesPersistenceService {
+export class HiddenFilesPersistenceService {
+    static readonly instance = new HiddenFilesPersistenceService()
     public load(): void {
         try {
             const hiddenFiles: HiddenFiles = JSON.parse(
-                persistenceService.loadFile('hiddenFiles.json')
+                PersistenceService.instance.loadFile('hiddenFiles.json')
             )
             const isInvalidHiddenFiles: boolean =
                 this.hasSelectedOrCuedHiddenFiles(hiddenFiles)
@@ -55,7 +56,7 @@ class HiddenFilesPersistenceService {
             this.getCleanHiddenFiles(hiddenFiles)
         const stringifiedHiddenFiles = JSON.stringify(cleanHiddenFiles)
 
-        persistenceService.saveFile(
+        PersistenceService.instance.saveFile(
             'hiddenFiles.json',
             stringifiedHiddenFiles,
             (message: any) => {
@@ -82,9 +83,10 @@ class HiddenFilesPersistenceService {
     }
 
     private hasSelectedOrCuedHiddenFiles(hiddenFiles: HiddenFiles): boolean {
-        const outputs: OutputSettings[] = settingsService.getGenericSettings(
-            state.settings
-        ).outputSettings
+        const outputs: OutputSettings[] =
+            SettingsService.instance.getGenericSettings(
+                state.settings
+            ).outputSettings
         return outputs.some(
             (output) =>
                 output.selectedFileName in hiddenFiles ||
@@ -96,9 +98,10 @@ class HiddenFilesPersistenceService {
         const hiddenFiles: HiddenFiles = {
             ...originalHiddenFiles,
         }
-        const outputs: OutputSettings[] = settingsService.getGenericSettings(
-            state.settings
-        ).outputSettings
+        const outputs: OutputSettings[] =
+            SettingsService.instance.getGenericSettings(
+                state.settings
+            ).outputSettings
         outputs.forEach((output) => {
             if (output.selectedFileName in hiddenFiles) {
                 delete hiddenFiles[output.selectedFileName]
@@ -107,6 +110,3 @@ class HiddenFilesPersistenceService {
         return hiddenFiles
     }
 }
-
-const hiddenFilesPersistenceService = new HiddenFilesPersistenceService()
-export default hiddenFilesPersistenceService

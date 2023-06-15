@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import OutputsForm from '../outputs'
 import SettingsActions from '../settings-actions/settings-actions'
 import CasparcgForm from '../casparcg-settings/casparcg-settings'
-import browserService from '../../../services/browser-service'
+import { BrowserService } from '../../../services/browser-service'
 import './settings-page.scss'
 import { CasparcgSettings, GenericSettings, OutputSettings } from '../../../../shared/models/settings-models'
 import { state } from '../../../../shared/store'
@@ -26,7 +26,7 @@ export function SettingsPage(): JSX.Element {
             <p className="c-settings-page__header">SETTINGS :</p>
             <SettingsActions settings={settings}/>
             <hr/>
-            {!browserService.isChannelView() && settings && <CasparcgForm casparcgSettings={settings.ccgSettings} onChange={(changedCasparcg) => onCasparcgChanged(changedCasparcg)}/> }
+            {!BrowserService.instance.isChannelView() && settings && <CasparcgForm casparcgSettings={settings.ccgSettings} onChange={(changedCasparcg) => onCasparcgChanged(changedCasparcg)}/> }
             {settings && <OutputsForm outputSettings={settings.outputSettings} onChange={(changedOutputs) => onOutputsChanged(changedOutputs)}/>}
         </div>
     )

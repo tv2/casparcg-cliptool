@@ -6,8 +6,8 @@ import { socket } from '../util/socket-gateway-handlers'
 
 import * as OSC from './osc-constants'
 import { ARG_CONSTANTS } from '../util/extract-args'
-import osService from '../../shared/services/os-service'
-import mediaService from '../../shared/services/media-service'
+import { OsService } from '../../shared/services/os-service'
+import { MediaService } from '../../shared/services/media-service'
 import { ClientToServerCommand } from '../../shared/socket-io-constants'
 
 export function oscServerGateway(): void {
@@ -19,7 +19,7 @@ export function oscServerGateway(): void {
 
     oscConnection
         .on('ready', () => {
-            let ipAddresses = osService.getIpAddresses()
+            let ipAddresses = OsService.instance.getIpAddresses()
 
             console.log('Listening for OSC over UDP.')
             ipAddresses.forEach((address) => {
@@ -57,8 +57,10 @@ export function oscServerGateway(): void {
                         {
                             type: 's',
                             value: JSON.stringify(
-                                mediaService.getOutput(state.media, channel - 1)
-                                    .mediaFiles
+                                MediaService.instance.getOutput(
+                                    state.media,
+                                    channel - 1
+                                ).mediaFiles
                             ),
                         },
                     ],

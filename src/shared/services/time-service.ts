@@ -1,4 +1,5 @@
-class TimeService {
+export class TimeService {
+    static readonly instance = new TimeService()
     public convertDurationToTimeCode(
         timeRange: [number, number] = [0, 0],
         frameRate: number = 25
@@ -23,6 +24,3 @@ class TimeService {
         return `${zeros}${text}`
     }
 }
-
-const timeService: TimeService = new TimeService()
-export default timeService

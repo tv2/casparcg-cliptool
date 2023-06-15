@@ -1,6 +1,7 @@
 import io from 'socket.io-client'
 
-class SocketService {
+export class SocketService {
+    static readonly instance = new SocketService()
     private socket: SocketIOClient.Socket
 
     constructor() {
@@ -11,6 +12,3 @@ class SocketService {
         return this.socket
     }
 }
-
-const socketService: SocketService = new SocketService()
-export default socketService

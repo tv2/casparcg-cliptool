@@ -1,6 +1,6 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import browserService from "../../services/browser-service";
+import { BrowserService } from "../../services/browser-service";
 import Output from "./output/output";
 import { State } from "../../../shared/reducers/index-reducer";
 import { CaspercgConfigChannel, OutputSettings } from "../../../shared/models/settings-models";
@@ -22,7 +22,7 @@ export default function OutputsForm(props: OutputsFormProps): JSX.Element {
     return (
         <div>
             {
-                browserService.isChannelView()
+                BrowserService.instance.isChannelView()
                     ? renderSingleOutput(props.outputSettings, casparcgConfig.channels, folders, onOutputChanged)
                     : renderMultipleOutputs(props.outputSettings, casparcgConfig.channels, folders, onOutputChanged)
             }
@@ -31,7 +31,7 @@ export default function OutputsForm(props: OutputsFormProps): JSX.Element {
 }
 
 function renderSingleOutput(outputSettings: OutputSettings[], casparcgChannels: CaspercgConfigChannel[], folders: string[], onChange: (changedOutput: OutputSettings, index: number) => void ): JSX.Element {
-    const channel = browserService.getChannel()
+    const channel = BrowserService.instance.getChannel()
     return buildSingleOutput(
         outputSettings[channel], 
         casparcgChannels[channel], 

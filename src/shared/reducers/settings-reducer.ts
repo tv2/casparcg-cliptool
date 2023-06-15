@@ -3,12 +3,12 @@ import {
     OutputSettings,
     Settings,
 } from './../models/settings-models'
-import settingsService from '../services/settings-service'
+import { SettingsService } from '../services/settings-service'
 import { getVideoFormat } from '../video-format'
 import * as IO from './../actions/settings-action'
 
 function defaultSettingsReducerState(): Settings {
-    const generics = settingsService.getDefaultGenericSettings()
+    const generics = SettingsService.instance.getDefaultGenericSettings()
     return {
         ccgConfig: {
             channels: [],

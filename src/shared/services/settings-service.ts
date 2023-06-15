@@ -11,7 +11,8 @@ import {
     newGenericSettingsSchema,
 } from '../schemas/new-settings-schema'
 
-class SettingsService {
+export class SettingsService {
+    static readonly instance = new SettingsService()
     private fallBackDefaultSettings: GenericSettings
 
     constructor() {
@@ -130,6 +131,3 @@ class SettingsService {
         )
     }
 }
-
-const settingsService: SettingsService = new SettingsService()
-export default settingsService

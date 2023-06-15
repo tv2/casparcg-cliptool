@@ -30,15 +30,15 @@ import {
     MediaFile,
 } from '../../shared/models/media-models'
 import { assignThumbnailsToOutputs } from './caspar-cg-handler'
-import settingsService from '../../shared/services/settings-service'
-import mediaService from '../../shared/services/media-service'
+import { SettingsService } from '../../shared/services/settings-service'
+import { MediaService } from '../../shared/services/media-service'
 import {
     GenericSettings,
     OperationMode,
     OutputSettings,
 } from '../../shared/models/settings-models'
-import settingsPersistenceService from '../services/settings-persistence-service'
-import hiddenFilesPersistenceService from '../services/hidden-files-persistence-service'
+import { SettingsPersistenceService } from '../services/settings-persistence-service'
+import { HiddenFilesPersistenceService } from '../services/hidden-files-persistence-service'
 import {
     ClientToServerCommand,
     GET_SETTINGS,
@@ -63,7 +63,7 @@ export function socketIoHandlers(socket: any): void {
             ClientToServerCommand.TOGGLE_THUMBNAIL_VISIBILITY,
             (channelIndex: number, fileName: string) => {
                 if (
-                    settingsService
+                    SettingsService.instance
                         .getGenericSettings(state.settings)
                         .outputSettings.some(
                             (output) => output.selectedFileName === fileName
@@ -80,7 +80,9 @@ export function socketIoHandlers(socket: any): void {
                         hiddenFiles
                     )
                     reduxStore.dispatch(updateHiddenFiles(updatedHiddenFiles))
-                    hiddenFilesPersistenceService.save(updatedHiddenFiles)
+                    HiddenFilesPersistenceService.instance.save(
+                        updatedHiddenFiles
+                    )
 
                     socketServer.emit(
                         ServerToClientCommand.HIDDEN_FILES_UPDATE,
@@ -99,7 +101,7 @@ export function socketIoHandlers(socket: any): void {
             ClientToServerCommand.PGM_PLAY,
             (channelIndex: number, fileName: string) => {
                 if (
-                    !settingsService.getOutputSettings(
+                    !SettingsService.instance.getOutputSettings(
                         state.settings,
                         channelIndex
                     ).mixState
@@ -118,7 +120,7 @@ export function socketIoHandlers(socket: any): void {
                     ''
                 )
                 reduxStore.dispatch(setSelectedFileName(channelIndex, fileName))
-                settingsPersistenceService.save()
+                SettingsPersistenceService.instance.save()
                 socketServer.emit(
                     ServerToClientCommand.FILE_SELECTED_UPDATE,
                     channelIndex,
@@ -142,7 +144,7 @@ export function socketIoHandlers(socket: any): void {
                     channelIndex,
                     ''
                 )
-                settingsPersistenceService.save()
+                SettingsPersistenceService.instance.save()
                 logger.info(
                     `Loading ${fileName} on channel index ${channelIndex}.`
                 )
@@ -152,11 +154,11 @@ export function socketIoHandlers(socket: any): void {
             ClientToServerCommand.SET_LOOP_STATE,
             (channelIndex: number, loopState: boolean) => {
                 reduxStore.dispatch(setLoop(channelIndex, loopState))
-                settingsPersistenceService.save()
+                SettingsPersistenceService.instance.save()
                 socketServer.emit(
                     ServerToClientCommand.LOOP_STATE_UPDATE,
                     channelIndex,
-                    settingsService.getOutputSettings(
+                    SettingsService.instance.getOutputSettings(
                         state.settings,
                         channelIndex
                     ).loopState
@@ -170,7 +172,7 @@ export function socketIoHandlers(socket: any): void {
                 socketServer.emit(
                     ServerToClientCommand.OPERATION_MODE_UPDATE,
                     channelIndex,
-                    settingsService.getOutputSettings(
+                    SettingsService.instance.getOutputSettings(
                         state.settings,
                         channelIndex
                     ).operationMode
@@ -183,11 +185,11 @@ export function socketIoHandlers(socket: any): void {
                 reduxStore.dispatch(
                     setManualStart(channelIndex, manualStartState)
                 )
-                settingsPersistenceService.save()
+                SettingsPersistenceService.instance.save()
                 socketServer.emit(
                     ServerToClientCommand.MANUAL_START_STATE_UPDATE,
                     channelIndex,
-                    settingsService.getOutputSettings(
+                    SettingsService.instance.getOutputSettings(
                         state.settings,
                         channelIndex
                     ).manualStartState
@@ -198,11 +200,11 @@ export function socketIoHandlers(socket: any): void {
             ClientToServerCommand.SET_MIX_STATE,
             (channelIndex: number, mixState: boolean) => {
                 reduxStore.dispatch(setMix(channelIndex, mixState))
-                settingsPersistenceService.save()
+                SettingsPersistenceService.instance.save()
                 socketServer.emit(
                     ServerToClientCommand.MIX_STATE_UPDATE,
                     channelIndex,
-                    settingsService.getOutputSettings(
+                    SettingsService.instance.getOutputSettings(
                         state.settings,
                         channelIndex
                     ).mixState
@@ -213,19 +215,20 @@ export function socketIoHandlers(socket: any): void {
             ClientToServerCommand.SET_WEB_STATE,
             (channelIndex: number, webState: boolean) => {
                 reduxStore.dispatch(setWeb(channelIndex, webState))
-                settingsPersistenceService.save()
+                SettingsPersistenceService.instance.save()
                 socketServer.emit(
                     ServerToClientCommand.WEB_STATE_UPDATE,
                     channelIndex,
-                    settingsService.getOutputSettings(
+                    SettingsService.instance.getOutputSettings(
                         state.settings,
                         channelIndex
                     ).webState
                 )
-                const outputSettings = settingsService.getOutputSettings(
-                    state.settings,
-                    channelIndex
-                )
+                const outputSettings =
+                    SettingsService.instance.getOutputSettings(
+                        state.settings,
+                        channelIndex
+                    )
                 updateOverlayPlayingState(channelIndex, outputSettings)
             }
         )
@@ -247,7 +250,7 @@ export function socketIoHandlers(socket: any): void {
             )
             logger.info('Updating and storing generic settings server side.')
             reduxStore.dispatch(setGenerics(generics))
-            settingsPersistenceService.save()
+            SettingsPersistenceService.instance.save()
             socketServer.emit(
                 ServerToClientCommand.SETTINGS_UPDATE,
                 state.settings
@@ -321,7 +324,7 @@ function findFile(
     fileName: string,
     channelIndex: number
 ): MediaFile | undefined {
-    return mediaService
+    return MediaService.instance
         .getOutput(state.media, channelIndex)
         .mediaFiles.find(
             (file) => file.name.toUpperCase() === fileName.toUpperCase()
@@ -338,7 +341,7 @@ function getMetadata(file: MediaFile): HiddenFileInfo {
 export function initializeClient(): void {
     let timeTallyData: TimeSelectedFilePayload[] = []
     const selectedFiles: string[] = []
-    settingsService
+    SettingsService.instance
         .getGenericSettings(state.settings)
         .outputSettings.forEach(
             (output: OutputSettings, channelIndex: number) => {
@@ -369,33 +372,37 @@ export function initializeClient(): void {
                 )
             }
         )
-    mediaService.getOutputs(state.media).forEach((output, channelIndex) => {
-        timeTallyData[channelIndex] = {
-            time: output.time,
-            selectedFileName: selectedFiles[channelIndex],
-        }
-        socketServer.emit(
-            ServerToClientCommand.TIME_TALLY_UPDATE,
-            timeTallyData
-        )
-        socketServer.emit(
-            ServerToClientCommand.THUMBNAIL_UPDATE,
-            channelIndex,
-            output.thumbnailList
-        )
-        socketServer.emit(
-            ServerToClientCommand.MEDIA_UPDATE,
-            channelIndex,
-            output.mediaFiles
-        )
-    })
+    MediaService.instance
+        .getOutputs(state.media)
+        .forEach((output, channelIndex) => {
+            timeTallyData[channelIndex] = {
+                time: output.time,
+                selectedFileName: selectedFiles[channelIndex],
+            }
+            socketServer.emit(
+                ServerToClientCommand.TIME_TALLY_UPDATE,
+                timeTallyData
+            )
+            socketServer.emit(
+                ServerToClientCommand.THUMBNAIL_UPDATE,
+                channelIndex,
+                output.thumbnailList
+            )
+            socketServer.emit(
+                ServerToClientCommand.MEDIA_UPDATE,
+                channelIndex,
+                output.mediaFiles
+            )
+        })
     socketServer.emit(ServerToClientCommand.TIME_TALLY_UPDATE, timeTallyData)
 }
 
 function cleanUpMediaFiles(): void {
-    mediaService.getOutputs(state.media).forEach(({}, channelIndex: number) => {
-        reduxStore.dispatch(updateMediaFiles(channelIndex, []))
-        reduxStore.dispatch(updateThumbnailFileList(channelIndex, []))
-        assignThumbnailsToOutputs()
-    })
+    MediaService.instance
+        .getOutputs(state.media)
+        .forEach(({}, channelIndex: number) => {
+            reduxStore.dispatch(updateMediaFiles(channelIndex, []))
+            reduxStore.dispatch(updateThumbnailFileList(channelIndex, []))
+            assignThumbnailsToOutputs()
+        })
 }

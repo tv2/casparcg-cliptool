@@ -1,12 +1,15 @@
 import { OperationMode } from '../../shared/models/settings-models'
 import { ClientToServerCommand } from '../../shared/socket-io-constants'
-import socketService from './socket-service'
+import { SocketService } from './socket-service'
 
-class BackendOperationApi {
+export class BackendOperationApi {
+    static readonly instance = new BackendOperationApi(
+        SocketService.instance.getSocket()
+    )
     private socket: SocketIOClient.Socket
 
-    constructor() {
-        this.socket = socketService.getSocket()
+    constructor(socket: SocketIOClient.Socket) {
+        this.socket = socket
     }
 
     public emitSetOperationModeToControl(outputIndex: number) {
@@ -40,6 +43,3 @@ class BackendOperationApi {
         this.socket.emit(ClientToServerCommand.RESTART_SERVER)
     }
 }
-
-const backendOperationApi: BackendOperationApi = new BackendOperationApi()
-export default backendOperationApi

@@ -5,8 +5,8 @@ import {
 import { setConnectionStatus } from '../../shared/actions/app-navigation-action'
 import { reduxStore, state } from '../../shared/store'
 import { OperationMode, Settings } from '../../shared/models/settings-models'
-import mediaService from '../../shared/services/media-service'
-import settingsService from '../../shared/services/settings-service'
+import { MediaService } from '../../shared/services/media-service'
+import { SettingsService } from '../../shared/services/settings-service'
 import {
     setNumberOfOutputs,
     setTime,
@@ -31,9 +31,12 @@ import {
     setWeb,
     updateSettings,
 } from '../../shared/actions/settings-action'
-import socketService from './socket-service'
+import { SocketService } from './socket-service'
 
-class BackendObserver {
+export class BackendObserver {
+    static readonly instance = new BackendObserver(
+        SocketService.instance.getSocket()
+    )
     private socket: SocketIOClient.Socket
 
     constructor(socket: SocketIOClient.Socket) {
@@ -43,7 +46,7 @@ class BackendObserver {
     }
 
     public startBackendObserver(): void {
-        console.log('Socket Initialized', socketService.getSocket())
+        console.log('Socket Initialized', SocketService.instance.getSocket())
         console.log('BackendObserver: Monitoring messages from socket...')
     }
 
@@ -147,13 +150,13 @@ class BackendObserver {
         channel: TimeSelectedFilePayload,
         index: number
     ): void {
-        const oldTime = mediaService.getOutput(state.media, index).time
+        const oldTime = MediaService.instance.getOutput(state.media, index).time
         if (!this.hasTimeChanged(oldTime, channel.time)) {
             return
         }
 
         if (
-            settingsService.getOutputSettings(state.settings, index)
+            SettingsService.instance.getOutputSettings(state.settings, index)
                 .selectedFileName !== channel.selectedFileName
         ) {
             reduxStore.dispatch(
@@ -229,8 +232,3 @@ class BackendObserver {
         )
     }
 }
-
-const backendObserver: BackendObserver = new BackendObserver(
-    socketService.getSocket()
-)
-export default backendObserver

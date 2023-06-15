@@ -1,10 +1,8 @@
 import { AppNavigation } from '../models/app-navigation-models'
 
-class AppNavigationService {
+export class AppNavigationService {
+    static readonly instance = new AppNavigationService()
     public getActiveTabIndex(navigationState: AppNavigation): number {
         return navigationState.activeTabIndex
     }
 }
-
-const appNavigationService: AppNavigationService = new AppNavigationService()
-export default appNavigationService

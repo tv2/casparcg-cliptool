@@ -1,26 +1,26 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import settingsService from "../../../../shared/services/settings-service";
-import appNavigationService from "../../../../shared/services/app-navigation-service";
+import { SettingsService } from "../../../../shared/services/settings-service";
+import { AppNavigationService } from "../../../../shared/services/app-navigation-service";
 import { State } from "../../../../shared/reducers/index-reducer";
 import Button from "../../shared/button";
-import browserService from "../../../services/browser-service";
+import { BrowserService } from "../../../services/browser-service";
 import './control-actions.scss'
 import { OutputSettings } from "../../../../shared/models/settings-models";
 import Group from "../group/group";
 import Toggle from "../../shared/switch/switch";
-import backendPlayApi from "../../../services/backend-play-api";
-import backendSettingApi from "../../../services/backend-settings-api";
+import { BackendPlayApi } from "../../../services/backend-play-api";
+import { BackendSettingsApi } from "../../../services/backend-settings-api";
 
 export default function ControlActions(): JSX.Element {
   const activeTabIndex: number = useSelector(
-    (state: State) => appNavigationService.getActiveTabIndex(state.appNavigation))
+    (state: State) => AppNavigationService.instance.getActiveTabIndex(state.appNavigation))
   const outputSettings = useSelector(
-    (state: State) => settingsService.getOutputSettings(state.settings, activeTabIndex))
+    (state: State) => SettingsService.instance.getOutputSettings(state.settings, activeTabIndex))
 
   return (
     <>
-      {!browserService.isTextView() && (
+      {!BrowserService.instance.isTextView() && (
         <>
           <Group>
             <Toggle
@@ -66,21 +66,21 @@ function playCuedFile(activeTabIndex: number, outputSettings: OutputSettings): v
   if (!outputSettings.cuedFileName) {
     return
   }
-  backendPlayApi.emitPlayFile(activeTabIndex, outputSettings.cuedFileName)
+  BackendPlayApi.instance.emitPlayFile(activeTabIndex, outputSettings.cuedFileName)
 }
 
 function toggleLoopState(activeTabIndex: number, isChecked: boolean): void {
-  backendSettingApi.emitSetLoopState(activeTabIndex, isChecked)
+  BackendSettingsApi.instance.emitSetLoopState(activeTabIndex, isChecked)
 }
 
 function toggleMixState(activeTabIndex: number, isChecked: boolean): void {
-  backendSettingApi.emitSetMixState(activeTabIndex, isChecked)  
+  BackendSettingsApi.instance.emitSetMixState(activeTabIndex, isChecked)  
 }
 
 function toggleWebState(activeTabIndex: number, isChecked: boolean): void {
-  backendSettingApi.emitSetWebState(activeTabIndex, isChecked)
+  BackendSettingsApi.instance.emitSetWebState(activeTabIndex, isChecked)
 }
 
 function toggleManualStartState(activeTabIndex: number, isChecked: boolean): void {
-  backendSettingApi.emitSetManualStartState(activeTabIndex, isChecked)
+  BackendSettingsApi.instance.emitSetManualStartState(activeTabIndex, isChecked)
 }

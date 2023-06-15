@@ -21,7 +21,7 @@ import { ARG_CONSTANTS } from './extract-args'
 import { logger } from './logger-gateway'
 import { MediaFile, ThumbnailFile } from '../../shared/models/media-models'
 import { OperationMode, Settings } from '../../shared/models/settings-models'
-import settingsService from '../../shared/services/settings-service'
+import { SettingsService } from '../../shared/services/settings-service'
 import {
     ServerToClientCommand,
     TimeSelectedFilePayload,
@@ -88,8 +88,10 @@ socket.on(
         data.forEach((channel, index) => {
             reduxStore.dispatch(setTime(index, channel.time))
             if (
-                settingsService.getOutputSettings(state.settings, index)
-                    .selectedFileName !== channel.selectedFileName
+                SettingsService.instance.getOutputSettings(
+                    state.settings,
+                    index
+                ).selectedFileName !== channel.selectedFileName
             ) {
                 reduxStore.dispatch(
                     setSelectedFileName(index, channel.selectedFileName)

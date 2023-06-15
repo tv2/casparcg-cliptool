@@ -1,11 +1,14 @@
 import { ClientToServerCommand } from '../../shared/socket-io-constants'
-import socketService from './socket-service'
+import { SocketService } from './socket-service'
 
-class BackendPlayApi {
+export class BackendPlayApi {
+    static readonly instance = new BackendPlayApi(
+        SocketService.instance.getSocket()
+    )
     private socket: SocketIOClient.Socket
 
-    constructor() {
-        this.socket = socketService.getSocket()
+    constructor(socket: SocketIOClient.Socket) {
+        this.socket = socket
     }
 
     public emitPlayFile(outputIndex: number, fileName: string) {
@@ -16,6 +19,3 @@ class BackendPlayApi {
         this.socket.emit(ClientToServerCommand.PGM_LOAD, outputIndex, fileName)
     }
 }
-
-const backendPlayApi: BackendPlayApi = new BackendPlayApi()
-export default backendPlayApi

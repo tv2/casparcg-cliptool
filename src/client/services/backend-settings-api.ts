@@ -1,12 +1,15 @@
 import { GenericSettings } from '../../shared/models/settings-models'
 import { ClientToServerCommand } from '../../shared/socket-io-constants'
-import socketService from './socket-service'
+import { SocketService } from './socket-service'
 
-class BackendSettingsApi {
+export class BackendSettingsApi {
+    static readonly instance = new BackendSettingsApi(
+        SocketService.instance.getSocket()
+    )
     private socket: SocketIOClient.Socket
 
-    constructor() {
-        this.socket = socketService.getSocket()
+    constructor(socket: SocketIOClient.Socket) {
+        this.socket = socket
     }
 
     public emitSetLoopState(outputIndex: number, state: boolean) {
@@ -45,6 +48,3 @@ class BackendSettingsApi {
         this.socket.emit(ClientToServerCommand.SET_GENERICS, settings)
     }
 }
-
-const backendSettingApi: BackendSettingsApi = new BackendSettingsApi()
-export default backendSettingApi

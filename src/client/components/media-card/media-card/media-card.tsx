@@ -1,12 +1,12 @@
 import React from "react"
-import browserService from "../../../services/browser-service";
+import { BrowserService } from "../../../services/browser-service";
 import { useSelector } from "react-redux";
 import './media-card.scss'
-import backendOperationApi from "../../../services/backend-operation-api";
-import backendPlayApi from "../../../services/backend-play-api";
-import appNavigationService from "../../../../shared/services/app-navigation-service";
+import { BackendOperationApi } from "../../../services/backend-operation-api";
+import { BackendPlayApi } from "../../../services/backend-play-api";
+import { AppNavigationService } from "../../../../shared/services/app-navigation-service";
 import { State } from "../../../../shared/reducers/index-reducer";
-import settingsService from "../../../../shared/services/settings-service";
+import { SettingsService } from "../../../../shared/services/settings-service";
 import { state } from "../../../../shared/store";
 import { OperationMode } from "../../../../shared/models/settings-models";
 import { FileType } from "../../../../shared/models/media-models";
@@ -22,18 +22,18 @@ interface MediaCardProps {
 
 export default function MediaCard(props: MediaCardProps): JSX.Element {
   const activeTabIndex: number = useSelector(
-    (state: State) => appNavigationService.getActiveTabIndex(state.appNavigation))
+    (state: State) => AppNavigationService.instance.getActiveTabIndex(state.appNavigation))
   useSelector(
-    (state: State) => settingsService.getOutputSettings(state.settings, props.activeTabIndex)
+    (state: State) => SettingsService.instance.getOutputSettings(state.settings, props.activeTabIndex)
       .selectedFileName
   )
   useSelector(
-    (state: State) => settingsService.getOutputSettings(state.settings, props.activeTabIndex)
+    (state: State) => SettingsService.instance.getOutputSettings(state.settings, props.activeTabIndex)
       .cuedFileName
     )
   
-  const isSelected: boolean = settingsService.isThumbnailSelected(props.fileName, state.settings, activeTabIndex)
-  const isCued: boolean = settingsService.isMediaCued(props.fileName, state.settings, activeTabIndex)
+  const isSelected: boolean = SettingsService.instance.isThumbnailSelected(props.fileName, state.settings, activeTabIndex)
+  const isCued: boolean = SettingsService.instance.isMediaCued(props.fileName, state.settings, activeTabIndex)
 
   const isSelectedClass = isSelected ? 'selected-thumbnail' : ''
   const chosenClass = isCued ? 'cued-thumbnail' : isSelectedClass
@@ -53,10 +53,10 @@ export default function MediaCard(props: MediaCardProps): JSX.Element {
 }
 
 function triggerOperationModeAction(fileName: string, activeTabIndex: number, fileType: string): void {   
-  if (browserService.isTextView()) {
+  if (BrowserService.instance.isTextView()) {
     return playFile(fileName, activeTabIndex, fileType)
   } 
-  const operationMode = settingsService.getOutputSettings(state.settings, activeTabIndex)?.operationMode
+  const operationMode = SettingsService.instance.getOutputSettings(state.settings, activeTabIndex)?.operationMode
   switch (operationMode) {
       case OperationMode.EDIT_VISIBILITY: 
           toggleVisibility(fileName, activeTabIndex)
@@ -69,21 +69,21 @@ function triggerOperationModeAction(fileName: string, activeTabIndex: number, fi
 }
 
 function toggleVisibility(fileName: string, activeTabIndex: number): void {
-  if (settingsService.isCardSelectedOnAnyOutput(fileName, state.settings) 
-    || settingsService.isCardCuedOnAnyOutput(fileName, state.settings)) {
+  if (SettingsService.instance.isCardSelectedOnAnyOutput(fileName, state.settings) 
+    || SettingsService.instance.isCardCuedOnAnyOutput(fileName, state.settings)) {
       alert('Unable to hide, as the file is in use somewhere.')
       return
   }
-  backendOperationApi.emitToggleThumbnailVisibility(activeTabIndex, fileName)
+  BackendOperationApi.instance.emitToggleThumbnailVisibility(activeTabIndex, fileName)
 }
 
 function playFile(fileName: string, activeTabIndex: number, fileType: string ): void {
   if (fileType === FileType.IMAGE) {
-    backendPlayApi.emitPlayFile(activeTabIndex, fileName)
+    BackendPlayApi.instance.emitPlayFile(activeTabIndex, fileName)
   } else {
-    const eventToFire = !settingsService.getOutputSettings(state.settings, activeTabIndex)?.manualStartState 
-      ? () => backendPlayApi.emitPlayFile(activeTabIndex, fileName)
-      : () => backendPlayApi.emitLoadFile(activeTabIndex, fileName)
+    const eventToFire = !SettingsService.instance.getOutputSettings(state.settings, activeTabIndex)?.manualStartState 
+      ? () => BackendPlayApi.instance.emitPlayFile(activeTabIndex, fileName)
+      : () => BackendPlayApi.instance.emitLoadFile(activeTabIndex, fileName)
     eventToFire()
   }   
 }

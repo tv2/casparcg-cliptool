@@ -1,7 +1,8 @@
 import { FileType } from '../../shared/models/media-models'
-import timeService from '../../shared/services/time-service'
+import { TimeService } from '../../shared/services/time-service'
 
-class ClientTimeService {
+export class ClientTimeService {
+    static readonly instance = new ClientTimeService()
     public convertDurationToTimeCode(
         timeRange: [number, number] = [0, 0],
         frameRate: number = 25,
@@ -16,9 +17,9 @@ class ClientTimeService {
             return '****END****'
         }
 
-        return timeService.convertDurationToTimeCode(timeRange, frameRate)
+        return TimeService.instance.convertDurationToTimeCode(
+            timeRange,
+            frameRate
+        )
     }
 }
-
-const clientTimeService = new ClientTimeService()
-export default clientTimeService

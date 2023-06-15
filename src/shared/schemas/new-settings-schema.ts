@@ -4,7 +4,7 @@ import {
     OperationMode,
     OutputSettings,
 } from '../models/settings-models'
-import arrayService from '../services/array-service'
+import { ArrayService } from '../services/array-service'
 
 export const defaultOutputSettingsState: OutputSettings = {
     label: '',
@@ -61,8 +61,16 @@ export const newGenericSettingsSchema = z.object({
     ccgSettings: ccgSettingsSchema.default(defaultCcgSettingsState),
     outputSettings: z
         .array(outputSettingsSchema)
-        .default(arrayService.fillWithDefault([], defaultOutputSettingsState))
+        .default(
+            ArrayService.instance.fillWithDefault(
+                [],
+                defaultOutputSettingsState
+            )
+        )
         .transform((transform) =>
-            arrayService.fillWithDefault(transform, defaultOutputSettingsState)
+            ArrayService.instance.fillWithDefault(
+                transform,
+                defaultOutputSettingsState
+            )
         ),
 })

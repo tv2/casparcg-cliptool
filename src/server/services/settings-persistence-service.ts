@@ -6,15 +6,16 @@ import {
 import { state, reduxStore } from '../../shared/store'
 import { newGenericSettingsSchema } from '../../shared/schemas/new-settings-schema'
 import { PreviousGenericSettings } from '../../shared/schemas/old-settings-schema'
-import settingsService from '../../shared/services/settings-service'
+import { SettingsService } from '../../shared/services/settings-service'
 import { logger } from '../utils/logger'
-import persistenceService from './persistence-service'
+import { PersistenceService } from './persistence-service'
 
-class SettingsPersistenceService {
+export class SettingsPersistenceService {
+    static readonly instance = new SettingsPersistenceService()
     load(): void {
         try {
             const rawSettings: unknown = JSON.parse(
-                persistenceService.loadFile('settings.json')
+                PersistenceService.instance.loadFile('settings.json')
             )
             let settings: GenericSettings = this.parseSettings(rawSettings)
             logger.data(rawSettings).info('File loaded with settings:')
@@ -24,7 +25,9 @@ class SettingsPersistenceService {
                 'Settings not found, or not yet stored, dispatching defaults, and saving it.'
             )
             reduxStore.dispatch(
-                setGenerics(settingsService.getDefaultGenericSettings())
+                setGenerics(
+                    SettingsService.instance.getDefaultGenericSettings()
+                )
             )
             this.save()
         }
@@ -53,15 +56,15 @@ class SettingsPersistenceService {
         logger
             .data(rawSettings)
             .error('Failed to parse settings from file, using default!')
-        return settingsService.getDefaultGenericSettings()
+        return SettingsService.instance.getDefaultGenericSettings()
     }
 
     public save(genericSettings?: GenericSettings): void {
         const generics: GenericSettings = genericSettings
             ? genericSettings
-            : settingsService.getGenericSettings(state.settings)
+            : SettingsService.instance.getGenericSettings(state.settings)
         const stringifiedSettings = JSON.stringify(generics)
-        persistenceService.saveFile(
+        PersistenceService.instance.saveFile(
             'settings.json',
             stringifiedSettings,
             (message: any) => {
@@ -109,7 +112,7 @@ class SettingsPersistenceService {
         old: PreviousGenericSettings
     ): GenericSettings {
         const newSettings: GenericSettings = {
-            ...settingsService.getDefaultGenericSettings(),
+            ...SettingsService.instance.getDefaultGenericSettings(),
         }
         newSettings.ccgSettings = {
             transitionTime: old.transitionTime ?? 16,
@@ -138,6 +141,3 @@ class SettingsPersistenceService {
         return newSettings
     }
 }
-
-const settingsPersistenceService = new SettingsPersistenceService()
-export default settingsPersistenceService

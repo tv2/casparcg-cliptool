@@ -1,7 +1,8 @@
 import * as fs from 'fs'
 import * as path from 'path'
 
-class PersistanceService {
+export class PersistenceService {
+    static readonly instance = new PersistenceService()
     public loadFile(fileName: string): any {
         return fs.readFileSync(path.resolve('storage', fileName))
     }
@@ -22,6 +23,3 @@ class PersistanceService {
         )
     }
 }
-
-const persistenceService = new PersistanceService()
-export default persistenceService

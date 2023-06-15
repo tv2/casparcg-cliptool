@@ -1,4 +1,5 @@
-class ArrayService {
+export class ArrayService {
+    static readonly instance = new ArrayService()
     fillWithDefault<T>(
         array: T[],
         defaultValue: T,
@@ -16,6 +17,3 @@ class ArrayService {
         return array
     }
 }
-
-const arrayService = new ArrayService()
-export default arrayService

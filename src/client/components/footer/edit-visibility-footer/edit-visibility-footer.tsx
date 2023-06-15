@@ -2,9 +2,9 @@ import React from "react"
 import { Footer } from "../footer/footer"
 import './edit-visibility-footer.scss'
 import Button from "../../shared/button"
-import backendOperationApi from "../../../services/backend-operation-api"
+import { BackendOperationApi } from "../../../services/backend-operation-api"
 import { state } from "../../../../shared/store"
-import appNavigationService from "../../../../shared/services/app-navigation-service"
+import { AppNavigationService } from "../../../../shared/services/app-navigation-service"
 
 
 export function EditVisibilityFooter(): JSX.Element {
@@ -23,5 +23,5 @@ export function EditVisibilityFooter(): JSX.Element {
 }
 
 function resetOperationMode(): void {
-  backendOperationApi.emitSetOperationModeToControl(appNavigationService.getActiveTabIndex(state.appNavigation))
+  BackendOperationApi.instance.emitSetOperationModeToControl(AppNavigationService.instance.getActiveTabIndex(state.appNavigation))
 }
