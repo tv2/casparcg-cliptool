@@ -3,19 +3,19 @@ import NumberInput from "../../shared/number-input/number-input";
 import TextInput from "../../shared/text-input/text-input";
 import './casparcg-settings.scss'
 import './../shared-settings.scss'
-import changingSettingsService from "../../../services/changing-settings-service";
 import { CasparcgSettings } from "../../../../shared/models/settings-models";
 
-interface CasparcgSettingsForm {
-    settings: CasparcgSettings
+interface CasparcgFormProps {
+    casparcgSettings: CasparcgSettings
+    onChange: (changedCasparcg: CasparcgSettings) => void
 }
 
-export default function CasparcgSettings(props: CasparcgSettingsForm): JSX.Element {
-    const ip = props.settings.ip
-    const amcpPort = props.settings.amcpPort
-    const oscPort = props.settings.oscPort
-    const defaultLayer = props.settings.defaultLayer
-    const transitionTime = props.settings.transitionTime
+export default function CasparcgForm(props: CasparcgFormProps): JSX.Element {
+    const ip = props.casparcgSettings.ip
+    const amcpPort = props.casparcgSettings.amcpPort
+    const oscPort = props.casparcgSettings.oscPort
+    const defaultLayer = props.casparcgSettings.defaultLayer
+    const transitionTime = props.casparcgSettings.transitionTime
   
     const fieldCss: string = 'settings-input-field'
     return (
@@ -58,31 +58,31 @@ export default function CasparcgSettings(props: CasparcgSettingsForm): JSX.Eleme
     
     function saveTempIpChange(event: React.ChangeEvent<HTMLInputElement>): void {
         const newIp = event.target.value
-        props.settings.ip = newIp
-        changingSettingsService.saveTemporaryCcgSettingChanges(props.settings)
+        props.casparcgSettings.ip = newIp
+        props.onChange(props.casparcgSettings)
     }
 
     function saveTempAmcpPortChange(event: React.ChangeEvent<HTMLInputElement>): void {
         const newAmcpPort = Number(event.target.value)
-        props.settings.amcpPort = newAmcpPort
-        changingSettingsService.saveTemporaryCcgSettingChanges(props.settings)
+        props.casparcgSettings.amcpPort = newAmcpPort
+        props.onChange(props.casparcgSettings)
     }
 
     function saveTempOscPortChange(event: React.ChangeEvent<HTMLInputElement>): void {
         const newOscPort = Number(event.target.value)
-        props.settings.oscPort = newOscPort
-        changingSettingsService.saveTemporaryCcgSettingChanges(props.settings)
+        props.casparcgSettings.oscPort = newOscPort
+        props.onChange(props.casparcgSettings)
     }
 
     function saveTempDefaultLayerChange(event: React.ChangeEvent<HTMLInputElement>): void {
         const newDefaultLayer = Number(event.target.value)
-        props.settings.defaultLayer = newDefaultLayer
-        changingSettingsService.saveTemporaryCcgSettingChanges(props.settings)
+        props.casparcgSettings.defaultLayer = newDefaultLayer
+        props.onChange(props.casparcgSettings)
     }
 
     function saveTempTransitionTimeChange(event: React.ChangeEvent<HTMLInputElement>): void {
         const newTransitionTime = Number(event.target.value)
-        props.settings.transitionTime = newTransitionTime
-        changingSettingsService.saveTemporaryCcgSettingChanges(props.settings)
+        props.casparcgSettings.transitionTime = newTransitionTime
+        props.onChange(props.casparcgSettings)
     }
 }

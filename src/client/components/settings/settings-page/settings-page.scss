@@ -1,4 +1,4 @@
-.settings-body {
+.c-settings-page {
   position: relative;
   background-color: rgb(31, 31, 31);
   border-width: 1px;
@@ -6,10 +6,11 @@
   border-color: rgba(156, 156, 156, 0.63);
   box-shadow: 8px 8px 8px rgba(66, 66, 66, 0.37);
   height: 100%;
+  width: 100%;
   overflow: auto;
 }
 
-.settings-header {
+.c-settings-page__header {
   height: 40px;
   background-color: rgb(34, 34, 34);
   color: white;

@@ -5,32 +5,37 @@ import Button from "../../shared/button";
 import browserService from "../../../services/browser-service";
 import './settings-actions.scss'
 import './../shared-settings.scss'
-import changingSettingsService from "../../../services/changing-settings-service";
 import Toggle from "../../shared/switch/switch";
 import backendOperationApi from "../../../services/backend-operation-api";
 import appNavigationService from "../../../../shared/services/app-navigation-service";
 import { State } from "../../../../shared/reducers/index-reducer";
 import settingsService from "../../../../shared/services/settings-service";
-import { OperationMode } from "../../../../shared/models/settings-models";
-import { state } from "../../../../shared/store";
+import { GenericSettings, OperationMode } from "../../../../shared/models/settings-models";
+import { reduxStore, state } from "../../../../shared/store";
+import { toggleSettingsVisibility } from "../../../../shared/actions/app-navigation-action";
+import backendSettingApi from "../../../services/backend-settings-api";
 
-export default function SettingsActions(): JSX.Element {
+interface SettingsActionsProps {
+  settings: GenericSettings
+}
+
+export default function SettingsActions(props: SettingsActionsProps): JSX.Element {
   const activeTabIndex: number = useSelector(
     (state: State) => appNavigationService.getActiveTabIndex(state.appNavigation))
   const operationMode = useSelector(
     (state: State) => settingsService.getOutputSettings(state.settings, activeTabIndex)?.operationMode)
   
   const buttonCss = "c-settings-actions-button"
-
+  const hasChanges = settingsHasChanges(props.settings)
   return (
       <div className="settings-channel-form">
         <Button className={buttonCss} 
-          onClick={() => saveSettings()}>
+          onClick={() => saveSettings(hasChanges, props.settings)}>
             SAVE SETTINGS
         </Button>
         <Button className={buttonCss}
-          onClick={() => discardSettings()}>
-          {changingSettingsService.getHasChanges() ? 'DISCARD CHANGES' : 'CLOSE SETTINGS'} 
+          onClick={() => closeSettings(hasChanges)}>
+          {hasChanges ? 'DISCARD CHANGES & CLOSE SETTINGS' : 'CLOSE SETTINGS'} 
         </Button>
         <Toggle className={buttonCss} checked={operationMode === OperationMode.EDIT_VISIBILITY} 
           onChange={() => setOperationModeToEditVisibility()}>
@@ -47,16 +52,27 @@ export default function SettingsActions(): JSX.Element {
   )
 }
 
-function discardSettings(): void {
-  changingSettingsService.discardSettings()
+function closeSettings(hasChanges: boolean): void {
+  if (hasChanges && !window.confirm(
+    'Changes have been made, are you sure you want to discard them?'
+  )) {
+    return
+  }
+
+  toggleSettingsPage()
 }
 
-function saveSettings(): void {
-  changingSettingsService.saveSettings()
+function saveSettings(hasChanges: boolean, settings: GenericSettings): void {
+  if (hasChanges && window.confirm(
+    'Changes have been made, do you want to save them?'
+  )) {
+    backendSettingApi.emitSetGenericSettings(settings)
+    toggleSettingsPage()
+  }
 }
 
 function toggleSettingsPage(): void {
-  changingSettingsService.toggleSettingsPage()
+  reduxStore.dispatch(toggleSettingsVisibility())
 }
 
 function setOperationModeToEditVisibility(): void {
@@ -82,4 +98,9 @@ function restartCliptool(): void {
   }
 }
 
-
+function settingsHasChanges(settings: GenericSettings): boolean {
+  return !_.isEqual(
+      settings,
+      settingsService.getGenericSettings(state.settings)
+  )
+}

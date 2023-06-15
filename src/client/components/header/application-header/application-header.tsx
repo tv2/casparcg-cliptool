@@ -5,20 +5,22 @@ import ControlActions from '../control-actions/control-actions'
 import browserService from '../../../services/browser-service'
 import Button from '../../shared/button'
 import './application-header.scss'
-import changingSettingsService from '../../../services/changing-settings-service'
 import Group from '../group/group'
-import { state } from '../../../../shared/store'
+import { reduxStore } from '../../../../shared/store'
+import { toggleSettingsVisibility } from '../../../../shared/actions/app-navigation-action'
 
-export default function ApplicationHeader(): JSX.Element {  
+export default function ApplicationHeader(): JSX.Element {
     return (
-        <header className="app-header">
+        <header className='app-header'>
             <div className="app-header__controls">
                 {!browserService.isTextView() && (
                     <Group>
                         <Button
                             className="app-settings-button"
-                            onClick={() => emitToggleSettingsVisibility()}
-                        >SETTINGS</Button>
+                            onClick={() => showSettings()}
+                        >
+                            SETTINGS
+                        </Button>
                     </Group>
                 )}
 
@@ -29,10 +31,6 @@ export default function ApplicationHeader(): JSX.Element {
     )
 }
 
-function emitToggleSettingsVisibility(): void {
-    if (!state.appNavigation.isSettingsVisible) {
-        changingSettingsService.toggleSettingsPage()
-    } else {
-        changingSettingsService.discardSettings()
-    }
+function showSettings(): void {
+    reduxStore.dispatch(toggleSettingsVisibility())
 }

@@ -4,7 +4,6 @@ import NumberInput from "../../shared/number-input/number-input"
 import TextInput from "../../shared/text-input/text-input"
 import './output.scss'
 import './../shared-settings.scss'
-import changingSettingsService from "../../../services/changing-settings-service"
 import Label from "../../shared/label/label"
 import { CaspercgConfigChannel, OutputSettings } from "../../../../shared/models/settings-models"
 
@@ -13,6 +12,7 @@ interface OutputProps {
   index: number
   outputSettings: OutputSettings
   folders: string[]
+  onChange: (changedOutput: OutputSettings) => void
 }
 
 export default function Output(props: OutputProps): JSX.Element {
@@ -122,61 +122,61 @@ export default function Output(props: OutputProps): JSX.Element {
     function saveTempOutputLabelChange(event: React.ChangeEvent<HTMLInputElement>): void {
         const newLabel = event.target.value
         props.outputSettings.label = newLabel
-        changingSettingsService.saveTemporaryOutputSettingChange(props.outputSettings, props.index)
+        props.onChange(props.outputSettings)
     }
     
     function saveTempLoopChange(event: React.ChangeEvent<HTMLInputElement>): void {
         const newLoop = event.target.checked
         props.outputSettings.loopState = newLoop
-        changingSettingsService.saveTemporaryOutputSettingChange(props.outputSettings, props.index)
+        props.onChange(props.outputSettings)
     }
     
     function saveTempMixChange(event: React.ChangeEvent<HTMLInputElement>): void {
         const newMix = event.target.checked
         props.outputSettings.mixState = newMix
-        changingSettingsService.saveTemporaryOutputSettingChange(props.outputSettings, props.index)
+        props.onChange(props.outputSettings)
     }
 
     function saveTempManualChange(event: React.ChangeEvent<HTMLInputElement>): void {
         const newManual = event.target.checked
         props.outputSettings.manualStartState = newManual
-        changingSettingsService.saveTemporaryOutputSettingChange(props.outputSettings, props.index)
+        props.onChange(props.outputSettings)
     }
     
     function saveTempShouldScaleChange(event: React.ChangeEvent<HTMLInputElement>): void {
         const newShouldScale = event.target.checked
         props.outputSettings.shouldScale = newShouldScale
-        changingSettingsService.saveTemporaryOutputSettingChange(props.outputSettings, props.index)
+        props.onChange(props.outputSettings)
     }
     
     function saveTempScaleXChange(event: React.ChangeEvent<HTMLInputElement>): void {
         const newScaleX = Number(event.target.value)
         props.outputSettings.scaleX = newScaleX
-        changingSettingsService.saveTemporaryOutputSettingChange(props.outputSettings, props.index)
+        props.onChange(props.outputSettings)
     }
     
     function saveTempScaleYChange(event: React.ChangeEvent<HTMLInputElement>): void {
         const newScaleY = Number(event.target.value)
         props.outputSettings.scaleY = newScaleY
-        changingSettingsService.saveTemporaryOutputSettingChange(props.outputSettings, props.index)
+        props.onChange(props.outputSettings)
     }
     
     function saveTempWebStateChange(event: React.ChangeEvent<HTMLInputElement>): void {
         const newWebState = event.target.checked
         props.outputSettings.webState = newWebState
-        changingSettingsService.saveTemporaryOutputSettingChange(props.outputSettings, props.index)
+        props.onChange(props.outputSettings)
     }
 
     function saveTempWebUrlChange(event: React.ChangeEvent<HTMLInputElement>): void {
         const newWebUrl = event.target.value
         props.outputSettings.webUrl = newWebUrl
-        changingSettingsService.saveTemporaryOutputSettingChange(props.outputSettings, props.index)
+        props.onChange(props.outputSettings)
     }
     
     function saveTempTabMediaFolderChange(event: React.ChangeEvent<HTMLSelectElement>): void {
         const newFolder = event.target.value
         props.outputSettings.folder = newFolder
-        changingSettingsService.saveTemporaryOutputSettingChange(props.outputSettings, props.index)
+        props.onChange(props.outputSettings)
     }    
 }
 

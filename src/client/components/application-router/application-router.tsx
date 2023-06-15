@@ -1,9 +1,9 @@
 import { useSelector } from "react-redux"
 import React from "react"
-import { Settings } from "../settings/settings/settings"
-import TabPanel from "../tab-panel"
+import MainPage from "../main-page"
 import './application-router.scss'
 import { State } from "../../../shared/reducers/index-reducer"
+import { SettingsPage } from "../settings/settings-page/settings-page"
 
 
 export default function ApplicationRouter() {    
@@ -15,7 +15,7 @@ export default function ApplicationRouter() {
       return (<div className="offline-overlay">CONNECTING TO SERVER...</div>)
     }
     if (isSettingsVisible) {
-      return (<Settings />)
+      return (<SettingsPage />)
     }
-    return (<TabPanel />)
+    return (<MainPage />)
 }

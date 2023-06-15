@@ -1,8 +1,6 @@
 import React from 'react'
 import { reduxStore } from '../../../shared/store'
 import { setActiveTabIndex } from '../../../shared/actions/app-navigation-action'
-import { OperationModeFooter } from '../footer/operation-mode-footer'
-import ApplicationHeader from '../header/application-header/application-header'
 import browserService from '../../services/browser-service'
 import './app.scss'
 import ApplicationRouter from '../application-router/application-router'
@@ -14,9 +12,7 @@ export function App(): JSX.Element {
     }
     return (
         <div className="app">
-            <ApplicationHeader />
             <ApplicationRouter/>
-            <OperationModeFooter />
         </div>
     )
 }
