@@ -2,7 +2,7 @@ import React from "react";
 import { useSelector } from "react-redux";
 import SelectedCardOverlay from "../selected-card-overlay";
 import './card-overlay-display.scss'
-import CardOverlay from "../card-overlay/card-overlay";
+import CardOverlay, { CardOverlayType } from "../card-overlay/card-overlay";
 import { SettingsService } from "../../../../shared/services/settings-service";
 import { State } from "../../../../shared/reducers/index-reducer";
 import { MediaFile } from "../../../../shared/models/media-models";
@@ -40,7 +40,7 @@ export default function CardOverlayDisplay(props: CardOverlayDisplayProps): JSX.
           <SelectedCardOverlay className={props.className ?? ''} fileType={props.file.type} time={time}/>
       )}
       {isCued && (
-          <CardOverlay className={`cued ${props.className ?? ''}`}>
+          <CardOverlay showAs={CardOverlayType.CUED}>
             CUED     
           </CardOverlay>
       )}
