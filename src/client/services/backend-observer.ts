@@ -65,64 +65,51 @@ class BackendObserver {
         )
         this.socket.on(
             ServerToClientCommand.FOLDERS_UPDATE,
-            (payload: string[]) => this.processFoldersUpdateEvent(payload)
+            this.processFoldersUpdateEvent.bind(this)
         )
         this.socket.on(
             ServerToClientCommand.THUMBNAIL_UPDATE,
-            (channelIndex: number, payload: ThumbnailFile[]) =>
-                this.processThumbnailUpdateEvent(channelIndex, payload)
+            this.processThumbnailUpdateEvent.bind(this)
         )
         this.socket.on(
             ServerToClientCommand.HIDDEN_FILES_UPDATE,
-            (hiddenFiles: HiddenFiles) =>
-                this.processHiddenFilesUpdateEvent(hiddenFiles)
+            this.processHiddenFilesUpdateEvent.bind(this)
         )
         this.socket.on(
             ServerToClientCommand.TIME_TALLY_UPDATE,
-            (data: TimeSelectedFilePayload[]) =>
-                this.processTimeTallyUpdateEvent(data)
+            this.processTimeTallyUpdateEvent.bind(this)
         )
         this.socket.on(
             ServerToClientCommand.FILE_CUED_UPDATE,
-            (channelIndex: number, fileName: string) =>
-                this.processFileCuedUpdateEvent(channelIndex, fileName)
+            this.processFileCuedUpdateEvent.bind(this)
         )
         this.socket.on(
             ServerToClientCommand.FILE_SELECTED_UPDATE,
-            (channelIndex: number, fileName: string) =>
-                this.processFileSelectedUpdateEvent(channelIndex, fileName)
+            this.processFileSelectedUpdateEvent.bind(this)
         )
         this.socket.on(
             ServerToClientCommand.LOOP_STATE_UPDATE,
-            (channelIndex: number, loop: boolean) =>
-                this.processLoopStateUpdateEvent(channelIndex, loop)
+            this.processLoopStateUpdateEvent.bind(this)
         )
         this.socket.on(
             ServerToClientCommand.OPERATION_MODE_UPDATE,
-            (channelIndex: number, mode: OperationMode) =>
-                this.processOperationStateUpdateEvent(channelIndex, mode)
+            this.processOperationStateUpdateEvent.bind(this)
         )
         this.socket.on(
             ServerToClientCommand.MIX_STATE_UPDATE,
-            (channelIndex: number, mix: boolean) =>
-                this.processMixStateUpdateEvent(channelIndex, mix)
+            this.processMixStateUpdateEvent.bind(this)
         )
         this.socket.on(
             ServerToClientCommand.WEB_STATE_UPDATE,
-            (channelIndex: number, web: boolean) =>
-                this.processWebStateUpdateEvent(channelIndex, web)
+            this.processWebStateUpdateEvent.bind(this)
         )
         this.socket.on(
             ServerToClientCommand.MANUAL_START_STATE_UPDATE,
-            (channelIndex: number, manualStart: boolean) =>
-                this.processManualStartStateUpdateEvent(
-                    channelIndex,
-                    manualStart
-                )
+            this.processManualStartStateUpdateEvent.bind(this)
         )
         this.socket.on(
             ServerToClientCommand.SETTINGS_UPDATE,
-            (payload: Settings) => this.processSettingsUpdateEvent(payload)
+            this.processSettingsUpdateEvent.bind(this)
         )
     }
 

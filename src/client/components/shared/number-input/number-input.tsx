@@ -12,7 +12,7 @@ interface NumberInputProps {
 
 export default function NumberInput(props: NumberInputProps): JSX.Element {
   return (
-    <div className={`${props.className ?? ''}`}>
+    <div className={`c-number-input ${props.className ?? ''}`}>
       {props.description ? (
         <label className="label">
           {props.description}
@@ -21,7 +21,7 @@ export default function NumberInput(props: NumberInputProps): JSX.Element {
       <input type="number" 
         value={props.value} 
         onChange={props.onChange}
-        className='c-number-input'/>
+        className='c-number-input__input'/>
       {props.unit ?? ''}
     </div>
   )

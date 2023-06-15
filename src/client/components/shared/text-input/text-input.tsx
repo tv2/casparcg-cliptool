@@ -11,7 +11,7 @@ interface TextInputProps {
 
 export default function TextInput(props: TextInputProps): JSX.Element {
   return (
-    <div className={`${props.className ?? ''}`}>
+    <div className={`c-text-input ${props.className ?? ''}`}>
       {props.description ? (
         <label className="label">
           {props.description}
@@ -20,7 +20,7 @@ export default function TextInput(props: TextInputProps): JSX.Element {
       <input type="text" 
         value={props.value} 
         onChange={props.onChange}
-        className='c-text-input' />
+        className='c-text-input__input' />
     </div>
   )
 }

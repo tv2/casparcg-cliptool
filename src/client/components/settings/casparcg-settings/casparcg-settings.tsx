@@ -17,36 +17,30 @@ export default function CasparcgForm(props: CasparcgFormProps): JSX.Element {
     const defaultLayer = props.casparcgSettings.defaultLayer
     const transitionTime = props.casparcgSettings.transitionTime
   
-    const fieldCss: string = 'settings-input-field'
     return (
         <form className="settings-form">
             <div className="settings-channel-form">
                 <TextInput
-                    className={fieldCss}
                     description="IP ADDRESS :"
                     value={ip}
                     onChange={saveTempIpChange}
                 />
                 <NumberInput 
-                    className={fieldCss}
                     description="AMCP PORT :"
                     value={amcpPort}
                     onChange={saveTempAmcpPortChange}
                 />
                 <NumberInput 
-                    className={fieldCss}
                     description="OSC PORT (into ClipTool) :"
                     value={oscPort}
                     onChange={saveTempOscPortChange}
                 />
                 <NumberInput 
-                    className={fieldCss}
                     description="DEFAULT LAYER :"
                     value={defaultLayer}
                     onChange={saveTempDefaultLayerChange}
                 />
                 <NumberInput 
-                    className={fieldCss}
                     description="TRANSITION TIME :"
                     value={transitionTime}
                     onChange={saveTempTransitionTimeChange}

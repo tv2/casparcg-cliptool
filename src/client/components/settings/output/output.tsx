@@ -27,8 +27,6 @@ export default function Output(props: OutputProps): JSX.Element {
     const scaleX = props.outputSettings.scaleX
     const scaleY = props.outputSettings.scaleY
 
-    const fieldCss: string = 'settings-input-field'
-    const checkboxCss: string = 'settings-checkbox-field'
     return (    
         props.outputSettings &&         
             <form className="settings-channel-form">
@@ -36,12 +34,11 @@ export default function Output(props: OutputProps): JSX.Element {
                     OUTPUT {props.index + 1} :
                 </label>
                 <TextInput
-                    className={fieldCss}
                     description="LABEL :"
                     value={label}
                     onChange={saveTempOutputLabelChange}
                 />
-                <Label className={fieldCss} 
+                <Label className="settings-input-field" 
                     description="MEDIA FOLDER :">
                     <select
                         className="settings-select"
@@ -58,57 +55,49 @@ export default function Output(props: OutputProps): JSX.Element {
                         )}
                     </select>
                 </Label>
-                <Label className={fieldCss}
+                <Label className="settings-input-field"
                     description="FORMAT :">
                     { props.configChannel.videoMode }
                 </Label>
                 <Checkbox
                     description="LOOP :"
-                    className={checkboxCss}
                     checked={loopState}
                     onChange={saveTempLoopChange}
                 />
                 <Checkbox
                     description="MIX :"
-                    className={checkboxCss}
                     checked={mixState}
                     onChange={saveTempMixChange}
                 />
                 <Checkbox
                     description="MANUAL :"
-                    className={checkboxCss}
                     checked={manualStartState}
                     onChange={saveTempManualChange}
                 />
                 <Checkbox
                     description="OVERLAY :"
-                    className={checkboxCss}
                     checked={webState}
                     onChange={saveTempWebStateChange}
                 />
                 <TextInput
-                    className={fieldCss}
                     description="OVERLAY URL :"
                     value={webUrl}
                     onChange={saveTempWebUrlChange}
                 />
                 <Checkbox
                     description="SCALE :"
-                    className={checkboxCss}
                     checked={shouldScale}
                     onChange={saveTempShouldScaleChange}
                 />
                 {shouldScale && (
                     <>
                         <NumberInput 
-                            className={fieldCss}
                             description="SCALE X :"
                             value={scaleX}
                             onChange={saveTempScaleXChange}
                             unit='px'
                         />
                         <NumberInput 
-                            className={fieldCss}
                             description="SCALE Y :"
                             value={scaleY}
                             onChange={saveTempScaleYChange}

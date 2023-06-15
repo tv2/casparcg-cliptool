@@ -11,7 +11,7 @@ interface CheckboxProps {
 
 export default function Checkbox(props: CheckboxProps): JSX.Element { 
   return (
-    <div className={`${props.className ?? ''}`}>
+    <div className={`c-checkbox ${props.className ?? ''}`}>
       {props.description ? (
         <label className="label">
           {props.description}
@@ -20,7 +20,7 @@ export default function Checkbox(props: CheckboxProps): JSX.Element {
       <input type="checkbox" 
         checked={props.checked} 
         onChange={props.onChange}
-        className='c-checkbox' />
+        className='c-checkbox__input' />
     </div>
   )
 }
