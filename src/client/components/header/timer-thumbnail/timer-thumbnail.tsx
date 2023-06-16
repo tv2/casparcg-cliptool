@@ -18,14 +18,6 @@ export default function TimerThumbnail(): JSX.Element {
         (state: State) => MediaService.instance.getOutput(state.media, activeTabIndex))
     const settingsOutput: OutputSettings = useSelector(
         (state: State) => SettingsService.instance.getOutputSettings(state.settings, activeTabIndex))
-    useSelector(
-        (state: State) => SettingsService.instance.getOutputSettings(state.settings, activeTabIndex).selectedFileName)
-    useSelector(
-        (state: State) => SettingsService.instance.getOutputSettings(state.settings, activeTabIndex).cuedFileName)
-    useSelector(
-        (state: State) => MediaService.instance.getOutput(state.media, activeTabIndex)?.time[0])
-    useSelector(
-        (state: State) => MediaService.instance.getOutput(state.media, activeTabIndex)?.thumbnailList)
 
     const cleanFileName: string = SettingsService.instance.getCleanSelectedFileName(settingsOutput, state.settings) 
         || SettingsService.instance.getCleanCuedFileName(settingsOutput, state.settings)
