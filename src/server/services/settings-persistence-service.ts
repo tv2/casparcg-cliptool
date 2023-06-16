@@ -13,27 +13,41 @@ import { PersistenceService } from './persistence-service'
 export class SettingsPersistenceService {
     static readonly instance = new SettingsPersistenceService()
     load(): void {
-        try {
-            const rawSettings: unknown = JSON.parse(
-                PersistenceService.instance.loadFile('settings.json')
-            )
-            let settings: GenericSettings = this.parseSettings(rawSettings)
-            logger.data(rawSettings).info('File loaded with settings:')
-            reduxStore.dispatch(setGenerics(settings))
-        } catch (error) {
-            logger.warn(
-                'Settings not found, or not yet stored, dispatching defaults, and saving it.'
-            )
-            reduxStore.dispatch(
-                setGenerics(
-                    SettingsService.instance.getDefaultGenericSettings()
+        PersistenceService.instance
+            .loadFile('settings.json')
+            .then((loadedSettings) => {
+                const rawSettings: unknown = JSON.parse(loadedSettings)
+                let settings: GenericSettings = this.parseSettings(rawSettings)
+                logger
+                    .data(rawSettings)
+                    .trace('Loaded following settings from file:')
+                reduxStore.dispatch(setGenerics(settings))
+            })
+            .catch((error) => {
+                logger
+                    .data(error)
+                    .warn(
+                        'Settings not found, or not yet stored, dispatching defaults, and saving it.'
+                    )
+                reduxStore.dispatch(
+                    setGenerics(
+                        SettingsService.instance.getDefaultGenericSettings()
+                    )
                 )
-            )
-            this.save()
-        }
+                this.save()
+            })
     }
 
     private parseSettings(rawSettings: unknown): GenericSettings {
+        const isNewStructure = this.isNewStructure(rawSettings)
+        if (isNewStructure.success && isNewStructure.parsed) {
+            return isNewStructure.parsed
+        }
+        logger.warn(
+            'Failed to parse settings file to newest structure. ' +
+                'Attempting to parse to old structure...'
+        )
+
         const isOldStructure = this.isPreviousStructure(rawSettings)
         if (isOldStructure.success && isOldStructure.parsed) {
             logger.warn(
@@ -48,11 +62,6 @@ export class SettingsPersistenceService {
             return correctedSettings
         }
 
-        const isNewStructure = this.isNewStructure(rawSettings)
-        if (isNewStructure.success && isNewStructure.parsed) {
-            return isNewStructure.parsed
-        }
-
         logger
             .data(rawSettings)
             .error('Failed to parse settings from file, using default!')
@@ -64,17 +73,14 @@ export class SettingsPersistenceService {
             ? genericSettings
             : SettingsService.instance.getGenericSettings(state.settings)
         const stringifiedSettings = JSON.stringify(generics)
-        PersistenceService.instance.saveFile(
-            'settings.json',
-            stringifiedSettings,
-            (message: any) => {
-                if (message) {
-                    logger.data(message).error('Error writing file:')
-                } else {
-                    logger.data(generics).debug('Settings saved')
-                }
-            }
-        )
+        PersistenceService.instance
+            .saveFile('settings.json', stringifiedSettings)
+            .then(() => {
+                logger.data(generics).debug('Settings saved')
+            })
+            .catch((error) => {
+                logger.data(error).error('Error writing file:')
+            })
     }
 
     // Checks if the loaded file has the structure of Cliptool version 2.14 and below.

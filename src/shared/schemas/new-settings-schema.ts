@@ -4,7 +4,6 @@ import {
     OperationMode,
     OutputSettings,
 } from '../models/settings-models'
-import { ArrayService } from '../services/array-service'
 
 export const defaultOutputSettingsState: OutputSettings = {
     label: '',
@@ -33,44 +32,31 @@ export const defaultCcgSettingsState: CasparcgSettings = {
 const operationModeSchema = z.nativeEnum(OperationMode)
 
 const outputSettingsSchema = z.object({
-    label: z.string().default(''),
-    folder: z.string().default(''),
-    shouldScale: z.boolean().default(false),
-    scaleX: z.number().default(1920),
-    scaleY: z.number().default(1080),
-    webUrl: z.string().default(''),
-    loopState: z.boolean().default(false),
-    mixState: z.boolean().default(false),
-    manualStartState: z.boolean().default(false),
-    webState: z.boolean().default(false),
-    operationMode: operationModeSchema.default(OperationMode.CONTROL),
-    selectedFileName: z.string().default(''),
-    cuedFileName: z.string().default(''),
+    label: z.string(),
+    folder: z.string(),
+    shouldScale: z.boolean(),
+    scaleX: z.number(),
+    scaleY: z.number(),
+    webUrl: z.string(),
+    loopState: z.boolean(),
+    mixState: z.boolean(),
+    manualStartState: z.boolean(),
+    webState: z.boolean(),
+    operationMode: operationModeSchema,
+    selectedFileName: z.string(),
+    cuedFileName: z.string(),
 })
 
 const ccgSettingsSchema = z.object({
-    transitionTime: z.number().default(16),
-    ip: z.string().default('0.0.0.0'),
-    amcpPort: z.number().default(5250),
-    defaultLayer: z.number().default(10),
-    oscPort: z.number().default(5253),
+    transitionTime: z.number(),
+    ip: z.string(),
+    amcpPort: z.number(),
+    defaultLayer: z.number(),
+    oscPort: z.number(),
 })
 
 // Schema for Cliptool version 2.15 and above.
 export const newGenericSettingsSchema = z.object({
-    ccgSettings: ccgSettingsSchema.default(defaultCcgSettingsState),
-    outputSettings: z
-        .array(outputSettingsSchema)
-        .default(
-            ArrayService.instance.fillWithDefault(
-                [],
-                defaultOutputSettingsState
-            )
-        )
-        .transform((transform) =>
-            ArrayService.instance.fillWithDefault(
-                transform,
-                defaultOutputSettingsState
-            )
-        ),
+    ccgSettings: ccgSettingsSchema,
+    outputSettings: z.array(outputSettingsSchema),
 })

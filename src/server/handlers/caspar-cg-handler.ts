@@ -22,11 +22,7 @@ import {
 } from '../../shared/models/media-models'
 
 import {
-    setLoop,
-    setManualStart,
-    setMix,
-    setOperationMode,
-    setWeb,
+    setGenerics,
     updateSettings,
 } from '../../shared/actions/settings-action'
 import { initializeClient } from './socket-io-server-handler'
@@ -40,7 +36,10 @@ import {
 } from '../utils/ccg-handler-utils'
 import { logger } from '../utils/logger'
 import { loadMedia, playOverlay } from '../utils/ccg-load-play'
-import { OperationMode } from '../../shared/models/settings-models'
+import {
+    OperationMode,
+    OutputSettings,
+} from '../../shared/models/settings-models'
 import { SettingsService } from '../../shared/services/settings-service'
 import { OsService } from '../../shared/services/os-service'
 import { MediaService } from '../../shared/services/media-service'
@@ -49,6 +48,9 @@ import {
     ServerToClientCommand,
     TimeSelectedFilePayload,
 } from '../../shared/socket-io-constants'
+import { ArrayService } from '../../shared/services/array-service'
+import { defaultOutputSettingsState } from '../../shared/schemas/new-settings-schema'
+import { SettingsPersistenceService } from '../services/settings-persistence-service'
 
 let waitingForCcgResponse: boolean = false
 let previousThumbnails: ThumbnailFile[] = []
@@ -151,50 +153,58 @@ function dispatchConfig(config: any): void {
     logger.data(config.channels).info('CasparCG Config : ')
     reduxStore.dispatch(setNumberOfOutputs(config.channels.length))
     reduxStore.dispatch(updateSettings(config.channels, config.paths.mediaPath))
+    fillInDefaultOutputSettingsIfNeeded(config.channels.length)
+    const genericSettings = {
+        ...SettingsService.instance.getGenericSettings(state.settings),
+    }
+    const allOutputSettings = [...genericSettings.outputSettings]
+
     config.channels.forEach(({}, index: number) => {
-        const genericSettings = SettingsService.instance.getGenericSettings(
-            state.settings
-        )
-        const cuedFileName = genericSettings.outputSettings[index].cuedFileName
-        if (cuedFileName) {
-            logger.info(`Re-loaded ${cuedFileName} on channel index ${index}.`)
-            loadMedia(index, 9, cuedFileName)
-        }
-        reduxStore.dispatch(
-            setLoop(
-                index,
-                genericSettings.outputSettings[index].loopState ?? false
-            )
-        )
-        reduxStore.dispatch(
-            setManualStart(
-                index,
-                genericSettings.outputSettings[index].manualStartState ?? false
-            )
-        )
-        reduxStore.dispatch(
-            setMix(
-                index,
-                genericSettings.outputSettings[index].mixState ?? false
-            )
-        )
-        reduxStore.dispatch(
-            setWeb(
-                index,
-                genericSettings.outputSettings[index].webState ?? false
-            )
-        )
-        reduxStore.dispatch(
-            setOperationMode(
-                index,
-                genericSettings.outputSettings[index].operationMode ??
-                    OperationMode.CONTROL
-            )
-        )
+        const outputSettings = { ...allOutputSettings[index] }
+        allOutputSettings[index] = reinvigorateChannel(outputSettings, index)
     })
+    genericSettings.outputSettings = allOutputSettings
+    reduxStore.dispatch(setGenerics(genericSettings))
     logger.info(`Number of Channels: ${config.channels.length}`)
     socketServer.emit(ServerToClientCommand.SETTINGS_UPDATE, state.settings)
     initializeClient()
+}
+
+function reinvigorateChannel(
+    outputSettings: OutputSettings,
+    index: number
+): OutputSettings {
+    const cuedFileName = outputSettings.cuedFileName
+    if (cuedFileName) {
+        logger.info(`Re-loaded ${cuedFileName} on channel index ${index}.`)
+        loadMedia(index, 9, cuedFileName)
+    }
+
+    outputSettings.loopState = outputSettings.loopState ?? false
+    outputSettings.manualStartState = outputSettings.manualStartState ?? false
+    outputSettings.mixState = outputSettings.mixState ?? false
+    outputSettings.webState = outputSettings.webState ?? false
+    outputSettings.operationMode =
+        outputSettings.operationMode ?? OperationMode.CONTROL
+
+    return outputSettings
+}
+
+function fillInDefaultOutputSettingsIfNeeded(needed: number) {
+    const genericSettings = {
+        ...SettingsService.instance.getGenericSettings(state.settings),
+    }
+
+    if (genericSettings.outputSettings.length < needed) {
+        const expandedOutputSettings = ArrayService.instance.fillWithDefault(
+            [...genericSettings.outputSettings],
+            defaultOutputSettingsState,
+            needed
+        )
+        genericSettings.outputSettings = expandedOutputSettings
+        reduxStore.dispatch(setGenerics(genericSettings))
+        SettingsPersistenceService.instance.save(genericSettings)
+    }
 }
 
 function loadInitialOverlay(): void {
@@ -232,6 +242,7 @@ function ccgAMPHandler(): void {
                 .then((config) => {
                     dispatchConfig(config)
                     waitingForCcgResponse = false
+                    startTimeEmitInterval()
                     loadInitialOverlay()
                 })
                 .catch((error) =>
@@ -241,11 +252,6 @@ function ccgAMPHandler(): void {
         .catch((error) =>
             logger.data(error).error('No connection to CasparCG ')
         )
-    startIntervalOperations()
-}
-
-function startIntervalOperations(): void {
-    startTimeEmitInterval()
     startFileChangesPollingInterval()
 }
 
@@ -256,13 +262,14 @@ function startTimeEmitInterval() {
         MediaService.instance
             .getOutputs(state.media)
             .forEach((output: Output, index: number) => {
+                const outputSettings =
+                    SettingsService.instance.getOutputSettings(
+                        state.settings,
+                        index
+                    )
                 data[index] = {
                     time: output.time,
-                    selectedFileName:
-                        SettingsService.instance.getOutputSettings(
-                            state.settings,
-                            index
-                        ).selectedFileName,
+                    selectedFileName: outputSettings.selectedFileName,
                 }
             })
     })

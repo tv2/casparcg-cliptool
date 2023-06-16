@@ -341,59 +341,57 @@ function getMetadata(file: MediaFile): HiddenFileInfo {
 export function initializeClient(): void {
     let timeTallyData: TimeSelectedFilePayload[] = []
     const selectedFiles: string[] = []
-    SettingsService.instance
-        .getGenericSettings(state.settings)
-        .outputSettings.forEach(
-            (output: OutputSettings, channelIndex: number) => {
-                selectedFiles.push(output.selectedFileName)
-                socketServer.emit(
-                    ServerToClientCommand.LOOP_STATE_UPDATE,
-                    channelIndex,
-                    output.loopState
-                )
-                socketServer.emit(
-                    ServerToClientCommand.OPERATION_MODE_UPDATE,
-                    channelIndex,
-                    output.operationMode
-                )
-                socketServer.emit(
-                    ServerToClientCommand.MIX_STATE_UPDATE,
-                    channelIndex,
-                    output.mixState
-                )
-                socketServer.emit(
-                    ServerToClientCommand.MANUAL_START_STATE_UPDATE,
-                    channelIndex,
-                    output.manualStartState
-                )
-                socketServer.emit(
-                    ServerToClientCommand.HIDDEN_FILES_UPDATE,
-                    state.media.hiddenFiles
-                )
-            }
+    const outputSettings = SettingsService.instance.getGenericSettings(
+        state.settings
+    ).outputSettings
+    outputSettings.forEach((output: OutputSettings, channelIndex: number) => {
+        selectedFiles.push(output.selectedFileName)
+        socketServer.emit(
+            ServerToClientCommand.LOOP_STATE_UPDATE,
+            channelIndex,
+            output.loopState
         )
-    MediaService.instance
-        .getOutputs(state.media)
-        .forEach((output, channelIndex) => {
-            timeTallyData[channelIndex] = {
-                time: output.time,
-                selectedFileName: selectedFiles[channelIndex],
-            }
-            socketServer.emit(
-                ServerToClientCommand.TIME_TALLY_UPDATE,
-                timeTallyData
-            )
-            socketServer.emit(
-                ServerToClientCommand.THUMBNAIL_UPDATE,
-                channelIndex,
-                output.thumbnailList
-            )
-            socketServer.emit(
-                ServerToClientCommand.MEDIA_UPDATE,
-                channelIndex,
-                output.mediaFiles
-            )
-        })
+        socketServer.emit(
+            ServerToClientCommand.OPERATION_MODE_UPDATE,
+            channelIndex,
+            output.operationMode
+        )
+        socketServer.emit(
+            ServerToClientCommand.MIX_STATE_UPDATE,
+            channelIndex,
+            output.mixState
+        )
+        socketServer.emit(
+            ServerToClientCommand.MANUAL_START_STATE_UPDATE,
+            channelIndex,
+            output.manualStartState
+        )
+        socketServer.emit(
+            ServerToClientCommand.HIDDEN_FILES_UPDATE,
+            state.media.hiddenFiles
+        )
+    })
+    const outputMedia = MediaService.instance.getOutputs(state.media)
+    outputMedia.forEach((output, channelIndex) => {
+        timeTallyData[channelIndex] = {
+            time: output.time,
+            selectedFileName: selectedFiles[channelIndex],
+        }
+        socketServer.emit(
+            ServerToClientCommand.TIME_TALLY_UPDATE,
+            timeTallyData
+        )
+        socketServer.emit(
+            ServerToClientCommand.THUMBNAIL_UPDATE,
+            channelIndex,
+            output.thumbnailList
+        )
+        socketServer.emit(
+            ServerToClientCommand.MEDIA_UPDATE,
+            channelIndex,
+            output.mediaFiles
+        )
+    })
     socketServer.emit(ServerToClientCommand.TIME_TALLY_UPDATE, timeTallyData)
 }
 

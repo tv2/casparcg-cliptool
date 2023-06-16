@@ -8,17 +8,16 @@ import {
 import {
     defaultCcgSettingsState,
     defaultOutputSettingsState,
-    newGenericSettingsSchema,
 } from '../schemas/new-settings-schema'
 
 export class SettingsService {
     static readonly instance = new SettingsService()
-    private fallBackDefaultSettings: GenericSettings
+    private defaultGenericSettings: GenericSettings
 
     constructor() {
-        this.fallBackDefaultSettings = {
+        this.defaultGenericSettings = {
             ccgSettings: defaultCcgSettingsState,
-            outputSettings: Array(8).fill({ ...defaultOutputSettingsState }),
+            outputSettings: Array(1).fill({ ...defaultOutputSettingsState }),
         }
     }
 
@@ -28,7 +27,10 @@ export class SettingsService {
             .map(({}, index) => this.buildTabInfoForIndex(settingsState, index))
     }
 
-    private buildTabInfoForIndex(settingsState: Settings, index: number) {
+    private buildTabInfoForIndex(
+        settingsState: Settings,
+        index: number
+    ): TabInfo {
         const output = this.getOutputSettings(settingsState, index)
         return {
             index,
@@ -49,10 +51,7 @@ export class SettingsService {
     }
 
     public getDefaultGenericSettings(): GenericSettings {
-        const parsed = newGenericSettingsSchema.safeParse({})
-        return parsed.success
-            ? (parsed.data as GenericSettings)
-            : this.fallBackDefaultSettings
+        return this.defaultGenericSettings
     }
 
     public isThumbnailSelected(

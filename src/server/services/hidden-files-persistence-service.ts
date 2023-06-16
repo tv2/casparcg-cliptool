@@ -12,25 +12,26 @@ import _ from 'lodash'
 export class HiddenFilesPersistenceService {
     static readonly instance = new HiddenFilesPersistenceService()
     public load(): void {
-        try {
-            const hiddenFiles: HiddenFiles = JSON.parse(
-                PersistenceService.instance.loadFile('hiddenFiles.json')
-            )
-            const isInvalidHiddenFiles: boolean =
-                this.hasSelectedOrCuedHiddenFiles(hiddenFiles)
+        PersistenceService.instance
+            .loadFile('hiddenFiles.json')
+            .then((rawHiddenFiles) => {
+                const hiddenFiles: HiddenFiles = JSON.parse(rawHiddenFiles)
+                const isInvalidHiddenFiles: boolean =
+                    this.hasSelectedOrCuedHiddenFiles(hiddenFiles)
 
-            if (isInvalidHiddenFiles) {
-                this.cleanAndUpdateReduxState(hiddenFiles)
-            } else {
-                this.updateReduxState(hiddenFiles)
-            }
-        } catch (error) {
-            logger
-                .data(error)
-                .warn(
-                    'File containing hidden files not found, or not yet stored.'
-                )
-        }
+                if (isInvalidHiddenFiles) {
+                    this.cleanAndUpdateReduxState(hiddenFiles)
+                } else {
+                    this.updateReduxState(hiddenFiles)
+                }
+            })
+            .catch((error) => {
+                logger
+                    .data(error)
+                    .warn(
+                        'File containing hidden files not found, or not yet stored.'
+                    )
+            })
     }
 
     private cleanAndUpdateReduxState(hiddenFiles: HiddenFiles) {
@@ -43,7 +44,7 @@ export class HiddenFilesPersistenceService {
     }
 
     private updateReduxState(hiddenFiles: HiddenFiles) {
-        logger.data(hiddenFiles).info('File with Hidden files loaded.')
+        logger.data(hiddenFiles).trace('Hidden files File loaded with:')
         reduxStore.dispatch(updateHiddenFiles(hiddenFiles))
         socketServer.emit(
             ServerToClientCommand.HIDDEN_FILES_UPDATE,
@@ -56,21 +57,14 @@ export class HiddenFilesPersistenceService {
             this.getCleanHiddenFiles(hiddenFiles)
         const stringifiedHiddenFiles = JSON.stringify(cleanHiddenFiles)
 
-        PersistenceService.instance.saveFile(
-            'hiddenFiles.json',
-            stringifiedHiddenFiles,
-            (message: any) => {
-                if (message) {
-                    logger
-                        .data(message)
-                        .error('Error writing hiddenFiles file:')
-                } else {
-                    logger
-                        .data(stringifiedHiddenFiles)
-                        .trace('Hidden files saved')
-                }
-            }
-        )
+        PersistenceService.instance
+            .saveFile('hiddenFiles.json', stringifiedHiddenFiles)
+            .then(() => {
+                logger.data(stringifiedHiddenFiles).trace('Hidden files saved')
+            })
+            .catch((error) => {
+                logger.data(error).error('Error writing hiddenFiles file:')
+            })
     }
 
     private getCleanHiddenFiles(originalHiddenFiles: HiddenFiles): HiddenFiles {
