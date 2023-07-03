@@ -7,7 +7,7 @@ import { socket } from '../util/socket-gateway-handlers'
 import * as OSC from './osc-constants'
 import { ARG_CONSTANTS } from '../util/extract-args'
 import { OsService } from '../../shared/services/os-service'
-import { MediaService } from '../../shared/services/media-service'
+import { ReduxMediaService } from '../../shared/services/redux-media-service'
 import { ClientToServerCommand } from '../../shared/socket-io-constants'
 
 export function oscServerGateway(): void {
@@ -19,7 +19,7 @@ export function oscServerGateway(): void {
 
     oscConnection
         .on('ready', () => {
-            let ipAddresses = OsService.instance.getIpAddresses()
+            let ipAddresses = new OsService().getIpAddresses()
 
             console.log('Listening for OSC over UDP.')
             ipAddresses.forEach((address) => {
@@ -57,7 +57,7 @@ export function oscServerGateway(): void {
                         {
                             type: 's',
                             value: JSON.stringify(
-                                MediaService.instance.getOutput(
+                                new ReduxMediaService().getOutput(
                                     state.media,
                                     channel - 1
                                 ).mediaFiles

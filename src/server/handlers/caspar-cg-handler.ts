@@ -40,9 +40,9 @@ import {
     OperationMode,
     OutputSettings,
 } from '../../shared/models/settings-models'
-import { SettingsService } from '../../shared/services/settings-service'
+import { ReduxSettingsService } from '../../shared/services/redux-settings-service'
 import { OsService } from '../../shared/services/os-service'
-import { MediaService } from '../../shared/services/media-service'
+import { ReduxMediaService } from '../../shared/services/redux-media-service'
 import { HiddenFilesPersistenceService } from '../services/hidden-files-persistence-service'
 import {
     ServerToClientCommand,
@@ -62,9 +62,9 @@ let thumbnails: ThumbnailFile[] = []
 
 //Setup AMCP Connection:
 export const ccgConnection = new CasparCG({
-    host: SettingsService.instance.getGenericSettings(state.settings)
+    host: new ReduxSettingsService().getGenericSettings(state.settings)
         .ccgSettings.ip,
-    port: SettingsService.instance.getGenericSettings(state.settings)
+    port: new ReduxSettingsService().getGenericSettings(state.settings)
         .ccgSettings.amcpPort,
     autoConnect: true,
 })
@@ -73,13 +73,13 @@ export const ccgConnection = new CasparCG({
 function ccgOSCServer(): void {
     const oscConnection = new osc.UDPPort({
         localAddress: '0.0.0.0',
-        localPort: SettingsService.instance.getGenericSettings(state.settings)
+        localPort: new ReduxSettingsService().getGenericSettings(state.settings)
             .ccgSettings.oscPort,
     })
 
     oscConnection
         .on('ready', () => {
-            let ipAddresses = OsService.instance.getIpAddresses()
+            let ipAddresses = new OsService().getIpAddresses()
 
             logger.info('Listening for OSC over UDP.')
             ipAddresses.forEach((address) =>
@@ -98,7 +98,7 @@ function ccgOSCServer(): void {
     oscConnection.open()
     logger.info(
         `OSC listening on port '${
-            SettingsService.instance.getGenericSettings(state.settings)
+            new ReduxSettingsService().getGenericSettings(state.settings)
                 .ccgSettings.oscPort
         }'.`
     )
@@ -139,7 +139,7 @@ function processTimeOscSegment(message: any, channelIndex: number): void {
 }
 
 function setNewTime(channelIndex: number, newTime: [number, number]): void {
-    const output = MediaService.instance.getOutput(state.media, channelIndex)
+    const output = new ReduxMediaService().getOutput(state.media, channelIndex)
     if (!output) {
         return
     }
@@ -155,7 +155,7 @@ function dispatchConfig(config: any): void {
     reduxStore.dispatch(updateSettings(config.channels, config.paths.mediaPath))
     fillInDefaultOutputSettingsIfNeeded(config.channels.length)
     const genericSettings = {
-        ...SettingsService.instance.getGenericSettings(state.settings),
+        ...new ReduxSettingsService().getGenericSettings(state.settings),
     }
     const allOutputSettings = [...genericSettings.outputSettings]
 
@@ -192,24 +192,24 @@ function reinvigorateChannel(
 
 function fillInDefaultOutputSettingsIfNeeded(needed: number) {
     const genericSettings = {
-        ...SettingsService.instance.getGenericSettings(state.settings),
+        ...new ReduxSettingsService().getGenericSettings(state.settings),
     }
 
     if (genericSettings.outputSettings.length < needed) {
-        const expandedOutputSettings = ArrayService.instance.fillWithDefault(
+        const expandedOutputSettings = new ArrayService().fillWithDefault(
             [...genericSettings.outputSettings],
             defaultOutputSettingsState,
             needed
         )
         genericSettings.outputSettings = expandedOutputSettings
         reduxStore.dispatch(setGenerics(genericSettings))
-        SettingsPersistenceService.instance.save(genericSettings)
+        new SettingsPersistenceService().save(genericSettings)
     }
 }
 
 function loadInitialOverlay(): void {
     if (
-        !SettingsService.instance.getGenericSettings(state.settings)
+        !new ReduxSettingsService().getGenericSettings(state.settings)
             .outputSettings
     ) {
         return
@@ -218,7 +218,7 @@ function loadInitialOverlay(): void {
         playOverlay(
             index,
             10,
-            SettingsService.instance.getOutputSettings(state.settings, index)
+            new ReduxSettingsService().getOutputSettings(state.settings, index)
                 .webUrl
         )
     })
@@ -230,9 +230,8 @@ function ccgAMPHandler(): void {
     ccgConnection
         .version()
         .then((response) => {
-            const genericSettings = SettingsService.instance.getGenericSettings(
-                state.settings
-            )
+            const genericSettings =
+                new ReduxSettingsService().getGenericSettings(state.settings)
             const address = genericSettings.ccgSettings.ip
             const port = genericSettings.ccgSettings.amcpPort
             logger.info(`AMCP connection established to: ${address}:${port}`)
@@ -259,11 +258,11 @@ function startTimeEmitInterval() {
     //Update of timeleft is set to a default 40ms (same as 25FPS)
     let data: TimeSelectedFilePayload[] = []
     reduxStore.subscribe(() => {
-        MediaService.instance
+        new ReduxMediaService()
             .getOutputs(state.media)
             .forEach((output: Output, index: number) => {
                 const outputSettings =
-                    SettingsService.instance.getOutputSettings(
+                    new ReduxSettingsService().getOutputSettings(
                         state.settings,
                         index
                     )
@@ -354,7 +353,7 @@ async function loadFileList(): Promise<void> {
                 state.media.folders
             )
 
-            MediaService.instance
+            new ReduxMediaService()
                 .getOutputs(state.media)
                 .forEach(({}, outputIndex: number) => {
                     outputExtractFiles(payload.response.data, outputIndex)
@@ -375,14 +374,14 @@ function outputExtractFiles(allFiles: MediaFile[], outputIndex: number): void {
         return (
             isFolderNameEqual(
                 file.name,
-                SettingsService.instance.getOutputSettings(
+                new ReduxSettingsService().getOutputSettings(
                     state.settings,
                     outputIndex
                 ).folder
             ) && !isAlphaFile(file.name)
         )
     })
-    const mediaFiles = MediaService.instance.getOutput(
+    const mediaFiles = new ReduxMediaService().getOutput(
         state.media,
         outputIndex
     ).mediaFiles
@@ -421,7 +420,7 @@ function checkHiddenFilesChanged(files: MediaFile[]): void {
             ServerToClientCommand.HIDDEN_FILES_UPDATE,
             hiddenFiles
         )
-        HiddenFilesPersistenceService.instance.save(hiddenFiles)
+        new HiddenFilesPersistenceService().save(hiddenFiles)
     }
 }
 
@@ -439,21 +438,21 @@ async function loadThumbnailImage(
 }
 
 export function assignThumbnailsToOutputs(): void {
-    MediaService.instance
+    new ReduxMediaService()
         .getOutputs(state.media)
         .forEach(({}, channelIndex: number) => {
             const outputMedia = thumbnails.filter(
                 (thumbnail: ThumbnailFile) => {
                     return isFolderNameEqual(
                         thumbnail?.name,
-                        SettingsService.instance.getOutputSettings(
+                        new ReduxSettingsService().getOutputSettings(
                             state.settings,
                             channelIndex
                         ).folder
                     )
                 }
             )
-            const outputThumbnailList = MediaService.instance.getOutput(
+            const outputThumbnailList = new ReduxMediaService().getOutput(
                 state.media,
                 channelIndex
             ).thumbnailList

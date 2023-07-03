@@ -1,7 +1,7 @@
 import { state } from '../../shared/store'
 import { ccgConnection } from '../handlers/caspar-cg-handler'
 import { Enum as CcgEnum } from 'casparcg-connection'
-import { SettingsService } from '../../shared/services/settings-service'
+import { ReduxSettingsService } from '../../shared/services/redux-settings-service'
 
 export function playMedia(
     channelIndex: number,
@@ -13,8 +13,10 @@ export function playMedia(
         channelIndex + 1,
         layerIndex + 1,
         fileName,
-        SettingsService.instance.getOutputSettings(state.settings, channelIndex)
-            .loopState || false
+        new ReduxSettingsService().getOutputSettings(
+            state.settings,
+            channelIndex
+        ).loopState || false
     )
 }
 
@@ -29,11 +31,13 @@ export function mixMedia(
         channelIndex + 1,
         layerIndex + 1,
         fileName,
-        SettingsService.instance.getOutputSettings(state.settings, channelIndex)
-            .loopState || false,
+        new ReduxSettingsService().getOutputSettings(
+            state.settings,
+            channelIndex
+        ).loopState || false,
         CcgEnum.Transition.MIX,
-        SettingsService.instance.getGenericSettings(state.settings).ccgSettings
-            .transitionTime
+        new ReduxSettingsService().getGenericSettings(state.settings)
+            .ccgSettings.transitionTime
     )
 }
 
@@ -48,8 +52,10 @@ export function loadMedia(
         channelIndex + 1,
         layerIndex + 1,
         fileName,
-        SettingsService.instance.getOutputSettings(state.settings, channelIndex)
-            .loopState || false
+        new ReduxSettingsService().getOutputSettings(
+            state.settings,
+            channelIndex
+        ).loopState || false
     )
 }
 
@@ -82,7 +88,7 @@ function scale(channelIndex: number, layerIndex: number): void {
 
     let scaleOutX = 1
     let scaleOutY = 1
-    const outputSetting = SettingsService.instance.getOutputSettings(
+    const outputSetting = new ReduxSettingsService().getOutputSettings(
         state.settings,
         channelIndex
     )

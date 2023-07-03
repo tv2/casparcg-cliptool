@@ -16,67 +16,67 @@ export const PreviousGenericSettings = z.object({
         .string()
         .array()
         .transform((transform) =>
-            ArrayService.instance.fillWithDefault(transform, '')
+            new ArrayService().fillWithDefault(transform, '')
         ),
     outputFolders: z
         .string()
         .array()
         .transform((transform) =>
-            ArrayService.instance.fillWithDefault(transform, '')
+            new ArrayService().fillWithDefault(transform, '')
         ),
     scale: z
         .boolean()
         .array()
         .transform((transform) =>
-            ArrayService.instance.fillWithDefault(transform, false)
+            new ArrayService().fillWithDefault(transform, false)
         ),
     scaleX: z
         .number()
         .array()
         .transform((transform) =>
-            ArrayService.instance.fillWithDefault(transform, 1920)
+            new ArrayService().fillWithDefault(transform, 1920)
         ),
     scaleY: z
         .number()
         .array()
         .transform((transform) =>
-            ArrayService.instance.fillWithDefault(transform, 1080)
+            new ArrayService().fillWithDefault(transform, 1080)
         ),
     webURL: z
         .string()
         .array()
         .transform((transform) =>
-            ArrayService.instance.fillWithDefault(transform, '')
+            new ArrayService().fillWithDefault(transform, '')
         ),
     startupLoopState: z
         .boolean()
         .array()
         .transform((transform) =>
-            ArrayService.instance.fillWithDefault(transform, false)
+            new ArrayService().fillWithDefault(transform, false)
         ),
     startupMixState: z
         .boolean()
         .array()
         .transform((transform) =>
-            ArrayService.instance.fillWithDefault(transform, false)
+            new ArrayService().fillWithDefault(transform, false)
         ),
     startupManualstartState: z
         .boolean()
         .array()
         .transform((transform) =>
-            ArrayService.instance.fillWithDefault(transform, false)
+            new ArrayService().fillWithDefault(transform, false)
         ),
     startupWebState: z
         .boolean()
         .array()
         .transform((transform) =>
-            ArrayService.instance.fillWithDefault(transform, false)
+            new ArrayService().fillWithDefault(transform, false)
         ),
     startupOperationMode: z
         .nativeEnum(OperationModeSnapshot)
         .array()
         .transform((transform) =>
-            ArrayService.instance.fillWithDefault(
+            new ArrayService().fillWithDefault(
                 transform,
                 OperationModeSnapshot.CONTROL
             )

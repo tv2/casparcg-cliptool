@@ -6,8 +6,8 @@ import { casparCgClient } from './handlers/caspar-cg-handler'
 import { logger } from './utils/logger'
 
 loadBundledEnvironment()
-SettingsPersistenceService.instance.load()
-HiddenFilesPersistenceService.instance.load()
+new SettingsPersistenceService().load()
+new HiddenFilesPersistenceService().load()
 serverInit()
 casparCgClient()
 

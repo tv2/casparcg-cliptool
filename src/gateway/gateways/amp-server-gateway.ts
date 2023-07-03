@@ -36,7 +36,7 @@ export function ampServerGateway(): void {
                 logger.info('AMP Client disconnected')
             })
     }).listen(3811)
-    let ipAddresses = OsService.instance.getIpAddresses()
+    let ipAddresses = new OsService().getIpAddresses()
     ipAddresses.forEach((address) => {
         logger.info(`AMP Host Listening for TCP at ${address}:3811.`)
     })

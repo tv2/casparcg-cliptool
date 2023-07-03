@@ -1,18 +1,14 @@
 import { OperationMode } from '../../shared/models/settings-models'
 import { ClientToServerCommand } from '../../shared/socket-io-constants'
-import { SocketService } from './socket-service'
 
-export class BackendOperationApi {
-    static readonly instance = new BackendOperationApi(
-        SocketService.instance.getSocket()
-    )
+export class SocketOperationService {
     private socket: SocketIOClient.Socket
 
     constructor(socket: SocketIOClient.Socket) {
         this.socket = socket
     }
 
-    public emitSetOperationModeToControl(outputIndex: number) {
+    public setOperationModeToControl(outputIndex: number) {
         this.socket.emit(
             ClientToServerCommand.SET_OPERATION_MODE,
             outputIndex,
@@ -20,7 +16,7 @@ export class BackendOperationApi {
         )
     }
 
-    public emitSetOperationModeToEditVisibility(outputIndex: number) {
+    public setOperationModeToEditVisibility(outputIndex: number) {
         this.socket.emit(
             ClientToServerCommand.SET_OPERATION_MODE,
             outputIndex,
@@ -28,7 +24,7 @@ export class BackendOperationApi {
         )
     }
 
-    public emitToggleThumbnailVisibility(
+    public toggleThumbnailVisibility(
         fileOriginOutputIndex: number,
         fileName: string
     ) {
@@ -39,7 +35,7 @@ export class BackendOperationApi {
         )
     }
 
-    public emitRestartServer() {
+    public restartServer() {
         this.socket.emit(ClientToServerCommand.RESTART_SERVER)
     }
 }

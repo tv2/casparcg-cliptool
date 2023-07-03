@@ -2,7 +2,6 @@ import { FileType } from '../../shared/models/media-models'
 import { TimeService } from '../../shared/services/time-service'
 
 export class ClientTimeService {
-    static readonly instance = new ClientTimeService()
     public convertDurationToTimeCode(
         timeRange: [number, number] = [0, 0],
         frameRate: number = 25,
@@ -17,9 +16,6 @@ export class ClientTimeService {
             return '****END****'
         }
 
-        return TimeService.instance.convertDurationToTimeCode(
-            timeRange,
-            frameRate
-        )
+        return new TimeService().convertDurationToTimeCode(timeRange, frameRate)
     }
 }

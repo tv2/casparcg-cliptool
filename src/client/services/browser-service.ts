@@ -11,11 +11,10 @@ interface BrowserSelectedView {
 }
 
 export class BrowserService {
-    static readonly instance = new BrowserService(window.location.search)
     private view: BrowserSelectedView
 
-    constructor(searchQuery: string) {
-        const search = new URLSearchParams(searchQuery)
+    constructor() {
+        const search = new URLSearchParams(window.location.search)
         this.view = this.getCurrentSelectedView(search)
     }
 

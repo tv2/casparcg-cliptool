@@ -6,25 +6,25 @@ import { State } from "../../../../shared/reducers/index-reducer";
 import { AppNavigationService } from "../../../../shared/services/app-navigation-service";
 import { FileType, Output } from "../../../../shared/models/media-models";
 import { OutputSettings } from "../../../../shared/models/settings-models";
-import { SettingsService } from "../../../../shared/services/settings-service";
+import { ReduxSettingsService } from "../../../../shared/services/redux-settings-service";
 import { state } from "../../../../shared/store";
-import { MediaService } from "../../../../shared/services/media-service";
+import { ReduxMediaService } from "../../../../shared/services/redux-media-service";
 import { ClientTimeService } from "../../../services/client-time-service";
 
 export default function TimerThumbnail(): JSX.Element {
     const activeTabIndex: number = useSelector(
-        (state: State) => AppNavigationService.instance.getActiveTabIndex(state.appNavigation))
+        (state: State) => new AppNavigationService().getActiveTabIndex(state.appNavigation))
     const mediaOutput: Output = useSelector(
-        (state: State) => MediaService.instance.getOutput(state.media, activeTabIndex))
+        (state: State) => new ReduxMediaService().getOutput(state.media, activeTabIndex))
     const settingsOutput: OutputSettings = useSelector(
-        (state: State) => SettingsService.instance.getOutputSettings(state.settings, activeTabIndex))
+        (state: State) => new ReduxSettingsService().getOutputSettings(state.settings, activeTabIndex))
 
-    const cleanFileName: string = SettingsService.instance.getCleanSelectedFileName(settingsOutput, state.settings) 
-        || SettingsService.instance.getCleanCuedFileName(settingsOutput, state.settings)
-    const thumbnailUrl: string = MediaService.instance.getBase64ThumbnailUrl(cleanFileName, activeTabIndex, state.media)
+    const cleanFileName: string = new ReduxSettingsService().getCleanSelectedFileName(settingsOutput, state.settings) 
+        || new ReduxSettingsService().getCleanCuedFileName(settingsOutput, state.settings)
+    const thumbnailUrl: string = new ReduxMediaService().getBase64ThumbnailUrl(cleanFileName, activeTabIndex, state.media)
     const playingFileType: string = mediaOutput?.mediaFiles.find(file => file.name === cleanFileName)?.type ?? FileType.UNKNOWN
 
-    const durationTimeCode = ClientTimeService.instance.convertDurationToTimeCode(
+    const durationTimeCode = new ClientTimeService().convertDurationToTimeCode(
         mediaOutput ? mediaOutput.time : [0, 0],
         state.settings.ccgConfig.channels[activeTabIndex]?.videoFormat?.frameRate,
         playingFileType

@@ -4,7 +4,7 @@ export class SocketService {
     static readonly instance = new SocketService()
     private socket: SocketIOClient.Socket
 
-    constructor() {
+    private constructor() {
         this.socket = io()
     }
 

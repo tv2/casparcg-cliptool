@@ -6,10 +6,10 @@ import { Provider as ReduxProvider } from 'react-redux'
 import { App } from './components/app/app'
 
 import { reduxStore, state } from '../shared/store'
-import { BackendObserver } from './services/backend-observer'
+import { ObserverService } from './services/observer-service'
 
 console.log('Redux initialized :', state)
-BackendObserver.instance.startBackendObserver()
+new ObserverService()
 
 ReactDom.render(
     <ReduxProvider store={reduxStore}>

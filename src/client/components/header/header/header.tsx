@@ -4,16 +4,16 @@ import TimerThumbnail from '../timer-thumbnail/timer-thumbnail'
 import ControlActions from '../control-actions/control-actions'
 import { BrowserService } from '../../../services/browser-service'
 import Button from '../../shared/button'
-import './application-header.scss'
+import './header.scss'
 import Group from '../group/group'
 import { reduxStore } from '../../../../shared/store'
 import { toggleSettingsVisibility } from '../../../../shared/actions/app-navigation-action'
 
-export default function ApplicationHeader(): JSX.Element {
+export default function Header(): JSX.Element {
     return (
         <header className='app-header'>
             <div className="app-header__controls">
-                {!BrowserService.instance.isTextView() && (
+                {!new BrowserService().isTextView() && (
                     <Group>
                         <Button
                             className="app-settings-button"

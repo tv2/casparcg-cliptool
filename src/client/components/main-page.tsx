@@ -6,18 +6,18 @@ import Tabs from "./tab/tabs/tabs"
 import { MediaOverview } from "./media-card/media-overview/media-overview"
 import { State } from "../../shared/reducers/index-reducer"
 import { TabInfo } from "../../shared/models/settings-models"
-import { SettingsService } from "../../shared/services/settings-service"
-import ApplicationHeader from "./header/application-header/application-header"
+import { ReduxSettingsService } from "../../shared/services/redux-settings-service"
+import Header from "./header/header/header"
 import { OperationModeFooter } from "./footer/operation-mode-footer"
 
 
 export default function MainPage(): JSX.Element {
-  const tabs: TabInfo[] = useSelector((state: State) => SettingsService.instance.getTabInfo(state.settings, state.media))
+  const tabs: TabInfo[] = useSelector((state: State) => new ReduxSettingsService().getTabInfo(state.settings, state.media))
   
   return (
     <>
-        <ApplicationHeader />
-        {BrowserService.instance.isChannelView() 
+        <Header />
+        {new BrowserService().isChannelView() 
             ? <MediaOverview/> 
             : <Tabs titles={tabs.map((info) => info.title)}>
                 {tabs.map((data) => 

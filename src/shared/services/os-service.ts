@@ -1,7 +1,6 @@
 import { networkInterfaces } from 'os' // Used to display (log) network addresses on local machine
 
 export class OsService {
-    static readonly instance = new OsService()
     getIpAddresses(): string[] {
         const interfaces = networkInterfaces()
         const ipAddresses: string[] = []

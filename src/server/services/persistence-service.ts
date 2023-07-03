@@ -3,7 +3,6 @@ import * as fsp from 'fs/promises'
 import * as path from 'path'
 
 export class PersistenceService {
-    static readonly instance = new PersistenceService()
     public async loadFile(fileName: string): Promise<string> {
         return fsp
             .readFile(path.resolve('storage', fileName))

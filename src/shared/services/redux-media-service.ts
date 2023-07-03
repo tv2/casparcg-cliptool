@@ -6,8 +6,7 @@ import {
     ThumbnailFile,
 } from '../models/media-models'
 
-export class MediaService {
-    static readonly instance = new MediaService()
+export class ReduxMediaService {
     public getOutput(media: Media, channelIndex: number): Output {
         return media.outputs[channelIndex]
     }

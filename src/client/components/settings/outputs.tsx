@@ -22,7 +22,7 @@ export default function OutputsForm(props: OutputsFormProps): JSX.Element {
     return (
         <div>
             {
-                BrowserService.instance.isChannelView()
+                new BrowserService().isChannelView()
                     ? renderSingleOutput(props.outputSettings, casparcgConfig.channels, folders, onOutputChanged)
                     : renderMultipleOutputs(props.outputSettings, casparcgConfig.channels, folders, onOutputChanged)
             }
@@ -31,7 +31,7 @@ export default function OutputsForm(props: OutputsFormProps): JSX.Element {
 }
 
 function renderSingleOutput(outputSettings: OutputSettings[], casparcgChannels: CaspercgConfigChannel[], folders: string[], onChange: (changedOutput: OutputSettings, index: number) => void ): JSX.Element {
-    const channel = BrowserService.instance.getChannel()
+    const channel = new BrowserService().getChannel()
     return buildSingleOutput(
         outputSettings[channel], 
         casparcgChannels[channel], 

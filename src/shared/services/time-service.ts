@@ -1,5 +1,4 @@
 export class TimeService {
-    static readonly instance = new TimeService()
     public convertDurationToTimeCode(
         timeRange: [number, number] = [0, 0],
         frameRate: number = 25

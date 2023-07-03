@@ -24,9 +24,9 @@ export function SettingsPage(): JSX.Element {
     return (
         <div className="c-settings-page">
             <p className="c-settings-page__header">SETTINGS :</p>
-            <SettingsActions settings={settings}/>
+            <SettingsActions settings={settings} onChange={(changedOutputs) => onOutputsChanged(changedOutputs)}/>
             <hr/>
-            {!BrowserService.instance.isChannelView() && settings && <CasparcgForm casparcgSettings={settings.ccgSettings} onChange={(changedCasparcg) => onCasparcgChanged(changedCasparcg)}/> }
+            {!new BrowserService().isChannelView() && settings && <CasparcgForm casparcgSettings={settings.ccgSettings} onChange={(changedCasparcg) => onCasparcgChanged(changedCasparcg)}/> }
             {settings && <OutputsForm outputSettings={settings.outputSettings} onChange={(changedOutputs) => onOutputsChanged(changedOutputs)}/>}
         </div>
     )

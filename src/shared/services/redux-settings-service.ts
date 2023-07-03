@@ -10,8 +10,7 @@ import {
     defaultOutputSettingsState,
 } from '../schemas/new-settings-schema'
 
-export class SettingsService {
-    static readonly instance = new SettingsService()
+export class ReduxSettingsService {
     private defaultGenericSettings: GenericSettings
 
     constructor() {

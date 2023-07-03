@@ -1,6 +1,6 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import { SettingsService } from "../../../../shared/services/settings-service";
+import { ReduxSettingsService } from "../../../../shared/services/redux-settings-service";
 import { AppNavigationService } from "../../../../shared/services/app-navigation-service";
 import { State } from "../../../../shared/reducers/index-reducer";
 import Button from "../../shared/button";
@@ -9,18 +9,19 @@ import './control-actions.scss'
 import { OutputSettings } from "../../../../shared/models/settings-models";
 import Group from "../group/group";
 import Toggle from "../../shared/switch/switch";
-import { BackendPlayApi } from "../../../services/backend-play-api";
-import { BackendSettingsApi } from "../../../services/backend-settings-api";
+import { SocketPlayService } from "../../../services/socket-play-service";
+import { SocketSettingsService } from "../../../services/socket-settings-service";
+import { SocketService } from "../../../services/socket-service";
 
 export default function ControlActions(): JSX.Element {
   const activeTabIndex: number = useSelector(
-    (state: State) => AppNavigationService.instance.getActiveTabIndex(state.appNavigation))
+    (state: State) => new AppNavigationService().getActiveTabIndex(state.appNavigation))
   const outputSettings = useSelector(
-    (state: State) => SettingsService.instance.getOutputSettings(state.settings, activeTabIndex))
+    (state: State) => new ReduxSettingsService().getOutputSettings(state.settings, activeTabIndex))
 
   return (
     <>
-      {!BrowserService.instance.isTextView() && (
+      {!new BrowserService().isTextView() && (
         <>
           <Group>
             <Toggle
@@ -66,21 +67,21 @@ function playCuedFile(activeTabIndex: number, outputSettings: OutputSettings): v
   if (!outputSettings.cuedFileName) {
     return
   }
-  BackendPlayApi.instance.emitPlayFile(activeTabIndex, outputSettings.cuedFileName)
+  new SocketPlayService(SocketService.instance.getSocket()).playFile(activeTabIndex, outputSettings.cuedFileName)
 }
 
 function toggleLoopState(activeTabIndex: number, isChecked: boolean): void {
-  BackendSettingsApi.instance.emitSetLoopState(activeTabIndex, isChecked)
+  new SocketSettingsService(SocketService.instance.getSocket()).setLoopState(activeTabIndex, isChecked)
 }
 
 function toggleMixState(activeTabIndex: number, isChecked: boolean): void {
-  BackendSettingsApi.instance.emitSetMixState(activeTabIndex, isChecked)  
+  new SocketSettingsService(SocketService.instance.getSocket()).setMixState(activeTabIndex, isChecked)  
 }
 
 function toggleWebState(activeTabIndex: number, isChecked: boolean): void {
-  BackendSettingsApi.instance.emitSetWebState(activeTabIndex, isChecked)
+  new SocketSettingsService(SocketService.instance.getSocket()).setWebState(activeTabIndex, isChecked)
 }
 
 function toggleManualStartState(activeTabIndex: number, isChecked: boolean): void {
-  BackendSettingsApi.instance.emitSetManualStartState(activeTabIndex, isChecked)
+  new SocketSettingsService(SocketService.instance.getSocket()).setManualStartState(activeTabIndex, isChecked)
 }

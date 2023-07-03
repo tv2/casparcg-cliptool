@@ -7,8 +7,8 @@ import ApplicationRouter from '../application-router/application-router'
 
 
 export function App(): JSX.Element {
-    if (BrowserService.instance.isChannelView()) {
-        setOutput(BrowserService.instance.getChannel())
+    if (new BrowserService().isChannelView()) {
+        setOutput(new BrowserService().getChannel())
     }
     return (
         <div className="app">

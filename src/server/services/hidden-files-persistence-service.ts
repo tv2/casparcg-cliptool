@@ -4,15 +4,14 @@ import { state, reduxStore } from '../../shared/store'
 import { socketServer } from '../handlers/express-handler'
 import { logger } from '../utils/logger'
 import { PersistenceService } from './persistence-service'
-import { SettingsService } from '../../shared/services/settings-service'
+import { ReduxSettingsService } from '../../shared/services/redux-settings-service'
 import { OutputSettings } from '../../shared/models/settings-models'
 import { ServerToClientCommand } from '../../shared/socket-io-constants'
 import _ from 'lodash'
 
 export class HiddenFilesPersistenceService {
-    static readonly instance = new HiddenFilesPersistenceService()
     public load(): void {
-        PersistenceService.instance
+        new PersistenceService()
             .loadFile('hiddenFiles.json')
             .then((rawHiddenFiles) => {
                 const hiddenFiles: HiddenFiles = JSON.parse(rawHiddenFiles)
@@ -57,7 +56,7 @@ export class HiddenFilesPersistenceService {
             this.getCleanHiddenFiles(hiddenFiles)
         const stringifiedHiddenFiles = JSON.stringify(cleanHiddenFiles)
 
-        PersistenceService.instance
+        new PersistenceService()
             .saveFile('hiddenFiles.json', stringifiedHiddenFiles)
             .then(() => {
                 logger.data(stringifiedHiddenFiles).trace('Hidden files saved')
@@ -78,7 +77,7 @@ export class HiddenFilesPersistenceService {
 
     private hasSelectedOrCuedHiddenFiles(hiddenFiles: HiddenFiles): boolean {
         const outputs: OutputSettings[] =
-            SettingsService.instance.getGenericSettings(
+            new ReduxSettingsService().getGenericSettings(
                 state.settings
             ).outputSettings
         return outputs.some(
@@ -93,7 +92,7 @@ export class HiddenFilesPersistenceService {
             ...originalHiddenFiles,
         }
         const outputs: OutputSettings[] =
-            SettingsService.instance.getGenericSettings(
+            new ReduxSettingsService().getGenericSettings(
                 state.settings
             ).outputSettings
         outputs.forEach((output) => {

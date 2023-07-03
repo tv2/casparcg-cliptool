@@ -5,16 +5,16 @@ import { BrowserService } from '../../services/browser-service'
 import { AppNavigationService } from '../../../shared/services/app-navigation-service'
 import { State } from '../../../shared/reducers/index-reducer'
 import { OperationMode } from '../../../shared/models/settings-models'
-import { SettingsService } from '../../../shared/services/settings-service'
+import { ReduxSettingsService } from '../../../shared/services/redux-settings-service'
 
 export function OperationModeFooter(): JSX.Element {
-  if (BrowserService.instance.isTextView()) {
+  if (new BrowserService().isTextView()) {
     return (<></>)
   }
   const activeTabIndex: number = useSelector((state: State) => 
-    AppNavigationService.instance.getActiveTabIndex(state.appNavigation)) 
+    new AppNavigationService().getActiveTabIndex(state.appNavigation)) 
   const operationMode: OperationMode | undefined = useSelector((state: State) =>
-    SettingsService.instance.getOutputSettings(state.settings, activeTabIndex)?.operationMode) 
+    new ReduxSettingsService().getOutputSettings(state.settings, activeTabIndex)?.operationMode) 
   switch (operationMode) {
     case OperationMode.EDIT_VISIBILITY: {
       return <EditVisibilityFooter />

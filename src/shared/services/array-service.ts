@@ -1,5 +1,4 @@
 export class ArrayService {
-    static readonly instance = new ArrayService()
     fillWithDefault<T>(
         array: T[],
         defaultValue: T,
