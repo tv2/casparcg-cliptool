@@ -1,15 +1,11 @@
 import React from "react";
-import { useSelector } from "react-redux";
 import _ from "lodash";
 import './settings-actions.scss'
 import './../shared.scss'
-import { AppNavigationService } from "../../../../shared/services/app-navigation-service";
-import { State } from "../../../../shared/reducers/index-reducer";
 import { ReduxSettingsService } from "../../../../shared/services/redux-settings-service";
-import { GenericSettings, OperationMode, OutputSettings } from "../../../../shared/models/settings-models";
+import { GenericSettings, } from "../../../../shared/models/settings-models";
 import { reduxStore, state } from "../../../../shared/store";
 import { toggleSettingsVisibility } from "../../../../shared/actions/app-navigation-action";
-import Toggle from "../../../shared/components/toggle/toggle";
 import { BrowserService } from "../../../shared/services/browser-service";
 import { SocketSettingsService } from "../../../shared/services/socket-settings-service";
 import { SocketService } from "../../../shared/services/socket-service";
@@ -17,21 +13,9 @@ import { SocketOperationService } from "../../../shared/services/socket-operatio
 
 interface SettingsActionsProps {
   settings: GenericSettings
-  onChange: (changedOutput: OutputSettings[]) => void
 }
 
 export default function SettingsActions(props: SettingsActionsProps): JSX.Element {
-  const activeTabIndex: number = useSelector(
-    (state: State) => new AppNavigationService().getActiveTabIndex(state.appNavigation))
-  const operationMode = useSelector(
-    (state: State) => new ReduxSettingsService().getOutputSettings(state.settings, activeTabIndex)?.operationMode)
-  
-  function onOutputChanged(changedOutput: OutputSettings, outputIndex: number, operationMode: OperationMode): void {
-    changedOutput.operationMode = operationMode
-    props.settings.outputSettings[outputIndex] = changedOutput
-    props.onChange(props.settings.outputSettings)
-  }
-
   const hasChanges = settingsHasChanges(props.settings)
   return (
       <div className="settings-channel-form">
@@ -42,11 +26,7 @@ export default function SettingsActions(props: SettingsActionsProps): JSX.Elemen
         <button className="c-settings-actions-button"
           onClick={() => closeSettings(hasChanges)}>
           {hasChanges ? 'DISCARD CHANGES & CLOSE SETTINGS' : 'CLOSE SETTINGS'} 
-        </button>
-        <Toggle checked={operationMode === OperationMode.EDIT_VISIBILITY} 
-          onChange={() => setOperationModeToEditVisibility(props.settings, onOutputChanged)}>
-            EDIT VISIBILITY
-        </Toggle>
+        </button>       
         
         {!new BrowserService().isChannelView() && (
           <button className="c-settings-actions-button"
@@ -81,19 +61,6 @@ function toggleSettingsPage(): void {
   reduxStore.dispatch(toggleSettingsVisibility())
 }
 
-function setOperationModeToEditVisibility(settings: GenericSettings, onChange: (changedOutput: OutputSettings, outputIndex: number, operationMode: OperationMode) => void): void {
-  const activeTabIndex: number = new AppNavigationService().getActiveTabIndex(state.appNavigation)
-  const output = settings.outputSettings[activeTabIndex]
-  if (output.operationMode !== OperationMode.EDIT_VISIBILITY) {
-    new SocketOperationService(SocketService.instance.getSocket()).setOperationModeToEditVisibility(activeTabIndex)
-      onChange(output, activeTabIndex, OperationMode.EDIT_VISIBILITY)
-  }
-  else {
-    new SocketOperationService(SocketService.instance.getSocket()).setOperationModeToControl(activeTabIndex)
-    onChange(output, activeTabIndex, OperationMode.CONTROL)
-  }
-}
-
 function restartCliptool(): void {
   if (
       window.confirm(
@@ -107,7 +74,6 @@ function restartCliptool(): void {
 
 function settingsHasChanges(settings: GenericSettings): boolean {
   return !_.isEqual(
-      settings,
-      new ReduxSettingsService().getGenericSettings(state.settings)
-  )
+    settings,
+    new ReduxSettingsService().getGenericSettings(state.settings))
 }

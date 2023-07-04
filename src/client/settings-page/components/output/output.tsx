@@ -1,11 +1,12 @@
 import React from "react"
 import './output.scss'
 import './../shared.scss'
-import { CaspercgConfigChannel, OutputSettings } from "../../../../shared/models/settings-models"
+import { CaspercgConfigChannel, OperationMode, OutputSettings } from "../../../../shared/models/settings-models"
 import TextInput from "../text-input/text-input"
 import Label from "../label/label"
 import Checkbox from "../checkbox/checkbox"
 import NumberInput from "../number-input/number-input"
+import { UtilityService } from "../../../../shared/services/utility-service"
 
 interface OutputProps {
   configChannel: CaspercgConfigChannel
@@ -18,6 +19,7 @@ interface OutputProps {
 export default function Output(props: OutputProps): JSX.Element {
     const label = props.outputSettings.label
     const folder = props.outputSettings.folder
+    const operationMode = new UtilityService().convertScreamingSnakeCaseToPascalCase(props.outputSettings.operationMode) 
     const loopState = props.outputSettings.loopState
     const mixState = props.outputSettings.mixState
     const manualStartState = props.outputSettings.manualStartState
@@ -25,7 +27,7 @@ export default function Output(props: OutputProps): JSX.Element {
     const webUrl = props.outputSettings.webUrl
     const shouldScale = props.outputSettings.shouldScale
     const scaleX = props.outputSettings.scaleX
-    const scaleY = props.outputSettings.scaleY
+    const scaleY = props.outputSettings.scaleY    
 
     return (    
         props.outputSettings &&         
@@ -55,6 +57,26 @@ export default function Output(props: OutputProps): JSX.Element {
                         )}
                     </select>
                 </Label>
+                <Label className="settings-input-field" 
+                    description="OPERATION MODE :">
+                    <select
+                        className="settings-select"
+                        name={String(props.index)}
+                        onChange={saveTempOperationModeChange}
+                        value={ operationMode }
+                    >
+                        {(Object.keys(OperationMode) as Array<keyof typeof OperationMode>).map(
+                            (snakeCase: string) => {
+                                const pascal = new UtilityService().convertScreamingSnakeCaseToPascalCase(snakeCase)
+                                return (
+                                    <option key={pascal} value={pascal}>
+                                        {pascal}
+                                    </option>
+                                )
+                            }                        
+                        )}
+                    </select>
+                </Label>
                 <Label className="settings-input-field"
                     description="FORMAT :">
                     { props.configChannel.videoMode }
@@ -78,7 +100,7 @@ export default function Output(props: OutputProps): JSX.Element {
                     description="OVERLAY :"
                     checked={webState}
                     onChange={saveTempWebStateChange}
-                />
+                />                
                 <TextInput
                     description="OVERLAY URL :"
                     value={webUrl}
@@ -166,7 +188,15 @@ export default function Output(props: OutputProps): JSX.Element {
         const newFolder = event.target.value
         props.outputSettings.folder = newFolder
         props.onChange(props.outputSettings)
-    }    
+    }
+    
+    function saveTempOperationModeChange(event: React.ChangeEvent<HTMLSelectElement>): void {
+        const rawNewOperationMode = event.target.value
+        const convertedRawNewOperationMode = new UtilityService().convertPascasCaseToScreamingSnakeCase(rawNewOperationMode)
+        const newOperationMode = OperationMode[convertedRawNewOperationMode as keyof typeof OperationMode]
+        props.outputSettings.operationMode = newOperationMode
+        props.onChange(props.outputSettings)
+    }
 }
 
 

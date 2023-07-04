@@ -48,7 +48,7 @@ import {
     ServerToClientCommand,
     TimeSelectedFilePayload,
 } from '../../shared/socket-io-constants'
-import { ArrayService } from '../../shared/services/array-service'
+import { UtilityService } from '../../shared/services/utility-service'
 import { defaultOutputSettingsState } from '../../shared/schemas/new-settings-schema'
 import { SettingsPersistenceService } from '../services/settings-persistence-service'
 
@@ -190,17 +190,18 @@ function reinvigorateChannel(
     return outputSettings
 }
 
-function fillInDefaultOutputSettingsIfNeeded(needed: number) {
+function fillInDefaultOutputSettingsIfNeeded(minimumOutputs: number) {
     const genericSettings = {
         ...new ReduxSettingsService().getGenericSettings(state.settings),
     }
 
-    if (genericSettings.outputSettings.length < needed) {
-        const expandedOutputSettings = new ArrayService().fillWithDefault(
-            [...genericSettings.outputSettings],
-            defaultOutputSettingsState,
-            needed
-        )
+    if (genericSettings.outputSettings.length < minimumOutputs) {
+        const expandedOutputSettings =
+            new UtilityService().expandArrayWithDefaultsIfNeeded(
+                [...genericSettings.outputSettings],
+                defaultOutputSettingsState,
+                minimumOutputs
+            )
         genericSettings.outputSettings = expandedOutputSettings
         reduxStore.dispatch(setGenerics(genericSettings))
         new SettingsPersistenceService().save(genericSettings)

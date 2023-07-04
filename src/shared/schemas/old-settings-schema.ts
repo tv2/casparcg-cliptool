@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { ArrayService } from '../services/array-service'
+import { UtilityService } from '../services/utility-service'
 
 enum OperationModeSnapshot {
     CONTROL = 'control',
@@ -16,67 +16,88 @@ export const PreviousGenericSettings = z.object({
         .string()
         .array()
         .transform((transform) =>
-            new ArrayService().fillWithDefault(transform, '')
+            new UtilityService().expandArrayWithDefaultsIfNeeded(transform, '')
         ),
     outputFolders: z
         .string()
         .array()
         .transform((transform) =>
-            new ArrayService().fillWithDefault(transform, '')
+            new UtilityService().expandArrayWithDefaultsIfNeeded(transform, '')
         ),
     scale: z
         .boolean()
         .array()
         .transform((transform) =>
-            new ArrayService().fillWithDefault(transform, false)
+            new UtilityService().expandArrayWithDefaultsIfNeeded(
+                transform,
+                false
+            )
         ),
     scaleX: z
         .number()
         .array()
         .transform((transform) =>
-            new ArrayService().fillWithDefault(transform, 1920)
+            new UtilityService().expandArrayWithDefaultsIfNeeded(
+                transform,
+                1920
+            )
         ),
     scaleY: z
         .number()
         .array()
         .transform((transform) =>
-            new ArrayService().fillWithDefault(transform, 1080)
+            new UtilityService().expandArrayWithDefaultsIfNeeded(
+                transform,
+                1080
+            )
         ),
     webURL: z
         .string()
         .array()
         .transform((transform) =>
-            new ArrayService().fillWithDefault(transform, '')
+            new UtilityService().expandArrayWithDefaultsIfNeeded(transform, '')
         ),
     startupLoopState: z
         .boolean()
         .array()
         .transform((transform) =>
-            new ArrayService().fillWithDefault(transform, false)
+            new UtilityService().expandArrayWithDefaultsIfNeeded(
+                transform,
+                false
+            )
         ),
     startupMixState: z
         .boolean()
         .array()
         .transform((transform) =>
-            new ArrayService().fillWithDefault(transform, false)
+            new UtilityService().expandArrayWithDefaultsIfNeeded(
+                transform,
+                false
+            )
         ),
     startupManualstartState: z
         .boolean()
         .array()
         .transform((transform) =>
-            new ArrayService().fillWithDefault(transform, false)
+            new UtilityService().expandArrayWithDefaultsIfNeeded(
+                transform,
+                false
+            )
         ),
     startupWebState: z
         .boolean()
         .array()
         .transform((transform) =>
-            new ArrayService().fillWithDefault(transform, false)
+            new UtilityService().expandArrayWithDefaultsIfNeeded(
+                transform,
+                false
+            )
         ),
     startupOperationMode: z
         .nativeEnum(OperationModeSnapshot)
         .array()
         .transform((transform) =>
-            new ArrayService().fillWithDefault(
+            new UtilityService().expandArrayWithDefaultsIfNeeded(
                 transform,
                 OperationModeSnapshot.CONTROL
             )
