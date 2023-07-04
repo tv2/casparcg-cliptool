@@ -1,12 +1,12 @@
-import './css/index.scss'
+import './index.scss'
 import React from 'react'
 import ReactDom from 'react-dom'
 
 import { Provider as ReduxProvider } from 'react-redux'
-import { App } from './components/app/app'
+import { App } from './app/app'
 
 import { reduxStore, state } from '../shared/store'
-import { ObserverService } from './services/observer-service'
+import { ObserverService } from './shared/services/observer-service'
 
 console.log('Redux initialized :', state)
 new ObserverService()
