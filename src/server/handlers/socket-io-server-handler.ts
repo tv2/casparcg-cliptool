@@ -175,6 +175,7 @@ export function socketIoHandlers(socket: any): void {
                         channelIndex
                     ).operationMode
                 )
+                new SettingsPersistenceService().save()
             }
         )
         .on(
