@@ -1,100 +1,100 @@
-import { updateHiddenFiles } from '../../model/reducers/media-actions'
-import { HiddenFileInfo } from '../../model/reducers/media-models'
-import { state, reduxStore } from '../../model/reducers/store'
+import { updateHiddenFiles } from '../../shared/actions/media-actions'
+import { HiddenFiles } from '../../shared/models/media-models'
+import { state, reduxStore } from '../../shared/store'
 import { socketServer } from '../handlers/express-handler'
 import { logger } from '../utils/logger'
-import persistenceService from './persistence-service'
-import settingsService from '../../model/services/settings-service'
-import { OutputSettings } from '../../model/reducers/settings-models'
-import { ServerToClient } from '../../model/socket-io-constants'
+import { PersistenceService } from './persistence-service'
+import { ReduxSettingsService } from '../../shared/services/redux-settings-service'
+import { OutputSettings } from '../../shared/models/settings-models'
+import { ServerToClientCommand } from '../../shared/socket-io-constants'
+import _ from 'lodash'
 
-class HiddenFilesPersistenceService {
+export class HiddenFilesPersistenceService {
     public load(): void {
-        try {
-            const hiddenFilesFromFile: Record<string, HiddenFileInfo> =
-                JSON.parse(persistenceService.loadFile('hiddenFiles.json'))
-            const isInvalidHiddenFiles: boolean =
-                this.validateHiddenFiles(hiddenFilesFromFile)
-            const cleanHiddenFiles: Record<string, HiddenFileInfo> =
-                this.getCleanHiddenFiles(hiddenFilesFromFile)
-            logger
-                .data(cleanHiddenFiles)
-                .info(
-                    `File with Hidden files loaded${
-                        isInvalidHiddenFiles
-                            ? ' and cleaned. Saving the cleaned version'
-                            : ''
-                    }:`
-                )
-            reduxStore.dispatch(updateHiddenFiles(cleanHiddenFiles))
-            socketServer.emit(
-                ServerToClient.HIDDEN_FILES_UPDATE,
-                cleanHiddenFiles
-            )
-            if (isInvalidHiddenFiles) {
-                this.save()
-            }
-        } catch (error) {
-            logger
-                .data(error)
-                .warn(
-                    'File containing hidden files not found, or not yet stored.'
-                )
-        }
+        new PersistenceService()
+            .loadFile('hiddenFiles.json')
+            .then((rawHiddenFiles) => {
+                const hiddenFiles: HiddenFiles = JSON.parse(rawHiddenFiles)
+                const isInvalidHiddenFiles: boolean =
+                    this.hasSelectedOrCuedHiddenFiles(hiddenFiles)
+
+                if (isInvalidHiddenFiles) {
+                    this.cleanAndUpdateReduxState(hiddenFiles)
+                } else {
+                    this.updateReduxState(hiddenFiles)
+                }
+            })
+            .catch((error) => {
+                logger
+                    .data(error)
+                    .warn(
+                        'File containing hidden files not found, or not yet stored.'
+                    )
+            })
     }
 
-    public save(): void {
-        const hiddenFiles: Record<string, HiddenFileInfo> =
-            state.media.hiddenFiles
-        const cleanHiddenFiles: Record<string, HiddenFileInfo> =
-            this.getCleanHiddenFiles(hiddenFiles)
-        const stringifiedHiddenFiles = JSON.stringify(cleanHiddenFiles)
+    private cleanAndUpdateReduxState(hiddenFiles: HiddenFiles) {
+        const cleanedHiddenFiles = this.getValidHiddenFiles(hiddenFiles)
+        logger
+            .data(_.omit(hiddenFiles, _.keys(cleanedHiddenFiles)))
+            .warn('Removed Invalid entries found in Hidden Files:')
+        this.updateReduxState(cleanedHiddenFiles)
+        this.save(cleanedHiddenFiles)
+    }
 
-        persistenceService.saveFile(
-            'hiddenFiles.json',
-            stringifiedHiddenFiles,
-            (error: any) => {
-                if (error) {
-                    logger.data(error).error('Error writing hiddenFiles file:')
-                } else {
-                    logger
-                        .data(stringifiedHiddenFiles)
-                        .trace('Hidden files saved')
-                }
-            }
+    private updateReduxState(hiddenFiles: HiddenFiles) {
+        logger.data(hiddenFiles).trace('Hidden files File loaded with:')
+        reduxStore.dispatch(updateHiddenFiles(hiddenFiles))
+        socketServer.emit(
+            ServerToClientCommand.HIDDEN_FILES_UPDATE,
+            hiddenFiles
         )
     }
 
-    private getCleanHiddenFiles(
-        originalHiddenFiles: Record<string, HiddenFileInfo>
-    ): Record<string, HiddenFileInfo> {
+    public save(hiddenFiles: HiddenFiles): void {
+        const cleanHiddenFiles: HiddenFiles =
+            this.getCleanHiddenFiles(hiddenFiles)
+        const stringifiedHiddenFiles = JSON.stringify(cleanHiddenFiles)
+
+        new PersistenceService()
+            .saveFile('hiddenFiles.json', stringifiedHiddenFiles)
+            .then(() => {
+                logger.data(stringifiedHiddenFiles).trace('Hidden files saved')
+            })
+            .catch((error) => {
+                logger.data(error).error('Error writing hiddenFiles file:')
+            })
+    }
+
+    private getCleanHiddenFiles(originalHiddenFiles: HiddenFiles): HiddenFiles {
         const isInvalidHiddenFiles: boolean =
-            this.validateHiddenFiles(originalHiddenFiles)
-        const cleanHiddenFiles: Record<string, HiddenFileInfo> =
-            isInvalidHiddenFiles
-                ? this.clearInvalidHiddenFiles(originalHiddenFiles)
-                : originalHiddenFiles
+            this.hasSelectedOrCuedHiddenFiles(originalHiddenFiles)
+        const cleanHiddenFiles: HiddenFiles = isInvalidHiddenFiles
+            ? this.getValidHiddenFiles(originalHiddenFiles)
+            : originalHiddenFiles
         return cleanHiddenFiles
     }
 
-    private validateHiddenFiles(
-        hiddenFiles: Record<string, HiddenFileInfo>
-    ): boolean {
-        const outputs: OutputSettings[] = settingsService.getGenericSettings(
-            state.settings
-        ).outputSettings
-        return outputs.some((output) => output.selectedFileName in hiddenFiles)
+    private hasSelectedOrCuedHiddenFiles(hiddenFiles: HiddenFiles): boolean {
+        const outputs: OutputSettings[] =
+            new ReduxSettingsService().getGenericSettings(
+                state.settings
+            ).outputSettings
+        return outputs.some(
+            (output) =>
+                output.selectedFileName in hiddenFiles ||
+                output.cuedFileName in hiddenFiles
+        )
     }
 
-    private clearInvalidHiddenFiles(
-        originalHiddenFiles: Record<string, HiddenFileInfo>
-    ): Record<string, HiddenFileInfo> {
-        const hiddenFiles: Record<string, HiddenFileInfo> = {
+    private getValidHiddenFiles(originalHiddenFiles: HiddenFiles): HiddenFiles {
+        const hiddenFiles: HiddenFiles = {
             ...originalHiddenFiles,
         }
-        const outputs: OutputSettings[] = settingsService.getGenericSettings(
-            state.settings
-        ).outputSettings
+        const outputs: OutputSettings[] =
+            new ReduxSettingsService().getGenericSettings(
+                state.settings
+            ).outputSettings
         outputs.forEach((output) => {
             if (output.selectedFileName in hiddenFiles) {
                 delete hiddenFiles[output.selectedFileName]
@@ -103,6 +103,3 @@ class HiddenFilesPersistenceService {
         return hiddenFiles
     }
 }
-
-const hiddenFilesPersistenceService = new HiddenFilesPersistenceService()
-export default hiddenFilesPersistenceService
