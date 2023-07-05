@@ -1,0 +1,39 @@
+.c-media-overview {
+  height: 100%;
+  overflow: auto;
+  position: relative;
+  box-sizing: border-box;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  justify-content: center;
+  list-style: none;
+  padding-left: 0;
+}
+
+.c-media-overview__card {
+  position: relative;
+  background: var(--thumbnail-background-color);
+  color: white;
+  box-shadow: 6px 6px 6px #555;
+  width: 300px;
+  margin: 5px;
+  font-size: 0.9em;
+
+  &.hidden {
+    scale: 0.8;
+    opacity: 70%;
+    background: var(--hidden-thumbnail-background-color);
+  
+    .c-image-media-card__image {
+      filter: grayscale(1);
+    }
+
+    .c-thumbnail-button {
+      border-color: var(--hidden-thumbnail-background-color);
+    }
+  }
+}

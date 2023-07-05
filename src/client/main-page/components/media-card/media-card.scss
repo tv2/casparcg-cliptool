@@ -1,0 +1,23 @@
+.c-media-card {
+  display: flex;
+  position: relative;
+  justify-content: center;
+  border-color: #2e2b41;
+  border-width: 4px;
+  border-style: solid;
+
+  &.selected-thumbnail {
+    border-color: var(--selected-color);
+  }
+
+  &.cued-thumbnail {
+    border-color: var(--cued-color);
+  }
+}
+
+.c-media-card__button {
+  display: flex;
+  background-color: transparent;
+  width: 100%;
+  border-color: var(--thumbnail-background-color);
+}

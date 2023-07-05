@@ -3,8 +3,8 @@ import { createServer } from 'net'
 import { socket as socketio } from '../util/socket-gateway-handlers'
 
 import { logger } from '../util/logger-gateway'
-import osService from '../../model/services/os-service'
-import { ClientToServer } from '../../model/socket-io-constants'
+import { OsService } from '../../shared/services/os-service'
+import { ClientToServerCommand } from '../../shared/socket-io-constants'
 
 export function ampServerGateway(): void {
     console.log('Initializing AMP server')
@@ -25,14 +25,18 @@ export function ampServerGateway(): void {
                 let channel = 1 // message.address.split('/')[2]
                 if (message.includes('CMDS00042001')) {
                     console.log(`PLAY on channel ${ccgCh}`)
-                    socketio.emit(ClientToServer.PGM_PLAY, channel - 1, '')
+                    socketio.emit(
+                        ClientToServerCommand.PGM_PLAY,
+                        channel - 1,
+                        ''
+                    )
                 }
             })
             .on('end', () => {
                 logger.info('AMP Client disconnected')
             })
     }).listen(3811)
-    let ipAddresses = osService.getThisMachineIpAddresses()
+    let ipAddresses = new OsService().getIpAddresses()
     ipAddresses.forEach((address) => {
         logger.info(`AMP Host Listening for TCP at ${address}:3811.`)
     })

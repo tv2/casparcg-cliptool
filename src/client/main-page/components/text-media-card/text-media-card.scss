@@ -1,0 +1,29 @@
+.c-text-media-card {
+  height: 130px;
+  border-width: 2px;
+  border-style: solid;
+  border-color: #2e2b41;
+  margin: 8px;
+  display: flex;
+  position: relative;
+}
+
+.c-text-media-card__wrapper {
+  width: 100%;
+}
+
+.c-text-media-card__button {
+  position: relative;
+  justify-content: center;
+  height: 100%;
+}
+
+.c-text-media-card__text {
+  top: 10%;
+  height: fit-content;
+  position: relative;
+  word-wrap: break-word;
+  margin: 0;
+  font-size: 1.4em;
+  color: white;
+}

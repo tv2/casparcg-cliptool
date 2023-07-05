@@ -1,4 +1,4 @@
-import { state, reduxStore } from '../../model/reducers/store'
+import { state, reduxStore } from '../../shared/store'
 
 import {
     setTime,
@@ -6,7 +6,7 @@ import {
     updateThumbnailFileList,
     updateFolders,
     setNumberOfOutputs,
-} from '../../model/reducers/media-actions'
+} from '../../shared/actions/media-actions'
 
 import {
     setGenerics,
@@ -16,16 +16,16 @@ import {
     setOperationMode,
     setSelectedFileName,
     updateSettings,
-} from '../../model/reducers/settings-action'
+} from '../../shared/actions/settings-action'
 import { ARG_CONSTANTS } from './extract-args'
 import { logger } from './logger-gateway'
-import { MediaFile, ThumbnailFile } from '../../model/reducers/media-models'
-import { OperationMode, Settings } from '../../model/reducers/settings-models'
-import settingsService from '../../model/services/settings-service'
+import { MediaFile, ThumbnailFile } from '../../shared/models/media-models'
+import { OperationMode, Settings } from '../../shared/models/settings-models'
+import { ReduxSettingsService } from '../../shared/services/redux-settings-service'
 import {
-    ServerToClient,
+    ServerToClientCommand,
     TimeSelectedFilePayload,
-} from '../../model/socket-io-constants'
+} from '../../shared/socket-io-constants'
 
 logger.info(`Connecting Socket to: ${ARG_CONSTANTS.clipToolHost}`)
 
@@ -51,7 +51,7 @@ socket.on('Socket Client reconnect_attempt', () =>
 )
 
 socket.on(
-    ServerToClient.MEDIA_UPDATE,
+    ServerToClientCommand.MEDIA_UPDATE,
     (channelIndex: number, mediaFiles: MediaFile[]) => {
         reduxStore.dispatch(updateMediaFiles(channelIndex, mediaFiles))
 
@@ -63,14 +63,14 @@ socket.on(
     }
 )
 
-socket.on(ServerToClient.FOLDERS_UPDATE, (payload: string[]) => {
+socket.on(ServerToClientCommand.FOLDERS_UPDATE, (payload: string[]) => {
     reduxStore.dispatch(updateFolders(payload))
 
     logger.data(payload).debug(`Folders updated Payload:`)
 })
 
 socket.on(
-    ServerToClient.THUMBNAIL_UPDATE,
+    ServerToClientCommand.THUMBNAIL_UPDATE,
     (channelIndex: number, thumbnailFiles: ThumbnailFile[]) => {
         reduxStore.dispatch(
             updateThumbnailFileList(channelIndex, thumbnailFiles)
@@ -83,13 +83,15 @@ socket.on(
 )
 
 socket.on(
-    ServerToClient.TIME_TALLY_UPDATE,
+    ServerToClientCommand.TIME_TALLY_UPDATE,
     (data: TimeSelectedFilePayload[]) => {
         data.forEach((channel, index) => {
             reduxStore.dispatch(setTime(index, channel.time))
             if (
-                settingsService.getOutputSettings(state.settings, index)
-                    .selectedFileName !== channel.selectedFileName
+                new ReduxSettingsService().getOutputSettings(
+                    state.settings,
+                    index
+                ).selectedFileName !== channel.selectedFileName
             ) {
                 reduxStore.dispatch(
                     setSelectedFileName(index, channel.selectedFileName)
@@ -100,7 +102,7 @@ socket.on(
 )
 
 socket.on(
-    ServerToClient.LOOP_STATE_UPDATE,
+    ServerToClientCommand.LOOP_STATE_UPDATE,
     (channelIndex: number, loop: boolean) => {
         reduxStore.dispatch(setLoop(channelIndex, loop))
         console.log('Loop State updated')
@@ -108,7 +110,7 @@ socket.on(
 )
 
 socket.on(
-    ServerToClient.OPERATION_MODE_UPDATE,
+    ServerToClientCommand.OPERATION_MODE_UPDATE,
     (channelIndex: number, mode: OperationMode) => {
         reduxStore.dispatch(setOperationMode(channelIndex, mode))
         console.log('Operation Mode updated')
@@ -116,7 +118,7 @@ socket.on(
 )
 
 socket.on(
-    ServerToClient.MIX_STATE_UPDATE,
+    ServerToClientCommand.MIX_STATE_UPDATE,
     (channelIndex: number, mix: boolean) => {
         reduxStore.dispatch(setMix(channelIndex, mix))
         console.log('Mix State updated')
@@ -124,14 +126,14 @@ socket.on(
 )
 
 socket.on(
-    ServerToClient.MANUAL_START_STATE_UPDATE,
+    ServerToClientCommand.MANUAL_START_STATE_UPDATE,
     (channelIndex: number, manualStart: boolean) => {
         reduxStore.dispatch(setManualStart(channelIndex, manualStart))
         console.log('Manual State updated')
     }
 )
 
-socket.on(ServerToClient.SETTINGS_UPDATE, (settings: Settings) => {
+socket.on(ServerToClientCommand.SETTINGS_UPDATE, (settings: Settings) => {
     reduxStore.dispatch(setNumberOfOutputs(settings.ccgConfig.channels.length))
     reduxStore.dispatch(setGenerics(settings.generics))
     reduxStore.dispatch(

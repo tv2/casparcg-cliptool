@@ -1,14 +1,15 @@
-import './css/index.scss'
+import './index.scss'
 import React from 'react'
 import ReactDom from 'react-dom'
 
 import { Provider as ReduxProvider } from 'react-redux'
-import { reduxStore, state } from '../model/reducers/store'
-import { App } from './components/app/app'
-import clientHandlerService from './services/client-handler-service'
+import { App } from './app/app'
+
+import { reduxStore, state } from '../shared/store'
+import { ObserverService } from './shared/services/observer-service'
 
 console.log('Redux initialized :', state)
-console.log('Socket Initialized', clientHandlerService.getSocket())
+new ObserverService()
 
 ReactDom.render(
     <ReduxProvider store={reduxStore}>

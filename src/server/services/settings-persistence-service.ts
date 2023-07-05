@@ -1,86 +1,93 @@
-import { setGenerics } from '../../model/reducers/settings-action'
+import { setGenerics } from '../../shared/actions/settings-action'
 import {
     GenericSettings,
     OperationMode,
-} from '../../model/reducers/settings-models'
-import { state, reduxStore } from '../../model/reducers/store'
-import { NewGenericSettings } from '../../model/schemas/new-settings-schema'
-import { PreviousGenericSettings } from '../../model/schemas/old-settings-schema'
-import settingsService from '../../model/services/settings-service'
+} from '../../shared/models/settings-models'
+import { state, reduxStore } from '../../shared/store'
+import { newGenericSettingsSchema } from '../../shared/schemas/new-settings-schema'
+import { PreviousGenericSettings } from '../../shared/schemas/old-settings-schema'
+import { ReduxSettingsService } from '../../shared/services/redux-settings-service'
 import { logger } from '../utils/logger'
-import persistenceService from './persistence-service'
+import { PersistenceService } from './persistence-service'
 
-class SettingsPersistenceService {
+export class SettingsPersistenceService {
     load(): void {
-        const defaultGenerics = settingsService.getDefaultGenericSettings()
-        try {
-            const settingsFromFile = JSON.parse(
-                persistenceService.loadFile('settings.json')
-            )
-            let settings: GenericSettings | null = null
-            let hasStructureBeenCorrected = false
-            const isOld = this.isPreviousStructure(settingsFromFile)
-            if (isOld.success && isOld.parsed) {
-                logger.warn(
-                    'Old settings structure detected - updating it to the new structure.'
-                )
-                settings = this.getCorrectedStructureFromOld(isOld.parsed)
-                hasStructureBeenCorrected = true
-            } else {
-                const isNew = this.isNewStructure(settingsFromFile)
-                if (isNew.success && isNew.parsed) {
-                    settings = isNew.parsed
-                } else {
-                    logger
-                        .data(settingsFromFile)
-                        .error(
-                            'Failed to parse settings from file, using default!'
-                        )
-                    settings = defaultGenerics
-                }
-            }
-
-            logger.data(settingsFromFile).info('File loaded with settings:')
-            reduxStore.dispatch(setGenerics(settings))
-            if (hasStructureBeenCorrected) {
-                logger.info(
-                    'New Settings structure generated, saving Settings...'
+        new PersistenceService()
+            .loadFile('settings.json')
+            .then((loadedSettings) => {
+                const rawSettings: unknown = JSON.parse(loadedSettings)
+                let settings: GenericSettings = this.parseSettings(rawSettings)
+                logger
+                    .data(rawSettings)
+                    .trace('Loaded following settings from file:')
+                reduxStore.dispatch(setGenerics(settings))
+            })
+            .catch((error) => {
+                logger
+                    .data(error)
+                    .warn(
+                        'Settings not found, or not yet stored, dispatching defaults, and saving it.'
+                    )
+                reduxStore.dispatch(
+                    setGenerics(
+                        new ReduxSettingsService().getDefaultGenericSettings()
+                    )
                 )
                 this.save()
-            }
-        } catch (error) {
-            logger.warn(
-                'Settings not found, or not yet stored, dispatching defaults, and saving it.'
-            )
-            reduxStore.dispatch(setGenerics(defaultGenerics))
-            this.save()
-        }
+            })
     }
 
-    public save(): void {
-        const generics: GenericSettings = settingsService.getGenericSettings(
-            state.settings
+    private parseSettings(rawSettings: unknown): GenericSettings {
+        const isNewStructure = this.isNewStructure(rawSettings)
+        if (isNewStructure.success && isNewStructure.parsed) {
+            return isNewStructure.parsed
+        }
+        logger.warn(
+            'Failed to parse settings file to newest structure. ' +
+                'Attempting to parse to old structure...'
         )
+
+        const isOldStructure = this.isPreviousStructure(rawSettings)
+        if (isOldStructure.success && isOldStructure.parsed) {
+            logger.warn(
+                'Old settings structure detected ' +
+                    '- updating it to the new structure.'
+            )
+            const correctedSettings = this.getCorrectedStructureFromOld(
+                isOldStructure.parsed
+            )
+            logger.info('New Settings structure generated, saving Settings...')
+            this.save(correctedSettings)
+            return correctedSettings
+        }
+
+        logger
+            .data(rawSettings)
+            .error('Failed to parse settings from file, using default!')
+        return new ReduxSettingsService().getDefaultGenericSettings()
+    }
+
+    public save(genericSettings?: GenericSettings): void {
+        const generics: GenericSettings = genericSettings
+            ? genericSettings
+            : new ReduxSettingsService().getGenericSettings(state.settings)
         const stringifiedSettings = JSON.stringify(generics)
-        persistenceService.saveFile(
-            'settings.json',
-            stringifiedSettings,
-            (error: any) => {
-                if (error) {
-                    logger.data(error).error('Error writing file:')
-                } else {
-                    logger.data(generics).debug('Settings saved')
-                }
-            }
-        )
+        new PersistenceService()
+            .saveFile('settings.json', stringifiedSettings)
+            .then(() => {
+                logger.data(generics).debug('Settings saved')
+            })
+            .catch((error) => {
+                logger.data(error).error('Error writing file:')
+            })
     }
 
     // Checks if the loaded file has the structure of Cliptool version 2.14 and below.
-    private isPreviousStructure(loadedFile: any): {
+    private isPreviousStructure(rawSettings: any): {
         success: boolean
         parsed: PreviousGenericSettings | undefined
     } {
-        const parsed = PreviousGenericSettings.safeParse(loadedFile)
+        const parsed = PreviousGenericSettings.safeParse(rawSettings)
         if (parsed.success) {
             return { success: true, parsed: parsed.data }
         }
@@ -91,11 +98,11 @@ class SettingsPersistenceService {
     }
 
     // Checks if the loaded file has the structure of Cliptool version 2.15 and above.
-    private isNewStructure(loadedFile: any): {
+    private isNewStructure(rawSettings: any): {
         success: boolean
         parsed: GenericSettings | undefined
     } {
-        const parsed = NewGenericSettings.safeParse(loadedFile)
+        const parsed = newGenericSettingsSchema.safeParse(rawSettings)
         if (parsed.success) {
             logger.info('Loaded settings as new structure.')
             return { success: true, parsed: parsed.data as GenericSettings }
@@ -110,7 +117,7 @@ class SettingsPersistenceService {
         old: PreviousGenericSettings
     ): GenericSettings {
         const newSettings: GenericSettings = {
-            ...settingsService.getDefaultGenericSettings(),
+            ...new ReduxSettingsService().getDefaultGenericSettings(),
         }
         newSettings.ccgSettings = {
             transitionTime: old.transitionTime ?? 16,
@@ -129,7 +136,7 @@ class SettingsPersistenceService {
             output.loopState = old.startupLoopState[index] ?? false
             output.mixState = old.startupMixState[index] ?? false
             output.manualStartState =
-                old.startupManualStartState[index] ?? false
+                old.startupManualstartState[index] ?? false
             output.webState = old.startupWebState[index] ?? false
             output.operationMode =
                 (old.startupOperationMode[index] as string as OperationMode) ??
@@ -139,6 +146,3 @@ class SettingsPersistenceService {
         return newSettings
     }
 }
-
-const settingsPersistenceService = new SettingsPersistenceService()
-export default settingsPersistenceService
