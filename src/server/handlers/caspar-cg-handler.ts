@@ -279,15 +279,14 @@ function startTimeEmitInterval() {
 }
 
 async function startFileChangesPollingInterval(): Promise<void> {
+    await pollFileChanges()
     await pollThumbnailChanges()
-    setInterval(() => {
+    setInterval(async () => {
         if (!waitingForCcgResponse) {
             waitingForCcgResponse = true
-            pollFileChanges().then(() => {
-                pollThumbnailChanges().then(() => {
-                    waitingForCcgResponse = false
-                })
-            })
+            await pollFileChanges()
+            await pollThumbnailChanges()
+            waitingForCcgResponse = false
         }
     }, 3000)
 }
@@ -377,7 +376,7 @@ function extractFilesToOutputs(allFiles: MediaFile[]): void {
     const outputs = new ReduxMediaService().getOutputs(state.media)
     if (outputs.length !== state.settings.ccgConfig.channels.length) {
         logger.warn(
-            `Expected '${state.settings.ccgConfig.channels.length}' Outputs but had '${outputs.length}'`
+            `Expected ${state.settings.ccgConfig.channels.length} Outputs but had ${outputs.length}`
         )
     }
     outputs.forEach((output: Output, outputIndex: number) => {
@@ -385,16 +384,42 @@ function extractFilesToOutputs(allFiles: MediaFile[]): void {
     })
 }
 
+function outputExtractFiles(
+    allFiles: MediaFile[],
+    outputIndex: number,
+    output: Output
+): void {
+    const outputFolder = new ReduxSettingsService().getOutputSettings(
+        state.settings,
+        outputIndex
+    ).folder
+    let outputMedia = allFiles.filter(
+        (file) =>
+            isFolderNameEqual(file.name, outputFolder) &&
+            !isAlphaFile(file.name)
+    )
+    const mediaFiles = output.mediaFiles
+    if (!isDeepCompareEqual(mediaFiles, outputMedia)) {
+        logger.info(`Media files changed for output: ${outputIndex}`)
+        reduxStore.dispatch(updateMediaFiles(outputIndex, outputMedia))
+        socketServer.emit(
+            ServerToClientCommand.MEDIA_UPDATE,
+            outputIndex,
+            outputMedia
+        )
+    }
+}
+
 function fixInvalidUsedPathsInSettings(allFiles: MediaFile[]): void {
     const fixedPaths = new ReduxSettingsService()
         .getAllOutputSettings(state.settings)
-        .map((outputSettings) => {
-            return new ReduxSettingsService().fixInvalidUsedPaths(
+        .map((outputSettings) =>
+            new ReduxSettingsService().clearInvalidTargetedPaths(
                 allFiles,
                 outputSettings,
                 state.media
             )
-        })
+        )
     if (
         !isDeepCompareEqual(
             new ReduxSettingsService().getAllOutputSettings(state.settings),
@@ -409,34 +434,6 @@ function fixInvalidUsedPathsInSettings(allFiles: MediaFile[]): void {
         reduxStore.dispatch(setGenerics(genericSettings))
         assignThumbnailsToOutputs()
         new SettingsPersistenceService().save()
-    }
-}
-
-function outputExtractFiles(
-    allFiles: MediaFile[],
-    outputIndex: number,
-    output: Output
-): void {
-    let outputMedia = allFiles.filter((file) => {
-        return (
-            isFolderNameEqual(
-                file.name,
-                new ReduxSettingsService().getOutputSettings(
-                    state.settings,
-                    outputIndex
-                ).folder
-            ) && !isAlphaFile(file.name)
-        )
-    })
-    const mediaFiles = output.mediaFiles
-    if (!isDeepCompareEqual(mediaFiles, outputMedia)) {
-        logger.info(`Media files changed for output: ${outputIndex}`)
-        reduxStore.dispatch(updateMediaFiles(outputIndex, outputMedia))
-        socketServer.emit(
-            ServerToClientCommand.MEDIA_UPDATE,
-            outputIndex,
-            outputMedia
-        )
     }
 }
 
@@ -485,16 +482,12 @@ export function assignThumbnailsToOutputs(): void {
     new ReduxMediaService()
         .getOutputs(state.media)
         .forEach((output: Output, channelIndex: number) => {
-            const outputMedia = thumbnails.filter(
-                (thumbnail: ThumbnailFile) => {
-                    return isFolderNameEqual(
-                        thumbnail?.name,
-                        new ReduxSettingsService().getOutputSettings(
-                            state.settings,
-                            channelIndex
-                        ).folder
-                    )
-                }
+            const outputFolder = new ReduxSettingsService().getOutputSettings(
+                state.settings,
+                channelIndex
+            ).folder
+            const outputMedia = thumbnails.filter((thumbnail: ThumbnailFile) =>
+                isFolderNameEqual(thumbnail?.name, outputFolder)
             )
             const outputThumbnailList = output.thumbnailList
             if (!isDeepCompareEqual(outputThumbnailList, outputMedia)) {

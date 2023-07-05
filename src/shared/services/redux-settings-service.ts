@@ -45,7 +45,7 @@ export class ReduxSettingsService {
         return settingsState.generics.outputSettings[channelIndex]
     }
 
-    public fixInvalidUsedPaths(
+    public clearInvalidTargetedPaths(
         allFiles: MediaFile[],
         originalOutputSettings: OutputSettings,
         mediaState: Media
@@ -58,11 +58,11 @@ export class ReduxSettingsService {
         ) {
             return outputSettings
         }
-        const pathExist = allFiles.find((file) => {
+        const mediaFile = allFiles.find((file) => {
             file.name === outputSettings.cuedFileName ||
                 file.name === outputSettings.selectedFileName
         })
-        if (!pathExist) {
+        if (!mediaFile) {
             outputSettings.cuedFileName = ''
             outputSettings.selectedFileName = ''
         }
