@@ -1,0 +1,9 @@
+.c-toggle {
+    outline: 0;
+    color: white;
+    font-family: 'Roboto Condensed', sans-serif;
+
+    &.on {
+        background-color: rgb(28, 115, 165);
+    }
+}

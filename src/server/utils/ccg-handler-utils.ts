@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import { ThumbnailFile } from '../../model/reducers/media-models'
+import { ThumbnailFile } from '../../shared/models/media-models'
 
 export function getChannelNumber(string: string): number {
     let channel = string.replace('/channel/', '')

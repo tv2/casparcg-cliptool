@@ -2,7 +2,7 @@
 import osc from 'osc' //Using OSC fork from PieceMeta/osc.js as it has excluded hardware serialport support and thereby is crossplatform
 
 import { CasparCG } from 'casparcg-connection'
-import { state, reduxStore } from '../../model/reducers/store'
+import { state, reduxStore } from '../../shared/store'
 import {
     setNumberOfOutputs,
     setTime,
@@ -10,25 +10,21 @@ import {
     updateMediaFiles,
     updateThumbnailFileList,
     updateHiddenFiles,
-} from '../../model/reducers/media-actions'
+} from '../../shared/actions/media-actions'
 
 import { socketServer } from './express-handler'
 import {
     HiddenFileInfo,
+    HiddenFiles,
     MediaFile,
     Output,
     ThumbnailFile,
-} from '../../model/reducers/media-models'
+} from '../../shared/models/media-models'
 
 import {
     setGenerics,
-    setLoop,
-    setManualStart,
-    setMix,
-    setOperationMode,
-    setWeb,
     updateSettings,
-} from '../../model/reducers/settings-action'
+} from '../../shared/actions/settings-action'
 import { initializeClient } from './socket-io-server-handler'
 import {
     extractFoldersList,
@@ -40,16 +36,21 @@ import {
 } from '../utils/ccg-handler-utils'
 import { logger } from '../utils/logger'
 import { loadMedia, playOverlay } from '../utils/ccg-load-play'
-import { OperationMode } from '../../model/reducers/settings-models'
-import settingsService from '../../model/services/settings-service'
-import osService from '../../model/services/os-service'
-import mediaService from '../../model/services/media-service'
-import hiddenFilesPersistenceService from '../services/hidden-files-persistence-service'
 import {
-    ServerToClient,
+    OperationMode,
+    OutputSettings,
+} from '../../shared/models/settings-models'
+import { ReduxSettingsService } from '../../shared/services/redux-settings-service'
+import { OsService } from '../../shared/services/os-service'
+import { ReduxMediaService } from '../../shared/services/redux-media-service'
+import { HiddenFilesPersistenceService } from '../services/hidden-files-persistence-service'
+import {
+    ServerToClientCommand,
     TimeSelectedFilePayload,
-} from '../../model/socket-io-constants'
-import settingsPersistenceService from '../services/settings-persistence-service'
+} from '../../shared/socket-io-constants'
+import { UtilityService } from '../../shared/services/utility-service'
+import { defaultOutputSettingsState } from '../../shared/schemas/new-settings-schema'
+import { SettingsPersistenceService } from '../services/settings-persistence-service'
 
 let waitingForCcgResponse: boolean = false
 let previousThumbnails: ThumbnailFile[] = []
@@ -61,9 +62,10 @@ let thumbnails: ThumbnailFile[] = []
 
 //Setup AMCP Connection:
 export const ccgConnection = new CasparCG({
-    host: settingsService.getGenericSettings(state.settings).ccgSettings.ip,
-    port: settingsService.getGenericSettings(state.settings).ccgSettings
-        .amcpPort,
+    host: new ReduxSettingsService().getGenericSettings(state.settings)
+        .ccgSettings.ip,
+    port: new ReduxSettingsService().getGenericSettings(state.settings)
+        .ccgSettings.amcpPort,
     autoConnect: true,
 })
 
@@ -71,13 +73,13 @@ export const ccgConnection = new CasparCG({
 function ccgOSCServer(): void {
     const oscConnection = new osc.UDPPort({
         localAddress: '0.0.0.0',
-        localPort: settingsService.getGenericSettings(state.settings)
+        localPort: new ReduxSettingsService().getGenericSettings(state.settings)
             .ccgSettings.oscPort,
     })
 
     oscConnection
         .on('ready', () => {
-            let ipAddresses = osService.getThisMachineIpAddresses()
+            let ipAddresses = new OsService().getIpAddresses()
 
             logger.info('Listening for OSC over UDP.')
             ipAddresses.forEach((address) =>
@@ -96,8 +98,8 @@ function ccgOSCServer(): void {
     oscConnection.open()
     logger.info(
         `OSC listening on port '${
-            settingsService.getGenericSettings(state.settings).ccgSettings
-                .oscPort
+            new ReduxSettingsService().getGenericSettings(state.settings)
+                .ccgSettings.oscPort
         }'.`
     )
 }
@@ -137,7 +139,7 @@ function processTimeOscSegment(message: any, channelIndex: number): void {
 }
 
 function setNewTime(channelIndex: number, newTime: [number, number]): void {
-    const output = mediaService.getOutput(state.media, channelIndex)
+    const output = new ReduxMediaService().getOutput(state.media, channelIndex)
     if (!output) {
         return
     }
@@ -151,61 +153,74 @@ function dispatchConfig(config: any): void {
     logger.data(config.channels).info('CasparCG Config : ')
     reduxStore.dispatch(setNumberOfOutputs(config.channels.length))
     reduxStore.dispatch(updateSettings(config.channels, config.paths.mediaPath))
+    fillInDefaultOutputSettingsIfNeeded(config.channels.length)
+    const genericSettings = {
+        ...new ReduxSettingsService().getGenericSettings(state.settings),
+    }
+    const allOutputSettings = [...genericSettings.outputSettings]
+
     config.channels.forEach(({}, index: number) => {
-        const genericSettings = settingsService.getGenericSettings(
-            state.settings
-        )
-        const cuedFileName = genericSettings.outputSettings[index].cuedFileName
-        if (cuedFileName) {
-            logger.info(`Re-loaded ${cuedFileName} on channel index ${index}.`)
-            loadMedia(index, 9, cuedFileName)
-        }
-        reduxStore.dispatch(
-            setLoop(
-                index,
-                genericSettings.outputSettings[index].loopState ?? false
-            )
-        )
-        reduxStore.dispatch(
-            setManualStart(
-                index,
-                genericSettings.outputSettings[index].manualStartState ?? false
-            )
-        )
-        reduxStore.dispatch(
-            setMix(
-                index,
-                genericSettings.outputSettings[index].mixState ?? false
-            )
-        )
-        reduxStore.dispatch(
-            setWeb(
-                index,
-                genericSettings.outputSettings[index].webState ?? false
-            )
-        )
-        reduxStore.dispatch(
-            setOperationMode(
-                index,
-                genericSettings.outputSettings[index].operationMode ??
-                    OperationMode.CONTROL
-            )
-        )
+        const outputSettings = { ...allOutputSettings[index] }
+        allOutputSettings[index] = reinvigorateChannel(outputSettings, index)
     })
+    genericSettings.outputSettings = allOutputSettings
+    reduxStore.dispatch(setGenerics(genericSettings))
     logger.info(`Number of Channels: ${config.channels.length}`)
-    socketServer.emit(ServerToClient.SETTINGS_UPDATE, state.settings)
+    socketServer.emit(ServerToClientCommand.SETTINGS_UPDATE, state.settings)
     initializeClient()
 }
 
+function reinvigorateChannel(
+    outputSettings: OutputSettings,
+    index: number
+): OutputSettings {
+    const cuedFileName = outputSettings.cuedFileName
+    if (cuedFileName) {
+        logger.info(`Re-loaded ${cuedFileName} on channel index ${index}.`)
+        loadMedia(index, 9, cuedFileName)
+    }
+
+    outputSettings.loopState = outputSettings.loopState ?? false
+    outputSettings.manualStartState = outputSettings.manualStartState ?? false
+    outputSettings.mixState = outputSettings.mixState ?? false
+    outputSettings.webState = outputSettings.webState ?? false
+    outputSettings.operationMode =
+        outputSettings.operationMode ?? OperationMode.CONTROL
+
+    return outputSettings
+}
+
+function fillInDefaultOutputSettingsIfNeeded(minimumOutputs: number) {
+    const genericSettings = {
+        ...new ReduxSettingsService().getGenericSettings(state.settings),
+    }
+
+    if (genericSettings.outputSettings.length < minimumOutputs) {
+        const expandedOutputSettings =
+            new UtilityService().expandArrayWithDefaultsIfNeeded(
+                [...genericSettings.outputSettings],
+                defaultOutputSettingsState,
+                minimumOutputs
+            )
+        genericSettings.outputSettings = expandedOutputSettings
+        reduxStore.dispatch(setGenerics(genericSettings))
+        new SettingsPersistenceService().save(genericSettings)
+    }
+}
+
 function loadInitialOverlay(): void {
-    if (!settingsService.getGenericSettings(state.settings).outputSettings) {
+    if (
+        !new ReduxSettingsService().getGenericSettings(state.settings)
+            .outputSettings
+    ) {
         return
     }
     state.settings.ccgConfig.channels.forEach(({}, index) => {
         playOverlay(
             index,
             10,
-            settingsService.getOutputSettings(state.settings, index).webUrl
+            new ReduxSettingsService().getOutputSettings(state.settings, index)
+                .webUrl
         )
     })
 }
@@ -216,9 +231,8 @@ function ccgAMPHandler(): void {
     ccgConnection
         .version()
         .then((response) => {
-            const genericSettings = settingsService.getGenericSettings(
-                state.settings
-            )
+            const genericSettings =
+                new ReduxSettingsService().getGenericSettings(state.settings)
             const address = genericSettings.ccgSettings.ip
             const port = genericSettings.ccgSettings.amcpPort
             logger.info(`AMCP connection established to: ${address}:${port}`)
@@ -228,6 +242,7 @@ function ccgAMPHandler(): void {
                 .then((config) => {
                     dispatchConfig(config)
                     waitingForCcgResponse = false
+                    startTimeEmitInterval()
                     loadInitialOverlay()
                 })
                 .catch((error) =>
@@ -237,11 +252,6 @@ function ccgAMPHandler(): void {
         .catch((error) =>
             logger.data(error).error('No connection to CasparCG ')
         )
-    startIntervalOperations()
-}
-
-function startIntervalOperations(): void {
-    startTimeEmitInterval()
     startFileChangesPollingInterval()
 }
 
@@ -249,20 +259,22 @@ function startTimeEmitInterval() {
     //Update of timeleft is set to a default 40ms (same as 25FPS)
     let data: TimeSelectedFilePayload[] = []
     reduxStore.subscribe(() => {
-        mediaService
+        new ReduxMediaService()
             .getOutputs(state.media)
             .forEach((output: Output, index: number) => {
-                data[index] = {
-                    time: output.time,
-                    selectedFileName: settingsService.getOutputSettings(
+                const outputSettings =
+                    new ReduxSettingsService().getOutputSettings(
                         state.settings,
                         index
-                    ).selectedFileName,
+                    )
+                data[index] = {
+                    time: output.time,
+                    selectedFileName: outputSettings.selectedFileName,
                 }
             })
     })
     setInterval(() => {
-        socketServer.emit(ServerToClient.TIME_TALLY_UPDATE, data)
+        socketServer.emit(ServerToClientCommand.TIME_TALLY_UPDATE, data)
     }, 40)
 }
 
@@ -345,7 +357,7 @@ async function loadFileList(): Promise<void> {
                 updateFolders(extractFoldersList(payload.response.data))
             )
             socketServer.emit(
-                ServerToClient.FOLDERS_UPDATE,
+                ServerToClientCommand.FOLDERS_UPDATE,
                 state.media.folders
             )
             extractFilesToOutputs(payload.response.data)
@@ -362,7 +374,7 @@ async function loadFileList(): Promise<void> {
 }
 
 function extractFilesToOutputs(allFiles: MediaFile[]): void {
-    const outputs = mediaService.getOutputs(state.media)
+    const outputs = new ReduxMediaService().getOutputs(state.media)
     if (outputs.length !== state.settings.ccgConfig.channels.length) {
         logger.warn(
             `Expected '${state.settings.ccgConfig.channels.length}' Outputs but had '${outputs.length}'`
@@ -374,10 +386,10 @@ function extractFilesToOutputs(allFiles: MediaFile[]): void {
 }
 
 function fixInvalidUsedPathsInSettings(allFiles: MediaFile[]): void {
-    const fixedPaths = settingsService
+    const fixedPaths = new ReduxSettingsService()
         .getAllOutputSettings(state.settings)
         .map((outputSettings) => {
-            return settingsService.fixInvalidUsedPaths(
+            return new ReduxSettingsService().fixInvalidUsedPaths(
                 allFiles,
                 outputSettings,
                 state.media
@@ -385,7 +397,7 @@ function fixInvalidUsedPathsInSettings(allFiles: MediaFile[]): void {
         })
     if (
         !isDeepCompareEqual(
-            settingsService.getAllOutputSettings(state.settings),
+            new ReduxSettingsService().getAllOutputSettings(state.settings),
             fixedPaths
         )
     ) {
@@ -396,7 +408,7 @@ function fixInvalidUsedPathsInSettings(allFiles: MediaFile[]): void {
         genericSettings.outputSettings = fixedPaths
         reduxStore.dispatch(setGenerics(genericSettings))
         assignThumbnailsToOutputs()
-        settingsPersistenceService.save()
+        new SettingsPersistenceService().save()
     }
 }
 
@@ -409,8 +421,10 @@ function outputExtractFiles(
         return (
             isFolderNameEqual(
                 file.name,
-                settingsService.getOutputSettings(state.settings, outputIndex)
-                    .folder
+                new ReduxSettingsService().getOutputSettings(
+                    state.settings,
+                    outputIndex
+                ).folder
             ) && !isAlphaFile(file.name)
         )
     })
@@ -418,13 +432,17 @@ function outputExtractFiles(
     if (!isDeepCompareEqual(mediaFiles, outputMedia)) {
         logger.info(`Media files changed for output: ${outputIndex}`)
         reduxStore.dispatch(updateMediaFiles(outputIndex, outputMedia))
-        socketServer.emit(ServerToClient.MEDIA_UPDATE, outputIndex, outputMedia)
+        socketServer.emit(
+            ServerToClientCommand.MEDIA_UPDATE,
+            outputIndex,
+            outputMedia
+        )
     }
 }
 
 function checkHiddenFilesChanged(files: MediaFile[]): void {
     let needsUpdating = false
-    const hiddenFiles: Record<string, HiddenFileInfo> = state.media.hiddenFiles
+    const hiddenFiles: HiddenFiles = state.media.hiddenFiles
     for (const key in hiddenFiles) {
         const hiddenFileInfo: HiddenFileInfo = hiddenFiles[key]
         const file = files.find((predicate) => predicate.name == key)
@@ -442,8 +460,11 @@ function checkHiddenFilesChanged(files: MediaFile[]): void {
             .data(hiddenFiles)
             .debug('Hidden files was updated from external changes:')
         reduxStore.dispatch(updateHiddenFiles(hiddenFiles))
-        socketServer.emit(ServerToClient.HIDDEN_FILES_UPDATE, hiddenFiles)
-        hiddenFilesPersistenceService.save()
+        socketServer.emit(
+            ServerToClientCommand.HIDDEN_FILES_UPDATE,
+            hiddenFiles
+        )
+        new HiddenFilesPersistenceService().save(hiddenFiles)
     }
 }
 
@@ -461,14 +482,14 @@ async function loadThumbnailImage(
 }
 
 export function assignThumbnailsToOutputs(): void {
-    mediaService
+    new ReduxMediaService()
         .getOutputs(state.media)
         .forEach((output: Output, channelIndex: number) => {
             const outputMedia = thumbnails.filter(
                 (thumbnail: ThumbnailFile) => {
                     return isFolderNameEqual(
                         thumbnail?.name,
-                        settingsService.getOutputSettings(
+                        new ReduxSettingsService().getOutputSettings(
                             state.settings,
                             channelIndex
                         ).folder
@@ -481,7 +502,7 @@ export function assignThumbnailsToOutputs(): void {
                     updateThumbnailFileList(channelIndex, outputMedia)
                 )
                 socketServer.emit(
-                    ServerToClient.THUMBNAIL_UPDATE,
+                    ServerToClientCommand.THUMBNAIL_UPDATE,
                     channelIndex,
                     outputMedia
                 )

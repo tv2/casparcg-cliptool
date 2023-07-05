@@ -1,22 +1,23 @@
-const fs = require('fs')
-const path = require('path')
+import * as fs from 'fs'
+import * as fsp from 'fs/promises'
+import * as path from 'path'
 
-class PersistanceService {
-    public loadFile(fileName: string): any {
-        return fs.readFileSync(path.resolve('storage', fileName))
+export class PersistenceService {
+    public async loadFile(fileName: string): Promise<string> {
+        return fsp
+            .readFile(path.resolve('storage', fileName))
+            .then((result) => Promise.resolve(result.toString()))
+            .catch((error) => Promise.reject(error))
     }
 
-    public saveFile(
-        fileName: string,
-        file: string,
-        onError: (error: any) => void
-    ): void {
+    public saveFile(fileName: string, fileContent: string): Promise<void> {
         if (!fs.existsSync('storage')) {
             fs.mkdirSync('storage')
         }
-        fs.writeFile(path.resolve('storage', fileName), file, 'utf8', onError)
+        return fsp.writeFile(
+            path.resolve('storage', fileName),
+            fileContent,
+            'utf8'
+        )
     }
 }
-
-const persistenceService = new PersistanceService()
-export default persistenceService
