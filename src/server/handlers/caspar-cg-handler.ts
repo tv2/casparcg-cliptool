@@ -393,7 +393,7 @@ function outputExtractFiles(
         state.settings,
         outputIndex
     ).folder
-    let outputMedia = allFiles.filter(
+    const outputMedia = allFiles.filter(
         (file) =>
             isFolderNameEqual(file.name, outputFolder) &&
             !isAlphaFile(file.name)
@@ -411,7 +411,7 @@ function outputExtractFiles(
 }
 
 function fixInvalidUsedPathsInSettings(allFiles: MediaFile[]): void {
-    const fixedPaths = new ReduxSettingsService()
+    const outputSettingsWithfixedPaths = new ReduxSettingsService()
         .getAllOutputSettings(state.settings)
         .map((outputSettings) =>
             new ReduxSettingsService().clearInvalidTargetedPaths(
@@ -423,14 +423,14 @@ function fixInvalidUsedPathsInSettings(allFiles: MediaFile[]): void {
     if (
         !isDeepCompareEqual(
             new ReduxSettingsService().getAllOutputSettings(state.settings),
-            fixedPaths
+            outputSettingsWithfixedPaths
         )
     ) {
         logger.warn(
             'Removing some invalid paths from settings, that likely exist due to folders/files being deleted while off.'
         )
         const genericSettings = { ...state.settings.generics }
-        genericSettings.outputSettings = fixedPaths
+        genericSettings.outputSettings = outputSettingsWithfixedPaths
         reduxStore.dispatch(setGenerics(genericSettings))
         assignThumbnailsToOutputs()
         new SettingsPersistenceService().save()
