@@ -61,21 +61,7 @@ export class ReduxSettingsService {
 
     private clearSelectedFolderFromSettings(
         mediaState: Media,
-        outputSettings: {
-            label: string
-            folder: string
-            shouldScale: boolean
-            scaleX: number
-            scaleY: number
-            webUrl: string
-            loopState: boolean
-            mixState: boolean
-            manualStartState: boolean
-            webState: boolean
-            operationMode: import('c:/Code/Tv2/Sofie Related/casparcg-cliptool/src/shared/models/settings-models').OperationMode
-            selectedFileName: string
-            cuedFileName: string
-        }
+        outputSettings: OutputSettings
     ) {
         if (!mediaState.folders.includes(outputSettings.folder)) {
             outputSettings.folder = ''
@@ -84,21 +70,7 @@ export class ReduxSettingsService {
 
     private clearClickedFileFromSettings(
         allFiles: MediaFile[],
-        outputSettings: {
-            label: string
-            folder: string
-            shouldScale: boolean
-            scaleX: number
-            scaleY: number
-            webUrl: string
-            loopState: boolean
-            mixState: boolean
-            manualStartState: boolean
-            webState: boolean
-            operationMode: import('c:/Code/Tv2/Sofie Related/casparcg-cliptool/src/shared/models/settings-models').OperationMode
-            selectedFileName: string
-            cuedFileName: string
-        }
+        outputSettings: OutputSettings
     ) {
         const mediaFile = allFiles.find((file) => {
             file.name === outputSettings.cuedFileName ||

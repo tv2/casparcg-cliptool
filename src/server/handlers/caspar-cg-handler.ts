@@ -55,7 +55,7 @@ import { SettingsPersistenceService } from '../services/settings-persistence-ser
 let waitingForCasparcgResponse: boolean = false
 let previousThumbnails: ThumbnailFile[] = []
 let thumbnails: ThumbnailFile[] = []
-let changesTimeout: NodeJS.Timeout | undefined
+let fileChangesInterval: NodeJS.Timeout | undefined
 
 //Communication with CasparCG consists of 2 parts:
 //1. An AMCP connection for receiving media info and sending commands
@@ -280,13 +280,13 @@ function startTimeEmitInterval() {
 }
 
 async function startFileChangesPollingInterval(): Promise<void> {
-    if (changesTimeout) {
-        clearInterval(changesTimeout)
-        changesTimeout = undefined
+    if (fileChangesInterval) {
+        clearInterval(fileChangesInterval)
+        fileChangesInterval = undefined
     }
     await getFileChanges()
     await getThumbnailChanges()
-    changesTimeout = setInterval(async () => {
+    fileChangesInterval = setInterval(async () => {
         if (!waitingForCasparcgResponse) {
             waitingForCasparcgResponse = true
             try {
