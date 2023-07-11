@@ -52,9 +52,10 @@ import { UtilityService } from '../../shared/services/utility-service'
 import { defaultOutputSettingsState } from '../../shared/schemas/new-settings-schema'
 import { SettingsPersistenceService } from '../services/settings-persistence-service'
 
-let waitingForCcgResponse: boolean = false
+let waitingForCasparcgResponse: boolean = false
 let previousThumbnails: ThumbnailFile[] = []
 let thumbnails: ThumbnailFile[] = []
+let changesTimeout: NodeJS.Timeout | undefined
 
 //Communication with CasparCG consists of 2 parts:
 //1. An AMCP connection for receiving media info and sending commands
@@ -241,7 +242,7 @@ function ccgAMPHandler(): void {
                 .getCasparCGConfig()
                 .then((config) => {
                     dispatchConfig(config)
-                    waitingForCcgResponse = false
+                    waitingForCasparcgResponse = false
                     startTimeEmitInterval()
                     loadInitialOverlay()
                 })
@@ -279,30 +280,38 @@ function startTimeEmitInterval() {
 }
 
 async function startFileChangesPollingInterval(): Promise<void> {
-    await pollFileChanges()
-    await pollThumbnailChanges()
-    setInterval(async () => {
-        if (!waitingForCcgResponse) {
-            waitingForCcgResponse = true
-            await pollFileChanges()
-            await pollThumbnailChanges()
-            waitingForCcgResponse = false
+    if (changesTimeout) {
+        clearInterval(changesTimeout)
+        changesTimeout = undefined
+    }
+    await getFileChanges()
+    await getThumbnailChanges()
+    changesTimeout = setInterval(async () => {
+        if (!waitingForCasparcgResponse) {
+            waitingForCasparcgResponse = true
+            try {
+                await getFileChanges()
+                await getThumbnailChanges()
+            } finally {
+                waitingForCasparcgResponse = false
+            }
         }
     }, 3000)
 }
 
-async function pollFileChanges(): Promise<void> {
+async function getFileChanges(): Promise<void> {
     logger.trace('Polling for File Changes.')
     await loadFileList()
 }
 
-async function pollThumbnailChanges(): Promise<void> {
+async function getThumbnailChanges(): Promise<void> {
     logger.trace('Polling for Thumbnail Changes.')
     const newThumbnails = await loadCcgThumbnails()
-    if (newThumbnails.hasChanges) {
-        thumbnails = newThumbnails.thumbnails
-        assignThumbnailsToOutputs()
+    if (!newThumbnails.hasChanges) {
+        return
     }
+    thumbnails = newThumbnails.thumbnails
+    assignThumbnailsToOutputs()
 }
 
 async function loadCcgThumbnails(): Promise<{
@@ -380,11 +389,11 @@ function extractFilesToOutputs(allFiles: MediaFile[]): void {
         )
     }
     outputs.forEach((output: Output, outputIndex: number) => {
-        outputExtractFiles(allFiles, outputIndex, output)
+        extractFilesToOutput(allFiles, outputIndex, output)
     })
 }
 
-function outputExtractFiles(
+function extractFilesToOutput(
     allFiles: MediaFile[],
     outputIndex: number,
     output: Output
@@ -393,25 +402,24 @@ function outputExtractFiles(
         state.settings,
         outputIndex
     ).folder
-    const outputMedia = allFiles.filter(
+    const outputMediaFiles = allFiles.filter(
         (file) =>
             isFolderNameEqual(file.name, outputFolder) &&
             !isAlphaFile(file.name)
     )
-    const mediaFiles = output.mediaFiles
-    if (!isDeepCompareEqual(mediaFiles, outputMedia)) {
+    if (!isDeepCompareEqual(output.mediaFiles, outputMediaFiles)) {
         logger.info(`Media files changed for output: ${outputIndex}`)
-        reduxStore.dispatch(updateMediaFiles(outputIndex, outputMedia))
+        reduxStore.dispatch(updateMediaFiles(outputIndex, outputMediaFiles))
         socketServer.emit(
             ServerToClientCommand.MEDIA_UPDATE,
             outputIndex,
-            outputMedia
+            outputMediaFiles
         )
     }
 }
 
 function fixInvalidUsedPathsInSettings(allFiles: MediaFile[]): void {
-    const outputSettingsWithfixedPaths = new ReduxSettingsService()
+    const outputSettingsWithFixedPaths = new ReduxSettingsService()
         .getAllOutputSettings(state.settings)
         .map((outputSettings) =>
             new ReduxSettingsService().clearInvalidTargetedPaths(
@@ -421,20 +429,27 @@ function fixInvalidUsedPathsInSettings(allFiles: MediaFile[]): void {
             )
         )
     if (
-        !isDeepCompareEqual(
+        isDeepCompareEqual(
             new ReduxSettingsService().getAllOutputSettings(state.settings),
-            outputSettingsWithfixedPaths
+            outputSettingsWithFixedPaths
         )
     ) {
-        logger.warn(
-            'Removing some invalid paths from settings, that likely exist due to folders/files being deleted while off.'
-        )
-        const genericSettings = { ...state.settings.generics }
-        genericSettings.outputSettings = outputSettingsWithfixedPaths
-        reduxStore.dispatch(setGenerics(genericSettings))
-        assignThumbnailsToOutputs()
-        new SettingsPersistenceService().save()
+        return
     }
+    saveFixedPathsSettings(outputSettingsWithFixedPaths)
+}
+
+function saveFixedPathsSettings(
+    outputSettingsWithFixedPaths: OutputSettings[]
+) {
+    logger.warn(
+        'Removing some invalid paths from settings, that likely exist due to folders/files being deleted while off.'
+    )
+    const genericSettings = { ...state.settings.generics }
+    genericSettings.outputSettings = outputSettingsWithFixedPaths
+    reduxStore.dispatch(setGenerics(genericSettings))
+    assignThumbnailsToOutputs()
+    new SettingsPersistenceService().save()
 }
 
 function checkHiddenFilesChanged(files: MediaFile[]): void {
@@ -487,10 +502,9 @@ export function assignThumbnailsToOutputs(): void {
                 channelIndex
             ).folder
             const outputMedia = thumbnails.filter((thumbnail: ThumbnailFile) =>
-                isFolderNameEqual(thumbnail?.name, outputFolder)
+                isFolderNameEqual(thumbnail.name, outputFolder)
             )
-            const outputThumbnailList = output.thumbnailList
-            if (!isDeepCompareEqual(outputThumbnailList, outputMedia)) {
+            if (!isDeepCompareEqual(output.thumbnailList, outputMedia)) {
                 reduxStore.dispatch(
                     updateThumbnailFileList(channelIndex, outputMedia)
                 )

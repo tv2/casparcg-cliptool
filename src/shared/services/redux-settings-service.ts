@@ -51,13 +51,55 @@ export class ReduxSettingsService {
         mediaState: Media
     ): OutputSettings {
         const outputSettings = { ...originalOutputSettings }
-        if (
-            outputSettings.selectedFileName === '' &&
-            outputSettings.cuedFileName === '' &&
-            outputSettings.folder === ''
-        ) {
+        if (this.isPathsEmpty(outputSettings)) {
             return outputSettings
         }
+        this.clearClickedFileFromSettings(allFiles, outputSettings)
+        this.clearSelectedFolderFromSettings(mediaState, outputSettings)
+        return outputSettings
+    }
+
+    private clearSelectedFolderFromSettings(
+        mediaState: Media,
+        outputSettings: {
+            label: string
+            folder: string
+            shouldScale: boolean
+            scaleX: number
+            scaleY: number
+            webUrl: string
+            loopState: boolean
+            mixState: boolean
+            manualStartState: boolean
+            webState: boolean
+            operationMode: import('c:/Code/Tv2/Sofie Related/casparcg-cliptool/src/shared/models/settings-models').OperationMode
+            selectedFileName: string
+            cuedFileName: string
+        }
+    ) {
+        if (!mediaState.folders.includes(outputSettings.folder)) {
+            outputSettings.folder = ''
+        }
+    }
+
+    private clearClickedFileFromSettings(
+        allFiles: MediaFile[],
+        outputSettings: {
+            label: string
+            folder: string
+            shouldScale: boolean
+            scaleX: number
+            scaleY: number
+            webUrl: string
+            loopState: boolean
+            mixState: boolean
+            manualStartState: boolean
+            webState: boolean
+            operationMode: import('c:/Code/Tv2/Sofie Related/casparcg-cliptool/src/shared/models/settings-models').OperationMode
+            selectedFileName: string
+            cuedFileName: string
+        }
+    ) {
         const mediaFile = allFiles.find((file) => {
             file.name === outputSettings.cuedFileName ||
                 file.name === outputSettings.selectedFileName
@@ -66,11 +108,14 @@ export class ReduxSettingsService {
             outputSettings.cuedFileName = ''
             outputSettings.selectedFileName = ''
         }
-        if (!mediaState.folders.includes(outputSettings.folder)) {
-            outputSettings.folder = ''
-        }
+    }
 
-        return outputSettings
+    private isPathsEmpty(outputSettings: OutputSettings): boolean {
+        return (
+            outputSettings.selectedFileName === '' &&
+            outputSettings.cuedFileName === '' &&
+            outputSettings.folder === ''
+        )
     }
 
     public getAllOutputSettings(settingsState: Settings): OutputSettings[] {
