@@ -23,7 +23,8 @@ interface MediaCardProps {
 
 export default function MediaCard(props: MediaCardProps): JSX.Element {
   const activeTabIndex: number = useSelector(
-    (state: State) => new AppNavigationService().getActiveTabIndex(state.appNavigation))
+    (state: State) => new AppNavigationService().getActiveTabIndex(state.appNavigation)
+  )
   useSelector(
     (state: State) => new ReduxSettingsService().getOutputSettings(state.settings, props.activeTabIndex)
       .selectedFileName
@@ -31,7 +32,7 @@ export default function MediaCard(props: MediaCardProps): JSX.Element {
   useSelector(
     (state: State) => new ReduxSettingsService().getOutputSettings(state.settings, props.activeTabIndex)
       .cuedFileName
-    )
+  )
   
   const isSelected: boolean = new ReduxSettingsService().isThumbnailSelected(props.fileName, state.settings, activeTabIndex)
   const isCued: boolean = new ReduxSettingsService().isMediaCued(props.fileName, state.settings, activeTabIndex)

@@ -1,7 +1,7 @@
 import React from "react"
 import { useSelector } from "react-redux"
 import './timer-thumbnail.scss'
-import Group from "../group/group";
+import Group from "../../../shared/components/group/group";
 import { State } from "../../../../shared/reducers/index-reducer";
 import { AppNavigationService } from "../../../../shared/services/app-navigation-service";
 import { FileType, Output } from "../../../../shared/models/media-models";
@@ -13,11 +13,14 @@ import { ClientTimeService } from "../../../shared/services/client-time-service"
 
 export default function TimerThumbnail(): JSX.Element {
     const activeTabIndex: number = useSelector(
-        (state: State) => new AppNavigationService().getActiveTabIndex(state.appNavigation))
+        (state: State) => new AppNavigationService().getActiveTabIndex(state.appNavigation)
+    )
     const mediaOutput: Output = useSelector(
-        (state: State) => new ReduxMediaService().getOutput(state.media, activeTabIndex))
+        (state: State) => new ReduxMediaService().getOutput(state.media, activeTabIndex)
+    )
     const settingsOutput: OutputSettings = useSelector(
-        (state: State) => new ReduxSettingsService().getOutputSettings(state.settings, activeTabIndex))
+        (state: State) => new ReduxSettingsService().getOutputSettings(state.settings, activeTabIndex)
+    )
 
     const cleanFileName: string = new ReduxSettingsService().getCleanSelectedFileName(settingsOutput, state.settings) 
         || new ReduxSettingsService().getCleanCuedFileName(settingsOutput, state.settings)
@@ -32,12 +35,12 @@ export default function TimerThumbnail(): JSX.Element {
     
     return (
         <Group>
-            <label className="c-timer-thumbnail-timer">
+            <label className="c-timer-thumbnail__timer">
                 {durationTimeCode}
             </label>
             <img
                 src={thumbnailUrl}
-                className="c-timer-thumbnail-thumbnail"
+                className="c-timer-thumbnail__thumbnail"
             />
         </Group>
     )

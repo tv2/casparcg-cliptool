@@ -12,9 +12,11 @@ export function OperationModeFooter(): JSX.Element {
     return (<></>)
   }
   const activeTabIndex: number = useSelector((state: State) => 
-    new AppNavigationService().getActiveTabIndex(state.appNavigation)) 
+    new AppNavigationService().getActiveTabIndex(state.appNavigation)
+  ) 
   const operationMode: OperationMode | undefined = useSelector((state: State) =>
-    new ReduxSettingsService().getOutputSettings(state.settings, activeTabIndex)?.operationMode) 
+    new ReduxSettingsService().getOutputSettings(state.settings, activeTabIndex)?.operationMode
+  ) 
   switch (operationMode) {
     case OperationMode.EDIT_VISIBILITY: {
       return <EditVisibilityFooter />

@@ -6,7 +6,7 @@ export enum OperationMode {
 }
 
 export interface Settings {
-    ccgConfig: CaspercgConfig
+    ccgConfig: CasparcgConfig
     generics: GenericSettings
 }
 
@@ -15,12 +15,12 @@ export interface TabInfo {
     title: string
 }
 
-export interface CaspercgConfig {
-    channels: CaspercgConfigChannel[]
+export interface CasparcgConfig {
+    channels: CasparcgConfigChannel[]
     path: string
 }
 
-export interface CaspercgConfigChannel {
+export interface CasparcgConfigChannel {
     _type?: string
     videoMode?: string
     videoFormat?: VideoFormat

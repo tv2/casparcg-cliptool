@@ -5,7 +5,7 @@ import { AppNavigationService } from "../../../../shared/services/app-navigation
 import { State } from "../../../../shared/reducers/index-reducer";
 import './control-actions.scss'
 import { OutputSettings } from "../../../../shared/models/settings-models";
-import Group from "../group/group";
+import Group from "../../../shared/components/group/group";
 import { BrowserService } from "../../../shared/services/browser-service";
 import Toggle from "../../../shared/components/toggle/toggle";
 import { SocketPlayService } from "../../../shared/services/socket-play-service";
@@ -14,9 +14,11 @@ import { SocketSettingsService } from "../../../shared/services/socket-settings-
 
 export default function ControlActions(): JSX.Element {
   const activeTabIndex: number = useSelector(
-    (state: State) => new AppNavigationService().getActiveTabIndex(state.appNavigation))
+    (state: State) => new AppNavigationService().getActiveTabIndex(state.appNavigation)
+  )
   const outputSettings = useSelector(
-    (state: State) => new ReduxSettingsService().getOutputSettings(state.settings, activeTabIndex))
+    (state: State) => new ReduxSettingsService().getOutputSettings(state.settings, activeTabIndex)
+  )
 
   return (
     <>

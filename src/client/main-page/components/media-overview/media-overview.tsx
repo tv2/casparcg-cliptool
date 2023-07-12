@@ -13,7 +13,8 @@ import { BrowserService } from '../../../shared/services/browser-service';
 
 export function MediaOverview(): JSX.Element {
     const activeTabIndex: number = useSelector(
-        (state: State) => new AppNavigationService().getActiveTabIndex(state.appNavigation))   
+        (state: State) => new AppNavigationService().getActiveTabIndex(state.appNavigation)
+    )   
     const files: MediaFile[] = useSelector(
         (state: State) => new ReduxMediaService().getOutput(state.media, activeTabIndex)?.mediaFiles ?? []
     )
