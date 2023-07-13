@@ -5,7 +5,7 @@ export enum OperationMode {
     EDIT_VISIBILITY = 'edit_visibility',
 }
 
-export interface Settings {
+export interface SettingsState {
     ccgConfig: CasparcgConfig
     generics: GenericSettings
 }

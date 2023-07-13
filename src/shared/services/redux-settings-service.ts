@@ -1,8 +1,8 @@
-import { Media, MediaFile } from '../models/media-models'
+import { MediaState, MediaFile } from '../models/media-models'
 import {
     GenericSettings,
     OutputSettings,
-    Settings,
+    SettingsState,
     TabInfo,
 } from '../models/settings-models'
 import {
@@ -20,14 +20,17 @@ export class ReduxSettingsService {
         }
     }
 
-    public getTabInfo(settingsState: Settings, mediaState: Media): TabInfo[] {
+    public getTabInfo(
+        settingsState: SettingsState,
+        mediaState: MediaState
+    ): TabInfo[] {
         return Array(mediaState.outputs.length)
             .fill({})
             .map(({}, index) => this.buildTabInfoForIndex(settingsState, index))
     }
 
     private buildTabInfoForIndex(
-        settingsState: Settings,
+        settingsState: SettingsState,
         index: number
     ): TabInfo {
         const output = this.getOutputSettings(settingsState, index)
@@ -39,7 +42,7 @@ export class ReduxSettingsService {
     }
 
     public getOutputSettings(
-        settingsState: Settings,
+        settingsState: SettingsState,
         channelIndex: number
     ): OutputSettings {
         return settingsState.generics.outputSettings[channelIndex]
@@ -48,7 +51,7 @@ export class ReduxSettingsService {
     public clearInvalidTargetedPaths(
         allFiles: MediaFile[],
         originalOutputSettings: OutputSettings,
-        mediaState: Media
+        mediaState: MediaState
     ): OutputSettings {
         const outputSettings = { ...originalOutputSettings }
         if (this.isPathsEmpty(outputSettings)) {
@@ -60,7 +63,7 @@ export class ReduxSettingsService {
     }
 
     private clearSelectedFolderFromSettings(
-        mediaState: Media,
+        mediaState: MediaState,
         outputSettings: OutputSettings
     ) {
         if (!mediaState.folders.includes(outputSettings.folder)) {
@@ -90,11 +93,13 @@ export class ReduxSettingsService {
         )
     }
 
-    public getAllOutputSettings(settingsState: Settings): OutputSettings[] {
+    public getAllOutputSettings(
+        settingsState: SettingsState
+    ): OutputSettings[] {
         return settingsState.generics.outputSettings
     }
 
-    public getGenericSettings(settingsState: Settings): GenericSettings {
+    public getGenericSettings(settingsState: SettingsState): GenericSettings {
         return settingsState.generics
     }
 
@@ -104,7 +109,7 @@ export class ReduxSettingsService {
 
     public isThumbnailSelected(
         thumbnailName: string,
-        settingsState: Settings,
+        settingsState: SettingsState,
         channelIndex: number
     ): boolean {
         const selectedFileName = this.getCleanSelectedFileName(
@@ -116,7 +121,7 @@ export class ReduxSettingsService {
 
     public isMediaCued(
         fileName: string,
-        settingsState: Settings,
+        settingsState: SettingsState,
         channelIndex: number
     ): boolean {
         const cuedFileName = this.getCleanCuedFileName(
@@ -128,7 +133,7 @@ export class ReduxSettingsService {
 
     public isCardSelectedOnAnyOutput(
         fileName: string,
-        settingsState: Settings
+        settingsState: SettingsState
     ): boolean {
         return this.getGenericSettings(settingsState).outputSettings.some(
             (output) =>
@@ -139,7 +144,7 @@ export class ReduxSettingsService {
 
     public isCardCuedOnAnyOutput(
         fileName: string,
-        settingsState: Settings
+        settingsState: SettingsState
     ): boolean {
         return this.getGenericSettings(settingsState).outputSettings.some(
             (output) =>
@@ -149,21 +154,21 @@ export class ReduxSettingsService {
 
     public getCleanSelectedFileName(
         output: OutputSettings,
-        settingsState: Settings
+        settingsState: SettingsState
     ): string {
         return this.getCleanString(output.selectedFileName, settingsState)
     }
 
     public getCleanCuedFileName(
         output: OutputSettings,
-        settingsState: Settings
+        settingsState: SettingsState
     ): string {
         return this.getCleanString(output.cuedFileName, settingsState)
     }
 
     private getCleanString(
         toBeCleaned: string,
-        settingsState: Settings
+        settingsState: SettingsState
     ): string {
         const fileName = toBeCleaned
             .toUpperCase()

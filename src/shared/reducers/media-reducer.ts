@@ -1,7 +1,7 @@
-import { Media, Output } from './../models/media-models'
+import { MediaState, Output } from './../models/media-models'
 import * as IO from './../actions/media-actions'
 
-function defaultMediaState(): Media {
+function defaultMediaState(): MediaState {
     return {
         outputs: [],
         folders: [],
@@ -17,8 +17,11 @@ function defaultOutputs(amount: number): Output[] {
     })
 }
 
-export function media(state: Media = defaultMediaState(), action: any): Media {
-    let nextState: Media = { ...state }
+export function media(
+    state: MediaState = defaultMediaState(),
+    action: any
+): MediaState {
+    let nextState: MediaState = { ...state }
     switch (action.type) {
         case IO.SET_NUMBER_OF_OUTPUTS:
             nextState.outputs = defaultOutputs(action.amount)
@@ -57,18 +60,18 @@ export function media(state: Media = defaultMediaState(), action: any): Media {
 }
 
 function doesMediaOutputChannelExist(
-    nextState: Media,
+    nextState: MediaState,
     channelIndex: number
 ): boolean {
     return nextState.outputs.length > channelIndex
 }
 
 function updateAttributeByPartial(
-    originalState: Media,
-    nextState: Media,
+    originalState: MediaState,
+    nextState: MediaState,
     action: any,
     updates: Partial<Output>
-): Media {
+): MediaState {
     const outputs = [...originalState.outputs]
     outputs[action.channelIndex] = {
         ...outputs[action.channelIndex],

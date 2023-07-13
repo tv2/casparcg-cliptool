@@ -287,14 +287,15 @@ async function startFileChangesPollingInterval(): Promise<void> {
     await getFileChanges()
     await getThumbnailChanges()
     fileChangesInterval = setInterval(async () => {
-        if (!waitingForCasparcgResponse) {
-            waitingForCasparcgResponse = true
-            try {
-                await getFileChanges()
-                await getThumbnailChanges()
-            } finally {
-                waitingForCasparcgResponse = false
-            }
+        if (waitingForCasparcgResponse) {
+            return
+        }
+        waitingForCasparcgResponse = true
+        try {
+            await getFileChanges()
+            await getThumbnailChanges()
+        } finally {
+            waitingForCasparcgResponse = false
         }
     }, 3000)
 }
