@@ -19,7 +19,8 @@ export function oscServerGateway(): void {
 
     oscConnection
         .on('ready', () => {
-            let ipAddresses = new OsService().getIpAddresses()
+            const osService = new OsService()
+            let ipAddresses = osService.getIpAddresses()
 
             console.log('Listening for OSC over UDP.')
             ipAddresses.forEach((address) => {
@@ -29,6 +30,7 @@ export function oscServerGateway(): void {
             })
         })
         .on('message', (message: any) => {
+            const reduxMediaService = new ReduxMediaService()
             console.log(
                 `Received Command : ${message.address} ${message.args[0]} `
             )
@@ -57,7 +59,7 @@ export function oscServerGateway(): void {
                         {
                             type: 's',
                             value: JSON.stringify(
-                                new ReduxMediaService().getOutput(
+                                reduxMediaService.getOutput(
                                     state.media,
                                     channel - 1
                                 ).mediaFiles

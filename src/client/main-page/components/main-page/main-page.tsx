@@ -11,12 +11,16 @@ import { OperationModeFooter } from "../operation-mode-footer/operation-mode-foo
 
 
 export default function MainPage(): JSX.Element {
-  const tabs: TabInfo[] = useSelector((state: State) => new ReduxSettingsService().getTabInfo(state.settings, state.media))
+  const browserService = new BrowserService()
+  const reduxSettingsService = new ReduxSettingsService()
+
+  const isChannelView = browserService.isChannelView()
+  const tabs: TabInfo[] = useSelector((state: State) => reduxSettingsService.getTabInfo(state.settings, state.media))
   
   return (
     <>
         <Header />
-        {new BrowserService().isChannelView() 
+        {isChannelView 
             ? <MediaOverview/> 
             : <Tabs titles={tabs.map((info) => info.title)}>
                 {tabs.map((data) => 

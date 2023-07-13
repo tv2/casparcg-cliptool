@@ -23,5 +23,7 @@ export function EditVisibilityFooter(): JSX.Element {
 }
 
 function resetOperationMode(): void {
-  new SocketOperationService(SocketService.instance.getSocket()).setOperationModeToControl(new AppNavigationService().getActiveTabIndex(state.appNavigation))
+  const appNavigationService = new AppNavigationService()
+  const socketOperationService = new SocketOperationService(SocketService.instance.getSocket())
+  socketOperationService.setOperationModeToControl(appNavigationService.getActiveTabIndex(state.appNavigation))
 }

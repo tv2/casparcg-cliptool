@@ -3,6 +3,8 @@ import { ccgConnection } from '../handlers/caspar-cg-handler'
 import { Enum as CcgEnum } from 'casparcg-connection'
 import { ReduxSettingsService } from '../../shared/services/redux-settings-service'
 
+const reduxSettingsService = new ReduxSettingsService()
+
 export function playMedia(
     channelIndex: number,
     layerIndex: number,
@@ -13,10 +15,8 @@ export function playMedia(
         channelIndex + 1,
         layerIndex + 1,
         fileName,
-        new ReduxSettingsService().getOutputSettings(
-            state.settings,
-            channelIndex
-        ).loopState || false
+        reduxSettingsService.getOutputSettings(state.settings, channelIndex)
+            .loopState || false
     )
 }
 
@@ -31,13 +31,11 @@ export function mixMedia(
         channelIndex + 1,
         layerIndex + 1,
         fileName,
-        new ReduxSettingsService().getOutputSettings(
-            state.settings,
-            channelIndex
-        ).loopState || false,
+        reduxSettingsService.getOutputSettings(state.settings, channelIndex)
+            .loopState || false,
         CcgEnum.Transition.MIX,
-        new ReduxSettingsService().getGenericSettings(state.settings)
-            .ccgSettings.transitionTime
+        reduxSettingsService.getGenericSettings(state.settings).ccgSettings
+            .transitionTime
     )
 }
 
@@ -52,10 +50,8 @@ export function loadMedia(
         channelIndex + 1,
         layerIndex + 1,
         fileName,
-        new ReduxSettingsService().getOutputSettings(
-            state.settings,
-            channelIndex
-        ).loopState || false
+        reduxSettingsService.getOutputSettings(state.settings, channelIndex)
+            .loopState || false
     )
 }
 
@@ -88,7 +84,7 @@ function scale(channelIndex: number, layerIndex: number): void {
 
     let scaleOutX = 1
     let scaleOutY = 1
-    const outputSetting = new ReduxSettingsService().getOutputSettings(
+    const outputSetting = reduxSettingsService.getOutputSettings(
         state.settings,
         channelIndex
     )

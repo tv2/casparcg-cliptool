@@ -11,6 +11,8 @@ interface OutputsFormProps {
 }
 
 export default function OutputsForm(props: OutputsFormProps): JSX.Element {
+    const browserService = new BrowserService()
+    const isChannelView = browserService.isChannelView()
     const casparcgConfig = useSelector((state: State) => state.settings.ccgConfig)
     const folders: string[] = useSelector((state: State) => state.media.folders)
 
@@ -22,16 +24,16 @@ export default function OutputsForm(props: OutputsFormProps): JSX.Element {
     return (
         <div>
             {
-                new BrowserService().isChannelView()
-                    ? renderSingleOutput(props.outputSettings, casparcgConfig.channels, folders, onOutputChanged)
+                isChannelView
+                    ? renderSingleOutput(browserService, props.outputSettings, casparcgConfig.channels, folders, onOutputChanged)
                     : renderMultipleOutputs(props.outputSettings, casparcgConfig.channels, folders, onOutputChanged)
             }
         </div>
     )
 }
 
-function renderSingleOutput(outputSettings: OutputSettings[], casparcgChannels: CasparcgConfigChannel[], folders: string[], onChange: (changedOutput: OutputSettings, index: number) => void ): JSX.Element {
-    const channel = new BrowserService().getChannel()
+function renderSingleOutput(browserService: BrowserService, outputSettings: OutputSettings[], casparcgChannels: CasparcgConfigChannel[], folders: string[], onChange: (changedOutput: OutputSettings, index: number) => void ): JSX.Element {
+    const channel = browserService.getChannel()
     return buildSingleOutput(
         outputSettings[channel], 
         casparcgChannels[channel], 

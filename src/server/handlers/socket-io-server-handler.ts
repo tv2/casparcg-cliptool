@@ -46,6 +46,11 @@ import {
     TimeSelectedFilePayload,
 } from '../../shared/socket-io-constants'
 
+const reduxMediaService = new ReduxMediaService()
+const reduxSettingsService = new ReduxSettingsService()
+const hiddenFilesPersistenceService = new HiddenFilesPersistenceService()
+const settingsPersistenceService = new SettingsPersistenceService()
+
 export function socketIoHandlers(socket: any): void {
     logger.info('SETTING UP SOCKET IO MAIN HANDLERS')
 
@@ -63,7 +68,7 @@ export function socketIoHandlers(socket: any): void {
             ClientToServerCommand.TOGGLE_THUMBNAIL_VISIBILITY,
             (channelIndex: number, fileName: string) => {
                 if (
-                    new ReduxSettingsService()
+                    reduxSettingsService
                         .getGenericSettings(state.settings)
                         .outputSettings.some(
                             (output) => output.selectedFileName === fileName
@@ -80,7 +85,7 @@ export function socketIoHandlers(socket: any): void {
                         hiddenFiles
                     )
                     reduxStore.dispatch(updateHiddenFiles(updatedHiddenFiles))
-                    new HiddenFilesPersistenceService().save(updatedHiddenFiles)
+                    hiddenFilesPersistenceService.save(updatedHiddenFiles)
 
                     socketServer.emit(
                         ServerToClientCommand.HIDDEN_FILES_UPDATE,
@@ -99,7 +104,7 @@ export function socketIoHandlers(socket: any): void {
             ClientToServerCommand.PGM_PLAY,
             (channelIndex: number, fileName: string) => {
                 if (
-                    !new ReduxSettingsService().getOutputSettings(
+                    !reduxSettingsService.getOutputSettings(
                         state.settings,
                         channelIndex
                     ).mixState
@@ -118,7 +123,7 @@ export function socketIoHandlers(socket: any): void {
                     ''
                 )
                 reduxStore.dispatch(setSelectedFileName(channelIndex, fileName))
-                new SettingsPersistenceService().save()
+                settingsPersistenceService.save()
                 socketServer.emit(
                     ServerToClientCommand.FILE_SELECTED_UPDATE,
                     channelIndex,
@@ -142,7 +147,7 @@ export function socketIoHandlers(socket: any): void {
                     channelIndex,
                     ''
                 )
-                new SettingsPersistenceService().save()
+                settingsPersistenceService.save()
                 logger.info(
                     `Loading ${fileName} on channel index ${channelIndex}.`
                 )
@@ -152,11 +157,11 @@ export function socketIoHandlers(socket: any): void {
             ClientToServerCommand.SET_LOOP_STATE,
             (channelIndex: number, loopState: boolean) => {
                 reduxStore.dispatch(setLoop(channelIndex, loopState))
-                new SettingsPersistenceService().save()
+                settingsPersistenceService.save()
                 socketServer.emit(
                     ServerToClientCommand.LOOP_STATE_UPDATE,
                     channelIndex,
-                    new ReduxSettingsService().getOutputSettings(
+                    reduxSettingsService.getOutputSettings(
                         state.settings,
                         channelIndex
                     ).loopState
@@ -167,15 +172,15 @@ export function socketIoHandlers(socket: any): void {
             ClientToServerCommand.SET_OPERATION_MODE,
             (channelIndex: number, mode: OperationMode) => {
                 reduxStore.dispatch(setOperationMode(channelIndex, mode))
+                settingsPersistenceService.save()
                 socketServer.emit(
                     ServerToClientCommand.OPERATION_MODE_UPDATE,
                     channelIndex,
-                    new ReduxSettingsService().getOutputSettings(
+                    reduxSettingsService.getOutputSettings(
                         state.settings,
                         channelIndex
                     ).operationMode
                 )
-                new SettingsPersistenceService().save()
             }
         )
         .on(
@@ -184,11 +189,11 @@ export function socketIoHandlers(socket: any): void {
                 reduxStore.dispatch(
                     setManualStart(channelIndex, manualStartState)
                 )
-                new SettingsPersistenceService().save()
+                settingsPersistenceService.save()
                 socketServer.emit(
                     ServerToClientCommand.MANUAL_START_STATE_UPDATE,
                     channelIndex,
-                    new ReduxSettingsService().getOutputSettings(
+                    reduxSettingsService.getOutputSettings(
                         state.settings,
                         channelIndex
                     ).manualStartState
@@ -199,11 +204,11 @@ export function socketIoHandlers(socket: any): void {
             ClientToServerCommand.SET_MIX_STATE,
             (channelIndex: number, mixState: boolean) => {
                 reduxStore.dispatch(setMix(channelIndex, mixState))
-                new SettingsPersistenceService().save()
+                settingsPersistenceService.save()
                 socketServer.emit(
                     ServerToClientCommand.MIX_STATE_UPDATE,
                     channelIndex,
-                    new ReduxSettingsService().getOutputSettings(
+                    reduxSettingsService.getOutputSettings(
                         state.settings,
                         channelIndex
                     ).mixState
@@ -214,20 +219,19 @@ export function socketIoHandlers(socket: any): void {
             ClientToServerCommand.SET_WEB_STATE,
             (channelIndex: number, webState: boolean) => {
                 reduxStore.dispatch(setWeb(channelIndex, webState))
-                new SettingsPersistenceService().save()
+                settingsPersistenceService.save()
                 socketServer.emit(
                     ServerToClientCommand.WEB_STATE_UPDATE,
                     channelIndex,
-                    new ReduxSettingsService().getOutputSettings(
+                    reduxSettingsService.getOutputSettings(
                         state.settings,
                         channelIndex
                     ).webState
                 )
-                const outputSettings =
-                    new ReduxSettingsService().getOutputSettings(
-                        state.settings,
-                        channelIndex
-                    )
+                const outputSettings = reduxSettingsService.getOutputSettings(
+                    state.settings,
+                    channelIndex
+                )
                 updateOverlayPlayingState(channelIndex, outputSettings)
             }
         )
@@ -249,7 +253,7 @@ export function socketIoHandlers(socket: any): void {
             )
             logger.info('Updating and storing generic settings server side.')
             reduxStore.dispatch(setGenerics(generics))
-            new SettingsPersistenceService().save()
+            settingsPersistenceService.save()
             socketServer.emit(
                 ServerToClientCommand.SETTINGS_UPDATE,
                 state.settings
@@ -323,7 +327,7 @@ function findFile(
     fileName: string,
     channelIndex: number
 ): MediaFile | undefined {
-    return new ReduxMediaService()
+    return reduxMediaService
         .getOutput(state.media, channelIndex)
         .mediaFiles.find(
             (file) => file.name.toUpperCase() === fileName.toUpperCase()
@@ -370,7 +374,7 @@ export function initializeClient(): void {
             state.media.hiddenFiles
         )
     })
-    const outputMedia = new ReduxMediaService().getOutputs(state.media)
+    const outputMedia = reduxMediaService.getOutputs(state.media)
     outputMedia.forEach((output, channelIndex) => {
         timeTallyData[channelIndex] = {
             time: output.time,
@@ -395,7 +399,7 @@ export function initializeClient(): void {
 }
 
 function cleanUpMediaFiles(): void {
-    new ReduxMediaService()
+    reduxMediaService
         .getOutputs(state.media)
         .forEach(({}, channelIndex: number) => {
             reduxStore.dispatch(updateMediaFiles(channelIndex, []))

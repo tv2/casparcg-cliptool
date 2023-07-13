@@ -15,11 +15,13 @@ interface ImageMediaCardProps {
 }
 
 export default function ImageMediaCard(props: ImageMediaCardProps): JSX.Element {
+  const reduxMediaService = new ReduxMediaService()  
+  
   const hiddenFiles: HiddenFiles = useSelector(
       (state: State) => 
           state.media.hiddenFiles
   )
-  const url: string = new ReduxMediaService().getBase64ThumbnailUrl(props.file.name, props.activeTabIndex || 0, state.media)
+  const url: string = reduxMediaService.getBase64ThumbnailUrl(props.file.name, props.activeTabIndex || 0, state.media)
   const isHidden: boolean = props.file.name in hiddenFiles
 
   return (

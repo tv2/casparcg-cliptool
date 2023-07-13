@@ -11,10 +11,12 @@ interface HeaderProps {
 }
 
 export default function Header(props: HeaderProps): JSX.Element {
+    const browserService = new BrowserService()
+    const isTextView = browserService.isTextView()
     return (
         <header className='c-header'>
             <div className="c-header__controls">
-                {!new BrowserService().isTextView() && (
+                {!isTextView && (
                     <Group>
                         <button
                             className="c-header__settings-button"

@@ -10,8 +10,16 @@ import { ServerToClientCommand } from '../../shared/socket-io-constants'
 import _ from 'lodash'
 
 export class HiddenFilesPersistenceService {
+    private reduxSettingsService: ReduxSettingsService
+    private persistenceService: PersistenceService
+
+    constructor() {
+        this.reduxSettingsService = new ReduxSettingsService()
+        this.persistenceService = new PersistenceService()
+    }
+
     public load(): void {
-        new PersistenceService()
+        this.persistenceService
             .loadFile('hiddenFiles.json')
             .then((rawHiddenFiles) => {
                 const hiddenFiles: HiddenFiles = JSON.parse(rawHiddenFiles)
@@ -56,7 +64,7 @@ export class HiddenFilesPersistenceService {
             this.getCleanHiddenFiles(hiddenFiles)
         const stringifiedHiddenFiles = JSON.stringify(cleanHiddenFiles)
 
-        new PersistenceService()
+        this.persistenceService
             .saveFile('hiddenFiles.json', stringifiedHiddenFiles)
             .then(() => {
                 logger.data(stringifiedHiddenFiles).trace('Hidden files saved')
@@ -77,7 +85,7 @@ export class HiddenFilesPersistenceService {
 
     private hasSelectedOrCuedHiddenFiles(hiddenFiles: HiddenFiles): boolean {
         const outputs: OutputSettings[] =
-            new ReduxSettingsService().getGenericSettings(
+            this.reduxSettingsService.getGenericSettings(
                 state.settings
             ).outputSettings
         return outputs.some(
@@ -92,7 +100,7 @@ export class HiddenFilesPersistenceService {
             ...originalHiddenFiles,
         }
         const outputs: OutputSettings[] =
-            new ReduxSettingsService().getGenericSettings(
+            this.reduxSettingsService.getGenericSettings(
                 state.settings
             ).outputSettings
         outputs.forEach((output) => {

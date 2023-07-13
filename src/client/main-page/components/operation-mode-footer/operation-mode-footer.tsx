@@ -8,14 +8,18 @@ import { ReduxSettingsService } from '../../../../shared/services/redux-settings
 import { BrowserService } from '../../../shared/services/browser-service'
 
 export function OperationModeFooter(): JSX.Element {
-  if (new BrowserService().isTextView()) {
+  const browserService = new BrowserService()
+  const appNavigationService = new AppNavigationService()
+  const reduxSettingsService = new ReduxSettingsService()
+
+  if (browserService.isTextView()) {
     return (<></>)
   }
   const activeTabIndex: number = useSelector((state: State) => 
-    new AppNavigationService().getActiveTabIndex(state.appNavigation)
+    appNavigationService.getActiveTabIndex(state.appNavigation)
   ) 
   const operationMode: OperationMode | undefined = useSelector((state: State) =>
-    new ReduxSettingsService().getOutputSettings(state.settings, activeTabIndex)?.operationMode
+    reduxSettingsService.getOutputSettings(state.settings, activeTabIndex)?.operationMode
   ) 
   switch (operationMode) {
     case OperationMode.EDIT_VISIBILITY: {

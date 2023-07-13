@@ -86,12 +86,11 @@ socket.on(
     ServerToClientCommand.TIME_TALLY_UPDATE,
     (data: TimeSelectedFilePayload[]) => {
         data.forEach((channel, index) => {
+            const reduxSettingsService = new ReduxSettingsService()
             reduxStore.dispatch(setTime(index, channel.time))
             if (
-                new ReduxSettingsService().getOutputSettings(
-                    state.settings,
-                    index
-                ).selectedFileName !== channel.selectedFileName
+                reduxSettingsService.getOutputSettings(state.settings, index)
+                    .selectedFileName !== channel.selectedFileName
             ) {
                 reduxStore.dispatch(
                     setSelectedFileName(index, channel.selectedFileName)

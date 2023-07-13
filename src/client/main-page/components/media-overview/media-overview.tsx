@@ -12,25 +12,31 @@ import { OperationMode } from '../../../../shared/models/settings-models';
 import { BrowserService } from '../../../shared/services/browser-service';
 
 export function MediaOverview(): JSX.Element {
+    const browserService = new BrowserService()
+    const appNavigationService = new AppNavigationService()
+    const reduxMediaService = new ReduxMediaService()
+    const reduxSettingsService = new ReduxSettingsService()
+
+    const isTextView = browserService.isTextView()
     const activeTabIndex: number = useSelector(
-        (state: State) => new AppNavigationService().getActiveTabIndex(state.appNavigation)
+        (state: State) => appNavigationService.getActiveTabIndex(state.appNavigation)
     )   
     const files: MediaFile[] = useSelector(
-        (state: State) => new ReduxMediaService().getOutput(state.media, activeTabIndex)?.mediaFiles ?? []
+        (state: State) => reduxMediaService.getOutput(state.media, activeTabIndex)?.mediaFiles ?? []
     )
     const hiddenFiles: HiddenFiles = useSelector(
         (state: State) => state.media.hiddenFiles
     ) ?? {}
     const isInEditVisibilityMode: boolean = useSelector(
-        (state: State) => new ReduxSettingsService().getOutputSettings(state.settings, activeTabIndex)
+        (state: State) => reduxSettingsService.getOutputSettings(state.settings, activeTabIndex)
             .operationMode === OperationMode.EDIT_VISIBILITY
     ) ?? false
-    const shownFiles: MediaFile[] = getShownFiles(files, isInEditVisibilityMode, hiddenFiles)
+    const shownFiles: MediaFile[] = getShownFiles(files, isInEditVisibilityMode, hiddenFiles, browserService)
     return (
         <div className="c-media-overview">
             {shownFiles.map((file: MediaFile) => (
                 <div className="c-media-overview__card" key={file.name}>
-                    {new BrowserService().isTextView()
+                    {isTextView
                         ? <TextMediaCard file={file} activeTabIndex={activeTabIndex}/>
                         : <ImageMediaCard file={file} activeTabIndex={activeTabIndex}/>}
                 </div>
@@ -39,8 +45,8 @@ export function MediaOverview(): JSX.Element {
     )
 }
 
-function getShownFiles(files: MediaFile[], isInEditVisibilityMode: boolean, hiddenFiles: HiddenFiles): MediaFile[] {
-    return  !isInEditVisibilityMode || new BrowserService().isTextView()
+function getShownFiles(files: MediaFile[], isInEditVisibilityMode: boolean, hiddenFiles: HiddenFiles, browserService: BrowserService): MediaFile[] {
+    return  !isInEditVisibilityMode || browserService.isTextView()
         ? files.filter(({ name }) => !(name in hiddenFiles)) 
         : files
 }

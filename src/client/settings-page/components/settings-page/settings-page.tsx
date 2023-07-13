@@ -8,7 +8,9 @@ import { state } from '../../../../shared/store'
 import _ from 'lodash'
 import { BrowserService } from '../../../shared/services/browser-service'
 
-export function SettingsPage(): JSX.Element { 
+export function SettingsPage(): JSX.Element {
+    const browserService = new BrowserService()
+    const isChannelView = browserService.isChannelView()
     const [settings, setSettings] = useState<GenericSettings>(deepClone(state.settings.generics))  
 
     function onOutputSettingsChanged(changedOutputs: OutputSettings[]): void {
@@ -26,7 +28,7 @@ export function SettingsPage(): JSX.Element {
             <p className="c-settings-page__header">SETTINGS :</p>
             <SettingsActions settings={settings}/>
             <hr/>
-            {!new BrowserService().isChannelView() && settings && <CasparcgForm casparcgSettings={settings.ccgSettings} onChange={(changedCasparcg) => onCasparcgSettingsChanged(changedCasparcg)}/> }
+            {!isChannelView && settings && <CasparcgForm casparcgSettings={settings.ccgSettings} onChange={(changedCasparcg) => onCasparcgSettingsChanged(changedCasparcg)}/> }
             {settings && <OutputsForm outputSettings={settings.outputSettings} onChange={(changedOutputs) => onOutputSettingsChanged(changedOutputs)}/>}
         </div>
     )
