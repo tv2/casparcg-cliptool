@@ -11,12 +11,12 @@ import { BrowserService } from '../../../shared/services/browser-service'
 export function SettingsPage(): JSX.Element { 
     const [settings, setSettings] = useState<GenericSettings>(deepClone(state.settings.generics))  
 
-    function onOutputsChanged(changedOutputs: OutputSettings[]): void {
+    function onOutputSettingsChanged(changedOutputs: OutputSettings[]): void {
         settings.outputSettings = changedOutputs
         setSettings({ ...settings })
     }
 
-    function onCasparcgChanged(changedCasparcg: CasparcgSettings): void {
+    function onCasparcgSettingsChanged(changedCasparcg: CasparcgSettings): void {
         settings.ccgSettings = changedCasparcg
         setSettings({ ...settings })
     }
@@ -26,8 +26,8 @@ export function SettingsPage(): JSX.Element {
             <p className="c-settings-page__header">SETTINGS :</p>
             <SettingsActions settings={settings}/>
             <hr/>
-            {!new BrowserService().isChannelView() && settings && <CasparcgForm casparcgSettings={settings.ccgSettings} onChange={(changedCasparcg) => onCasparcgChanged(changedCasparcg)}/> }
-            {settings && <OutputsForm outputSettings={settings.outputSettings} onChange={(changedOutputs) => onOutputsChanged(changedOutputs)}/>}
+            {!new BrowserService().isChannelView() && settings && <CasparcgForm casparcgSettings={settings.ccgSettings} onChange={(changedCasparcg) => onCasparcgSettingsChanged(changedCasparcg)}/> }
+            {settings && <OutputsForm outputSettings={settings.outputSettings} onChange={(changedOutputs) => onOutputSettingsChanged(changedOutputs)}/>}
         </div>
     )
 }

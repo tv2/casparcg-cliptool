@@ -8,7 +8,8 @@ import MainPage from "../../../main-page/components/main-page/main-page"
 
 export default function ApplicationRouter() {    
     const isConnected: boolean = useSelector(
-        (state: State) => state.appNavigation.isConnected)
+        (state: State) => state.appNavigation.isConnected
+    )
     const isSettingsVisible: boolean = useSelector((state: State) => state.appNavigation.isSettingsVisible)
 
     if (!isConnected) {

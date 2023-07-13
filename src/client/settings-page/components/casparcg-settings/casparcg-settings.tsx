@@ -11,11 +11,7 @@ interface CasparcgFormProps {
 }
 
 export default function CasparcgForm(props: CasparcgFormProps): JSX.Element {
-    const ip = props.casparcgSettings.ip
-    const amcpPort = props.casparcgSettings.amcpPort
-    const oscPort = props.casparcgSettings.oscPort
-    const defaultLayer = props.casparcgSettings.defaultLayer
-    const transitionTime = props.casparcgSettings.transitionTime
+    const {ip, amcpPort, oscPort, defaultLayer, transitionTime} = props.casparcgSettings
   
     return (
         <form className="settings-form">

@@ -1,7 +1,7 @@
 import React from "react";
 import { useSelector } from "react-redux";
 import { State } from "../../../../shared/reducers/index-reducer";
-import { CaspercgConfigChannel, OutputSettings } from "../../../../shared/models/settings-models";
+import { CasparcgConfigChannel, OutputSettings } from "../../../../shared/models/settings-models";
 import { BrowserService } from "../../../shared/services/browser-service";
 import Output from "../output/output";
 
@@ -30,7 +30,7 @@ export default function OutputsForm(props: OutputsFormProps): JSX.Element {
     )
 }
 
-function renderSingleOutput(outputSettings: OutputSettings[], casparcgChannels: CaspercgConfigChannel[], folders: string[], onChange: (changedOutput: OutputSettings, index: number) => void ): JSX.Element {
+function renderSingleOutput(outputSettings: OutputSettings[], casparcgChannels: CasparcgConfigChannel[], folders: string[], onChange: (changedOutput: OutputSettings, index: number) => void ): JSX.Element {
     const channel = new BrowserService().getChannel()
     return buildSingleOutput(
         outputSettings[channel], 
@@ -41,7 +41,7 @@ function renderSingleOutput(outputSettings: OutputSettings[], casparcgChannels: 
     )
 }
 
-function renderMultipleOutputs(outputSettings: OutputSettings[], casparcgChannels: CaspercgConfigChannel[], folders: string[], onChange: (changedOutput: OutputSettings, index: number) => void): JSX.Element[] {
+function renderMultipleOutputs(outputSettings: OutputSettings[], casparcgChannels: CasparcgConfigChannel[], folders: string[], onChange: (changedOutput: OutputSettings, index: number) => void): JSX.Element[] {
     return casparcgChannels.map(
         (channel, index) => {
             const outputSetting = outputSettings[index]
@@ -50,7 +50,7 @@ function renderMultipleOutputs(outputSettings: OutputSettings[], casparcgChannel
     )
 }   
 
-function buildSingleOutput(outputSettings: OutputSettings, configChannel: CaspercgConfigChannel, outputIndex: number, folders: string[], onChange: (changedOutput: OutputSettings, index: number) => void): JSX.Element {
+function buildSingleOutput(outputSettings: OutputSettings, configChannel: CasparcgConfigChannel, outputIndex: number, folders: string[], onChange: (changedOutput: OutputSettings, index: number) => void): JSX.Element {
     return (
         <Output 
             index={outputIndex}

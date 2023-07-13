@@ -37,7 +37,7 @@ export default function CardOverlayDisplay(props: CardOverlayDisplayProps): JSX.
   return (
   <div className="c-card-overlay-display">
       {(isSelected && isValidFile) && (
-          <SelectedCardOverlay className={props.className ?? ''} fileType={props.file.type} time={time}/>
+          <SelectedCardOverlay className={props.className ?? ''} fileType={props.file.type} timeRange={time}/>
       )}
       {isCued && (
           <CardOverlay showAs={CardOverlayType.CUED}>

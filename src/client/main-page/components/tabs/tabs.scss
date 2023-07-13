@@ -2,22 +2,22 @@
   z-index: 10;
   touch-action: pan-x;
   background: #444;
-}
 
-.tabs-bar__tab-titles {
-  display: flex;
-  flex-direction: row;
-  overflow-x: auto;
-  padding: 6px;
-
-  &::-webkit-scrollbar {
-    height: 6px;
-    background-color: transparent;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    height: 6px;
-    background-color: grey;
+  &__tab-titles {
+    display: flex;
+    flex-direction: row;
+    overflow-x: auto;
+    padding: 6px;
+  
+    &::-webkit-scrollbar {
+      height: 6px;
+      background-color: transparent;
+    }
+  
+    &::-webkit-scrollbar-thumb {
+      height: 6px;
+      background-color: grey;
+    }
   }
 }
 

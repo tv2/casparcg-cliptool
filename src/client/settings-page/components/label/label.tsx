@@ -9,8 +9,8 @@ interface LabelProps {
 
 export default function Label(props: LabelProps): JSX.Element {
   return (
-    <label className={`label ${props.className ?? ''}`} >
-      <span className="label__title">{props.description}</span>
+    <label className={`${props.className ?? ''}`} >
+      <span className="label">{props.description}</span>
       {props.children ?? ''}
     </label>
   )

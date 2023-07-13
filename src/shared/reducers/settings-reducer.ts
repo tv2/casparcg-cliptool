@@ -1,5 +1,5 @@
 import {
-    CaspercgConfigChannel,
+    CasparcgConfigChannel,
     OutputSettings,
     Settings,
 } from './../models/settings-models'
@@ -19,8 +19,8 @@ function defaultSettingsReducerState(): Settings {
 }
 
 function updateChannelConfigWithVideoFormat(
-    channelConfig: CaspercgConfigChannel
-): CaspercgConfigChannel {
+    channelConfig: CasparcgConfigChannel
+): CasparcgConfigChannel {
     return {
         ...channelConfig,
         videoFormat: getVideoFormat(channelConfig.videoMode),

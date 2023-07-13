@@ -1,7 +1,7 @@
 import React from "react"
 import './output.scss'
 import './../shared.scss'
-import { CaspercgConfigChannel, OperationMode, OutputSettings } from "../../../../shared/models/settings-models"
+import { CasparcgConfigChannel, OperationMode, OutputSettings } from "../../../../shared/models/settings-models"
 import TextInput from "../text-input/text-input"
 import Label from "../label/label"
 import Checkbox from "../checkbox/checkbox"
@@ -9,7 +9,7 @@ import NumberInput from "../number-input/number-input"
 import { UtilityService } from "../../../../shared/services/utility-service"
 
 interface OutputProps {
-  configChannel: CaspercgConfigChannel
+  configChannel: CasparcgConfigChannel
   index: number
   outputSettings: OutputSettings
   folders: string[]
@@ -17,17 +17,8 @@ interface OutputProps {
 }
 
 export default function Output(props: OutputProps): JSX.Element {
-    const label = props.outputSettings.label
-    const folder = props.outputSettings.folder
-    const operationMode = new UtilityService().convertScreamingSnakeCaseToPascalCase(props.outputSettings.operationMode) 
-    const loopState = props.outputSettings.loopState
-    const mixState = props.outputSettings.mixState
-    const manualStartState = props.outputSettings.manualStartState
-    const webState = props.outputSettings.webState
-    const webUrl = props.outputSettings.webUrl
-    const shouldScale = props.outputSettings.shouldScale
-    const scaleX = props.outputSettings.scaleX
-    const scaleY = props.outputSettings.scaleY    
+    const {label, folder, loopState, mixState, manualStartState, webState, webUrl, shouldScale, scaleX, scaleY} = props.outputSettings
+    const operationMode = new UtilityService().convertScreamingSnakeCaseToPascalCase(props.outputSettings.operationMode)
 
     return (    
         props.outputSettings &&         

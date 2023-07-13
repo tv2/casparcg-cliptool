@@ -84,10 +84,13 @@ export class PlayObserver {
     }
 
     private hasTimeChanged(
-        oldtime: [number, number],
-        newTime: [number, number]
+        oldtimeRange: [number, number],
+        newTimeRange: [number, number]
     ): boolean {
-        return newTime[0] !== oldtime[0] || newTime[1] !== oldtime[1]
+        return (
+            newTimeRange[0] !== oldtimeRange[0] ||
+            newTimeRange[1] !== oldtimeRange[1]
+        )
     }
 
     private processFileCuedUpdateEvent(

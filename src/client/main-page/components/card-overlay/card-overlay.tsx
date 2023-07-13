@@ -13,21 +13,8 @@ interface CardOverlayProps {
 }
 
 export default function CardOverlay(props: CardOverlayProps): JSX.Element {
-  let appliedCss: string = ''
-  switch (props.showAs) {
-    case CardOverlayType.CUED:
-      appliedCss = CardOverlayType.CUED
-      break
-    case CardOverlayType.SELECTED:
-      appliedCss = CardOverlayType.SELECTED
-      break
-    default: 
-      appliedCss = ''
-      break
-  }
-
   return (
-    <div className={`c-card-overlay ${appliedCss}`}>
+    <div className={`c-card-overlay ${props.showAs}`}>
       {props.children}
     </div>
   )
