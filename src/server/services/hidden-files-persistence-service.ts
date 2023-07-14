@@ -1,7 +1,6 @@
 import { updateHiddenFiles } from '../../shared/actions/media-actions'
 import { HiddenFiles } from '../../shared/models/media-models'
 import { state, reduxStore } from '../../shared/store'
-import { socketServer } from '../handlers/express-handler'
 import { logger } from '../utils/logger'
 import { PersistenceService } from './persistence-service'
 import { ReduxSettingsService } from '../../shared/services/redux-settings-service'
@@ -12,9 +11,15 @@ import _ from 'lodash'
 export class HiddenFilesPersistenceService {
     private reduxSettingsService: ReduxSettingsService
     private persistenceService: PersistenceService
+    private socketService: any
 
-    constructor() {
-        this.reduxSettingsService = new ReduxSettingsService()
+    constructor(
+        socketService: any,
+        reduxSettingsService?: ReduxSettingsService
+    ) {
+        this.socketService = socketService
+        this.reduxSettingsService =
+            reduxSettingsService ?? new ReduxSettingsService()
         this.persistenceService = new PersistenceService()
     }
 
@@ -53,7 +58,7 @@ export class HiddenFilesPersistenceService {
     private updateReduxState(hiddenFiles: HiddenFiles) {
         logger.data(hiddenFiles).trace('Hidden files File loaded with:')
         reduxStore.dispatch(updateHiddenFiles(hiddenFiles))
-        socketServer.emit(
+        this.socketService.emit(
             ServerToClientCommand.HIDDEN_FILES_UPDATE,
             hiddenFiles
         )

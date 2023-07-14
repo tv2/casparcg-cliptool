@@ -14,8 +14,9 @@ export class SettingsPersistenceService {
     private reduxSettingsService: ReduxSettingsService
     private persistenceService: PersistenceService
 
-    constructor() {
-        this.reduxSettingsService = new ReduxSettingsService()
+    constructor(reduxSettingsService?: ReduxSettingsService) {
+        this.reduxSettingsService =
+            reduxSettingsService ?? new ReduxSettingsService()
         this.persistenceService = new PersistenceService()
     }
 

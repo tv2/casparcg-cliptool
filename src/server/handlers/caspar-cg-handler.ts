@@ -1,18 +1,14 @@
 // @ts-ignore
 import osc from 'osc' //Using OSC fork from PieceMeta/osc.js as it has excluded hardware serialport support and thereby is crossplatform
-
-import { CasparCG } from 'casparcg-connection'
 import { state, reduxStore } from '../../shared/store'
 import {
     setNumberOfOutputs,
     setTime,
     updateFolders,
     updateMediaFiles,
-    updateThumbnailFileList,
     updateHiddenFiles,
 } from '../../shared/actions/media-actions'
 
-import { socketServer } from './express-handler'
 import {
     HiddenFileInfo,
     HiddenFiles,
@@ -25,7 +21,6 @@ import {
     setGenerics,
     updateSettings,
 } from '../../shared/actions/settings-action'
-import { initializeClient } from './socket-io-server-handler'
 import {
     extractFoldersList,
     getChannelNumber,
@@ -43,7 +38,6 @@ import {
 import { ReduxSettingsService } from '../../shared/services/redux-settings-service'
 import { OsService } from '../../shared/services/os-service'
 import { ReduxMediaService } from '../../shared/services/redux-media-service'
-import { HiddenFilesPersistenceService } from '../services/hidden-files-persistence-service'
 import {
     ServerToClientCommand,
     TimeSelectedFilePayload,
@@ -51,30 +45,29 @@ import {
 import { UtilityService } from '../../shared/services/utility-service'
 import { defaultOutputSettingsState } from '../../shared/schemas/new-settings-schema'
 import { SettingsPersistenceService } from '../services/settings-persistence-service'
+import { HiddenFilesPersistenceService } from '../services/hidden-files-persistence-service'
+import { CasparCgHandlerService } from '../services/casparcg-handler-service'
+import { ExpressService } from '../services/express-service'
 
 let waitingForCcgResponse: boolean = false
-let previousThumbnails: ThumbnailFile[] = []
-let thumbnails: ThumbnailFile[] = []
 
 const reduxMediaService = new ReduxMediaService()
 const reduxSettingsService = new ReduxSettingsService()
 const utilityService = new UtilityService()
-const hiddenFilesPersistenceService = new HiddenFilesPersistenceService()
-const settingsPersistenceService = new SettingsPersistenceService()
+const casparCgHandlerService = CasparCgHandlerService.instance
+const expressService = ExpressService.instance
+const socketIoServerHandlerService =
+    expressService.getSocketIoServerHandlerService()
+const hiddenFilesPersistenceService = new HiddenFilesPersistenceService(
+    reduxSettingsService
+)
+const settingsPersistenceService = new SettingsPersistenceService(
+    reduxSettingsService
+)
 
 //Communication with CasparCG consists of 2 parts:
-//1. An AMCP connection for receiving media info and sending commands
+//1. An AMCP connection for receiving media info and sending commands, which is created in the 'casparcg-handler-service'
 //2. An OSC connection for receiving realtime info about the media playing on the outputs
-
-//Setup AMCP Connection:
-
-export const ccgConnection = new CasparCG({
-    host: reduxSettingsService.getGenericSettings(state.settings).ccgSettings
-        .ip,
-    port: reduxSettingsService.getGenericSettings(state.settings).ccgSettings
-        .amcpPort,
-    autoConnect: true,
-})
 
 //Setup OSC Connection:
 function ccgOSCServer(): void {
@@ -174,8 +167,10 @@ function dispatchConfig(config: any): void {
     genericSettings.outputSettings = allOutputSettings
     reduxStore.dispatch(setGenerics(genericSettings))
     logger.info(`Number of Channels: ${config.channels.length}`)
-    socketServer.emit(ServerToClientCommand.SETTINGS_UPDATE, state.settings)
-    initializeClient()
+    expressService
+        .getSocketServer()
+        .emit(ServerToClientCommand.SETTINGS_UPDATE, state.settings)
+    socketIoServerHandlerService.initializeClient()
 }
 
 function reinvigorateChannel(
@@ -234,7 +229,8 @@ function loadInitialOverlay(): void {
 function ccgAMPHandler(): void {
     //Check CCG Version and initialise OSC server:
     logger.debug('Checking CasparCG connection')
-    ccgConnection
+    casparCgHandlerService
+        .getCasparCgConnection()
         .version()
         .then((response) => {
             const genericSettings = reduxSettingsService.getGenericSettings(
@@ -244,7 +240,8 @@ function ccgAMPHandler(): void {
             const port = genericSettings.ccgSettings.amcpPort
             logger.info(`AMCP connection established to: ${address}:${port}`)
             logger.info(`CasparCG Server Version: ${response.response.data}`)
-            ccgConnection
+            casparCgHandlerService
+                .getCasparCgConnection()
                 .getCasparCGConfig()
                 .then((config) => {
                     dispatchConfig(config)
@@ -280,7 +277,9 @@ function startTimeEmitInterval() {
             })
     })
     setInterval(() => {
-        socketServer.emit(ServerToClientCommand.TIME_TALLY_UPDATE, data)
+        expressService
+            .getSocketServer()
+            .emit(ServerToClientCommand.TIME_TALLY_UPDATE, data)
     }, 40)
 }
 
@@ -299,8 +298,10 @@ async function startFileChangesPollingInterval(): Promise<void> {
 async function pollFileChanges(): Promise<void> {
     const newThumbnails = await loadCcgThumbnails()
     if (newThumbnails.hasChanges) {
-        thumbnails = newThumbnails.thumbnails
-        assignThumbnailsToOutputs()
+        casparCgHandlerService.updateStoredThumbnails(newThumbnails.thumbnails)
+        casparCgHandlerService.assignThumbnailsToOutputs(
+            expressService.getSocketServer()
+        )
     }
     await loadFileList()
 }
@@ -309,7 +310,8 @@ async function loadCcgThumbnails(): Promise<{
     thumbnails: ThumbnailFile[]
     hasChanges: boolean
 }> {
-    const thumbnailFiles: any = await ccgConnection
+    const thumbnailFiles: any = await casparCgHandlerService
+        .getCasparCgConnection()
         .thumbnailList()
         .catch((reason) => {
             logger
@@ -319,17 +321,23 @@ async function loadCcgThumbnails(): Promise<{
                 )
         })
     if (!thumbnailFiles) {
-        return { thumbnails: previousThumbnails, hasChanges: false }
+        return {
+            thumbnails: casparCgHandlerService.getStoredPreviousThumbnails(),
+            hasChanges: false,
+        }
     }
-    let newThumbnails: ThumbnailFile[] = thumbnails
+    let newThumbnails: ThumbnailFile[] =
+        casparCgHandlerService.getStoredThumbnails()
     let hasChanges = false
     if (
         hasThumbnailListChanged(
             thumbnailFiles.response.data,
-            previousThumbnails
+            casparCgHandlerService.getStoredPreviousThumbnails()
         )
     ) {
-        previousThumbnails = thumbnailFiles.response.data
+        casparCgHandlerService.updateStoredPreviousThumbnails(
+            thumbnailFiles.response.data
+        )
         newThumbnails = []
         hasChanges = true
         for await (const thumbnailFile of thumbnailFiles.response.data) {
@@ -344,7 +352,8 @@ async function loadCcgThumbnails(): Promise<{
 }
 
 async function loadFileList(): Promise<void> {
-    ccgConnection
+    casparCgHandlerService
+        .getCasparCgConnection()
         .cls() //AMCP list media files
         .then((payload) => {
             if (payload.response.data.length === 0) {
@@ -355,10 +364,9 @@ async function loadFileList(): Promise<void> {
             reduxStore.dispatch(
                 updateFolders(extractFoldersList(payload.response.data))
             )
-            socketServer.emit(
-                ServerToClientCommand.FOLDERS_UPDATE,
-                state.media.folders
-            )
+            expressService
+                .getSocketServer()
+                .emit(ServerToClientCommand.FOLDERS_UPDATE, state.media.folders)
 
             reduxMediaService
                 .getOutputs(state.media)
@@ -395,11 +403,9 @@ function outputExtractFiles(allFiles: MediaFile[], outputIndex: number): void {
     if (!isDeepCompareEqual(mediaFiles, outputMedia)) {
         logger.info(`Media files changed for output: ${outputIndex}`)
         reduxStore.dispatch(updateMediaFiles(outputIndex, outputMedia))
-        socketServer.emit(
-            ServerToClientCommand.MEDIA_UPDATE,
-            outputIndex,
-            outputMedia
-        )
+        expressService
+            .getSocketServer()
+            .emit(ServerToClientCommand.MEDIA_UPDATE, outputIndex, outputMedia)
     }
 }
 
@@ -423,10 +429,9 @@ function checkHiddenFilesChanged(files: MediaFile[]): void {
             .data(hiddenFiles)
             .debug('Hidden files was updated from external changes:')
         reduxStore.dispatch(updateHiddenFiles(hiddenFiles))
-        socketServer.emit(
-            ServerToClientCommand.HIDDEN_FILES_UPDATE,
-            hiddenFiles
-        )
+        expressService
+            .getSocketServer()
+            .emit(ServerToClientCommand.HIDDEN_FILES_UPDATE, hiddenFiles)
         hiddenFilesPersistenceService.save(hiddenFiles)
     }
 }
@@ -434,7 +439,9 @@ function checkHiddenFilesChanged(files: MediaFile[]): void {
 async function loadThumbnailImage(
     element: ThumbnailFile
 ): Promise<ThumbnailFile> {
-    const thumbnail = await ccgConnection.thumbnailRetrieve(element.name)
+    const thumbnail = await casparCgHandlerService
+        .getCasparCgConnection()
+        .thumbnailRetrieve(element.name)
     return {
         name: element.name,
         changed: element.changed,
@@ -442,38 +449,6 @@ async function loadThumbnailImage(
         type: element.type,
         thumbnail: thumbnail.response.data,
     }
-}
-
-export function assignThumbnailsToOutputs(): void {
-    reduxMediaService
-        .getOutputs(state.media)
-        .forEach(({}, channelIndex: number) => {
-            const outputMedia = thumbnails.filter(
-                (thumbnail: ThumbnailFile) => {
-                    return isFolderNameEqual(
-                        thumbnail?.name,
-                        reduxSettingsService.getOutputSettings(
-                            state.settings,
-                            channelIndex
-                        ).folder
-                    )
-                }
-            )
-            const outputThumbnailList = reduxMediaService.getOutput(
-                state.media,
-                channelIndex
-            ).thumbnailList
-            if (!isDeepCompareEqual(outputThumbnailList, outputMedia)) {
-                reduxStore.dispatch(
-                    updateThumbnailFileList(channelIndex, outputMedia)
-                )
-                socketServer.emit(
-                    ServerToClientCommand.THUMBNAIL_UPDATE,
-                    channelIndex,
-                    outputMedia
-                )
-            }
-        })
 }
 
 export function casparCgClient(): void {
