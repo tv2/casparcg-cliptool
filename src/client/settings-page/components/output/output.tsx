@@ -17,8 +17,10 @@ interface OutputProps {
 }
 
 export default function Output(props: OutputProps): JSX.Element {
+    const utilityService = new UtilityService()
+
     const {label, folder, loopState, mixState, manualStartState, webState, webUrl, shouldScale, scaleX, scaleY} = props.outputSettings
-    const operationMode = new UtilityService().convertScreamingSnakeCaseToPascalCase(props.outputSettings.operationMode)
+    const operationMode = utilityService.convertScreamingSnakeCaseToPascalCase(props.outputSettings.operationMode)
 
     return (    
         props.outputSettings &&         
@@ -58,7 +60,7 @@ export default function Output(props: OutputProps): JSX.Element {
                     >
                         {(Object.keys(OperationMode) as Array<keyof typeof OperationMode>).map(
                             (snakeCase: string) => {
-                                const pascal = new UtilityService().convertScreamingSnakeCaseToPascalCase(snakeCase)
+                                const pascal = utilityService.convertScreamingSnakeCaseToPascalCase(snakeCase)
                                 return (
                                     <option key={pascal} value={pascal}>
                                         {pascal}
@@ -182,8 +184,9 @@ export default function Output(props: OutputProps): JSX.Element {
     }
     
     function saveTempOperationModeChange(event: React.ChangeEvent<HTMLSelectElement>): void {
+        const utilityService = new UtilityService()
         const rawNewOperationMode = event.target.value
-        const convertedRawNewOperationMode = new UtilityService().convertPascasCaseToScreamingSnakeCase(rawNewOperationMode)
+        const convertedRawNewOperationMode = utilityService.convertPascalCaseToScreamingSnakeCase(rawNewOperationMode)
         const newOperationMode = OperationMode[convertedRawNewOperationMode as keyof typeof OperationMode]
         props.outputSettings.operationMode = newOperationMode
         props.onChange(props.outputSettings)

@@ -13,16 +13,21 @@ import { SocketService } from "../../../shared/services/socket-service";
 import { SocketSettingsService } from "../../../shared/services/socket-settings-service";
 
 export default function ControlActions(): JSX.Element {
+  const browserService = new BrowserService()
+  const appNavigationService = new AppNavigationService()
+  const reduxSettingsService = new ReduxSettingsService()
+
+  const isTextView = browserService.isTextView() 
   const activeTabIndex: number = useSelector(
-    (state: State) => new AppNavigationService().getActiveTabIndex(state.appNavigation)
+    (state: State) => appNavigationService.getActiveTabIndex(state.appNavigation)
   )
   const outputSettings = useSelector(
-    (state: State) => new ReduxSettingsService().getOutputSettings(state.settings, activeTabIndex)
+    (state: State) => reduxSettingsService.getOutputSettings(state.settings, activeTabIndex)
   )
 
   return (
     <>
-      {!new BrowserService().isTextView() && (
+      {!isTextView && (
         <>
           <Group>
             <Toggle

@@ -64,16 +64,16 @@ export class PlayObserver {
         channel: TimeSelectedFilePayload,
         index: number
     ): void {
-        const oldTime = new ReduxMediaService().getOutput(
-            state.media,
-            index
-        ).time
+        const reduxMediaService = new ReduxMediaService()
+        const reduxSettingsService = new ReduxSettingsService()
+
+        const oldTime = reduxMediaService.getOutput(state.media, index).time
         if (!this.hasTimeChanged(oldTime, channel.time)) {
             return
         }
 
         if (
-            new ReduxSettingsService().getOutputSettings(state.settings, index)
+            reduxSettingsService.getOutputSettings(state.settings, index)
                 .selectedFileName !== channel.selectedFileName
         ) {
             reduxStore.dispatch(

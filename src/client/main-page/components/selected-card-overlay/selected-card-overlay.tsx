@@ -12,14 +12,18 @@ interface SelectedCardOverlayProps {
 }
 
 export default function SelectedCardOverlay(props: SelectedCardOverlayProps): JSX.Element {
+  const appNavigationService = new AppNavigationService() 
+  const clientTimeService = new ClientTimeService()
+
+  const activeTabIndex = useSelector((state: State) => appNavigationService.getActiveTabIndex(state.appNavigation))
   const frameRate: number = useSelector(
     (state: State) => {
-      const videoFormat = state.settings.ccgConfig.channels[new AppNavigationService().getActiveTabIndex(state.appNavigation)]?.videoFormat
+      const videoFormat = state.settings.ccgConfig.channels[activeTabIndex]?.videoFormat
       return videoFormat ? videoFormat.frameRate : 25
     }
   )
 
-  const durationTimeCode = new ClientTimeService().convertDurationToTimeCode(props.timeRange, frameRate, props.fileType)
+  const durationTimeCode = clientTimeService.convertDurationToTimeCode(props.timeRange, frameRate, props.fileType)
   return (
     <CardOverlay showAs={CardOverlayType.SELECTED}>        
       {durationTimeCode}            
