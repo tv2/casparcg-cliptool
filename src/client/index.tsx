@@ -1,18 +1,15 @@
+import './index.scss'
 import React from 'react'
 import ReactDom from 'react-dom'
 
 import { Provider as ReduxProvider } from 'react-redux'
-import { reduxStore, reduxState } from '../model/reducers/store'
-import { socket } from './util/SocketClientHandlers'
-import { App } from './components/App'
-import { setSelectView } from '../model/reducers/appNavAction'
+import { App } from './app/app'
 
-console.log('Redux initialized :', reduxState)
-if (new URLSearchParams(window.location.search).get('textview') === '1') {
-    reduxStore.dispatch(setSelectView(1))
-}
+import { reduxStore, state } from '../shared/store'
+import { ObserverService } from './shared/services/observer-service'
 
-console.log('Socket Initialized', socket)
+console.log('Redux initialized :', state)
+new ObserverService()
 
 ReactDom.render(
     <ReduxProvider store={reduxStore}>

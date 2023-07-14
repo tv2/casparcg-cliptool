@@ -1,5 +1,5 @@
 # Settings #
-settings.json
+/storage/
 
 # Build folder and files #
 ##########################
@@ -56,4 +56,3 @@ ehthumbs.db
 # Windows shortcuts #
 #####################
 *.lnk
-/storage/hiddenFiles.json

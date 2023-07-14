@@ -1,8 +1,8 @@
-import { ampServerGateway } from './gateways/AmpServerGateway'
-import { oscServerGateway } from './gateways/OscServerGateway'
-import { argHelp, ARG_CONSTANTS } from './util/extractArgs'
+import { ampServerGateway } from './gateways/amp-server-gateway'
+import { oscServerGateway } from './gateways/osc-server-gateway'
+import { argHelp, ARG_CONSTANTS } from './util/extract-args'
 
-export const app = () => {
+export function app(): void {
     console.log('ControlGateway started')
 
     switch (ARG_CONSTANTS.type) {

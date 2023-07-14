@@ -1,0 +1,27 @@
+.settings-channel-form {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  margin-top: 20px;
+  font-size: 1.1em;
+  text-align: left;
+  background-color: rgb(56, 56, 56);
+  border-width: 1px;
+  border-style: solid;
+  border-color: rgba(230, 230, 230, 0.63);
+}
+
+.settings-input-field {
+  white-space: nowrap;
+  margin: 5px;
+  min-width: 120px;
+  color: white;
+  background-color: rgb(49, 49, 49);
+  border-width: 1px;
+  border-style: solid;
+  border-color: rgb(34, 34, 34);
+}
+
+.label {
+  display: block;
+}

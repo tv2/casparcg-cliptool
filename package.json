@@ -61,29 +61,28 @@
         ]
     },
     "dependencies": {
-        "@tv2media/logger": "^1.2.4",
+        "@reduxjs/toolkit": "^1.9.3",
+        "@tv2media/logger": "^2.0.0",
         "casparcg-connection": "^5.1.0",
-        "chokidar": "^3.5.1",
         "express": "^4.17.1",
         "filehound": "^1.17.4",
         "http": "^0.0.0",
+        "lodash": "^4.17.21",
         "osc": "https://github.com/olzzon/tv2-osc.js-no-serialport.git",
         "react": "^17.0.2",
         "react-dom": "^17.0.2",
         "react-redux": "^7.2.3",
-        "react-sortablejs": "^6.0.0",
-        "redux": "^4.0.5",
-        "rmc-tabs": "^1.2.29",
         "serialport": "^9.0.7",
         "socket.io": "^4.0.0",
         "socket.io-client": "^4.0.0",
-        "sortablejs": "^1.13.0",
-        "xml-js": "^1.6.11"
+        "zod": "^3.21.4"
     },
     "devDependencies": {
         "@babel/core": "^7.13.10",
         "@babel/preset-typescript": "^7.13.0",
+        "@types/lodash": "^4.14.191",
         "@types/node": "^14.14.36",
+        "@types/react-dom": "^18.0.11",
         "@types/react-redux": "^7.1.16",
         "@types/socket.io-client": "^1.4.36",
         "copyfiles": "^2.4.1",
@@ -94,12 +93,14 @@
         "node-license-validator": "^1.3.0",
         "pkg": "^5.8.0",
         "prettier": "^2.2.1",
+        "sass": "^1.60.0",
+        "sass-loader": "^13.2.2",
         "simple-git-hooks": "^2.0.3",
         "standard-version": "^9.1.1",
         "style-loader": "^2.0.0",
         "ts-loader": "^8.0.18",
         "typescript": "^4.2.3",
-        "webpack": "^5.28.0",
+        "webpack": "^5.77.0",
         "webpack-cli": "^4.5.0"
     }
 }

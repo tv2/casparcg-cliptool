@@ -1,0 +1,18 @@
+.c-number-input {
+  white-space: nowrap;
+  margin: 5px;
+  min-width: 120px;
+  color: white;
+  background-color: rgb(49, 49, 49);
+  border-width: 1px;
+  border-style: solid;
+  border-color: rgb(34, 34, 34);
+
+  &__input {
+    text-align: right;
+    width: 120px;
+    border: 1px solid rgb(104, 104, 104);
+    -webkit-appearance: none;
+    appearance: none;
+  }
+}
