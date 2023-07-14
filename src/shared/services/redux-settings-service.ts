@@ -66,7 +66,10 @@ export class ReduxSettingsService {
         mediaState: MediaState,
         outputSettings: OutputSettings
     ) {
-        if (!mediaState.folders.includes(outputSettings.folder)) {
+        if (
+            !(outputSettings.folder === '') &&
+            !mediaState.folders.includes(outputSettings.folder)
+        ) {
             outputSettings.folder = ''
         }
     }
@@ -75,6 +78,13 @@ export class ReduxSettingsService {
         allFiles: MediaFile[],
         outputSettings: OutputSettings
     ) {
+        if (
+            outputSettings.selectedFileName === '' &&
+            outputSettings.cuedFileName === ''
+        ) {
+            return
+        }
+
         const mediaFile = allFiles.find((file) => {
             file.name === outputSettings.cuedFileName ||
                 file.name === outputSettings.selectedFileName

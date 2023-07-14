@@ -437,24 +437,23 @@ function extractFilesToOutput(
 }
 
 function fixInvalidUsedPathsInSettings(allFiles: MediaFile[]): void {
-    const outputSettingsWithFixedPaths = new ReduxSettingsService()
+    const outputSettingsWithFixedPaths = reduxSettingsService
         .getAllOutputSettings(state.settings)
         .map((outputSettings) =>
-            new ReduxSettingsService().clearInvalidTargetedPaths(
+            reduxSettingsService.clearInvalidTargetedPaths(
                 allFiles,
                 outputSettings,
                 state.media
             )
         )
     if (
-        isDeepCompareEqual(
-            new ReduxSettingsService().getAllOutputSettings(state.settings),
+        !isDeepCompareEqual(
+            reduxSettingsService.getAllOutputSettings(state.settings),
             outputSettingsWithFixedPaths
         )
     ) {
-        return
+        saveFixedPathsSettings(outputSettingsWithFixedPaths)
     }
-    saveFixedPathsSettings(outputSettingsWithFixedPaths)
 }
 
 function saveFixedPathsSettings(
