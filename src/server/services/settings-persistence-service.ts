@@ -11,8 +11,17 @@ import { logger } from '../utils/logger'
 import { PersistenceService } from './persistence-service'
 
 export class SettingsPersistenceService {
+    private reduxSettingsService: ReduxSettingsService
+    private persistenceService: PersistenceService
+
+    constructor(reduxSettingsService?: ReduxSettingsService) {
+        this.reduxSettingsService =
+            reduxSettingsService ?? new ReduxSettingsService()
+        this.persistenceService = new PersistenceService()
+    }
+
     load(): void {
-        new PersistenceService()
+        this.persistenceService
             .loadFile('settings.json')
             .then((loadedSettings) => {
                 const rawSettings: unknown = JSON.parse(loadedSettings)
@@ -30,7 +39,7 @@ export class SettingsPersistenceService {
                     )
                 reduxStore.dispatch(
                     setGenerics(
-                        new ReduxSettingsService().getDefaultGenericSettings()
+                        this.reduxSettingsService.getDefaultGenericSettings()
                     )
                 )
                 this.save()
@@ -64,15 +73,15 @@ export class SettingsPersistenceService {
         logger
             .data(rawSettings)
             .error('Failed to parse settings from file, using default!')
-        return new ReduxSettingsService().getDefaultGenericSettings()
+        return this.reduxSettingsService.getDefaultGenericSettings()
     }
 
     public save(genericSettings?: GenericSettings): void {
         const generics: GenericSettings = genericSettings
             ? genericSettings
-            : new ReduxSettingsService().getGenericSettings(state.settings)
+            : this.reduxSettingsService.getGenericSettings(state.settings)
         const stringifiedSettings = JSON.stringify(generics)
-        new PersistenceService()
+        this.persistenceService
             .saveFile('settings.json', stringifiedSettings)
             .then(() => {
                 logger.data(generics).debug('Settings saved')
@@ -117,7 +126,7 @@ export class SettingsPersistenceService {
         old: PreviousGenericSettings
     ): GenericSettings {
         const newSettings: GenericSettings = {
-            ...new ReduxSettingsService().getDefaultGenericSettings(),
+            ...this.reduxSettingsService.getDefaultGenericSettings(),
         }
         newSettings.ccgSettings = {
             transitionTime: old.transitionTime ?? 16,

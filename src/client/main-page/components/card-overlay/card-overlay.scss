@@ -10,11 +10,11 @@
     padding: 0;
   }
 
-  &.cued {
+  &__cued {
     color: var(--cued-color);
   }
 
-  &.selected {
+  &__selected {
     color: var(--selected-color);
   }
 }

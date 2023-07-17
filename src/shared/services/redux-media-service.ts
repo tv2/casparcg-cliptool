@@ -1,24 +1,24 @@
 import {
     FileInfo,
     FileType,
-    Media,
+    MediaState,
     Output as Output,
     ThumbnailFile,
 } from '../models/media-models'
 
 export class ReduxMediaService {
-    public getOutput(media: Media, channelIndex: number): Output {
+    public getOutput(media: MediaState, channelIndex: number): Output {
         return media.outputs[channelIndex]
     }
 
-    public getOutputs(media: Media): Output[] {
+    public getOutputs(media: MediaState): Output[] {
         return media.outputs
     }
 
     public getBase64ThumbnailUrl(
         fileName: string,
         channelIndex: number,
-        media: Media
+        media: MediaState
     ): string {
         const output = this.getOutput(media, channelIndex)
         if (!output || !output.thumbnailList) {
@@ -33,7 +33,7 @@ export class ReduxMediaService {
 
     public getSelectedFile(
         cleanFileName: string,
-        media: Media,
+        media: MediaState,
         channelIndex: number
     ): FileInfo | undefined {
         return media.outputs[channelIndex].mediaFiles.find(

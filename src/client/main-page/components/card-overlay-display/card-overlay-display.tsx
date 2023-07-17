@@ -16,28 +16,30 @@ interface CardOverlayDisplayProps {
 }
 
 export default function CardOverlayDisplay(props: CardOverlayDisplayProps): JSX.Element {
-  
+  const reduxMediaService = new ReduxMediaService()
+  const reduxSettingsService = new ReduxSettingsService()
+
   useSelector(
-    (state: State) => new ReduxSettingsService()
+    (state: State) => reduxSettingsService
       .getOutputSettings(state.settings, props.activeTabIndex).selectedFileName
   )
   useSelector(
-    (state: State) => new ReduxSettingsService()
+    (state: State) => reduxSettingsService
       .getOutputSettings(state.settings, props.activeTabIndex).cuedFileName
   )
 
   const time: [number, number] = useSelector(
-    (state: State) => new ReduxMediaService().getOutput(state.media, props.activeTabIndex).time
+    (state: State) => reduxMediaService.getOutput(state.media, props.activeTabIndex).time
   )
   
-  const isSelected: boolean = new ReduxSettingsService().isThumbnailSelected(props.file.name, state.settings, props.activeTabIndex)
-  const isCued: boolean = new ReduxSettingsService().isMediaCued(props.file.name, state.settings, props.activeTabIndex)
-  const isValidFile: boolean = isSelected ? new ReduxMediaService().isValidFile(props.file, time) : false
+  const isSelected: boolean = reduxSettingsService.isThumbnailSelected(props.file.name, state.settings, props.activeTabIndex)
+  const isCued: boolean = reduxSettingsService.isMediaCued(props.file.name, state.settings, props.activeTabIndex)
+  const isValidFile: boolean = isSelected ? reduxMediaService.isValidFile(props.file, time) : false
 
   return (
   <div className="c-card-overlay-display">
       {(isSelected && isValidFile) && (
-          <SelectedCardOverlay className={props.className ?? ''} fileType={props.file.type} time={time}/>
+          <SelectedCardOverlay className={props.className ?? ''} fileType={props.file.type} timeRange={time}/>
       )}
       {isCued && (
           <CardOverlay showAs={CardOverlayType.CUED}>

@@ -7,8 +7,9 @@ import { BrowserService } from '../shared/services/browser-service'
 
 
 export function App(): JSX.Element {
-    if (new BrowserService().isChannelView()) {
-        setOutput(new BrowserService().getChannel())
+    const browserService = new BrowserService()
+    if (browserService.isChannelView()) {
+        setOutput(browserService.getChannel())
     }
     return (
         <div className="app">

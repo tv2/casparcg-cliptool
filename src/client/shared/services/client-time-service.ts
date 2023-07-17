@@ -2,6 +2,12 @@ import { FileType } from '../../../shared/models/media-models'
 import { TimeService } from '../../../shared/services/time-service'
 
 export class ClientTimeService {
+    private timeService: TimeService
+
+    constructor() {
+        this.timeService = new TimeService()
+    }
+
     public convertDurationToTimeCode(
         timeRange: [number, number] = [0, 0],
         frameRate: number = 25,
@@ -16,6 +22,6 @@ export class ClientTimeService {
             return '****END****'
         }
 
-        return new TimeService().convertDurationToTimeCode(timeRange, frameRate)
+        return this.timeService.convertDurationToTimeCode(timeRange, frameRate)
     }
 }

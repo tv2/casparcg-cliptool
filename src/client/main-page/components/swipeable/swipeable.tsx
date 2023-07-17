@@ -57,7 +57,7 @@ export default function Swipeable(props: SwipeableProps): JSX.Element {
 
   function onSwipe(direction: SwipeDirection): void {
     const nextChildIndex = getNextChild(props.activeChild, direction)
-    if (!isValidChild(nextChildIndex, props.children.length)) {
+    if (!isValidIndex(nextChildIndex, props.children.length)) {
       return
     }
     reduxStore.dispatch(setActiveTabIndex(nextChildIndex))
@@ -83,8 +83,8 @@ export default function Swipeable(props: SwipeableProps): JSX.Element {
     return slope <= MAX_SWIPE_SLOPE
   }
 
-  function isValidChild(child: number, childCount: number): boolean {
-      return child >= 0 && child < childCount
+  function isValidIndex(index: number, length: number): boolean {
+      return index >= 0 && index < length
   }
 
   function getSwipeDirection(start: Point, end: Point): SwipeDirection {

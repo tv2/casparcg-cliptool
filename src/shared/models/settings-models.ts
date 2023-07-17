@@ -5,8 +5,8 @@ export enum OperationMode {
     EDIT_VISIBILITY = 'edit_visibility',
 }
 
-export interface Settings {
-    ccgConfig: CaspercgConfig
+export interface SettingsState {
+    ccgConfig: CasparcgConfig
     generics: GenericSettings
 }
 
@@ -15,12 +15,12 @@ export interface TabInfo {
     title: string
 }
 
-export interface CaspercgConfig {
-    channels: CaspercgConfigChannel[]
+export interface CasparcgConfig {
+    channels: CasparcgConfigChannel[]
     path: string
 }
 
-export interface CaspercgConfigChannel {
+export interface CasparcgConfigChannel {
     _type?: string
     videoMode?: string
     videoFormat?: VideoFormat

@@ -25,7 +25,7 @@ export interface MediaFile extends FileInfo {
 export interface ThumbnailFile extends FileInfo {
     thumbnail: string
 }
-export interface Media {
+export interface MediaState {
     outputs: Output[]
     folders: string[]
     hiddenFiles: HiddenFiles

@@ -8,18 +8,22 @@ import { ClientTimeService } from "../../../shared/services/client-time-service"
 interface SelectedCardOverlayProps {
   className?: string
   fileType: string
-  time: [number, number]
+  timeRange: [number, number]
 }
 
 export default function SelectedCardOverlay(props: SelectedCardOverlayProps): JSX.Element {
-  const frameRate: number = useSelector(
-      (state: State) => {
-        const videoFormat = state.settings.ccgConfig.channels[new AppNavigationService().getActiveTabIndex(state.appNavigation)]?.videoFormat
-        return videoFormat ? videoFormat.frameRate : 25
-      }
-    )
+  const appNavigationService = new AppNavigationService() 
+  const clientTimeService = new ClientTimeService()
 
-  const durationTimeCode = new ClientTimeService().convertDurationToTimeCode(props.time, frameRate, props.fileType)
+  const activeTabIndex = useSelector((state: State) => appNavigationService.getActiveTabIndex(state.appNavigation))
+  const frameRate: number = useSelector(
+    (state: State) => {
+      const videoFormat = state.settings.ccgConfig.channels[activeTabIndex]?.videoFormat
+      return videoFormat ? videoFormat.frameRate : 25
+    }
+  )
+
+  const durationTimeCode = clientTimeService.convertDurationToTimeCode(props.timeRange, frameRate, props.fileType)
   return (
     <CardOverlay showAs={CardOverlayType.SELECTED}>        
       {durationTimeCode}            

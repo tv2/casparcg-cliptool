@@ -34,7 +34,7 @@ export class UtilityService {
             .join(' ')
     }
 
-    convertPascasCaseToScreamingSnakeCase(toBeConverted: string) {
+    convertPascalCaseToScreamingSnakeCase(toBeConverted: string) {
         return toBeConverted.toUpperCase().replace(' ', '_')
     }
 }
