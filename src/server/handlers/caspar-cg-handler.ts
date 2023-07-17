@@ -49,7 +49,7 @@ import { HiddenFilesPersistenceService } from '../services/hidden-files-persiste
 import { CasparCgHandlerService } from '../services/casparcg-handler-service'
 import { ExpressService } from '../services/express-service'
 
-let waitingForCcgResponse: boolean = false
+let waitingForCasparcgResponse: boolean = false
 
 const reduxMediaService = new ReduxMediaService()
 const reduxSettingsService = new ReduxSettingsService()
@@ -64,6 +64,7 @@ const hiddenFilesPersistenceService = new HiddenFilesPersistenceService(
 const settingsPersistenceService = new SettingsPersistenceService(
     reduxSettingsService
 )
+let fileChangesInterval: NodeJS.Timeout | undefined
 
 //Communication with CasparCG consists of 2 parts:
 //1. An AMCP connection for receiving media info and sending commands, which is created in the 'casparcg-handler-service'
@@ -245,7 +246,7 @@ function ccgAMPHandler(): void {
                 .getCasparCGConfig()
                 .then((config) => {
                     dispatchConfig(config)
-                    waitingForCcgResponse = false
+                    waitingForCasparcgResponse = false
                     startTimeEmitInterval()
                     loadInitialOverlay()
                 })
@@ -284,26 +285,41 @@ function startTimeEmitInterval() {
 }
 
 async function startFileChangesPollingInterval(): Promise<void> {
-    await pollFileChanges()
-    setInterval(() => {
-        if (!waitingForCcgResponse) {
-            waitingForCcgResponse = true
-            pollFileChanges().then(() => {
-                waitingForCcgResponse = false
-            })
+    if (fileChangesInterval) {
+        clearInterval(fileChangesInterval)
+        fileChangesInterval = undefined
+    }
+    await getFileChanges()
+    await getThumbnailChanges()
+    fileChangesInterval = setInterval(async () => {
+        if (waitingForCasparcgResponse) {
+            return
+        }
+        waitingForCasparcgResponse = true
+        try {
+            await getFileChanges()
+            await getThumbnailChanges()
+        } finally {
+            waitingForCasparcgResponse = false
         }
     }, 3000)
 }
 
-async function pollFileChanges(): Promise<void> {
-    const newThumbnails = await loadCcgThumbnails()
-    if (newThumbnails.hasChanges) {
-        casparCgHandlerService.updateStoredThumbnails(newThumbnails.thumbnails)
-        casparCgHandlerService.assignThumbnailsToOutputs(
-            expressService.getSocketServer()
-        )
-    }
+async function getFileChanges(): Promise<void> {
+    logger.trace('Polling for File Changes.')
     await loadFileList()
+}
+
+async function getThumbnailChanges(): Promise<void> {
+    logger.trace('Polling for Thumbnail Changes.')
+    const newThumbnails = await loadCcgThumbnails()
+    if (!newThumbnails.hasChanges) {
+        return
+    }
+    casparCgHandlerService.updateStoredThumbnails(newThumbnails.thumbnails)
+    casparCgHandlerService.assignThumbnailsToOutputs(
+        expressService.getSocketServer()
+    )
 }
 
 async function loadCcgThumbnails(): Promise<{
@@ -368,11 +384,8 @@ async function loadFileList(): Promise<void> {
                 .getSocketServer()
                 .emit(ServerToClientCommand.FOLDERS_UPDATE, state.media.folders)
 
-            reduxMediaService
-                .getOutputs(state.media)
-                .forEach(({}, outputIndex: number) => {
-                    outputExtractFiles(payload.response.data, outputIndex)
-                })
+            extractFilesToOutputs(payload.response.data)
+            fixInvalidUsedPathsInSettings(payload.response.data)
             checkHiddenFilesChanged(payload.response.data)
         })
         .catch((error) => {
@@ -384,29 +397,78 @@ async function loadFileList(): Promise<void> {
         })
 }
 
-function outputExtractFiles(allFiles: MediaFile[], outputIndex: number): void {
-    let outputMedia = allFiles.filter((file) => {
-        return (
-            isFolderNameEqual(
-                file.name,
-                reduxSettingsService.getOutputSettings(
-                    state.settings,
-                    outputIndex
-                ).folder
-            ) && !isAlphaFile(file.name)
+function extractFilesToOutputs(allFiles: MediaFile[]): void {
+    const outputs = reduxMediaService.getOutputs(state.media)
+    if (outputs.length !== state.settings.ccgConfig.channels.length) {
+        logger.warn(
+            `Expected ${state.settings.ccgConfig.channels.length} Outputs but had ${outputs.length}`
         )
+    }
+    outputs.forEach((output: Output, outputIndex: number) => {
+        extractFilesToOutput(allFiles, outputIndex, output)
     })
-    const mediaFiles = reduxMediaService.getOutput(
-        state.media,
+}
+
+function extractFilesToOutput(
+    allFiles: MediaFile[],
+    outputIndex: number,
+    output: Output
+): void {
+    const outputFolder = reduxSettingsService.getOutputSettings(
+        state.settings,
         outputIndex
-    ).mediaFiles
-    if (!isDeepCompareEqual(mediaFiles, outputMedia)) {
+    ).folder
+    const outputMediaFiles = allFiles.filter(
+        (file) =>
+            isFolderNameEqual(file.name, outputFolder) &&
+            !isAlphaFile(file.name)
+    )
+    if (!isDeepCompareEqual(output.mediaFiles, outputMediaFiles)) {
         logger.info(`Media files changed for output: ${outputIndex}`)
-        reduxStore.dispatch(updateMediaFiles(outputIndex, outputMedia))
+        reduxStore.dispatch(updateMediaFiles(outputIndex, outputMediaFiles))
         expressService
             .getSocketServer()
-            .emit(ServerToClientCommand.MEDIA_UPDATE, outputIndex, outputMedia)
+            .emit(
+                ServerToClientCommand.MEDIA_UPDATE,
+                outputIndex,
+                outputMediaFiles
+            )
     }
+}
+
+function fixInvalidUsedPathsInSettings(allFiles: MediaFile[]): void {
+    const outputSettingsWithFixedPaths = reduxSettingsService
+        .getAllOutputSettings(state.settings)
+        .map((outputSettings) =>
+            reduxSettingsService.clearInvalidTargetedPaths(
+                allFiles,
+                outputSettings,
+                state.media
+            )
+        )
+    if (
+        !isDeepCompareEqual(
+            reduxSettingsService.getAllOutputSettings(state.settings),
+            outputSettingsWithFixedPaths
+        )
+    ) {
+        saveFixedPathsSettings(outputSettingsWithFixedPaths)
+    }
+}
+
+function saveFixedPathsSettings(
+    outputSettingsWithFixedPaths: OutputSettings[]
+) {
+    logger.warn(
+        'Removing some invalid paths from settings, that likely exist due to folders/files being deleted while off.'
+    )
+    const genericSettings = { ...state.settings.generics }
+    genericSettings.outputSettings = outputSettingsWithFixedPaths
+    reduxStore.dispatch(setGenerics(genericSettings))
+    casparCgHandlerService.assignThumbnailsToOutputs(
+        expressService.getSocketServer()
+    )
+    new SettingsPersistenceService().save()
 }
 
 function checkHiddenFilesChanged(files: MediaFile[]): void {

@@ -1,13 +1,13 @@
 import {
     CasparcgConfigChannel,
     OutputSettings,
-    Settings,
+    SettingsState,
 } from './../models/settings-models'
 import { ReduxSettingsService } from '../services/redux-settings-service'
 import { getVideoFormat } from '../video-format'
 import * as IO from './../actions/settings-action'
 
-function defaultSettingsReducerState(): Settings {
+function defaultSettingsReducerState(): SettingsState {
     const generics = new ReduxSettingsService().getDefaultGenericSettings()
     return {
         ccgConfig: {
@@ -28,10 +28,10 @@ function updateChannelConfigWithVideoFormat(
 }
 
 export function settings(
-    state: Settings = defaultSettingsReducerState(),
+    state: SettingsState = defaultSettingsReducerState(),
     action: any
-): Settings {
-    let nextState: Settings = { ...state }
+): SettingsState {
+    let nextState: SettingsState = { ...state }
 
     switch (action.type) {
         case IO.UPDATE_SETTINGS: {
@@ -111,11 +111,11 @@ export function settings(
 }
 
 function updateAttributeByPartial(
-    originalState: Settings,
-    nextState: Settings,
+    originalState: SettingsState,
+    nextState: SettingsState,
     action: any,
     updates: Partial<OutputSettings>
-): Settings {
+): SettingsState {
     const outputSettings = [...originalState.generics.outputSettings]
     outputSettings[action.channelIndex] = {
         ...outputSettings[action.channelIndex],
@@ -132,7 +132,7 @@ function updateAttributeByPartial(
 }
 
 function doesChannelExist(
-    nextState: Settings,
+    nextState: SettingsState,
     action: { channelIndex: number }
 ): boolean {
     return nextState.generics.outputSettings.length > action.channelIndex
