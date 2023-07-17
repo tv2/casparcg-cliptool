@@ -85,10 +85,11 @@ export class ReduxSettingsService {
             return
         }
 
-        const mediaFile = allFiles.find((file) => {
-            file.name === outputSettings.cuedFileName ||
+        const mediaFile = allFiles.find(
+            (file) =>
+                file.name === outputSettings.cuedFileName ||
                 file.name === outputSettings.selectedFileName
-        })
+        )
         if (!mediaFile) {
             outputSettings.cuedFileName = ''
             outputSettings.selectedFileName = ''
