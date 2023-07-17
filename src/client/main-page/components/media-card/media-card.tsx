@@ -22,19 +22,23 @@ interface MediaCardProps {
 }
 
 export default function MediaCard(props: MediaCardProps): JSX.Element {
+  const appNavigationService = new AppNavigationService()
+  const reduxSettingsService = new ReduxSettingsService()
+
   const activeTabIndex: number = useSelector(
-    (state: State) => new AppNavigationService().getActiveTabIndex(state.appNavigation))
+    (state: State) => appNavigationService.getActiveTabIndex(state.appNavigation)
+  )
   useSelector(
-    (state: State) => new ReduxSettingsService().getOutputSettings(state.settings, props.activeTabIndex)
+    (state: State) => reduxSettingsService.getOutputSettings(state.settings, props.activeTabIndex)
       .selectedFileName
   )
   useSelector(
-    (state: State) => new ReduxSettingsService().getOutputSettings(state.settings, props.activeTabIndex)
+    (state: State) => reduxSettingsService.getOutputSettings(state.settings, props.activeTabIndex)
       .cuedFileName
-    )
+  )
   
-  const isSelected: boolean = new ReduxSettingsService().isThumbnailSelected(props.fileName, state.settings, activeTabIndex)
-  const isCued: boolean = new ReduxSettingsService().isMediaCued(props.fileName, state.settings, activeTabIndex)
+  const isSelected: boolean = reduxSettingsService.isThumbnailSelected(props.fileName, state.settings, activeTabIndex)
+  const isCued: boolean = reduxSettingsService.isMediaCued(props.fileName, state.settings, activeTabIndex)
 
   const isSelectedClass = isSelected ? 'selected-thumbnail' : ''
   const chosenClass = isCued ? 'cued-thumbnail' : isSelectedClass
@@ -53,11 +57,14 @@ export default function MediaCard(props: MediaCardProps): JSX.Element {
   )
 }
 
-function triggerOperationModeAction(fileName: string, activeTabIndex: number, fileType: string): void {   
-  if (new BrowserService().isTextView()) {
+function triggerOperationModeAction(fileName: string, activeTabIndex: number, fileType: string): void {
+  const browserService = new BrowserService()
+  const reduxSettingsService = new ReduxSettingsService()
+
+  if (browserService.isTextView()) {
     return playFile(fileName, activeTabIndex, fileType)
   } 
-  const operationMode = new ReduxSettingsService().getOutputSettings(state.settings, activeTabIndex)?.operationMode
+  const operationMode = reduxSettingsService.getOutputSettings(state.settings, activeTabIndex)?.operationMode
   switch (operationMode) {
       case OperationMode.EDIT_VISIBILITY: 
           toggleVisibility(fileName, activeTabIndex)
@@ -70,8 +77,10 @@ function triggerOperationModeAction(fileName: string, activeTabIndex: number, fi
 }
 
 function toggleVisibility(fileName: string, activeTabIndex: number): void {
-  if (new ReduxSettingsService().isCardSelectedOnAnyOutput(fileName, state.settings) 
-    || new ReduxSettingsService().isCardCuedOnAnyOutput(fileName, state.settings)) {
+  const reduxSettingsService = new ReduxSettingsService()
+
+  if (reduxSettingsService.isCardSelectedOnAnyOutput(fileName, state.settings) 
+    || reduxSettingsService.isCardCuedOnAnyOutput(fileName, state.settings)) {
       alert('Unable to hide, as the file is in use somewhere.')
       return
   }
@@ -79,12 +88,15 @@ function toggleVisibility(fileName: string, activeTabIndex: number): void {
 }
 
 function playFile(fileName: string, activeTabIndex: number, fileType: string ): void {
+  const socketPlayService = new SocketPlayService(SocketService.instance.getSocket())
+  const reduxSettingsService = new ReduxSettingsService()
+
   if (fileType === FileType.IMAGE) {
-    new SocketPlayService(SocketService.instance.getSocket()).playFile(activeTabIndex, fileName)
+    socketPlayService.playFile(activeTabIndex, fileName)
   } else {
-    const eventToFire = !new ReduxSettingsService().getOutputSettings(state.settings, activeTabIndex)?.manualStartState 
-      ? () => new SocketPlayService(SocketService.instance.getSocket()).playFile(activeTabIndex, fileName)
-      : () => new SocketPlayService(SocketService.instance.getSocket()).loadFile(activeTabIndex, fileName)
+    const eventToFire = !reduxSettingsService.getOutputSettings(state.settings, activeTabIndex)?.manualStartState 
+      ? () => socketPlayService.playFile(activeTabIndex, fileName)
+      : () => socketPlayService.loadFile(activeTabIndex, fileName)
     eventToFire()
   }   
 }

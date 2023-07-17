@@ -16,20 +16,22 @@ interface SettingsActionsProps {
 }
 
 export default function SettingsActions(props: SettingsActionsProps): JSX.Element {
+  const browserService = new BrowserService()
+  const isChannelView = browserService.isChannelView()
   const hasChanges = settingsHasChanges(props.settings)
   return (
       <div className="settings-channel-form">
-        <button className="c-settings-actions-button"
+        <button className="c-settings-actions__button"
           onClick={() => saveSettings(hasChanges, props.settings)}>
             SAVE SETTINGS
         </button>
-        <button className="c-settings-actions-button"
+        <button className="c-settings-actions__button"
           onClick={() => closeSettings(hasChanges)}>
           {hasChanges ? 'DISCARD CHANGES & CLOSE SETTINGS' : 'CLOSE SETTINGS'} 
         </button>       
         
-        {!new BrowserService().isChannelView() && (
-          <button className="c-settings-actions-button"
+        {!isChannelView && (
+          <button className="c-settings-actions__button"
             onClick={() => restartCliptool()}>
               RESTART CLIPTOOL
            </button>
@@ -73,7 +75,9 @@ function restartCliptool(): void {
 }
 
 function settingsHasChanges(settings: GenericSettings): boolean {
+  const reduxSettingsService = new ReduxSettingsService()
   return !_.isEqual(
     settings,
-    new ReduxSettingsService().getGenericSettings(state.settings))
+    reduxSettingsService.getGenericSettings(state.settings)
+  )
 }

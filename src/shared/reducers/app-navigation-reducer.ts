@@ -1,7 +1,7 @@
-import { AppNavigation } from '../models/app-navigation-models'
+import { AppNavigationState } from '../models/app-navigation-models'
 import * as AppNav from './../actions/app-navigation-action'
 
-function defaultAppNavigationReducerState(): AppNavigation {
+function defaultAppNavigationReducerState(): AppNavigationState {
     return {
         isConnected: false,
         activeTabIndex: 0,
@@ -10,10 +10,10 @@ function defaultAppNavigationReducerState(): AppNavigation {
 }
 
 export function appNavigation(
-    state: AppNavigation = defaultAppNavigationReducerState(),
+    state: AppNavigationState = defaultAppNavigationReducerState(),
     action: any
-): AppNavigation {
-    let nextState: AppNavigation = { ...state }
+): AppNavigationState {
+    let nextState: AppNavigationState = { ...state }
 
     switch (action.type) {
         case AppNav.SET_ACTIVE_TAB_INDEX:

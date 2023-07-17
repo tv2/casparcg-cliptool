@@ -1,7 +1,6 @@
 import { updateHiddenFiles } from '../../shared/actions/media-actions'
 import { HiddenFiles } from '../../shared/models/media-models'
 import { state, reduxStore } from '../../shared/store'
-import { socketServer } from '../handlers/express-handler'
 import { logger } from '../utils/logger'
 import { PersistenceService } from './persistence-service'
 import { ReduxSettingsService } from '../../shared/services/redux-settings-service'
@@ -10,8 +9,22 @@ import { ServerToClientCommand } from '../../shared/socket-io-constants'
 import _ from 'lodash'
 
 export class HiddenFilesPersistenceService {
+    private reduxSettingsService: ReduxSettingsService
+    private persistenceService: PersistenceService
+    private socketService: any
+
+    constructor(
+        socketService: any,
+        reduxSettingsService?: ReduxSettingsService
+    ) {
+        this.socketService = socketService
+        this.reduxSettingsService =
+            reduxSettingsService ?? new ReduxSettingsService()
+        this.persistenceService = new PersistenceService()
+    }
+
     public load(): void {
-        new PersistenceService()
+        this.persistenceService
             .loadFile('hiddenFiles.json')
             .then((rawHiddenFiles) => {
                 const hiddenFiles: HiddenFiles = JSON.parse(rawHiddenFiles)
@@ -45,7 +58,7 @@ export class HiddenFilesPersistenceService {
     private updateReduxState(hiddenFiles: HiddenFiles) {
         logger.data(hiddenFiles).trace('Hidden files File loaded with:')
         reduxStore.dispatch(updateHiddenFiles(hiddenFiles))
-        socketServer.emit(
+        this.socketService.emit(
             ServerToClientCommand.HIDDEN_FILES_UPDATE,
             hiddenFiles
         )
@@ -56,7 +69,7 @@ export class HiddenFilesPersistenceService {
             this.getCleanHiddenFiles(hiddenFiles)
         const stringifiedHiddenFiles = JSON.stringify(cleanHiddenFiles)
 
-        new PersistenceService()
+        this.persistenceService
             .saveFile('hiddenFiles.json', stringifiedHiddenFiles)
             .then(() => {
                 logger.data(stringifiedHiddenFiles).trace('Hidden files saved')
@@ -77,7 +90,7 @@ export class HiddenFilesPersistenceService {
 
     private hasSelectedOrCuedHiddenFiles(hiddenFiles: HiddenFiles): boolean {
         const outputs: OutputSettings[] =
-            new ReduxSettingsService().getGenericSettings(
+            this.reduxSettingsService.getGenericSettings(
                 state.settings
             ).outputSettings
         return outputs.some(
@@ -92,7 +105,7 @@ export class HiddenFilesPersistenceService {
             ...originalHiddenFiles,
         }
         const outputs: OutputSettings[] =
-            new ReduxSettingsService().getGenericSettings(
+            this.reduxSettingsService.getGenericSettings(
                 state.settings
             ).outputSettings
         outputs.forEach((output) => {

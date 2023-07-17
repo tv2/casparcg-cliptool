@@ -1,7 +1,10 @@
 import { state } from '../../shared/store'
-import { ccgConnection } from '../handlers/caspar-cg-handler'
 import { Enum as CcgEnum } from 'casparcg-connection'
 import { ReduxSettingsService } from '../../shared/services/redux-settings-service'
+import { CasparCgHandlerService } from '../services/casparcg-handler-service'
+
+const reduxSettingsService = new ReduxSettingsService()
+const casparCgHandlerService = CasparCgHandlerService.instance
 
 export function playMedia(
     channelIndex: number,
@@ -9,15 +12,15 @@ export function playMedia(
     fileName: string
 ): void {
     scale(channelIndex, layerIndex)
-    ccgConnection.play(
-        channelIndex + 1,
-        layerIndex + 1,
-        fileName,
-        new ReduxSettingsService().getOutputSettings(
-            state.settings,
-            channelIndex
-        ).loopState || false
-    )
+    casparCgHandlerService
+        .getCasparCgConnection()
+        .play(
+            channelIndex + 1,
+            layerIndex + 1,
+            fileName,
+            reduxSettingsService.getOutputSettings(state.settings, channelIndex)
+                .loopState || false
+        )
 }
 
 export function mixMedia(
@@ -27,18 +30,18 @@ export function mixMedia(
 ): void {
     scale(channelIndex, layerIndex)
 
-    ccgConnection.play(
-        channelIndex + 1,
-        layerIndex + 1,
-        fileName,
-        new ReduxSettingsService().getOutputSettings(
-            state.settings,
-            channelIndex
-        ).loopState || false,
-        CcgEnum.Transition.MIX,
-        new ReduxSettingsService().getGenericSettings(state.settings)
-            .ccgSettings.transitionTime
-    )
+    casparCgHandlerService
+        .getCasparCgConnection()
+        .play(
+            channelIndex + 1,
+            layerIndex + 1,
+            fileName,
+            reduxSettingsService.getOutputSettings(state.settings, channelIndex)
+                .loopState || false,
+            CcgEnum.Transition.MIX,
+            reduxSettingsService.getGenericSettings(state.settings).ccgSettings
+                .transitionTime
+        )
 }
 
 export function loadMedia(
@@ -48,15 +51,15 @@ export function loadMedia(
 ): void {
     scale(channelIndex, layerIndex)
 
-    ccgConnection.load(
-        channelIndex + 1,
-        layerIndex + 1,
-        fileName,
-        new ReduxSettingsService().getOutputSettings(
-            state.settings,
-            channelIndex
-        ).loopState || false
-    )
+    casparCgHandlerService
+        .getCasparCgConnection()
+        .load(
+            channelIndex + 1,
+            layerIndex + 1,
+            fileName,
+            reduxSettingsService.getOutputSettings(state.settings, channelIndex)
+                .loopState || false
+        )
 }
 
 export function playOverlay(
@@ -69,13 +72,19 @@ export function playOverlay(
     }
     scale(channelIndex, layerIndex)
 
-    ccgConnection.loadHtmlPage(channelIndex + 1, layerIndex + 1, fileName)
+    casparCgHandlerService
+        .getCasparCgConnection()
+        .loadHtmlPage(channelIndex + 1, layerIndex + 1, fileName)
 
-    ccgConnection.playHtmlPage(channelIndex + 1, layerIndex + 1)
+    casparCgHandlerService
+        .getCasparCgConnection()
+        .playHtmlPage(channelIndex + 1, layerIndex + 1)
 }
 
 export function stopOverlay(channelIndex: number, layerIndex: number): void {
-    ccgConnection.stop(channelIndex + 1, layerIndex + 1)
+    casparCgHandlerService
+        .getCasparCgConnection()
+        .stop(channelIndex + 1, layerIndex + 1)
 }
 
 function scale(channelIndex: number, layerIndex: number): void {
@@ -88,7 +97,7 @@ function scale(channelIndex: number, layerIndex: number): void {
 
     let scaleOutX = 1
     let scaleOutY = 1
-    const outputSetting = new ReduxSettingsService().getOutputSettings(
+    const outputSetting = reduxSettingsService.getOutputSettings(
         state.settings,
         channelIndex
     )
@@ -97,13 +106,15 @@ function scale(channelIndex: number, layerIndex: number): void {
         scaleOutY = outputSetting.scaleY / resY
     }
 
-    ccgConnection.mixerFill(
-        channelIndex + 1,
-        layerIndex + 1,
-        0,
-        0,
-        scaleOutX,
-        scaleOutY,
-        1
-    )
+    casparCgHandlerService
+        .getCasparCgConnection()
+        .mixerFill(
+            channelIndex + 1,
+            layerIndex + 1,
+            0,
+            0,
+            scaleOutX,
+            scaleOutY,
+            1
+        )
 }

@@ -7,6 +7,8 @@ import { OsService } from '../../shared/services/os-service'
 import { ClientToServerCommand } from '../../shared/socket-io-constants'
 
 export function ampServerGateway(): void {
+    const osService = new OsService()
+
     console.log('Initializing AMP server')
     // @ts-ignore
     const ampConnection = createServer((client: any) => {
@@ -36,7 +38,7 @@ export function ampServerGateway(): void {
                 logger.info('AMP Client disconnected')
             })
     }).listen(3811)
-    let ipAddresses = new OsService().getIpAddresses()
+    let ipAddresses = osService.getIpAddresses()
     ipAddresses.forEach((address) => {
         logger.info(`AMP Host Listening for TCP at ${address}:3811.`)
     })

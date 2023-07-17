@@ -13,7 +13,9 @@ interface ImageMediaCardProps {
 }
 
 export default function ImageMediaCard(props: ImageMediaCardProps): JSX.Element {
-  const url: string = new ReduxMediaService().getBase64ThumbnailUrl(props.file.name, props.activeTabIndex || 0, state.media)
+  const reduxMediaService = new ReduxMediaService()  
+  
+  const url: string = reduxMediaService.getBase64ThumbnailUrl(props.file.name, props.activeTabIndex || 0, state.media)
 
   return (
     <div className="c-image-media-card">

@@ -8,7 +8,6 @@ interface FileNameDisplayProps {
 export function FileNameDisplay(props: FileNameDisplayProps): JSX.Element{
     const slicedName = props.fileName
         .substring(props.fileName.lastIndexOf('/') + 1)
-        .slice(-45)
     
     return (
         <p className={props.className ?? ''}>

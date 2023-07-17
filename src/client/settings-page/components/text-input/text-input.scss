@@ -1,9 +1,3 @@
-.c-text-input__input {
-  border: 1px solid rgb(104, 104, 104);
-  -webkit-appearance: none;
-  appearance: none;
-}
-
 .c-text-input {
   white-space: nowrap;
   margin: 5px;
@@ -13,4 +7,10 @@
   border-width: 1px;
   border-style: solid;
   border-color: rgb(34, 34, 34);
+
+  &__input {
+    border: 1px solid rgb(104, 104, 104);
+    -webkit-appearance: none;
+    appearance: none;
+  }
 }

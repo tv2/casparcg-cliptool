@@ -1,9 +1,3 @@
-.c-checkbox__input {
-  text-align: right;
-  width: 25px;
-  height: 25px;
-}
-
 .c-checkbox {
   white-space: nowrap;
   margin: 5px;
@@ -13,5 +7,11 @@
   border-width: 1px;
   border-style: solid;
   border-color: rgb(34, 34, 34);
+
+  &__input {
+    text-align: right;
+    width: 25px;
+    height: 25px;
+  }
 }
 
