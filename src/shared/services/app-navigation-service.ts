@@ -1,7 +1,7 @@
-import { AppNavigation } from '../models/app-navigation-models'
+import { AppNavigationState } from '../models/app-navigation-models'
 
 export class AppNavigationService {
-    public getActiveTabIndex(navigationState: AppNavigation): number {
+    public getActiveTabIndex(navigationState: AppNavigationState): number {
         return navigationState.activeTabIndex
     }
 }
