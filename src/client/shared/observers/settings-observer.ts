@@ -1,6 +1,6 @@
 import { ServerToClientCommand } from '../../../shared/socket-io-constants'
 import { reduxStore } from '../../../shared/store'
-import { Settings } from '../../../shared/models/settings-models'
+import { SettingsState } from '../../../shared/models/settings-models'
 import { setNumberOfOutputs } from '../../../shared/actions/media-actions'
 import {
     setGenerics,
@@ -70,7 +70,7 @@ export class SettingsObserver {
         reduxStore.dispatch(setManualStart(channelIndex, manualStart))
     }
 
-    private processSettingsUpdateEvent(payload: Settings): void {
+    private processSettingsUpdateEvent(payload: SettingsState): void {
         reduxStore.dispatch(
             setNumberOfOutputs(payload.ccgConfig.channels.length)
         )

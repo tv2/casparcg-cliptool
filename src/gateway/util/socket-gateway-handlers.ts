@@ -20,7 +20,10 @@ import {
 import { ARG_CONSTANTS } from './extract-args'
 import { logger } from './logger-gateway'
 import { MediaFile, ThumbnailFile } from '../../shared/models/media-models'
-import { OperationMode, Settings } from '../../shared/models/settings-models'
+import {
+    OperationMode,
+    SettingsState,
+} from '../../shared/models/settings-models'
 import { ReduxSettingsService } from '../../shared/services/redux-settings-service'
 import {
     ServerToClientCommand,
@@ -132,7 +135,7 @@ socket.on(
     }
 )
 
-socket.on(ServerToClientCommand.SETTINGS_UPDATE, (settings: Settings) => {
+socket.on(ServerToClientCommand.SETTINGS_UPDATE, (settings: SettingsState) => {
     reduxStore.dispatch(setNumberOfOutputs(settings.ccgConfig.channels.length))
     reduxStore.dispatch(setGenerics(settings.generics))
     reduxStore.dispatch(
