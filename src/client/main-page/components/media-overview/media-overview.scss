@@ -16,10 +16,24 @@
 
 .c-media-overview__card {
   position: relative;
-  background: #2e2b41;
+  background: var(--thumbnail-background-color);
   color: white;
   box-shadow: 6px 6px 6px #555;
   width: 300px;
   margin: 5px;
   font-size: 0.9em;
+
+  &.hidden {
+    scale: 0.8;
+    opacity: 70%;
+    background: var(--hidden-thumbnail-background-color);
+  
+    .c-image-media-card__image {
+      filter: grayscale(1);
+    }
+
+    .c-thumbnail-button {
+      border-color: var(--hidden-thumbnail-background-color);
+    }
+  }
 }

@@ -35,7 +35,7 @@ export function MediaOverview(): JSX.Element {
     return (
         <div className="c-media-overview">
             {shownFiles.map((file: MediaFile) => (
-                <div className="c-media-overview__card" key={file.name}>
+                <div className={`c-media-overview__card ${file.name in hiddenFiles ? 'hidden' : ''}`} key={file.name}>
                     {isTextView
                         ? <TextMediaCard file={file} activeTabIndex={activeTabIndex}/>
                         : <ImageMediaCard file={file} activeTabIndex={activeTabIndex}/>}
