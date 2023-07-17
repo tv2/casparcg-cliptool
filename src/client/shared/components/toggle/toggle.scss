@@ -4,6 +4,6 @@
     font-family: 'Roboto Condensed', sans-serif;
 
     &.on {
-        background-color: rgb(28, 115, 165);
+        background-color: var(--active-color);
     }
 }
