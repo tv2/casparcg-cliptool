@@ -8,6 +8,7 @@ import { BrowserService } from "../../../shared/services/browser-service"
 import { MediaOverview } from "../media-overview/media-overview"
 import Tabs from "../tabs/tabs"
 import { OperationModeFooter } from "../operation-mode-footer/operation-mode-footer"
+import './main-page.scss'
 
 
 export default function MainPage(): JSX.Element {
@@ -18,7 +19,7 @@ export default function MainPage(): JSX.Element {
   const tabs: TabInfo[] = useSelector((state: State) => reduxSettingsService.getTabInfo(state.settings, state.media))
   
   return (
-    <>
+    <div className="c-main-page">
         <Header />
         {isChannelView 
             ? <MediaOverview/> 
@@ -30,6 +31,6 @@ export default function MainPage(): JSX.Element {
                 )}
             </Tabs>}
         <OperationModeFooter />
-    </>
+    </div>
   )
 }

@@ -1,7 +1,7 @@
-import React, { useEffect } from "react"
-import { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { reduxStore } from "../../../../shared/store"
 import { setActiveTabIndex } from "../../../../shared/actions/app-navigation-action"
+import './swipeable.scss'
 
 const MIN_SWIPE_DISTANCE = 50
 const MAX_SWIPE_SLOPE = 0.5
@@ -64,7 +64,7 @@ export default function Swipeable(props: SwipeableProps): JSX.Element {
   }
 
   return (
-    <div 
+    <div className="c-swipeable"
       role={props.role}
       onTouchStart={onTouchStart}
       onTouchMove={onTouchMove}

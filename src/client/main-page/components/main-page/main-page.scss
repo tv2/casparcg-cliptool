@@ -1,7 +1,12 @@
 .c-main-page {
+    height: 100%;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+
     &__tab {        
         overflow: hidden;
-        max-height: 100%;
+        height: 100%;
         flex: 1;          
     }
 }
