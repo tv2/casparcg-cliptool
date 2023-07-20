@@ -268,15 +268,19 @@ export class SocketIOServerHandlerService {
                 ClientToServerCommand.SET_GENERICS,
                 (generics: GenericSettings) => {
                     logger.data(generics).trace('Save Settings')
+                    logger.info(
+                        'Updating and storing generic settings server side.'
+                    )
+                    const oldAllOutputSettings =
+                        state.settings.generics.outputSettings
+                    reduxStore.dispatch(setGenerics(generics))
                     state.settings.generics.outputSettings.forEach(
                         (outputSettings, channelIndex) => {
-                            const currentChangedOutputSetitngs =
-                                generics.outputSettings[channelIndex]
                             if (
-                                outputSettings.webState !==
-                                    currentChangedOutputSetitngs.webState ||
-                                outputSettings.webUrl !==
-                                    currentChangedOutputSetitngs.webUrl
+                                this.shouldUpdatePlayingOverlay(
+                                    oldAllOutputSettings[channelIndex],
+                                    outputSettings
+                                )
                             ) {
                                 this.updateOverlayPlayingState(
                                     channelIndex,
@@ -285,10 +289,6 @@ export class SocketIOServerHandlerService {
                             }
                         }
                     )
-                    logger.info(
-                        'Updating and storing generic settings server side.'
-                    )
-                    reduxStore.dispatch(setGenerics(generics))
                     this.settingsPersistenceService.save()
                     this.socketServer.emit(
                         ServerToClientCommand.SETTINGS_UPDATE,
@@ -302,11 +302,24 @@ export class SocketIOServerHandlerService {
             })
     }
 
+    private shouldUpdatePlayingOverlay(
+        oldOutputSettings: OutputSettings,
+        newOutputSettings: OutputSettings
+    ): boolean {
+        return (
+            oldOutputSettings.webState !== newOutputSettings.webState ||
+            oldOutputSettings.webUrl !== newOutputSettings.webUrl
+        )
+    }
+
     private updateOverlayPlayingState(
         channelIndex: number,
         outputSettings: OutputSettings
     ): void {
         if (outputSettings.webState) {
+            if (outputSettings.webUrl === '') {
+                return
+            }
             const webUrl = outputSettings.webUrl
             playOverlay(channelIndex, 10, webUrl)
             logger.info(
