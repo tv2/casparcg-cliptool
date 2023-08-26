@@ -10,7 +10,11 @@ import { logger } from '../util/loggerGateway'
 import { IMediaFile } from '../../model/reducers/mediaReducer'
 
 import { AmpMessageTypes, AmpReceiveCommandTypes } from './AMP/Constants'
-import { DEFAULT_STATUS, IAmpMessage, IChannelStatus } from './AMP/Interfaces'
+import {
+    GetDefaultAmpStatus,
+    IAmpMessage,
+    IChannelStatus,
+} from './AMP/Interfaces'
 import {
     convertArrayIntoReponseCommand,
     convertTextIntoResponseCommand,
@@ -23,10 +27,10 @@ import {
 let gangStage = ['8f', '8f', '8f', '8f']
 
 let chStatus: IChannelStatus[] = [
-    DEFAULT_STATUS,
-    DEFAULT_STATUS,
-    DEFAULT_STATUS,
-    DEFAULT_STATUS,
+    GetDefaultAmpStatus(),
+    GetDefaultAmpStatus(),
+    GetDefaultAmpStatus(),
+    GetDefaultAmpStatus(),
 ]
 
 export function ampServerGateway() {

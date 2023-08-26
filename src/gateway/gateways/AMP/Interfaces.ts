@@ -15,13 +15,15 @@ export interface IChannelStatus {
     loop: boolean
 }
 
-export const DEFAULT_STATUS: IChannelStatus = {
-    loadedClip: 'no_clip',
-    workingFolder: 'no_folder',
-    busy: false,
-    playing: false,
-    automode: true,
-    cueStart: false,
-    cueing: false,
-    loop: false,
+export const GetDefaultAmpStatus = (): IChannelStatus => {
+    return {
+        loadedClip: 'no_clip',
+        workingFolder: 'no_folder',
+        busy: false,
+        playing: false,
+        automode: true,
+        cueStart: false,
+        cueing: false,
+        loop: false,
+    }
 }
