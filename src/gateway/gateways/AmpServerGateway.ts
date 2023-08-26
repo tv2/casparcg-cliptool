@@ -1,6 +1,6 @@
 import os from 'os' // Used to display (log) network addresses on local machine
 
-import { createServer, Server, Socket } from 'net'
+import { createServer, Socket } from 'net'
 
 import { reduxState } from '../../model/reducers/store'
 import { socket } from '../util/SocketGatewayHandlers'
@@ -8,7 +8,6 @@ import { socket } from '../util/SocketGatewayHandlers'
 import * as IO from '../../model/SocketIoConstants'
 import { logger } from '../util/loggerGateway'
 import { IMediaFile } from '../../model/reducers/mediaReducer'
-import { log } from 'console'
 
 import { AmpMessageTypes, AmpReceiveCommandTypes } from './AMP/Constants'
 import { DEFAULT_STATUS, IAmpMessage, IChannelStatus } from './AMP/Interfaces'
