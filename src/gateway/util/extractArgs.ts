@@ -15,7 +15,7 @@ export interface IArgConstants {
 }
 //Runtime args:
 export const ARG_CONSTANTS: IArgConstants = {
-    clipToolHost: extractArg('cliptool') || 'http://0.0.0.0:5555',
+    clipToolHost: extractArg('cliptoolip') || 'http://0.0.0.0:5555',
     type: extractArg('type') || '',
     oscPort: extractArg('oscport') || '5256',
 }
@@ -25,7 +25,7 @@ export const argHelp = () => {
     logger.info(
         `----------------------------------------------------------------`
     )
-    logger.info(`cliptool='hostname:port' - adress of the clipttol server `)
+    logger.info(`cliptoolip='hostname:port' - adress of the clipttol server `)
     logger.info(
         `----------------------------------------------------------------`
     )

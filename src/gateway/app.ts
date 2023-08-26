@@ -4,7 +4,7 @@ import { argHelp, ARG_CONSTANTS } from './util/extractArgs'
 import { logger } from './util/loggerGateway'
 
 export const app = () => {
-    console.log('ControlGateway started')
+    logger.info('ControlGateway started')
 
     switch (ARG_CONSTANTS.type) {
         case 'osc':
