@@ -139,7 +139,7 @@ function ampClientConnection(socketClient: Socket) {
                 statusCommandsType61 = true
                 break
             case AmpReceiveCommandTypes.STATUS_CUE_START_612041:
-                console.log(ccgCh, ': Status QueStart :', message.ampCmdData)
+                //  console.log(ccgCh, ': Status QueStart :', message.ampCmdData)
                 writeCache.push('712040')
                 statusCommandsType61 = true
                 break
@@ -159,6 +159,20 @@ function ampClientConnection(socketClient: Socket) {
                 setTimeout(() => {
                     chStatus[ccgCh - 1].playing = false
                 }, 500)
+
+                //Re-que clip, if it's already has played to the end:
+                const fullClipName = (
+                    chStatus[ccgCh - 1].workingFolder +
+                    '/' +
+                    chStatus[ccgCh - 1].loadedClip
+                ).toUpperCase()
+                reduxState.media[0].output[ccgCh - 1]?.mediaFiles.forEach(
+                    (mediaFile: IMediaFile) => {
+                        if (mediaFile.name === fullClipName) {
+                            socket.emit(IO.PGM_LOAD, ccgCh - 1, fullClipName)
+                        }
+                    }
+                )
                 socket.emit(IO.PGM_PLAY, ccgCh - 1)
                 writeCache.push('1001')
                 break
@@ -263,20 +277,33 @@ function ampClientConnection(socketClient: Socket) {
             case AmpReceiveCommandTypes.CUE_FILE_AA18:
                 let receivedClipName = hexToAscii(message.ampCmdData.slice(12))
 
-                console.log(ccgCh, ': Que File :', receivedClipName)
+                //console.log(ccgCh, ': WorkingFolder :', receivedClipName)
+                //console.log(ccgCh, 'Qued file in ClipTool', reduxState.media[0].output[ccgCh - 1]?.tallyFile)
 
-                if (chStatus[ccgCh - 1].loadedClip !== receivedClipName) {
-                    chStatus[ccgCh - 1].loadedClip = receivedClipName
-                    // this is a fake timeout to simulate the time it takes to load a clip
-                    chStatus[ccgCh - 1].cueing = true
-                    setTimeout(() => {
-                        chStatus[ccgCh - 1].cueing = false
-                    }, 500)
+                // AMP protocol returns clipname loaded status, not matter wehter it's loaded or not:
+                chStatus[ccgCh - 1].loadedClip = receivedClipName
+
+                const quedFileInClipTool =
+                    reduxState.media[0].output[
+                        ccgCh - 1
+                    ]?.tallyFile.toUpperCase() || ''
+                if (
+                    !quedFileInClipTool.includes(
+                        receivedClipName.toUpperCase() + '.'
+                    )
+                ) {
                     const newFullClipName = (
                         chStatus[ccgCh - 1].workingFolder +
                         '/' +
                         receivedClipName
                     ).toUpperCase()
+
+                    // this is a fake timeout to simulate the time it takes to load a clip
+                    chStatus[ccgCh - 1].cueing = true
+                    setTimeout(() => {
+                        chStatus[ccgCh - 1].cueing = false
+                    }, 500)
+
                     reduxState.media[0].output[ccgCh - 1]?.mediaFiles.forEach(
                         (mediaFile: IMediaFile) => {
                             if (mediaFile.name === newFullClipName) {
@@ -317,8 +344,16 @@ function ampClientConnection(socketClient: Socket) {
                 writeCache.push('8014')
                 break
             case AmpReceiveCommandTypes.LOOP_4142:
-                console.log(ccgCh, ': Set Loop ')
-                chStatus[ccgCh - 1].loop = message.ampCmdData.slice(4) == '01'
+                chStatus[ccgCh - 1].loop = message.ampCmdData.slice(4) === '01'
+                console.log(ccgCh, ': Set Loop :', message.ampCmdData.slice(4))
+                // As a workaround loop only set ON state, not OFF:
+                if (chStatus[ccgCh - 1].loop) {
+                    socket.emit(
+                        IO.SET_LOOP_STATE,
+                        ccgCh - 1,
+                        chStatus[ccgCh - 1].loop
+                    )
+                }
                 writeCache.push('1001')
                 break
             case AmpReceiveCommandTypes.ID_CHANGED_LIST_A012:
