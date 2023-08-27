@@ -139,21 +139,7 @@ function ampClientConnection(socketClient: Socket) {
                 statusCommandsType61 = true
                 break
             case AmpReceiveCommandTypes.STATUS_CUE_START_612041:
-                console.log(ccgCh, ': Status QueStart - Reque file')
-                //Re-que clip, to ensure it's ready even if it's already has played to the end:
-                const fullClipName = (
-                    chStatus[ccgCh - 1].workingFolder +
-                    '/' +
-                    chStatus[ccgCh - 1].loadedClip
-                ).toUpperCase()
-                reduxState.media[0].output[ccgCh - 1]?.mediaFiles.forEach(
-                    (mediaFile: IMediaFile) => {
-                        if (mediaFile.name === fullClipName) {
-                            socket.emit(IO.PGM_LOAD, ccgCh - 1, fullClipName)
-                        }
-                    }
-                )
-
+                // console.log(ccgCh, ': Status QueStart - Reque file')
                 writeCache.push('712040')
                 statusCommandsType61 = true
                 break
@@ -274,6 +260,26 @@ function ampClientConnection(socketClient: Socket) {
                 writeCache.push(
                     convertTextIntoResponseCommand('8a14', firstClip)
                 )
+                break
+            case AmpReceiveCommandTypes.AUTOMODE_ON_4041:
+                console.log(
+                    ccgCh,
+                    ': Set Automode (used for triggering re-que of already played clip'
+                )
+                // Using the 4041 command is a workaround for re-triggering a clip that has already been played:
+                const fullClipName = (
+                    chStatus[ccgCh - 1].workingFolder +
+                    '/' +
+                    chStatus[ccgCh - 1].loadedClip
+                ).toUpperCase()
+                reduxState.media[0].output[ccgCh - 1]?.mediaFiles.forEach(
+                    (mediaFile: IMediaFile) => {
+                        if (mediaFile.name === fullClipName) {
+                            socket.emit(IO.PGM_LOAD, ccgCh - 1, fullClipName)
+                        }
+                    }
+                )
+                writeCache.push('1001')
                 break
             case AmpReceiveCommandTypes.CUE_FILE_AA18:
                 let receivedClipName = hexToAscii(message.ampCmdData.slice(12))
