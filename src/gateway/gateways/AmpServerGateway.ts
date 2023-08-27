@@ -139,7 +139,21 @@ function ampClientConnection(socketClient: Socket) {
                 statusCommandsType61 = true
                 break
             case AmpReceiveCommandTypes.STATUS_CUE_START_612041:
-                //  console.log(ccgCh, ': Status QueStart :', message.ampCmdData)
+                console.log(ccgCh, ': Status QueStart - Reque file')
+                //Re-que clip, to ensure it's ready even if it's already has played to the end:
+                const fullClipName = (
+                    chStatus[ccgCh - 1].workingFolder +
+                    '/' +
+                    chStatus[ccgCh - 1].loadedClip
+                ).toUpperCase()
+                reduxState.media[0].output[ccgCh - 1]?.mediaFiles.forEach(
+                    (mediaFile: IMediaFile) => {
+                        if (mediaFile.name === fullClipName) {
+                            socket.emit(IO.PGM_LOAD, ccgCh - 1, fullClipName)
+                        }
+                    }
+                )
+
                 writeCache.push('712040')
                 statusCommandsType61 = true
                 break
@@ -160,19 +174,6 @@ function ampClientConnection(socketClient: Socket) {
                     chStatus[ccgCh - 1].playing = false
                 }, 500)
 
-                //Re-que clip, if it's already has played to the end:
-                const fullClipName = (
-                    chStatus[ccgCh - 1].workingFolder +
-                    '/' +
-                    chStatus[ccgCh - 1].loadedClip
-                ).toUpperCase()
-                reduxState.media[0].output[ccgCh - 1]?.mediaFiles.forEach(
-                    (mediaFile: IMediaFile) => {
-                        if (mediaFile.name === fullClipName) {
-                            socket.emit(IO.PGM_LOAD, ccgCh - 1, fullClipName)
-                        }
-                    }
-                )
                 socket.emit(IO.PGM_PLAY, ccgCh - 1)
                 writeCache.push('1001')
                 break
@@ -280,7 +281,7 @@ function ampClientConnection(socketClient: Socket) {
                 //console.log(ccgCh, ': WorkingFolder :', receivedClipName)
                 //console.log(ccgCh, 'Qued file in ClipTool', reduxState.media[0].output[ccgCh - 1]?.tallyFile)
 
-                // AMP protocol returns clipname loaded status, not matter wehter it's loaded or not:
+                // AMP protocol returns clipname loaded status, no matter wheter it's loaded or not:
                 chStatus[ccgCh - 1].loadedClip = receivedClipName
 
                 const quedFileInClipTool =
