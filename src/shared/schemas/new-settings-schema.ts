@@ -27,6 +27,7 @@ export const defaultCcgSettingsState: CasparcgSettings = {
     amcpPort: 5250,
     defaultLayer: 10,
     oscPort: 5253,
+    bannedCharacters: 'æøå',
 }
 
 const operationModeSchema = z.nativeEnum(OperationMode)
@@ -53,6 +54,7 @@ const ccgSettingsSchema = z.object({
     amcpPort: z.number(),
     defaultLayer: z.number(),
     oscPort: z.number(),
+    bannedCharacters: z.string(),
 })
 
 // Schema for Cliptool version 2.15 and above.

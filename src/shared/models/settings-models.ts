@@ -51,6 +51,7 @@ export interface CasparcgSettings {
     amcpPort: number
     defaultLayer: number
     oscPort: number
+    bannedCharacters: string
 }
 
 export interface GenericSettings {
