@@ -228,10 +228,17 @@ function ampClientConnection(socketClient: Socket) {
                     chStatus[ccgCh - 1].workingFolder
                 )
                 // The +1 is for some reason expected by the GV mixer??
-                const formattedNumberOfClips = (deliveredClipList.length + 1)
+                /* const formattedNumberOfClips = (deliveredClipList.length + 1)
                     .toString(16)
                     .padStart(4, '0')
+                    */
+
+                //Workaround for now - for some reason
+                //the filelist returned to GV is wrong
+                const formattedNumberOfClips = (2).toString(16).padStart(4, '0')
                 console.log(ccgCh, ' : Num of Clips :' + formattedNumberOfClips)
+                deliveredClipList = deliveredClipList.slice(0, 0)
+                // End of workaround
 
                 writeCache.push('82260002' + formattedNumberOfClips)
                 break
