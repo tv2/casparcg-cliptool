@@ -163,6 +163,11 @@ function ampClientConnection(socketClient: Socket) {
                 socket.emit(IO.PGM_PLAY, ccgCh - 1)
                 writeCache.push('1001')
                 break
+            case AmpReceiveCommandTypes.STOP_2000:
+                console.log(ccgCh, ': STOP')
+                socket.emit(IO.PGM_STOP, ccgCh - 1)
+                writeCache.push('1001')
+                break
             case AmpReceiveCommandTypes.GET_DEVICE_TYPE_0011:
                 console.log(ccgCh, ': Get Device Type ')
                 writeCache.push('1211d905')
