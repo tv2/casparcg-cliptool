@@ -9,6 +9,7 @@ import {
     loadMedia,
     playOverlay,
     stopOverlay,
+    stopMedia,
 } from '../utils/CcgLoadPlay'
 import {
     setLoop,
@@ -50,6 +51,11 @@ export function socketIoHandlers(socket: any) {
                 'Load Media :' + fileName + ' On ChannelIndex : ' + channelIndex
             )
         })
+        .on(IO.PGM_STOP, (channelIndex: number) => {
+            stopMedia(channelIndex, 9)
+            logger.info('Stop Media On ChannelIndex : ' + channelIndex)
+        })
+
         .on(IO.SET_LOOP_STATE, (channelIndex: number, state: boolean) => {
             reduxStore.dispatch(setLoop(channelIndex, state))
             socketServer.emit(

@@ -49,6 +49,10 @@ export const loadMedia = (
     )
 }
 
+export const stopMedia = (channelIndex: number, layerIndex: number) => {
+    ccgConnection.stop(channelIndex + 1, layerIndex + 1)
+}
+
 export const playOverlay = (
     channelIndex: number,
     layerIndex: number,
