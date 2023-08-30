@@ -73,6 +73,17 @@ function ampClientConnection(socketClient: Socket) {
                 .filter((message) => message !== '')
             rawMessages.forEach((rawMessage: string) => {
                 const ampMessage = readAmpMessage(rawMessage)
+                /*
+                // Log all commands:
+                if (
+                    !ampMessage.ampCmdData.includes('610C01') &&
+                    !ampMessage.ampCmdData.includes('AA1800') &&
+                    !ampMessage.ampCmdData.includes('A012') &&
+                    !ampMessage.ampCmdData.includes('61200f')
+                ) {
+                    console.log(ccgCh, ampMessage.ampCmdData.slice(0, 6))
+                }
+                */
                 switch (ampMessage.ampMessageType) {
                     case AmpMessageTypes.COMMAND:
                         handleAmpCommand(writeCache, ampMessage)
@@ -117,6 +128,7 @@ function ampClientConnection(socketClient: Socket) {
     function handleAmpCommand(writeCache: string[], message: IAmpMessage) {
         // This 61-type is a workaround until knowlegde of the 6-char commands is gained
         let statusCommandsType61 = false
+
         switch (message.ampCmdData.slice(0, 6)) {
             case AmpReceiveCommandTypes.STATUS_SENSE_61200F:
                 // console.log(ccgCh, ': Status Sense :', message.ampCmdData)
@@ -164,6 +176,12 @@ function ampClientConnection(socketClient: Socket) {
                 writeCache.push('1001')
                 break
             case AmpReceiveCommandTypes.STOP_2000:
+                console.log(ccgCh, ': STOP')
+                socket.emit(IO.PGM_STOP, ccgCh - 1)
+                writeCache.push('1001')
+                break
+            case AmpReceiveCommandTypes.QUE_TO_BEGIN_2031:
+                // This doubles as STOP command as GV does not send STOP command
                 console.log(ccgCh, ': STOP')
                 socket.emit(IO.PGM_STOP, ccgCh - 1)
                 writeCache.push('1001')

@@ -21,11 +21,11 @@ export enum AmpMessageTypes {
 
 export enum AmpReceiveCommandTypes {
     // A2140000   - Return current clip??
-
     GET_DEVICE_TYPE_0011 = '0011',
     STOP_2000 = '2000',
     PLAY_2001 = '2001',
     CUE_2032 = '2032',
+    QUE_TO_BEGIN_2031 = '2031', // This command is used as STOP command, as GV does not send STOP command
     GET_DEFAULT_FOLDER_A02A = 'A02A', // Return 822a0009000764656661756c74  (Default)
     GET_FOLDER_LIST_A02B = 'A02B', // Return 822b + message length hex(FFFF) + each folder as array in length hex(FFFF)+foldername & Return 802b as "List finish"
     GET_MACHINE_ID_A02C = 'A02C', // Return 822c000b0a454a3132343830303038 (probably the machine to find thumbnails)
