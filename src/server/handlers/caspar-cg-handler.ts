@@ -219,11 +219,13 @@ function loadInitialOverlay(): void {
         return
     }
     state.settings.ccgConfig.channels.forEach(({}, index) => {
-        playOverlay(
-            index,
-            10,
-            reduxSettingsService.getOutputSettings(state.settings, index).webUrl
+        const outputSettings = reduxSettingsService.getOutputSettings(
+            state.settings,
+            index
         )
+        if (outputSettings.webState) {
+            playOverlay(index, 10, outputSettings.webUrl)
+        }
     })
 }
 
