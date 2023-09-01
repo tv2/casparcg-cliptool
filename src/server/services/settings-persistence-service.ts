@@ -134,6 +134,7 @@ export class SettingsPersistenceService {
             amcpPort: old.ccgAmcpPort ?? 5250,
             defaultLayer: old.ccgDefaultLayer ?? 10,
             oscPort: old.ccgOscPort ?? 5253,
+            bannedCharacters: '',
         }
         newSettings.outputSettings.forEach((output, index) => {
             output.label = old.outputLabels[index] ?? ''

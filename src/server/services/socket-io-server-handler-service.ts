@@ -313,7 +313,7 @@ export class SocketIOServerHandlerService {
 
     private notifyAboutError(message: string, error: Error): void {
         logger.data(error).error(message)
-        this.socketServer.emit('error', `${message}\n${error.message}`)
+        this.socketServer.emit('error', `${message}|${error.message}`)
     }
 
     private processLoadEvent(channelIndex: number, fileName: string): void {
