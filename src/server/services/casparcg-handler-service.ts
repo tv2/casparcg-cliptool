@@ -16,7 +16,7 @@ export class CasparCgHandlerService {
     private reduxSettingsService: ReduxSettingsService
     private thumbnails: ThumbnailFile[]
     private previousThumbnails: ThumbnailFile[]
-    private casparCgConnection: CasparCG
+    private readonly casparCgConnection: CasparCG
 
     constructor() {
         this.reduxMediaService = new ReduxMediaService()
