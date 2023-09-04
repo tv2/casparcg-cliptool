@@ -11,14 +11,8 @@ interface CasparcgFormProps {
 }
 
 export default function CasparcgForm(props: CasparcgFormProps): JSX.Element {
-    const {
-        ip,
-        amcpPort,
-        oscPort,
-        defaultLayer,
-        transitionTime,
-        bannedCharacters,
-    } = props.casparcgSettings
+    const { ip, amcpPort, oscPort, defaultLayer, transitionTime } =
+        props.casparcgSettings
 
     return (
         <form className="settings-form">
@@ -48,11 +42,6 @@ export default function CasparcgForm(props: CasparcgFormProps): JSX.Element {
                     value={transitionTime}
                     onChange={saveTempTransitionTimeChange}
                 />
-                <TextInput
-                    description="BANNED CHARACTERS :"
-                    value={bannedCharacters}
-                    onChange={saveTempBannedCharacterChange}
-                />
             </div>
             <hr />
         </form>
@@ -63,14 +52,6 @@ export default function CasparcgForm(props: CasparcgFormProps): JSX.Element {
     ): void {
         const newIp = event.target.value
         props.casparcgSettings.ip = newIp
-        props.onChange(props.casparcgSettings)
-    }
-
-    function saveTempBannedCharacterChange(
-        event: React.ChangeEvent<HTMLInputElement>
-    ): void {
-        const newBannedCharacters = event.target.value
-        props.casparcgSettings.bannedCharacters = newBannedCharacters
         props.onChange(props.casparcgSettings)
     }
 
