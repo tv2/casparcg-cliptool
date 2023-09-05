@@ -4,12 +4,22 @@ import { HiddenFilesPersistenceService } from './services/hidden-files-persisten
 import { casparCgClient } from './handlers/caspar-cg-handler'
 import { logger } from './utils/logger'
 import { ExpressService } from './services/express-service'
+import { ReduxSettingsService } from '../shared/services/redux-settings-service'
+
+const reduxSettingsService: ReduxSettingsService = new ReduxSettingsService()
+const expressService: ExpressService = ExpressService.instance
+const hiddenFilesPersistenceService: HiddenFilesPersistenceService =
+    new HiddenFilesPersistenceService(
+        expressService.getSocketServer(),
+        reduxSettingsService
+    )
+const settingsPersistenceService: SettingsPersistenceService =
+    new SettingsPersistenceService(reduxSettingsService)
 
 loadBundledEnvironment()
-const expressService = ExpressService.instance
 expressService.serverInit()
-new SettingsPersistenceService().load()
-new HiddenFilesPersistenceService(expressService.getSocketServer()).load()
+settingsPersistenceService.load()
+hiddenFilesPersistenceService.load()
 casparCgClient()
 
 process.on('unhandledRejection', (error) => processUnhandledRejection(error))

@@ -11,13 +11,13 @@ import _ from 'lodash'
 export class HiddenFilesPersistenceService {
     private reduxSettingsService: ReduxSettingsService
     private persistenceService: PersistenceService
-    private socketService: any
+    private socketServer: any
 
     constructor(
-        socketService: any,
+        socketServer: any,
         reduxSettingsService?: ReduxSettingsService
     ) {
-        this.socketService = socketService
+        this.socketServer = socketServer
         this.reduxSettingsService =
             reduxSettingsService ?? new ReduxSettingsService()
         this.persistenceService = new PersistenceService()
@@ -58,7 +58,7 @@ export class HiddenFilesPersistenceService {
     private updateReduxState(hiddenFiles: HiddenFiles) {
         logger.data(hiddenFiles).trace('Hidden files File loaded with:')
         reduxStore.dispatch(updateHiddenFiles(hiddenFiles))
-        this.socketService.emit(
+        this.socketServer.emit(
             ServerToClientCommand.HIDDEN_FILES_UPDATE,
             hiddenFiles
         )

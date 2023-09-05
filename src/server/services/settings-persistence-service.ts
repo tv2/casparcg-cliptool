@@ -3,12 +3,13 @@ import {
     GenericSettings,
     OperationMode,
 } from '../../shared/models/settings-models'
-import { state, reduxStore } from '../../shared/store'
+import { reduxStore, state } from '../../shared/store'
 import { newGenericSettingsSchema } from '../../shared/schemas/new-settings-schema'
 import { PreviousGenericSettings } from '../../shared/schemas/old-settings-schema'
 import { ReduxSettingsService } from '../../shared/services/redux-settings-service'
 import { logger } from '../utils/logger'
 import { PersistenceService } from './persistence-service'
+import { CasparCG } from 'casparcg-connection'
 
 export class SettingsPersistenceService {
     private reduxSettingsService: ReduxSettingsService
@@ -20,12 +21,14 @@ export class SettingsPersistenceService {
         this.persistenceService = new PersistenceService()
     }
 
-    load(): void {
+    public load(): void {
         this.persistenceService
             .loadFile('settings.json')
-            .then((loadedSettings) => {
+            .then(async (loadedSettings) => {
                 const rawSettings: unknown = JSON.parse(loadedSettings)
-                let settings: GenericSettings = this.parseSettings(rawSettings)
+                const settings: GenericSettings = await this.parseSettings(
+                    rawSettings
+                )
                 logger
                     .data(rawSettings)
                     .trace('Loaded following settings from file:')
@@ -46,7 +49,9 @@ export class SettingsPersistenceService {
             })
     }
 
-    private parseSettings(rawSettings: unknown): GenericSettings {
+    private async parseSettings(
+        rawSettings: unknown
+    ): Promise<GenericSettings> {
         const isNewStructure = this.isNewStructure(rawSettings)
         if (isNewStructure.success && isNewStructure.parsed) {
             return isNewStructure.parsed
@@ -56,24 +61,40 @@ export class SettingsPersistenceService {
                 'Attempting to parse to old structure...'
         )
 
-        const isOldStructure = this.isPreviousStructure(rawSettings)
-        if (isOldStructure.success && isOldStructure.parsed) {
-            logger.warn(
-                'Old settings structure detected ' +
-                    '- updating it to the new structure.'
-            )
-            const correctedSettings = this.getCorrectedStructureFromOld(
-                isOldStructure.parsed
-            )
-            logger.info('New Settings structure generated, saving Settings...')
-            this.save(correctedSettings)
-            return correctedSettings
+        const isOldStructure: {
+            success: boolean
+            parsed: PreviousGenericSettings | undefined
+        } = this.isPreviousStructure(rawSettings)
+        const parsedOld: GenericSettings | undefined =
+            await this.parseOldSettings(isOldStructure)
+        if (parsedOld) {
+            return parsedOld
         }
 
         logger
             .data(rawSettings)
             .error('Failed to parse settings from file, using default!')
         return this.reduxSettingsService.getDefaultGenericSettings()
+    }
+
+    private async parseOldSettings(old: {
+        success: boolean
+        parsed: PreviousGenericSettings | undefined
+    }): Promise<undefined | GenericSettings> {
+        if (!old.success || !old.parsed) {
+            return undefined
+        }
+
+        logger.warn(
+            'Old settings structure detected ' +
+                '- updating it to the new structure.'
+        )
+        const correctedSettings = await this.getCorrectedStructureFromOld(
+            old.parsed
+        )
+        logger.info('New Settings structure generated, saving Settings...')
+        this.save(correctedSettings)
+        return correctedSettings
     }
 
     public save(genericSettings?: GenericSettings): void {
@@ -122,11 +143,18 @@ export class SettingsPersistenceService {
         return { success: false, parsed: undefined }
     }
 
-    private getCorrectedStructureFromOld(
+    private async getCorrectedStructureFromOld(
         old: PreviousGenericSettings
-    ): GenericSettings {
+    ): Promise<GenericSettings> {
+        const channelsCount: number = await this.retrieveChannelsCount(
+            old.ccgIp,
+            old.ccgAmcpPort
+        )
+
         const newSettings: GenericSettings = {
-            ...this.reduxSettingsService.getDefaultGenericSettings(),
+            ...this.reduxSettingsService.getDefaultGenericSettings(
+                channelsCount
+            ),
         }
         newSettings.ccgSettings = {
             transitionTime: old.transitionTime ?? 16,
@@ -153,5 +181,32 @@ export class SettingsPersistenceService {
         })
 
         return newSettings
+    }
+
+    private async retrieveChannelsCount(
+        ip: string,
+        port: number
+    ): Promise<number> {
+        const tempCasparCgConnection = new CasparCG({
+            host: ip,
+            port: port,
+            autoConnect: false,
+        })
+
+        const channelsCount = await tempCasparCgConnection
+            .getCasparCGConfig()
+            .then((config) => config.channels.length)
+            .catch((error) => {
+                logger
+                    .data(error)
+                    .warn(
+                        'Failed to retrieve amount of channels from Temporary CasparCG connection. Using default of 1.'
+                    )
+                return 1
+            })
+        logger.debug(
+            `Retrieved a count of ${channelsCount} channels from temporary CasparCG connection...`
+        )
+        return channelsCount
     }
 }

@@ -11,14 +11,7 @@ import {
 } from '../schemas/new-settings-schema'
 
 export class ReduxSettingsService {
-    private defaultGenericSettings: GenericSettings
-
-    constructor() {
-        this.defaultGenericSettings = {
-            ccgSettings: defaultCcgSettingsState,
-            outputSettings: Array(1).fill({ ...defaultOutputSettingsState }),
-        }
-    }
+    constructor() {}
 
     public getTabInfo(
         settingsState: SettingsState,
@@ -114,8 +107,15 @@ export class ReduxSettingsService {
         return settingsState.generics
     }
 
-    public getDefaultGenericSettings(): GenericSettings {
-        return this.defaultGenericSettings
+    public getDefaultGenericSettings(
+        outputSettingsCount: number = 1
+    ): GenericSettings {
+        return {
+            ccgSettings: defaultCcgSettingsState,
+            outputSettings: Array(outputSettingsCount).fill({
+                ...defaultOutputSettingsState,
+            }),
+        }
     }
 
     public isThumbnailSelected(

@@ -40,13 +40,13 @@ import {
     stopOverlay,
 } from '../utils/ccg-load-play'
 import { logger } from '../utils/logger'
-import { CasparCgHandlerService } from './casparcg-handler-service'
 import { HiddenFilesPersistenceService } from './hidden-files-persistence-service'
 import { SettingsPersistenceService } from './settings-persistence-service'
+import { AmcpThumbnailsService } from './amcp-thumbnails-service'
 
 /*
     A new instance of this should not be created at new usage sites.
-    Instead the instance created and saved in ExpressService should be used.
+    Instead, the instance created and saved in ExpressService should be used.
     ExpressService is a singleton, and therefor saves and uses the same instance for the full runtime.
     Not following this, could cause duplicate, unnecessary, events to be fired.
     This will very likely be fixed during UT-203.
@@ -54,16 +54,16 @@ import { SettingsPersistenceService } from './settings-persistence-service'
 export class SocketIOServerHandlerService {
     private reduxMediaService: ReduxMediaService
     private reduxSettingsService: ReduxSettingsService
-    private casparCgHandlerService: CasparCgHandlerService
+    private amcpThumbnailService: AmcpThumbnailsService
     private hiddenFilesPersistenceService: HiddenFilesPersistenceService
     private settingsPersistenceService: SettingsPersistenceService
-    private socketServer
+    private readonly socketServer
 
     constructor(socketServer: any) {
         this.socketServer = socketServer
         this.reduxMediaService = new ReduxMediaService()
         this.reduxSettingsService = new ReduxSettingsService()
-        this.casparCgHandlerService = CasparCgHandlerService.instance
+        this.amcpThumbnailService = AmcpThumbnailsService.instance
         this.hiddenFilesPersistenceService = new HiddenFilesPersistenceService(
             socketServer
         )
@@ -398,7 +398,7 @@ export class SocketIOServerHandlerService {
             .forEach(({}, channelIndex: number) => {
                 reduxStore.dispatch(updateMediaFiles(channelIndex, []))
                 reduxStore.dispatch(updateThumbnailFileList(channelIndex, []))
-                this.casparCgHandlerService.assignThumbnailsToOutputs(
+                this.amcpThumbnailService.assignThumbnailsToOutputs(
                     this.socketServer
                 )
             })

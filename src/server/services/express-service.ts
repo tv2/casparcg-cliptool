@@ -5,10 +5,10 @@ const SERVER_PORT = 5555
 
 export class ExpressService {
     public static readonly instance = new ExpressService()
-    private socketIoServerHandlerService: SocketIOServerHandlerService
-    private server: any
-    private socketServer: any
-    private app: any
+    private readonly socketIoServerHandlerService: SocketIOServerHandlerService
+    private readonly server: any
+    private readonly socketServer: any
+    private readonly app: any
 
     constructor() {
         const express = require('express')
@@ -47,7 +47,7 @@ export class ExpressService {
         return this.socketIoServerHandlerService
     }
 
-    serverInit(): void {
+    public serverInit(): void {
         this.server.listen(SERVER_PORT)
         logger.info(`Server started at http://localhost:${SERVER_PORT}`)
     }

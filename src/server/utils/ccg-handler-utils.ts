@@ -1,30 +1,9 @@
 import _ from 'lodash'
-import { ThumbnailFile } from '../../shared/models/media-models'
 
 export function getChannelNumber(string: string): number {
     let channel = string.replace('/channel/', '')
     channel = channel.slice(0, channel.indexOf('/'))
     return parseInt(channel)
-}
-
-export function getLayerNumber(string: string): number {
-    let channel = string.slice(string.indexOf('layer/') + 6)
-    channel = channel.slice(0, channel.indexOf('/'))
-    return parseInt(channel)
-}
-
-export function extractFoldersList(fileList: any): string[] {
-    let folders: string[] = []
-    fileList.forEach((media: any) => {
-        let pathName =
-            media.name.substring(0, media.name.lastIndexOf('/')) || ''
-        folders.push(pathName)
-    })
-    return [...new Set(folders)]
-}
-
-export function isAlphaFile(filename: string): boolean {
-    return /_a(\.[^.]+)?$/i.test(filename)
 }
 
 export function isDeepCompareEqual(a: any, b: any): boolean {
@@ -41,20 +20,4 @@ export function isFolderNameEqual(
             .substring(0, fileName.lastIndexOf('/'))
             .substring(0, outputFolder.length)
     )
-}
-
-export function hasThumbnailListChanged(
-    newList: ThumbnailFile[],
-    previousList: ThumbnailFile[]
-): boolean {
-    if (newList.length !== previousList.length) {
-        return true
-    }
-
-    return newList.some((file, index) => {
-        return (
-            file.name !== previousList[index].name ||
-            file.size !== previousList[index].size
-        )
-    })
 }
