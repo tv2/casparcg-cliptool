@@ -7,11 +7,11 @@ export class SocketPlayService {
         this.socket = socket
     }
 
-    public playFile(outputIndex: number, fileName: string) {
+    public playFile(outputIndex: number, fileName: string): void {
         this.socket.emit(ClientToServerCommand.PGM_PLAY, outputIndex, fileName)
     }
 
-    public loadFile(outputIndex: number, fileName: string) {
+    public loadFile(outputIndex: number, fileName: string): void {
         this.socket.emit(ClientToServerCommand.PGM_LOAD, outputIndex, fileName)
     }
 }

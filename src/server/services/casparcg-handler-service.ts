@@ -21,10 +21,10 @@ import {
 } from '../../shared/actions/settings-action'
 import { SettingsPersistenceService } from './settings-persistence-service'
 import { defaultOutputSettingsState } from '../../shared/schemas/new-settings-schema'
-import { loadMedia, playOverlay } from '../utils/ccg-load-play'
 import { UtilityService } from '../../shared/services/utility-service'
 import { AmcpThumbnailsService } from './amcp-thumbnails-service'
 import { AmcpMediaService } from './amcp-media-service'
+import { CasparCgPlayoutService } from './casparcg-playout-service'
 
 export class CasparCgHandlerService {
     public static readonly instance = new CasparCgHandlerService()
@@ -33,6 +33,7 @@ export class CasparCgHandlerService {
     private expressService: ExpressService
     private utilityService: UtilityService
     private settingsPersistenceService: SettingsPersistenceService
+    private casparCgPlayoutService: CasparCgPlayoutService
     private readonly amcpThumbnailService: AmcpThumbnailsService
     private amcpMediaService: AmcpMediaService
     private readonly casparCgConnection: CasparCG
@@ -64,10 +65,14 @@ export class CasparCgHandlerService {
             this.casparCgConnection,
             this.expressService.getSocketServer()
         )
+        this.expressService.setupExpressService(this.casparCgConnection)
         this.amcpMediaService = new AmcpMediaService(
             this.casparCgConnection,
             this.expressService.getSocketServer(),
             this.amcpThumbnailService
+        )
+        this.casparCgPlayoutService = new CasparCgPlayoutService(
+            this.casparCgConnection
         )
     }
     public getCasparCgConnection(): CasparCG {
@@ -170,7 +175,7 @@ export class CasparCgHandlerService {
         const cuedFileName = outputSettings.cuedFileName
         if (cuedFileName) {
             logger.info(`Re-loaded ${cuedFileName} on channel index ${index}.`)
-            loadMedia(index, 9, cuedFileName)
+            this.casparCgPlayoutService.loadMedia(index, 9, cuedFileName)
         }
 
         outputSettings.loopState = outputSettings.loopState ?? false
@@ -222,7 +227,11 @@ export class CasparCgHandlerService {
                 index
             )
             if (outputSettings.webState) {
-                playOverlay(index, 10, outputSettings.webUrl)
+                this.casparCgPlayoutService.playOverlay(
+                    index,
+                    10,
+                    outputSettings.webUrl
+                )
             }
         })
     }

@@ -18,5 +18,16 @@ export class ConnectionObserver {
             reduxStore.dispatch(setConnectionStatus(false))
             console.log('LOST CONNECTION TO CLIPTOOL SERVER')
         })
+        this.socket.on('error', (error: string) => {
+            const splitError = error.split('|')
+            if (splitError.length !== 2) {
+                console.log(
+                    'Received error from backend without expected layout:',
+                    error
+                )
+                return
+            }
+            alert(splitError[0])
+        })
     }
 }
