@@ -58,7 +58,7 @@ const utilityService: UtilityService = new UtilityService()
 const casparCgHandlerService: CasparCgHandlerService =
     CasparCgHandlerService.instance
 const casparCgPlayoutService: CasparCgPlayoutService =
-    new CasparCgPlayoutService()
+    new CasparCgPlayoutService(casparCgHandlerService.getCasparCgConnection())
 const expressService: ExpressService = ExpressService.instance
 const socketIoServerHandlerService: SocketIOServerHandlerService =
     expressService.getSocketIoServerHandlerService()
@@ -182,9 +182,19 @@ function reinvigorateChannel(
 ): OutputSettings {
     const cuedFileName = outputSettings.cuedFileName
     if (cuedFileName) {
-        casparCgPlayoutService.loadMedia(index, 9, cuedFileName).then(() => {
-            logger.info(`Re-loaded ${cuedFileName} on channel index ${index}.`)
-        })
+        casparCgPlayoutService
+            .loadMedia(index, 9, cuedFileName)
+            .then(() => {
+                logger.info(
+                    `Re-loaded ${cuedFileName} on channel index ${index}.`
+                )
+            })
+            .catch((error) => {
+                socketIoServerHandlerService.notifyAboutError(
+                    `Caught failed attempt to load media during re-invigoration of channel ${index}.`,
+                    error
+                )
+            })
     }
 
     outputSettings.loopState = outputSettings.loopState ?? false
@@ -229,9 +239,9 @@ function loadInitialOverlay(): void {
         if (outputSettings.webState) {
             casparCgPlayoutService
                 .playOverlay(index, 10, outputSettings.webUrl)
-                .then(() => {
+                .then(() =>
                     logger.info(`Loaded initial overlay for channel: ${index}`)
-                })
+                )
         }
     })
 }

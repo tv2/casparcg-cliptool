@@ -1,15 +1,15 @@
 import { ReduxSettingsService } from '../../shared/services/redux-settings-service'
-import { CasparCgHandlerService } from './casparcg-handler-service'
 import { state } from '../../shared/store'
 import { Enum as CcgEnum } from 'casparcg-connection/dist/lib/ServerStateEnum'
+import { CasparCG } from 'casparcg-connection'
 
 export class CasparCgPlayoutService {
     private readonly reduxSettingsService: ReduxSettingsService
-    private readonly casparCgHandlerService: CasparCgHandlerService
+    private readonly casparCgConnection: CasparCG
 
-    public constructor() {
+    public constructor(casparCgConnection: CasparCG) {
         this.reduxSettingsService = new ReduxSettingsService()
-        this.casparCgHandlerService = CasparCgHandlerService.instance
+        this.casparCgConnection = casparCgConnection
     }
 
     public async playMedia(
@@ -45,23 +45,16 @@ export class CasparCgPlayoutService {
         fileName: string,
         transitionType: CcgEnum.Transition = CcgEnum.Transition.CUT,
         transitionTime: number = 0
-    ) {
-        try {
-            const loopState = this.getLoopState(channelIndex)
-            await this.casparCgHandlerService
-                .getCasparCgConnection()
-                .play(
-                    channelIndex + 1,
-                    layerIndex + 1,
-                    fileName,
-                    loopState,
-                    transitionType,
-                    transitionTime
-                )
-            return Promise.resolve()
-        } catch (error) {
-            return Promise.reject(error)
-        }
+    ): Promise<void> {
+        const loopState = this.getLoopState(channelIndex)
+        await this.casparCgConnection.play(
+            channelIndex + 1,
+            layerIndex + 1,
+            fileName,
+            loopState,
+            transitionType,
+            transitionTime
+        )
     }
 
     private getLoopState(channelIndex: number): boolean {
@@ -79,15 +72,13 @@ export class CasparCgPlayoutService {
         fileName: string
     ): Promise<void> {
         await this.scale(channelIndex, layerIndex)
-        try {
-            const loopState = this.getLoopState(channelIndex)
-            await this.casparCgHandlerService
-                .getCasparCgConnection()
-                .load(channelIndex + 1, layerIndex + 1, fileName, loopState)
-            return Promise.resolve()
-        } catch (error) {
-            return Promise.reject(error)
-        }
+        const loopState = this.getLoopState(channelIndex)
+        await this.casparCgConnection.load(
+            channelIndex + 1,
+            layerIndex + 1,
+            fileName,
+            loopState
+        )
     }
 
     public async playOverlay(
@@ -100,22 +91,23 @@ export class CasparCgPlayoutService {
         }
         await this.scale(channelIndex, layerIndex)
 
-        await this.casparCgHandlerService
-            .getCasparCgConnection()
-            .loadHtmlPage(channelIndex + 1, layerIndex + 1, fileName)
+        await this.casparCgConnection.loadHtmlPage(
+            channelIndex + 1,
+            layerIndex + 1,
+            fileName
+        )
 
-        await this.casparCgHandlerService
-            .getCasparCgConnection()
-            .playHtmlPage(channelIndex + 1, layerIndex + 1)
+        await this.casparCgConnection.playHtmlPage(
+            channelIndex + 1,
+            layerIndex + 1
+        )
     }
 
     public async stopOverlay(
         channelIndex: number,
         layerIndex: number
     ): Promise<void> {
-        await this.casparCgHandlerService
-            .getCasparCgConnection()
-            .stop(channelIndex + 1, layerIndex + 1)
+        await this.casparCgConnection.stop(channelIndex + 1, layerIndex + 1)
     }
 
     private async scale(
@@ -141,16 +133,14 @@ export class CasparCgPlayoutService {
             scaleOutY = outputSetting.scaleY / resY
         }
 
-        await this.casparCgHandlerService
-            .getCasparCgConnection()
-            .mixerFill(
-                channelIndex + 1,
-                layerIndex + 1,
-                0,
-                0,
-                scaleOutX,
-                scaleOutY,
-                1
-            )
+        await this.casparCgConnection.mixerFill(
+            channelIndex + 1,
+            layerIndex + 1,
+            0,
+            0,
+            scaleOutX,
+            scaleOutY,
+            1
+        )
     }
 }

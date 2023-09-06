@@ -38,6 +38,7 @@ import { CasparCgHandlerService } from './casparcg-handler-service'
 import { HiddenFilesPersistenceService } from './hidden-files-persistence-service'
 import { SettingsPersistenceService } from './settings-persistence-service'
 import { CasparCgPlayoutService } from './casparcg-playout-service'
+import { CasparCG } from 'casparcg-connection'
 
 /*
     A new instance of this should not be created at new usage sites.
@@ -52,10 +53,10 @@ export class SocketIOServerHandlerService {
     private casparCgHandlerService: CasparCgHandlerService
     private hiddenFilesPersistenceService: HiddenFilesPersistenceService
     private settingsPersistenceService: SettingsPersistenceService
-    private casparCgPlayoutService: CasparCgPlayoutService
+    private readonly casparCgPlayoutService: CasparCgPlayoutService
     private readonly socketServer
 
-    constructor(socketServer: any) {
+    constructor(socketServer: any, casparCgConnection: CasparCG) {
         this.socketServer = socketServer
         this.reduxMediaService = new ReduxMediaService()
         this.reduxSettingsService = new ReduxSettingsService()
@@ -64,7 +65,9 @@ export class SocketIOServerHandlerService {
             socketServer
         )
         this.settingsPersistenceService = new SettingsPersistenceService()
-        this.casparCgPlayoutService = new CasparCgPlayoutService()
+        this.casparCgPlayoutService = new CasparCgPlayoutService(
+            casparCgConnection
+        )
     }
 
     public setupSocketEvents(socket: any): void {
@@ -232,7 +235,6 @@ export class SocketIOServerHandlerService {
             )
             reduxStore.dispatch(updateHiddenFiles(updatedHiddenFiles))
             this.hiddenFilesPersistenceService.save(updatedHiddenFiles)
-
             this.socketServer.emit(
                 ServerToClientCommand.HIDDEN_FILES_UPDATE,
                 updatedHiddenFiles
@@ -311,7 +313,7 @@ export class SocketIOServerHandlerService {
             })
     }
 
-    private notifyAboutError(message: string, error: Error): void {
+    public notifyAboutError(message: string, error: Error): void {
         logger.data(error).error(message)
         this.socketServer.emit('error', `${message}|${error.message}`)
     }

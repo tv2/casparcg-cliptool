@@ -9,11 +9,13 @@ import {
     isDeepCompareEqual,
     isFolderNameEqual,
 } from '../utils/ccg-handler-utils'
+import { ExpressService } from './express-service'
 
 export class CasparCgHandlerService {
     public static readonly instance = new CasparCgHandlerService()
     private reduxMediaService: ReduxMediaService
     private reduxSettingsService: ReduxSettingsService
+    private expressService: ExpressService
     private thumbnails: ThumbnailFile[]
     private previousThumbnails: ThumbnailFile[]
     private readonly casparCgConnection: CasparCG
@@ -21,6 +23,7 @@ export class CasparCgHandlerService {
     constructor() {
         this.reduxMediaService = new ReduxMediaService()
         this.reduxSettingsService = new ReduxSettingsService()
+        this.expressService = ExpressService.instance
         this.thumbnails = []
         this.previousThumbnails = []
 
@@ -32,6 +35,8 @@ export class CasparCgHandlerService {
                 .ccgSettings.amcpPort,
             autoConnect: true,
         })
+
+        this.expressService.setupExpressService(this.casparCgConnection)
     }
     getCasparCgConnection(): CasparCG {
         return this.casparCgConnection

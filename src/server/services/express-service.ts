@@ -1,11 +1,12 @@
 import { logger } from '../utils/logger'
 import { SocketIOServerHandlerService } from './socket-io-server-handler-service'
+import { CasparCG } from 'casparcg-connection'
 
 const SERVER_PORT = 5555
 
 export class ExpressService {
     public static readonly instance = new ExpressService()
-    private readonly socketIoServerHandlerService: SocketIOServerHandlerService
+    private socketIoServerHandlerService!: SocketIOServerHandlerService
     private readonly server: any
     private readonly socketServer: any
     private readonly app: any
@@ -19,10 +20,14 @@ export class ExpressService {
 
         this.app.use('/', express.static(path.join(__dirname, '../../client')))
 
-        this.socketIoServerHandlerService = new SocketIOServerHandlerService(
-            this.socketServer
-        )
         this.configureOnEvents()
+    }
+
+    public setupExpressService(casparCgConnection: CasparCG) {
+        this.socketIoServerHandlerService = new SocketIOServerHandlerService(
+            this.socketServer,
+            casparCgConnection
+        )
     }
 
     private configureOnEvents() {
