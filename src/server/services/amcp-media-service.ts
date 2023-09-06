@@ -109,24 +109,37 @@ export class AmcpMediaService {
         outputIndex: number,
         output: Output
     ): void {
-        const outputFolder = this.reduxSettingsService.getOutputSettings(
-            state.settings,
-            outputIndex
-        ).folder
-        const outputMediaFiles = allFiles.filter(
+        const outputFolder: string =
+            this.reduxSettingsService.getOutputSettingsFolder(
+                state.settings,
+                outputIndex
+            )
+        const outputMediaFiles: MediaFile[] = this.getOutputMediaFiles(
+            allFiles,
+            outputFolder
+        )
+        if (isDeepCompareEqual(output.mediaFiles, outputMediaFiles)) {
+            return
+        }
+
+        logger.info(`Media files changed for output: ${outputIndex}`)
+        reduxStore.dispatch(updateMediaFiles(outputIndex, outputMediaFiles))
+        this.socketServer.emit(
+            ServerToClientCommand.MEDIA_UPDATE,
+            outputIndex,
+            outputMediaFiles
+        )
+    }
+
+    private getOutputMediaFiles(
+        allFiles: MediaFile[],
+        folder: string
+    ): MediaFile[] {
+        return allFiles.filter(
             (file) =>
-                isFolderNameEqual(file.name, outputFolder) &&
+                isFolderNameEqual(file.name, folder) &&
                 !this.isAlphaFile(file.name)
         )
-        if (!isDeepCompareEqual(output.mediaFiles, outputMediaFiles)) {
-            logger.info(`Media files changed for output: ${outputIndex}`)
-            reduxStore.dispatch(updateMediaFiles(outputIndex, outputMediaFiles))
-            this.socketServer.emit(
-                ServerToClientCommand.MEDIA_UPDATE,
-                outputIndex,
-                outputMediaFiles
-            )
-        }
     }
 
     private isAlphaFile(filename: string): boolean {
@@ -134,15 +147,16 @@ export class AmcpMediaService {
     }
 
     private fixInvalidUsedPathsInSettings(allFiles: MediaFile[]): void {
-        const outputSettingsWithFixedPaths = this.reduxSettingsService
-            .getAllOutputSettings(state.settings)
-            .map((outputSettings) =>
-                this.reduxSettingsService.clearInvalidTargetedPaths(
-                    allFiles,
-                    outputSettings,
-                    state.media
+        const outputSettingsWithFixedPaths: OutputSettings[] =
+            this.reduxSettingsService
+                .getAllOutputSettings(state.settings)
+                .map((outputSettings) =>
+                    this.reduxSettingsService.clearInvalidTargetedPaths(
+                        allFiles,
+                        outputSettings,
+                        state.media
+                    )
                 )
-            )
         if (
             !isDeepCompareEqual(
                 this.reduxSettingsService.getAllOutputSettings(state.settings),
@@ -162,8 +176,8 @@ export class AmcpMediaService {
         const genericSettings = { ...state.settings.generics }
         genericSettings.outputSettings = outputSettingsWithFixedPaths
         reduxStore.dispatch(setGenerics(genericSettings))
-        this.amcpThumbnailService.assignThumbnailsToOutputs(this.socketServer)
-        new SettingsPersistenceService().save()
+        this.amcpThumbnailService.assignThumbnailsToOutputs()
+        SettingsPersistenceService.instance.save()
     }
 
     private checkHiddenFilesChanged(files: MediaFile[]): void {

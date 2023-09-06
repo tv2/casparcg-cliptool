@@ -1,7 +1,9 @@
 import { setGenerics } from '../../shared/actions/settings-action'
 import {
+    CasparcgSettings,
     GenericSettings,
     OperationMode,
+    OutputSettings,
 } from '../../shared/models/settings-models'
 import { reduxStore, state } from '../../shared/store'
 import { newGenericSettingsSchema } from '../../shared/schemas/new-settings-schema'
@@ -9,15 +11,15 @@ import { PreviousGenericSettings } from '../../shared/schemas/old-settings-schem
 import { ReduxSettingsService } from '../../shared/services/redux-settings-service'
 import { logger } from '../utils/logger'
 import { PersistenceService } from './persistence-service'
-import { CasparCG } from 'casparcg-connection'
 
 export class SettingsPersistenceService {
+    public static readonly instance = new SettingsPersistenceService()
     private reduxSettingsService: ReduxSettingsService
     private persistenceService: PersistenceService
+    private savedOldSettings: PreviousGenericSettings | undefined
 
-    constructor(reduxSettingsService?: ReduxSettingsService) {
-        this.reduxSettingsService =
-            reduxSettingsService ?? new ReduxSettingsService()
+    private constructor() {
+        this.reduxSettingsService = new ReduxSettingsService()
         this.persistenceService = new PersistenceService()
     }
 
@@ -66,7 +68,7 @@ export class SettingsPersistenceService {
             parsed: PreviousGenericSettings | undefined
         } = this.isPreviousStructure(rawSettings)
         const parsedOld: GenericSettings | undefined =
-            await this.parseOldSettings(isOldStructure)
+            await this.partiallyParseOldSettings(isOldStructure)
         if (parsedOld) {
             return parsedOld
         }
@@ -75,41 +77,6 @@ export class SettingsPersistenceService {
             .data(rawSettings)
             .error('Failed to parse settings from file, using default!')
         return this.reduxSettingsService.getDefaultGenericSettings()
-    }
-
-    private async parseOldSettings(old: {
-        success: boolean
-        parsed: PreviousGenericSettings | undefined
-    }): Promise<undefined | GenericSettings> {
-        if (!old.success || !old.parsed) {
-            return undefined
-        }
-
-        logger.warn(
-            'Old settings structure detected ' +
-                '- updating it to the new structure.'
-        )
-        const correctedSettings = await this.getCorrectedStructureFromOld(
-            old.parsed
-        )
-        logger.info('New Settings structure generated, saving Settings...')
-        this.save(correctedSettings)
-        return correctedSettings
-    }
-
-    public save(genericSettings?: GenericSettings): void {
-        const generics: GenericSettings = genericSettings
-            ? genericSettings
-            : this.reduxSettingsService.getGenericSettings(state.settings)
-        const stringifiedSettings = JSON.stringify(generics)
-        this.persistenceService
-            .saveFile('settings.json', stringifiedSettings)
-            .then(() => {
-                logger.data(generics).debug('Settings saved')
-            })
-            .catch((error) => {
-                logger.data(error).error('Error writing file:')
-            })
     }
 
     // Checks if the loaded file has the structure of Cliptool version 2.14 and below.
@@ -143,70 +110,107 @@ export class SettingsPersistenceService {
         return { success: false, parsed: undefined }
     }
 
-    private async getCorrectedStructureFromOld(
+    private async partiallyParseOldSettings(old: {
+        success: boolean
+        parsed: PreviousGenericSettings | undefined
+    }): Promise<undefined | GenericSettings> {
+        if (!old.success || !old.parsed) {
+            return undefined
+        }
+        logger.warn(
+            'Old settings structure detected. ' +
+                'Migrates CasparCG related settings, then saving the old settings to resume ones CasparCG Connection has been established.'
+        )
+        const partiallyMigratedSettings: GenericSettings = {
+            ...this.reduxSettingsService.getDefaultGenericSettings(),
+        }
+        partiallyMigratedSettings.ccgSettings = this.getCasparCgSettingsFromOld(
+            old.parsed
+        )
+        logger.debug('Saving partially migrated settings...')
+        this.savedOldSettings = old.parsed
+        this.save(partiallyMigratedSettings)
+        return partiallyMigratedSettings
+    }
+
+    public async save(genericSettings?: GenericSettings): Promise<void> {
+        const generics: GenericSettings = genericSettings
+            ? genericSettings
+            : this.reduxSettingsService.getGenericSettings(state.settings)
+        const stringifiedSettings = JSON.stringify(generics)
+        try {
+            await this.persistenceService.saveFile(
+                'settings.json',
+                stringifiedSettings
+            )
+            logger.data(generics).debug('Settings saved')
+        } catch (error) {
+            logger.data(error).error('Error writing file:')
+        }
+    }
+
+    public async resumeMigratingOldSettings(): Promise<void> {
+        if (!this.savedOldSettings) {
+            return
+        }
+        logger.debug('Resuming migration of old settings to new structure.')
+        const migratedSettings =
+            await this.getFullCorrectedStructureFromStoredOldIfPresent(
+                this.savedOldSettings
+            )
+        this.save(migratedSettings)
+        reduxStore.dispatch(setGenerics(migratedSettings))
+        this.savedOldSettings = undefined
+    }
+
+    private async getFullCorrectedStructureFromStoredOldIfPresent(
         old: PreviousGenericSettings
     ): Promise<GenericSettings> {
-        const channelsCount: number = await this.retrieveChannelsCount(
-            old.ccgIp,
-            old.ccgAmcpPort
-        )
-
         const newSettings: GenericSettings = {
-            ...this.reduxSettingsService.getDefaultGenericSettings(
-                channelsCount
-            ),
+            ...this.reduxSettingsService.getDefaultGenericSettings(),
         }
-        newSettings.ccgSettings = {
+        newSettings.ccgSettings = this.getCasparCgSettingsFromOld(old)
+        newSettings.outputSettings = this.getOutputSettingsFromOld(old)
+
+        return newSettings
+    }
+
+    private getCasparCgSettingsFromOld(
+        old: PreviousGenericSettings
+    ): CasparcgSettings {
+        return {
             transitionTime: old.transitionTime ?? 16,
             ip: old.ccgIp ?? '0.0.0.0',
             amcpPort: old.ccgAmcpPort ?? 5250,
             defaultLayer: old.ccgDefaultLayer ?? 10,
             oscPort: old.ccgOscPort ?? 5253,
         }
-        newSettings.outputSettings.forEach((output, index) => {
-            output.label = old.outputLabels[index] ?? ''
-            output.folder = old.outputFolders[index] ?? ''
-            output.shouldScale = old.scale[index] ?? false
-            output.scaleX = old.scaleX[index] ?? 1920
-            output.scaleY = old.scaleY[index] ?? 1080
-            output.webUrl = old.webURL[index] ?? ''
-            output.loopState = old.startupLoopState[index] ?? false
-            output.mixState = old.startupMixState[index] ?? false
-            output.manualStartState =
-                old.startupManualstartState[index] ?? false
-            output.webState = old.startupWebState[index] ?? false
-            output.operationMode =
-                (old.startupOperationMode[index] as string as OperationMode) ??
-                OperationMode.CONTROL
-        })
-
-        return newSettings
     }
 
-    private async retrieveChannelsCount(
-        ip: string,
-        port: number
-    ): Promise<number> {
-        const tempCasparCgConnection = new CasparCG({
-            host: ip,
-            port: port,
-            autoConnect: false,
+    private getOutputSettingsFromOld(
+        old: PreviousGenericSettings
+    ): OutputSettings[] {
+        const outputSettings: OutputSettings[] = [
+            ...state.settings.generics.outputSettings,
+        ]
+        return outputSettings.map((outputSetting, index) => {
+            const copiedOutputSettings: OutputSettings = { ...outputSetting }
+            copiedOutputSettings.label = old.outputLabels[index] ?? ''
+            copiedOutputSettings.folder = old.outputFolders[index] ?? ''
+            copiedOutputSettings.shouldScale = old.scale[index] ?? false
+            copiedOutputSettings.scaleX = old.scaleX[index] ?? 1920
+            copiedOutputSettings.scaleY = old.scaleY[index] ?? 1080
+            copiedOutputSettings.webUrl = old.webURL[index] ?? ''
+            copiedOutputSettings.loopState =
+                old.startupLoopState[index] ?? false
+            copiedOutputSettings.mixState = old.startupMixState[index] ?? false
+            copiedOutputSettings.manualStartState =
+                old.startupManualstartState[index] ?? false
+            copiedOutputSettings.webState = old.startupWebState[index] ?? false
+            copiedOutputSettings.operationMode =
+                (old.startupOperationMode[index] as string as OperationMode) ??
+                OperationMode.CONTROL
+            return copiedOutputSettings
         })
-
-        const channelsCount = await tempCasparCgConnection
-            .getCasparCGConfig()
-            .then((config) => config.channels.length)
-            .catch((error) => {
-                logger
-                    .data(error)
-                    .warn(
-                        'Failed to retrieve amount of channels from Temporary CasparCG connection. Using default of 1.'
-                    )
-                return 1
-            })
-        logger.debug(
-            `Retrieved a count of ${channelsCount} channels from temporary CasparCG connection...`
-        )
-        return channelsCount
     }
 }

@@ -35,48 +35,55 @@ export class AmcpThumbnailsService {
     public updateStoredThumbnails(newThumbnails: ThumbnailFile[]): void {
         this.thumbnails = newThumbnails
     }
-    public getStoredThumbnails(): ThumbnailFile[] {
-        return this.thumbnails
-    }
+
     public updateStoredPreviousThumbnails(
         newThumbnails: ThumbnailFile[]
     ): void {
         this.previousThumbnails = newThumbnails
     }
-    public getStoredPreviousThumbnails(): ThumbnailFile[] {
-        return this.previousThumbnails
-    }
 
-    public assignThumbnailsToOutputs(socketServer: any): void {
+    public assignThumbnailsToOutputs(): void {
         this.reduxMediaService
             .getOutputs(state.media)
-            .forEach(({}, channelIndex: number) => {
-                const outputMedia = this.thumbnails.filter(
-                    (thumbnail: ThumbnailFile) => {
-                        return isFolderNameEqual(
-                            thumbnail?.name,
-                            this.reduxSettingsService.getOutputSettings(
-                                state.settings,
-                                channelIndex
-                            ).folder
-                        )
-                    }
+            .forEach(({}, channelIndex: number) =>
+                this.assignThumbnailsToOutput(channelIndex)
+            )
+    }
+
+    private assignThumbnailsToOutput(index: number): void {
+        const folderThumbnailFiles: ThumbnailFile[] =
+            this.getFolderFilteredThumbnails(
+                this.reduxSettingsService.getOutputSettingsFolder(
+                    state.settings,
+                    index
                 )
-                const outputThumbnailList = this.reduxMediaService.getOutput(
-                    state.media,
-                    channelIndex
-                ).thumbnailList
-                if (!isDeepCompareEqual(outputThumbnailList, outputMedia)) {
-                    reduxStore.dispatch(
-                        updateThumbnailFileList(channelIndex, outputMedia)
-                    )
-                    socketServer.emit(
-                        ServerToClientCommand.THUMBNAIL_UPDATE,
-                        channelIndex,
-                        outputMedia
-                    )
-                }
-            })
+            )
+        const outputThumbnailFiles: ThumbnailFile[] =
+            this.getOutputThumbnailFiles(index)
+
+        if (isDeepCompareEqual(outputThumbnailFiles, folderThumbnailFiles)) {
+            return
+        }
+
+        reduxStore.dispatch(
+            updateThumbnailFileList(index, folderThumbnailFiles)
+        )
+        this.socketServer.emit(
+            ServerToClientCommand.THUMBNAIL_UPDATE,
+            index,
+            folderThumbnailFiles
+        )
+    }
+
+    private getFolderFilteredThumbnails(folder: string): ThumbnailFile[] {
+        return this.thumbnails.filter((thumbnail: ThumbnailFile) => {
+            return isFolderNameEqual(thumbnail.name, folder)
+        })
+    }
+
+    private getOutputThumbnailFiles(index: number): ThumbnailFile[] {
+        return this.reduxMediaService.getOutput(state.media, index)
+            .thumbnailList
     }
 
     public async getThumbnailChanges(): Promise<void> {
@@ -98,7 +105,7 @@ export class AmcpThumbnailsService {
             retrievedThumbnails
         )
         this.updateStoredThumbnails(newThumbnails)
-        this.assignThumbnailsToOutputs(this.socketServer)
+        this.assignThumbnailsToOutputs()
     }
 
     private hasThumbnailListChanged(

@@ -44,23 +44,14 @@ export class CasparCgHandlerService {
         this.reduxMediaService = new ReduxMediaService()
         this.reduxSettingsService = new ReduxSettingsService()
         this.expressService = ExpressService.instance
-        this.expressService = ExpressService.instance
         this.amcpThumbnailService = AmcpThumbnailsService.instance
+        this.settingsPersistenceService = SettingsPersistenceService.instance
 
         this.utilityService = new UtilityService()
-        this.settingsPersistenceService = new SettingsPersistenceService(
-            this.reduxSettingsService
-        )
         this.waitingForCasparCgResponse = false
 
         //Setup AMCP Connection:
-        this.casparCgConnection = new CasparCG({
-            host: this.reduxSettingsService.getGenericSettings(state.settings)
-                .ccgSettings.ip,
-            port: this.reduxSettingsService.getGenericSettings(state.settings)
-                .ccgSettings.amcpPort,
-            autoConnect: true,
-        })
+        this.casparCgConnection = this.createCasparCgConnection()
 
         this.amcpThumbnailService.setupAmcpThumbnailService(
             this.casparCgConnection,
@@ -76,21 +67,51 @@ export class CasparCgHandlerService {
             this.casparCgConnection
         )
     }
+
+    private createCasparCgConnection(): CasparCG {
+        const casparCgSettings = this.reduxSettingsService.getGenericSettings(
+            state.settings
+        ).ccgSettings
+        return new CasparCG({
+            host: casparCgSettings.ip,
+            port: casparCgSettings.amcpPort,
+            autoConnect: true,
+        })
+    }
+
     public getCasparCgConnection(): CasparCG {
         return this.casparCgConnection
     }
 
-    public async amcpHandler(): Promise<void> {
+    public async amcpHandler(retryAttempts: number = 0): Promise<void> {
         //Check CCG Version and initialise OSC server:
         logger.debug('Checking CasparCG connection')
         if (await this.checkVersion()) {
-            await this.getConfig()
-        }
-        this.startFileChangesPollingInterval().then(() => {
-            logger.info(
-                'Started continued polling for File and Thumbnail changes.'
+            await this.retrieveConfig()
+            this.startFileChangesPollingInterval().then(() => {
+                logger.info(
+                    'Started continued polling for File and Thumbnail changes.'
+                )
+            })
+        } else {
+            retryAttempts++
+            if (retryAttempts > 3) {
+                const errorMessage: string =
+                    'Failed to retrieve version from CasparCG - ' +
+                    'Abandoning further attempts to retrieve version and startup.'
+                logger.error(errorMessage)
+                throw new Error(errorMessage)
+            }
+            logger.warn(
+                `Failed to retrieve version from CasparCG CasparCG - retrying ${retryAttempts}/3`
             )
-        })
+            await this.delay(retryAttempts * 2000)
+            await this.amcpHandler(retryAttempts)
+        }
+    }
+
+    private delay(ms: number): Promise<unknown> {
+        return new Promise((res) => setTimeout(res, ms))
     }
 
     private async checkVersion(): Promise<boolean> {
@@ -111,10 +132,10 @@ export class CasparCgHandlerService {
         return false
     }
 
-    private async getConfig(): Promise<void> {
+    private async retrieveConfig(): Promise<void> {
         try {
             const config = await this.casparCgConnection.getCasparCGConfig()
-            this.dispatchConfig(config)
+            await this.dispatchConfig(config)
             this.waitingForCasparCgResponse = false
             this.startTimeEmitInterval()
             this.loadInitialOverlay()
@@ -123,26 +144,28 @@ export class CasparCgHandlerService {
         }
     }
 
-    private dispatchConfig(config: any): void {
+    private async dispatchConfig(config: any): Promise<void> {
         logger.data(config.channels).info('CasparCG Config : ')
         reduxStore.dispatch(setNumberOfOutputs(config.channels.length))
         reduxStore.dispatch(
             updateSettings(config.channels, config.paths.mediaPath)
         )
-        this.fillInDefaultOutputSettingsIfNeeded(config.channels.length)
-        const genericSettings = {
+        await this.fillInDefaultOutputSettingsIfNeeded(config.channels.length)
+        await this.settingsPersistenceService.resumeMigratingOldSettings()
+        const genericSettings: GenericSettings = {
             ...this.reduxSettingsService.getGenericSettings(state.settings),
         }
-        const allOutputSettings = [...genericSettings.outputSettings]
-
-        config.channels.forEach(({}, index: number) => {
-            const outputSettings = { ...allOutputSettings[index] }
-            allOutputSettings[index] = this.reinvigorateChannel(
-                outputSettings,
-                index
-            )
-        })
-        genericSettings.outputSettings = allOutputSettings
+        const allOutputSettings: OutputSettings[] = [
+            ...genericSettings.outputSettings,
+        ]
+        genericSettings.outputSettings = await Promise.all(
+            config.channels.map(async ({}, index: number) => {
+                const outputSettings: OutputSettings = {
+                    ...allOutputSettings[index],
+                }
+                return await this.reinvigorateChannel(outputSettings, index)
+            })
+        )
         reduxStore.dispatch(setGenerics(genericSettings))
         logger.info(`Number of Channels: ${config.channels.length}`)
         this.expressService
@@ -151,32 +174,38 @@ export class CasparCgHandlerService {
         this.expressService.getSocketIoServerHandlerService().initializeClient()
     }
 
-    private fillInDefaultOutputSettingsIfNeeded(minimumOutputs: number) {
-        const genericSettings = {
+    private async fillInDefaultOutputSettingsIfNeeded(
+        minimumOutputs: number
+    ): Promise<void> {
+        const genericSettings: GenericSettings = {
             ...this.reduxSettingsService.getGenericSettings(state.settings),
         }
 
-        if (genericSettings.outputSettings.length < minimumOutputs) {
-            const expandedOutputSettings =
-                this.utilityService.expandArrayWithDefaultsIfNeeded(
-                    [...genericSettings.outputSettings],
-                    defaultOutputSettingsState,
-                    minimumOutputs
-                )
-            genericSettings.outputSettings = expandedOutputSettings
-            reduxStore.dispatch(setGenerics(genericSettings))
-            this.settingsPersistenceService.save(genericSettings)
+        if (genericSettings.outputSettings.length >= minimumOutputs) {
+            return
         }
+
+        logger.debug(
+            `Expanding amount of Output Settings in settings from ${genericSettings.outputSettings.length} to ${minimumOutputs}.`
+        )
+        genericSettings.outputSettings =
+            this.utilityService.expandArrayWithDefaultsIfNeeded(
+                [...genericSettings.outputSettings],
+                defaultOutputSettingsState,
+                minimumOutputs
+            )
+        reduxStore.dispatch(setGenerics(genericSettings))
+        await this.settingsPersistenceService.save(genericSettings)
     }
 
-    private reinvigorateChannel(
+    private async reinvigorateChannel(
         outputSettings: OutputSettings,
         index: number
-    ): OutputSettings {
+    ): Promise<OutputSettings> {
         const cuedFileName = outputSettings.cuedFileName
         if (cuedFileName) {
             logger.info(`Re-loaded ${cuedFileName} on channel index ${index}.`)
-            this.casparCgPlayoutService.loadMedia(index, 9, cuedFileName)
+            await this.casparCgPlayoutService.loadMedia(index, 9, cuedFileName)
         }
 
         outputSettings.loopState = outputSettings.loopState ?? false
@@ -190,9 +219,9 @@ export class CasparCgHandlerService {
         return outputSettings
     }
 
-    private startTimeEmitInterval() {
+    private startTimeEmitInterval(): void {
         //Update of timeleft is set to a default 40ms (same as 25FPS)
-        let data: TimeSelectedFilePayload[] = []
+        const data: TimeSelectedFilePayload[] = []
         reduxStore.subscribe(() => {
             this.reduxMediaService
                 .getOutputs(state.media)
@@ -222,13 +251,13 @@ export class CasparCgHandlerService {
         ) {
             return
         }
-        state.settings.ccgConfig.channels.forEach(({}, index) => {
+        state.settings.ccgConfig.channels.forEach(async ({}, index) => {
             const outputSettings = this.reduxSettingsService.getOutputSettings(
                 state.settings,
                 index
             )
             if (outputSettings.webState) {
-                this.casparCgPlayoutService.playOverlay(
+                await this.casparCgPlayoutService.playOverlay(
                     index,
                     10,
                     outputSettings.webUrl
@@ -242,9 +271,9 @@ export class CasparCgHandlerService {
             clearInterval(this.fileChangesInterval)
             this.fileChangesInterval = undefined
         }
-        logger.info('Retrieving initial Files and Thumbnails.')
-        await this.amcpMediaService.getFileChanges()
+        logger.info('Retrieving initial Thumbnails and Files.')
         await this.amcpThumbnailService.getThumbnailChanges()
+        await this.amcpMediaService.getFileChanges()
         this.fileChangesInterval = setInterval(
             async () => this.retrieveChangesIntervalAction(),
             3000
@@ -257,8 +286,8 @@ export class CasparCgHandlerService {
         }
         this.waitingForCasparCgResponse = true
         try {
-            await this.amcpMediaService.getFileChanges()
             await this.amcpThumbnailService.getThumbnailChanges()
+            await this.amcpMediaService.getFileChanges()
         } finally {
             this.waitingForCasparCgResponse = false
         }

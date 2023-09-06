@@ -14,7 +14,7 @@ const hiddenFilesPersistenceService: HiddenFilesPersistenceService =
         reduxSettingsService
     )
 const settingsPersistenceService: SettingsPersistenceService =
-    new SettingsPersistenceService(reduxSettingsService)
+    SettingsPersistenceService.instance
 
 loadBundledEnvironment()
 expressService.serverInit()

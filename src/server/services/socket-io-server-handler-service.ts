@@ -58,13 +58,13 @@ export class SocketIOServerHandlerService {
 
     constructor(socketServer: any, casparCgConnection: CasparCG) {
         this.socketServer = socketServer
+        this.amcpThumbnailService = AmcpThumbnailsService.instance
+        this.settingsPersistenceService = SettingsPersistenceService.instance
         this.reduxMediaService = new ReduxMediaService()
         this.reduxSettingsService = new ReduxSettingsService()
-        this.amcpThumbnailService = AmcpThumbnailsService.instance
         this.hiddenFilesPersistenceService = new HiddenFilesPersistenceService(
             socketServer
         )
-        this.settingsPersistenceService = new SettingsPersistenceService()
         this.casparCgPlayoutService = new CasparCgPlayoutService(
             casparCgConnection
         )
@@ -460,9 +460,7 @@ export class SocketIOServerHandlerService {
             .forEach(({}, channelIndex: number) => {
                 reduxStore.dispatch(updateMediaFiles(channelIndex, []))
                 reduxStore.dispatch(updateThumbnailFileList(channelIndex, []))
-                this.amcpThumbnailService.assignThumbnailsToOutputs(
-                    this.socketServer
-                )
+                this.amcpThumbnailService.assignThumbnailsToOutputs()
             })
     }
 

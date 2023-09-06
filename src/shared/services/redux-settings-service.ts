@@ -1,4 +1,4 @@
-import { MediaState, MediaFile } from '../models/media-models'
+import { MediaFile, MediaState } from '../models/media-models'
 import {
     GenericSettings,
     OutputSettings,
@@ -39,6 +39,13 @@ export class ReduxSettingsService {
         channelIndex: number
     ): OutputSettings {
         return settingsState.generics.outputSettings[channelIndex]
+    }
+
+    public getOutputSettingsFolder(
+        settingsState: SettingsState,
+        index: number
+    ): string {
+        return this.getOutputSettings(settingsState, index).folder
     }
 
     public clearInvalidTargetedPaths(
@@ -107,12 +114,10 @@ export class ReduxSettingsService {
         return settingsState.generics
     }
 
-    public getDefaultGenericSettings(
-        outputSettingsCount: number = 1
-    ): GenericSettings {
+    public getDefaultGenericSettings(): GenericSettings {
         return {
             ccgSettings: defaultCcgSettingsState,
-            outputSettings: Array(outputSettingsCount).fill({
+            outputSettings: Array(1).fill({
                 ...defaultOutputSettingsState,
             }),
         }
