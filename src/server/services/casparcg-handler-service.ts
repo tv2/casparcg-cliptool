@@ -44,6 +44,7 @@ export class CasparCgHandlerService {
         this.reduxMediaService = new ReduxMediaService()
         this.reduxSettingsService = new ReduxSettingsService()
         this.expressService = ExpressService.instance
+        this.expressService = ExpressService.instance
         this.amcpThumbnailService = AmcpThumbnailsService.instance
 
         this.utilityService = new UtilityService()

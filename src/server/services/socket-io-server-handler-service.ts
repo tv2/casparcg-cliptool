@@ -56,7 +56,7 @@ export class SocketIOServerHandlerService {
     private readonly casparCgPlayoutService: CasparCgPlayoutService
     private readonly socketServer
 
-    constructor(socketServer: any, casparCg: CasparCG) {
+    constructor(socketServer: any, casparCgConnection: CasparCG) {
         this.socketServer = socketServer
         this.reduxMediaService = new ReduxMediaService()
         this.reduxSettingsService = new ReduxSettingsService()
@@ -65,7 +65,9 @@ export class SocketIOServerHandlerService {
             socketServer
         )
         this.settingsPersistenceService = new SettingsPersistenceService()
-        this.casparCgPlayoutService = new CasparCgPlayoutService(casparCg)
+        this.casparCgPlayoutService = new CasparCgPlayoutService(
+            casparCgConnection
+        )
     }
 
     public setupSocketEvents(socket: any): void {
@@ -233,7 +235,6 @@ export class SocketIOServerHandlerService {
             )
             reduxStore.dispatch(updateHiddenFiles(updatedHiddenFiles))
             this.hiddenFilesPersistenceService.save(updatedHiddenFiles)
-
             this.socketServer.emit(
                 ServerToClientCommand.HIDDEN_FILES_UPDATE,
                 updatedHiddenFiles
@@ -312,7 +313,7 @@ export class SocketIOServerHandlerService {
             })
     }
 
-    private notifyAboutError(message: string, error: Error): void {
+    public notifyAboutError(message: string, error: Error): void {
         logger.data(error).error(message)
         this.socketServer.emit('error', `${message}|${error.message}`)
     }

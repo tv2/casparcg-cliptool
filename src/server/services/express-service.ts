@@ -23,10 +23,10 @@ export class ExpressService {
         this.configureOnEvents()
     }
 
-    public setupExpressService(casparCg: CasparCG) {
+    public setupExpressService(casparCgConnection: CasparCG) {
         this.socketIoServerHandlerService = new SocketIOServerHandlerService(
             this.socketServer,
-            casparCg
+            casparCgConnection
         )
     }
 

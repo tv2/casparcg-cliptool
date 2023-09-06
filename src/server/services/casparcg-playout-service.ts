@@ -45,21 +45,16 @@ export class CasparCgPlayoutService {
         fileName: string,
         transitionType: CcgEnum.Transition = CcgEnum.Transition.CUT,
         transitionTime: number = 0
-    ) {
-        try {
-            const loopState = this.getLoopState(channelIndex)
-            await this.casparCgConnection.play(
-                channelIndex + 1,
-                layerIndex + 1,
-                fileName,
-                loopState,
-                transitionType,
-                transitionTime
-            )
-            return Promise.resolve()
-        } catch (error) {
-            return Promise.reject(error)
-        }
+    ): Promise<void> {
+        const loopState = this.getLoopState(channelIndex)
+        await this.casparCgConnection.play(
+            channelIndex + 1,
+            layerIndex + 1,
+            fileName,
+            loopState,
+            transitionType,
+            transitionTime
+        )
     }
 
     private getLoopState(channelIndex: number): boolean {
@@ -77,18 +72,13 @@ export class CasparCgPlayoutService {
         fileName: string
     ): Promise<void> {
         await this.scale(channelIndex, layerIndex)
-        try {
-            const loopState = this.getLoopState(channelIndex)
-            await this.casparCgConnection.load(
-                channelIndex + 1,
-                layerIndex + 1,
-                fileName,
-                loopState
-            )
-            return Promise.resolve()
-        } catch (error) {
-            return Promise.reject(error)
-        }
+        const loopState = this.getLoopState(channelIndex)
+        await this.casparCgConnection.load(
+            channelIndex + 1,
+            layerIndex + 1,
+            fileName,
+            loopState
+        )
     }
 
     public async playOverlay(
