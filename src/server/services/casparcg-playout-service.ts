@@ -87,10 +87,11 @@ export class CasparCgPlayoutService {
         fileName: string
     ): Promise<void> {
         if (!fileName) {
-            return
+            throw new Error(
+                `Expected a a value in fileName, but it was '${fileName}'`
+            )
         }
         await this.scale(channelIndex, layerIndex)
-
         await this.casparCgConnection.loadHtmlPage(
             channelIndex + 1,
             layerIndex + 1,

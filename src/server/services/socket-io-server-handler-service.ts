@@ -379,22 +379,27 @@ export class SocketIOServerHandlerService {
             if (outputSettings.webUrl === '') {
                 return
             }
-            const webUrl = outputSettings.webUrl
+            const webUrl: string = outputSettings.webUrl
             this.casparCgPlayoutService
                 .playOverlay(channelIndex, 10, webUrl)
-                .then(() => {
+                .then(() =>
                     logger.info(
                         `Overlay playing ${webUrl} on channel index ${channelIndex}.`
                     )
-                })
+                )
+                .catch((error) =>
+                    logger
+                        .data(error)
+                        .warn('Failed to play overlay with error:')
+                )
         } else {
             this.casparCgPlayoutService
                 .stopOverlay(channelIndex, 10)
-                .then(() => {
+                .then(() =>
                     logger.info(
                         `Stopped playing overlay for channel: ${channelIndex}`
                     )
-                })
+                )
         }
     }
 
@@ -435,7 +440,10 @@ export class SocketIOServerHandlerService {
         fileName: string,
         channelIndex: number
     ): HiddenFileInfo {
-        const file = this.findFile(fileName, channelIndex)
+        const file: MediaFile | undefined = this.findFile(
+            fileName,
+            channelIndex
+        )
         if (!file) {
             throw new Error(`No such file: ${fileName}`)
         }
@@ -472,9 +480,10 @@ export class SocketIOServerHandlerService {
 
     initializeClient(): void {
         const selectedFiles: string[] = []
-        const outputSettings = new ReduxSettingsService().getGenericSettings(
-            state.settings
-        ).outputSettings
+        const outputSettings: OutputSettings[] =
+            new ReduxSettingsService().getGenericSettings(
+                state.settings
+            ).outputSettings
         outputSettings.forEach(
             (output: OutputSettings, channelIndex: number) => {
                 selectedFiles.push(

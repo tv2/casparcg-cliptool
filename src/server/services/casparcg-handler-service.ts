@@ -257,11 +257,13 @@ export class CasparCgHandlerService {
                 index
             )
             if (outputSettings.webState) {
-                await this.casparCgPlayoutService.playOverlay(
-                    index,
-                    10,
-                    outputSettings.webUrl
-                )
+                await this.casparCgPlayoutService
+                    .playOverlay(index, 10, outputSettings.webUrl)
+                    .catch((error) =>
+                        logger
+                            .data(error)
+                            .warn('Failed to play overlay with error:')
+                    )
             }
         })
     }
