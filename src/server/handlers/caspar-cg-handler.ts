@@ -31,6 +31,7 @@ import {
 } from '../utils/ccg-handler-utils'
 import { logger } from '../utils/logger'
 import {
+    GenericSettings,
     OperationMode,
     OutputSettings,
 } from '../../shared/models/settings-models'
@@ -184,17 +185,17 @@ function reinvigorateChannel(
     if (cuedFileName) {
         casparCgPlayoutService
             .loadMedia(index, 9, cuedFileName)
-            .then(() => {
+            .then(() =>
                 logger.info(
                     `Re-loaded ${cuedFileName} on channel index ${index}.`
                 )
-            })
-            .catch((error) => {
+            )
+            .catch((error) =>
                 socketIoServerHandlerService.notifyAboutError(
                     `Caught failed attempt to load media during re-invigoration of channel ${index}.`,
                     error
                 )
-            })
+            )
     }
 
     outputSettings.loopState = outputSettings.loopState ?? false
@@ -208,18 +209,17 @@ function reinvigorateChannel(
 }
 
 function fillInDefaultOutputSettingsIfNeeded(minimumOutputs: number) {
-    const genericSettings = {
+    const genericSettings: GenericSettings = {
         ...reduxSettingsService.getGenericSettings(state.settings),
     }
 
     if (genericSettings.outputSettings.length < minimumOutputs) {
-        const expandedOutputSettings =
+        genericSettings.outputSettings =
             utilityService.expandArrayWithDefaultsIfNeeded(
                 [...genericSettings.outputSettings],
                 defaultOutputSettingsState,
                 minimumOutputs
             )
-        genericSettings.outputSettings = expandedOutputSettings
         reduxStore.dispatch(setGenerics(genericSettings))
         settingsPersistenceService.save(genericSettings)
     }
