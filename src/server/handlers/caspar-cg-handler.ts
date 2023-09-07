@@ -242,6 +242,11 @@ function loadInitialOverlay(): void {
                 .then(() =>
                     logger.info(`Loaded initial overlay for channel: ${index}`)
                 )
+                .catch((error) =>
+                    logger
+                        .data(error)
+                        .warn('Failed to play overlay with error:')
+                )
         }
     })
 }
