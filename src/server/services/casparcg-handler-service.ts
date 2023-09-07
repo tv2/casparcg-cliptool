@@ -10,6 +10,7 @@ import {
 import { reduxStore, state } from '../../shared/store'
 import { logger } from '../utils/logger'
 import {
+    CasparcgSettings,
     GenericSettings,
     OperationMode,
     OutputSettings,
@@ -25,6 +26,7 @@ import { UtilityService } from '../../shared/services/utility-service'
 import { AmcpThumbnailsService } from './amcp-thumbnails-service'
 import { AmcpMediaService } from './amcp-media-service'
 import { CasparCgPlayoutService } from './casparcg-playout-service'
+import { CasparCgInfoService, ChannelInfo } from './casparcg-info-service'
 
 export class CasparCgHandlerService {
     public static readonly instance = new CasparCgHandlerService()
@@ -37,6 +39,7 @@ export class CasparCgHandlerService {
     private readonly amcpThumbnailService: AmcpThumbnailsService
     private amcpMediaService: AmcpMediaService
     private readonly casparCgConnection: CasparCG
+    private casparCgInfoService: CasparCgInfoService
     private fileChangesInterval: NodeJS.Timeout | undefined
     private waitingForCasparCgResponse: boolean
 
@@ -66,12 +69,16 @@ export class CasparCgHandlerService {
         this.casparCgPlayoutService = new CasparCgPlayoutService(
             this.casparCgConnection
         )
+        this.casparCgInfoService = new CasparCgInfoService(
+            this.casparCgConnection
+        )
     }
 
     private createCasparCgConnection(): CasparCG {
-        const casparCgSettings = this.reduxSettingsService.getGenericSettings(
-            state.settings
-        ).ccgSettings
+        const casparCgSettings: CasparcgSettings =
+            this.reduxSettingsService.getGenericSettings(
+                state.settings
+            ).ccgSettings
         return new CasparCG({
             host: casparCgSettings.ip,
             port: casparCgSettings.amcpPort,
@@ -158,7 +165,7 @@ export class CasparCgHandlerService {
         const allOutputSettings: OutputSettings[] = [
             ...genericSettings.outputSettings,
         ]
-        genericSettings.outputSettings = await Promise.all(
+        const reinvigoratedChannels: OutputSettings[] = await Promise.all(
             config.channels.map(async ({}, index: number) => {
                 const outputSettings: OutputSettings = {
                     ...allOutputSettings[index],
@@ -166,12 +173,66 @@ export class CasparCgHandlerService {
                 return await this.reinvigorateChannel(outputSettings, index)
             })
         )
+        genericSettings.outputSettings =
+            await this.synchronizeOutputSettingsWithPlayingChannels(
+                reinvigoratedChannels
+            )
         reduxStore.dispatch(setGenerics(genericSettings))
+        await this.settingsPersistenceService.save(genericSettings)
         logger.info(`Number of Channels: ${config.channels.length}`)
         this.expressService
             .getSocketServer()
             .emit(ServerToClientCommand.SETTINGS_UPDATE, state.settings)
         this.expressService.getSocketIoServerHandlerService().initializeClient()
+    }
+
+    private async synchronizeOutputSettingsWithPlayingChannels(
+        outputSettings: OutputSettings[]
+    ): Promise<OutputSettings[]> {
+        return await Promise.all(
+            outputSettings.map(
+                async (outputSettings, index) =>
+                    await this.synchronizeOutputSettingsWithPlayingChannel(
+                        outputSettings,
+                        index
+                    )
+            )
+        )
+    }
+
+    private async synchronizeOutputSettingsWithPlayingChannel(
+        outputSettings: OutputSettings,
+        index: number
+    ): Promise<OutputSettings> {
+        const info: ChannelInfo = await this.casparCgInfoService.getChannelInfo(
+            index
+        )
+        if (!info.stage) {
+            return outputSettings
+        }
+        const rawFilePath: string =
+            info.stage.layer.layer_10.foreground.file.path
+        const fileName: string = rawFilePath.substring(
+            0,
+            rawFilePath.lastIndexOf('.')
+        )
+        const isPaused: boolean = info.stage.layer.layer_10.foreground.paused
+        if (
+            fileName === outputSettings.selectedFileName ||
+            fileName === outputSettings.cuedFileName
+        ) {
+            return outputSettings
+        }
+        logger.debug(
+            `File playing or loaded on CasparCG channel ${index} is different than saved file. Updating saved value: ${fileName}`
+        )
+        if (!isPaused) {
+            outputSettings.selectedFileName = fileName
+        } else if (isPaused) {
+            outputSettings.cuedFileName = fileName
+        }
+
+        return outputSettings
     }
 
     private async fillInDefaultOutputSettingsIfNeeded(

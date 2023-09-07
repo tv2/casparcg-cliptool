@@ -16,7 +16,10 @@ import {
     MediaFile,
     Output,
 } from '../../shared/models/media-models'
-import { OutputSettings } from '../../shared/models/settings-models'
+import {
+    GenericSettings,
+    OutputSettings,
+} from '../../shared/models/settings-models'
 import { setGenerics } from '../../shared/actions/settings-action'
 import { SettingsPersistenceService } from './settings-persistence-service'
 import { CasparCG } from 'casparcg-connection'
@@ -73,7 +76,7 @@ export class AmcpMediaService {
             )
 
             this.extractFilesToOutputs(mediaFiles)
-            this.fixInvalidUsedPathsInSettings(mediaFiles)
+            await this.fixInvalidUsedPathsInSettings(mediaFiles)
             this.checkHiddenFilesChanged(mediaFiles)
         } catch (error) {
             logger
@@ -146,7 +149,9 @@ export class AmcpMediaService {
         return /_a(\.[^.]+)?$/i.test(filename)
     }
 
-    private fixInvalidUsedPathsInSettings(allFiles: MediaFile[]): void {
+    private async fixInvalidUsedPathsInSettings(
+        allFiles: MediaFile[]
+    ): Promise<void> {
         const outputSettingsWithFixedPaths: OutputSettings[] =
             this.reduxSettingsService
                 .getAllOutputSettings(state.settings)
@@ -163,29 +168,31 @@ export class AmcpMediaService {
                 outputSettingsWithFixedPaths
             )
         ) {
-            this.saveFixedPathsSettings(outputSettingsWithFixedPaths)
+            await this.saveFixedPathsSettings(outputSettingsWithFixedPaths)
         }
     }
 
-    private saveFixedPathsSettings(
+    private async saveFixedPathsSettings(
         outputSettingsWithFixedPaths: OutputSettings[]
-    ) {
+    ): Promise<void> {
         logger.warn(
             'Removing some invalid paths from settings, that likely exist due to folders/files being deleted while off.'
         )
-        const genericSettings = { ...state.settings.generics }
+        const genericSettings: GenericSettings = { ...state.settings.generics }
         genericSettings.outputSettings = outputSettingsWithFixedPaths
         reduxStore.dispatch(setGenerics(genericSettings))
         this.amcpThumbnailService.assignThumbnailsToOutputs()
-        SettingsPersistenceService.instance.save()
+        await SettingsPersistenceService.instance.save()
     }
 
     private checkHiddenFilesChanged(files: MediaFile[]): void {
-        let needsUpdating = false
+        let needsUpdating: boolean = false
         const hiddenFiles: HiddenFiles = state.media.hiddenFiles
         for (const key in hiddenFiles) {
             const hiddenFileInfo: HiddenFileInfo = hiddenFiles[key]
-            const file = files.find((predicate) => predicate.name == key)
+            const file: MediaFile | undefined = files.find(
+                (predicate) => predicate.name == key
+            )
             if (
                 !file ||
                 file.changed !== hiddenFileInfo.changed ||

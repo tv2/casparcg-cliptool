@@ -26,7 +26,10 @@ export class ReduxSettingsService {
         settingsState: SettingsState,
         index: number
     ): TabInfo {
-        const output = this.getOutputSettings(settingsState, index)
+        const output: OutputSettings = this.getOutputSettings(
+            settingsState,
+            index
+        )
         return {
             index,
             title:
@@ -53,7 +56,7 @@ export class ReduxSettingsService {
         originalOutputSettings: OutputSettings,
         mediaState: MediaState
     ): OutputSettings {
-        const outputSettings = { ...originalOutputSettings }
+        const outputSettings: OutputSettings = { ...originalOutputSettings }
         if (this.isPathsEmpty(outputSettings)) {
             return outputSettings
         }
@@ -65,7 +68,7 @@ export class ReduxSettingsService {
     private clearSelectedFolderFromSettings(
         mediaState: MediaState,
         outputSettings: OutputSettings
-    ) {
+    ): void {
         if (
             !(outputSettings.folder === '') &&
             !mediaState.folders.includes(outputSettings.folder)
@@ -77,15 +80,14 @@ export class ReduxSettingsService {
     private clearClickedFileFromSettings(
         allFiles: MediaFile[],
         outputSettings: OutputSettings
-    ) {
+    ): void {
         if (
             outputSettings.selectedFileName === '' &&
             outputSettings.cuedFileName === ''
         ) {
             return
         }
-
-        const mediaFile = allFiles.find(
+        const mediaFile: MediaFile | undefined = allFiles.find(
             (file) =>
                 file.name === outputSettings.cuedFileName ||
                 file.name === outputSettings.selectedFileName
