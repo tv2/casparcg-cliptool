@@ -23,14 +23,14 @@ export class ExpressService {
         this.configureOnEvents()
     }
 
-    public setupExpressService(casparCgConnection: CasparCG) {
+    public setupExpressService(casparCgConnection: CasparCG): void {
         this.socketIoServerHandlerService = new SocketIOServerHandlerService(
             this.socketServer,
             casparCgConnection
         )
     }
 
-    private configureOnEvents() {
+    private configureOnEvents(): void {
         this.server.on('connection', () => {
             this.app.get('/', ({}: any, res: any) => {
                 logger.info('Connected Client')

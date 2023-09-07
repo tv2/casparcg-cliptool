@@ -39,6 +39,7 @@ import { SettingsPersistenceService } from './settings-persistence-service'
 import { AmcpThumbnailsService } from './amcp-thumbnails-service'
 import { CasparCgPlayoutService } from './casparcg-playout-service'
 import { CasparCG } from 'casparcg-connection'
+import { ErrorEvent } from '../../shared/models/error-models'
 
 /*
     A new instance of this should not be created at new usage sites.
@@ -315,7 +316,12 @@ export class SocketIOServerHandlerService {
 
     public notifyAboutError(message: string, error: Error): void {
         logger.data(error).error(message)
-        this.socketServer.emit('error', `${message}|${error.message}`)
+        const errorEvent: ErrorEvent = {
+            message: message,
+            errorMessage: error.message,
+            shouldNotify: true,
+        }
+        this.socketServer.emit('error', errorEvent)
     }
 
     private processLoadEvent(channelIndex: number, fileName: string): void {

@@ -1,5 +1,6 @@
 import { setConnectionStatus } from '../../../shared/actions/app-navigation-action'
 import { reduxStore } from '../../../shared/store'
+import { ErrorEvent } from '../../../shared/models/error-models'
 
 export class ConnectionObserver {
     private socket: SocketIOClient.Socket
@@ -18,16 +19,12 @@ export class ConnectionObserver {
             reduxStore.dispatch(setConnectionStatus(false))
             console.log('LOST CONNECTION TO CLIPTOOL SERVER')
         })
-        this.socket.on('error', (error: string) => {
-            const splitError = error.split('|')
-            if (splitError.length !== 2) {
-                console.log(
-                    'Received error from backend without expected layout:',
-                    error
-                )
+        this.socket.on('error', (errorEvent: ErrorEvent) => {
+            console.log('Error occurred in backend', errorEvent.errorMessage)
+            if (!errorEvent.shouldNotify) {
                 return
             }
-            alert(splitError[0])
+            alert(errorEvent.message)
         })
     }
 }
