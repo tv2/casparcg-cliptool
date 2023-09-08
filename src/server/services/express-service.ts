@@ -11,7 +11,7 @@ export class ExpressService {
     private readonly socketServer: any
     private readonly app: any
 
-    constructor() {
+    private constructor() {
         const express = require('express')
         const path = require('path')
         this.app = express()
