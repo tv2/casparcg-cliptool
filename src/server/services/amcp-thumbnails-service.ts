@@ -13,10 +13,10 @@ import { CasparCG } from 'casparcg-connection'
 
 export class AmcpThumbnailsService {
     public static readonly instance = new AmcpThumbnailsService()
+    private readonly reduxMediaService: ReduxMediaService
+    private readonly reduxSettingsService: ReduxSettingsService
     private thumbnails: ThumbnailFile[]
     private previousThumbnails: ThumbnailFile[]
-    private reduxMediaService: ReduxMediaService
-    private readonly reduxSettingsService: ReduxSettingsService
     private casparCgConnection!: CasparCG
     private socketServer: any
 
@@ -137,12 +137,12 @@ export class AmcpThumbnailsService {
         }
     }
 
-    private async loadThumbnails(
+    private loadThumbnails(
         retrievedThumbnails: ThumbnailFile[]
     ): Promise<ThumbnailFile[]> {
-        return await Promise.all(
-            retrievedThumbnails.map(
-                async (retrieved) => await this.loadThumbnailImage(retrieved)
+        return Promise.all(
+            retrievedThumbnails.map((retrieved) =>
+                this.loadThumbnailImage(retrieved)
             )
         )
     }
