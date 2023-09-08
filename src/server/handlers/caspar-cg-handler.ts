@@ -1,12 +1,12 @@
 // @ts-ignore
 import osc from 'osc' //Using OSC fork from PieceMeta/osc.js as it has excluded hardware serialport support and thereby is crossplatform
-import { state, reduxStore } from '../../shared/store'
+import { reduxStore, state } from '../../shared/store'
 import {
     setNumberOfOutputs,
     setTime,
     updateFolders,
-    updateMediaFiles,
     updateHiddenFiles,
+    updateMediaFiles,
 } from '../../shared/actions/media-actions'
 
 import {
@@ -30,8 +30,8 @@ import {
     isFolderNameEqual,
 } from '../utils/ccg-handler-utils'
 import { logger } from '../utils/logger'
-import { loadMedia, playOverlay } from '../utils/ccg-load-play'
 import {
+    GenericSettings,
     OperationMode,
     OutputSettings,
 } from '../../shared/models/settings-models'
@@ -48,22 +48,25 @@ import { SettingsPersistenceService } from '../services/settings-persistence-ser
 import { HiddenFilesPersistenceService } from '../services/hidden-files-persistence-service'
 import { CasparCgHandlerService } from '../services/casparcg-handler-service'
 import { ExpressService } from '../services/express-service'
+import { SocketIOServerHandlerService } from '../services/socket-io-server-handler-service'
+import { CasparCgPlayoutService } from '../services/casparcg-playout-service'
 
 let waitingForCasparcgResponse: boolean = false
 
-const reduxMediaService = new ReduxMediaService()
-const reduxSettingsService = new ReduxSettingsService()
-const utilityService = new UtilityService()
-const casparCgHandlerService = CasparCgHandlerService.instance
-const expressService = ExpressService.instance
-const socketIoServerHandlerService =
+const reduxMediaService: ReduxMediaService = new ReduxMediaService()
+const reduxSettingsService: ReduxSettingsService = new ReduxSettingsService()
+const utilityService: UtilityService = new UtilityService()
+const casparCgHandlerService: CasparCgHandlerService =
+    CasparCgHandlerService.instance
+const casparCgPlayoutService: CasparCgPlayoutService =
+    new CasparCgPlayoutService(casparCgHandlerService.getCasparCgConnection())
+const expressService: ExpressService = ExpressService.instance
+const socketIoServerHandlerService: SocketIOServerHandlerService =
     expressService.getSocketIoServerHandlerService()
-const hiddenFilesPersistenceService = new HiddenFilesPersistenceService(
-    reduxSettingsService
-)
-const settingsPersistenceService = new SettingsPersistenceService(
-    reduxSettingsService
-)
+const hiddenFilesPersistenceService: HiddenFilesPersistenceService =
+    new HiddenFilesPersistenceService(reduxSettingsService)
+const settingsPersistenceService: SettingsPersistenceService =
+    new SettingsPersistenceService(reduxSettingsService)
 let fileChangesInterval: NodeJS.Timeout | undefined
 
 //Communication with CasparCG consists of 2 parts:
@@ -180,8 +183,19 @@ function reinvigorateChannel(
 ): OutputSettings {
     const cuedFileName = outputSettings.cuedFileName
     if (cuedFileName) {
-        logger.info(`Re-loaded ${cuedFileName} on channel index ${index}.`)
-        loadMedia(index, 9, cuedFileName)
+        casparCgPlayoutService
+            .loadMedia(index, 9, cuedFileName)
+            .then(() =>
+                logger.info(
+                    `Re-loaded ${cuedFileName} on channel index ${index}.`
+                )
+            )
+            .catch((error) =>
+                socketIoServerHandlerService.notifyAboutError(
+                    `Caught failed attempt to load media during re-invigoration of channel ${index}.`,
+                    error
+                )
+            )
     }
 
     outputSettings.loopState = outputSettings.loopState ?? false
@@ -195,18 +209,17 @@ function reinvigorateChannel(
 }
 
 function fillInDefaultOutputSettingsIfNeeded(minimumOutputs: number) {
-    const genericSettings = {
+    const genericSettings: GenericSettings = {
         ...reduxSettingsService.getGenericSettings(state.settings),
     }
 
     if (genericSettings.outputSettings.length < minimumOutputs) {
-        const expandedOutputSettings =
+        genericSettings.outputSettings =
             utilityService.expandArrayWithDefaultsIfNeeded(
                 [...genericSettings.outputSettings],
                 defaultOutputSettingsState,
                 minimumOutputs
             )
-        genericSettings.outputSettings = expandedOutputSettings
         reduxStore.dispatch(setGenerics(genericSettings))
         settingsPersistenceService.save(genericSettings)
     }
@@ -224,7 +237,16 @@ function loadInitialOverlay(): void {
             index
         )
         if (outputSettings.webState) {
-            playOverlay(index, 10, outputSettings.webUrl)
+            casparCgPlayoutService
+                .playOverlay(index, 10, outputSettings.webUrl)
+                .then(() =>
+                    logger.info(`Loaded initial overlay for channel: ${index}`)
+                )
+                .catch((error) =>
+                    logger
+                        .data(error)
+                        .warn('Failed to play overlay with error:')
+                )
         }
     })
 }

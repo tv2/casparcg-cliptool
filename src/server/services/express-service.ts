@@ -1,16 +1,17 @@
 import { logger } from '../utils/logger'
 import { SocketIOServerHandlerService } from './socket-io-server-handler-service'
+import { CasparCG } from 'casparcg-connection'
 
 const SERVER_PORT = 5555
 
 export class ExpressService {
     public static readonly instance = new ExpressService()
-    private socketIoServerHandlerService: SocketIOServerHandlerService
-    private server: any
-    private socketServer: any
-    private app: any
+    private socketIoServerHandlerService!: SocketIOServerHandlerService
+    private readonly server: any
+    private readonly socketServer: any
+    private readonly app: any
 
-    constructor() {
+    private constructor() {
         const express = require('express')
         const path = require('path')
         this.app = express()
@@ -19,13 +20,17 @@ export class ExpressService {
 
         this.app.use('/', express.static(path.join(__dirname, '../../client')))
 
-        this.socketIoServerHandlerService = new SocketIOServerHandlerService(
-            this.socketServer
-        )
         this.configureOnEvents()
     }
 
-    private configureOnEvents() {
+    public setupExpressService(casparCgConnection: CasparCG): void {
+        this.socketIoServerHandlerService = new SocketIOServerHandlerService(
+            this.socketServer,
+            casparCgConnection
+        )
+    }
+
+    private configureOnEvents(): void {
         this.server.on('connection', () => {
             this.app.get('/', ({}: any, res: any) => {
                 logger.info('Connected Client')
