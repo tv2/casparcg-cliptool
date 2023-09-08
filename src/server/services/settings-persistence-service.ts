@@ -14,8 +14,8 @@ import { PersistenceService } from './persistence-service'
 
 export class SettingsPersistenceService {
     public static readonly instance = new SettingsPersistenceService()
-    private reduxSettingsService: ReduxSettingsService
-    private persistenceService: PersistenceService
+    private readonly reduxSettingsService: ReduxSettingsService
+    private readonly persistenceService: PersistenceService
     private savedOldSettings: PreviousGenericSettings | undefined
 
     private constructor() {
@@ -80,7 +80,7 @@ export class SettingsPersistenceService {
     }
 
     // Checks if the loaded file has the structure of Cliptool version 2.14 and below.
-    private isPreviousStructure(rawSettings: any): {
+    private isPreviousStructure(rawSettings: unknown): {
         success: boolean
         parsed: PreviousGenericSettings | undefined
     } {
@@ -95,7 +95,7 @@ export class SettingsPersistenceService {
     }
 
     // Checks if the loaded file has the structure of Cliptool version 2.15 and above.
-    private isNewStructure(rawSettings: any): {
+    private isNewStructure(rawSettings: unknown): {
         success: boolean
         parsed: GenericSettings | undefined
     } {
@@ -110,26 +110,29 @@ export class SettingsPersistenceService {
         return { success: false, parsed: undefined }
     }
 
-    private async partiallyParseOldSettings(old: {
+    private async partiallyParseOldSettings(parsedPreviousGenericSettings: {
         success: boolean
         parsed: PreviousGenericSettings | undefined
     }): Promise<undefined | GenericSettings> {
-        if (!old.success || !old.parsed) {
+        if (
+            !parsedPreviousGenericSettings.success ||
+            !parsedPreviousGenericSettings.parsed
+        ) {
             return undefined
         }
         logger.warn(
             'Old settings structure detected. ' +
-                'Migrates CasparCG related settings, then saving the old settings to resume ones CasparCG Connection has been established.'
+                'Migrating CasparCG related settings, then saving the old settings to resume ones CasparCG connection has been established.'
         )
         const partiallyMigratedSettings: GenericSettings = {
             ...this.reduxSettingsService.getDefaultGenericSettings(),
         }
         partiallyMigratedSettings.ccgSettings = this.getCasparCgSettingsFromOld(
-            old.parsed
+            parsedPreviousGenericSettings.parsed
         )
         logger.debug('Saving partially migrated settings...')
-        this.savedOldSettings = old.parsed
-        this.save(partiallyMigratedSettings)
+        this.savedOldSettings = parsedPreviousGenericSettings.parsed
+        await this.save(partiallyMigratedSettings)
         return partiallyMigratedSettings
     }
 
@@ -154,62 +157,75 @@ export class SettingsPersistenceService {
             return
         }
         logger.debug('Resuming migration of old settings to new structure.')
-        const migratedSettings =
-            await this.getFullCorrectedStructureFromStoredOldIfPresent(
+        const migratedSettings: GenericSettings =
+            this.getFullCorrectedStructureFromStoredOldIfPresent(
                 this.savedOldSettings
             )
-        this.save(migratedSettings)
+        await this.save(migratedSettings)
         reduxStore.dispatch(setGenerics(migratedSettings))
         this.savedOldSettings = undefined
     }
 
-    private async getFullCorrectedStructureFromStoredOldIfPresent(
-        old: PreviousGenericSettings
-    ): Promise<GenericSettings> {
+    private getFullCorrectedStructureFromStoredOldIfPresent(
+        previousGenericSettings: PreviousGenericSettings
+    ): GenericSettings {
         const newSettings: GenericSettings = {
             ...this.reduxSettingsService.getDefaultGenericSettings(),
         }
-        newSettings.ccgSettings = this.getCasparCgSettingsFromOld(old)
-        newSettings.outputSettings = this.getOutputSettingsFromOld(old)
+        newSettings.ccgSettings = this.getCasparCgSettingsFromOld(
+            previousGenericSettings
+        )
+        newSettings.outputSettings = this.getOutputSettingsFromOld(
+            previousGenericSettings
+        )
 
         return newSettings
     }
 
     private getCasparCgSettingsFromOld(
-        old: PreviousGenericSettings
+        previousGenericSettings: PreviousGenericSettings
     ): CasparcgSettings {
         return {
-            transitionTime: old.transitionTime ?? 16,
-            ip: old.ccgIp ?? '0.0.0.0',
-            amcpPort: old.ccgAmcpPort ?? 5250,
-            defaultLayer: old.ccgDefaultLayer ?? 10,
-            oscPort: old.ccgOscPort ?? 5253,
+            transitionTime: previousGenericSettings.transitionTime ?? 16,
+            ip: previousGenericSettings.ccgIp ?? '0.0.0.0',
+            amcpPort: previousGenericSettings.ccgAmcpPort ?? 5250,
+            defaultLayer: previousGenericSettings.ccgDefaultLayer ?? 10,
+            oscPort: previousGenericSettings.ccgOscPort ?? 5253,
         }
     }
 
     private getOutputSettingsFromOld(
-        old: PreviousGenericSettings
+        previousGenericSettings: PreviousGenericSettings
     ): OutputSettings[] {
         const outputSettings: OutputSettings[] = [
             ...state.settings.generics.outputSettings,
         ]
         return outputSettings.map((outputSetting, index) => {
             const copiedOutputSettings: OutputSettings = { ...outputSetting }
-            copiedOutputSettings.label = old.outputLabels[index] ?? ''
-            copiedOutputSettings.folder = old.outputFolders[index] ?? ''
-            copiedOutputSettings.shouldScale = old.scale[index] ?? false
-            copiedOutputSettings.scaleX = old.scaleX[index] ?? 1920
-            copiedOutputSettings.scaleY = old.scaleY[index] ?? 1080
-            copiedOutputSettings.webUrl = old.webURL[index] ?? ''
+            copiedOutputSettings.label =
+                previousGenericSettings.outputLabels[index] ?? ''
+            copiedOutputSettings.folder =
+                previousGenericSettings.outputFolders[index] ?? ''
+            copiedOutputSettings.shouldScale =
+                previousGenericSettings.scale[index] ?? false
+            copiedOutputSettings.scaleX =
+                previousGenericSettings.scaleX[index] ?? 1920
+            copiedOutputSettings.scaleY =
+                previousGenericSettings.scaleY[index] ?? 1080
+            copiedOutputSettings.webUrl =
+                previousGenericSettings.webURL[index] ?? ''
             copiedOutputSettings.loopState =
-                old.startupLoopState[index] ?? false
-            copiedOutputSettings.mixState = old.startupMixState[index] ?? false
+                previousGenericSettings.startupLoopState[index] ?? false
+            copiedOutputSettings.mixState =
+                previousGenericSettings.startupMixState[index] ?? false
             copiedOutputSettings.manualStartState =
-                old.startupManualstartState[index] ?? false
-            copiedOutputSettings.webState = old.startupWebState[index] ?? false
+                previousGenericSettings.startupManualstartState[index] ?? false
+            copiedOutputSettings.webState =
+                previousGenericSettings.startupWebState[index] ?? false
             copiedOutputSettings.operationMode =
-                (old.startupOperationMode[index] as string as OperationMode) ??
-                OperationMode.CONTROL
+                (previousGenericSettings.startupOperationMode[
+                    index
+                ] as string as OperationMode) ?? OperationMode.CONTROL
             return copiedOutputSettings
         })
     }

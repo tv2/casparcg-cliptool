@@ -28,14 +28,14 @@ import { CasparCgPlayoutService } from './casparcg-playout-service'
 
 export class CasparCgHandlerService {
     public static readonly instance = new CasparCgHandlerService()
-    private reduxMediaService: ReduxMediaService
+    private readonly reduxMediaService: ReduxMediaService
     private readonly reduxSettingsService: ReduxSettingsService
-    private expressService: ExpressService
-    private utilityService: UtilityService
-    private settingsPersistenceService: SettingsPersistenceService
-    private casparCgPlayoutService: CasparCgPlayoutService
+    private readonly expressService: ExpressService
+    private readonly utilityService: UtilityService
+    private readonly settingsPersistenceService: SettingsPersistenceService
+    private readonly casparCgPlayoutService: CasparCgPlayoutService
     private readonly amcpThumbnailService: AmcpThumbnailsService
-    private amcpMediaService: AmcpMediaService
+    private readonly amcpMediaService: AmcpMediaService
     private readonly casparCgConnection: CasparCG
     private fileChangesInterval: NodeJS.Timeout | undefined
     private waitingForCasparCgResponse: boolean
@@ -86,7 +86,7 @@ export class CasparCgHandlerService {
     public async amcpHandler(retryAttempts: number = 0): Promise<void> {
         //Check CCG Version and initialise OSC server:
         logger.debug('Checking CasparCG connection')
-        if (await this.checkVersion()) {
+        if (await this.checkConnection()) {
             await this.retrieveConfig()
             this.startFileChangesPollingInterval().then(() => {
                 logger.info(
@@ -103,7 +103,7 @@ export class CasparCgHandlerService {
                 throw new Error(errorMessage)
             }
             logger.warn(
-                `Failed to retrieve version from CasparCG CasparCG - retrying ${retryAttempts}/3`
+                `Failed to retrieve version from CasparCG - retrying ${retryAttempts}/3`
             )
             await this.delay(retryAttempts * 2000)
             await this.amcpHandler(retryAttempts)
@@ -114,7 +114,7 @@ export class CasparCgHandlerService {
         return new Promise((res) => setTimeout(res, ms))
     }
 
-    private async checkVersion(): Promise<boolean> {
+    private async checkConnection(): Promise<boolean> {
         try {
             const versionResponse = await this.casparCgConnection.version()
             const genericSettings: GenericSettings =
@@ -277,7 +277,7 @@ export class CasparCgHandlerService {
         await this.amcpThumbnailService.getThumbnailChanges()
         await this.amcpMediaService.getFileChanges()
         this.fileChangesInterval = setInterval(
-            async () => this.retrieveChangesIntervalAction(),
+            this.retrieveChangesIntervalAction.bind(this),
             3000
         )
     }

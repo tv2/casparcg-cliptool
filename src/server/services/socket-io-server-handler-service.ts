@@ -49,11 +49,11 @@ import { ErrorEvent } from '../../shared/models/error-models'
     This will very likely be fixed during UT-203.
 */
 export class SocketIOServerHandlerService {
-    private reduxMediaService: ReduxMediaService
-    private reduxSettingsService: ReduxSettingsService
-    private amcpThumbnailService: AmcpThumbnailsService
-    private hiddenFilesPersistenceService: HiddenFilesPersistenceService
-    private settingsPersistenceService: SettingsPersistenceService
+    private readonly reduxMediaService: ReduxMediaService
+    private readonly reduxSettingsService: ReduxSettingsService
+    private readonly amcpThumbnailService: AmcpThumbnailsService
+    private readonly hiddenFilesPersistenceService: HiddenFilesPersistenceService
+    private readonly settingsPersistenceService: SettingsPersistenceService
     private readonly casparCgPlayoutService: CasparCgPlayoutService
     private readonly socketServer
 

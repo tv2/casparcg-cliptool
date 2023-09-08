@@ -26,12 +26,12 @@ import { ReduxSettingsService } from '../../shared/services/redux-settings-servi
 import { AmcpThumbnailsService } from './amcp-thumbnails-service'
 
 export class AmcpMediaService {
-    private casparCgConnection: CasparCG
+    private readonly casparCgConnection: CasparCG
     private readonly socketServer: any
-    private hiddenFilesPersistenceService: HiddenFilesPersistenceService
-    private reduxMediaService: ReduxMediaService
+    private readonly hiddenFilesPersistenceService: HiddenFilesPersistenceService
+    private readonly reduxMediaService: ReduxMediaService
     private readonly reduxSettingsService: ReduxSettingsService
-    private amcpThumbnailService: AmcpThumbnailsService
+    private readonly amcpThumbnailService: AmcpThumbnailsService
 
     constructor(
         casparCgConnection: CasparCG,
@@ -61,7 +61,7 @@ export class AmcpMediaService {
             ).response.data
             if (mediaFiles.length === 0) {
                 logger.warn(
-                    'Received no files from CasparCG when requesting them. Are the media folder empty or the path misconfigured?'
+                    'Received no files from CasparCG when requesting them. Is the media folder empty or the path misconfigured?'
                 )
             }
             reduxStore.dispatch(
@@ -85,9 +85,8 @@ export class AmcpMediaService {
     }
 
     private extractFoldersList(fileList: MediaFile[]): string[] {
-        let folders: string[] = fileList.map(
-            (media: MediaFile) =>
-                media.name.substring(0, media.name.lastIndexOf('/')) || ''
+        let folders: string[] = fileList.map((media: MediaFile) =>
+            media.name.substring(0, media.name.lastIndexOf('/'))
         )
         return [...new Set(folders)]
     }
@@ -201,7 +200,7 @@ export class AmcpMediaService {
 
         logger
             .data(hiddenFiles)
-            .debug('Hidden files was updated from external changes:')
+            .debug('Hidden files were updated from external changes:')
         reduxStore.dispatch(updateHiddenFiles(hiddenFiles))
         this.socketServer.emit(
             ServerToClientCommand.HIDDEN_FILES_UPDATE,

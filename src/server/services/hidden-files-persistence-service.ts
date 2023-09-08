@@ -9,9 +9,9 @@ import { ServerToClientCommand } from '../../shared/socket-io-constants'
 import _ from 'lodash'
 
 export class HiddenFilesPersistenceService {
-    private reduxSettingsService: ReduxSettingsService
-    private persistenceService: PersistenceService
-    private socketServer: any
+    private readonly reduxSettingsService: ReduxSettingsService
+    private readonly persistenceService: PersistenceService
+    private readonly socketServer: any
 
     constructor(
         socketServer: any,

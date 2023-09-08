@@ -1,6 +1,7 @@
 import { logger } from '../utils/logger'
 import { SocketIOServerHandlerService } from './socket-io-server-handler-service'
 import { CasparCG } from 'casparcg-connection'
+import * as Path from 'path'
 
 const SERVER_PORT = 5555
 
@@ -13,12 +14,11 @@ export class ExpressService {
 
     private constructor() {
         const express = require('express')
-        const path = require('path')
         this.app = express()
         this.server = require('http').Server(this.app)
         this.socketServer = require('socket.io')(this.server)
 
-        this.app.use('/', express.static(path.join(__dirname, '../../client')))
+        this.app.use('/', express.static(Path.join(__dirname, '../../client')))
 
         this.configureOnEvents()
     }
