@@ -39,9 +39,10 @@ export class CasparCgHandlerService {
     private readonly amcpThumbnailService: AmcpThumbnailsService
     private readonly amcpMediaService: AmcpMediaService
     private readonly casparCgConnection: CasparCG
-    private casparCgInfoService: CasparCgInfoService
+    private readonly casparCgInfoService: CasparCgInfoService
     private fileChangesInterval: NodeJS.Timeout | undefined
     private waitingForCasparCgResponse: boolean
+    private channelCount: number
 
     private constructor() {
         this.reduxMediaService = new ReduxMediaService()
@@ -52,10 +53,10 @@ export class CasparCgHandlerService {
 
         this.utilityService = new UtilityService()
         this.waitingForCasparCgResponse = false
+        this.channelCount = 0
 
         //Setup AMCP Connection:
         this.casparCgConnection = this.createCasparCgConnection()
-
         this.amcpThumbnailService.setupAmcpThumbnailService(
             this.casparCgConnection,
             this.expressService.getSocketServer()
@@ -67,7 +68,8 @@ export class CasparCgHandlerService {
             this.amcpThumbnailService
         )
         this.casparCgPlayoutService = new CasparCgPlayoutService(
-            this.casparCgConnection
+            this.casparCgConnection,
+            this.expressService.getSocketServer()
         )
         this.casparCgInfoService = new CasparCgInfoService(
             this.casparCgConnection
@@ -83,7 +85,59 @@ export class CasparCgHandlerService {
             host: casparCgSettings.ip,
             port: casparCgSettings.amcpPort,
             autoConnect: true,
+            onConnected: this.onCasparCgConnect.bind(this),
+            onDisconnected: this.onCasparCgDisconnected.bind(this),
         })
+    }
+
+    private async onCasparCgConnect(isConnected: boolean): Promise<void> {
+        this.logConnectionStatus(isConnected)
+        for (let i = 0; i < this.channelCount; i++) {
+            this.resendPlayOrLoadCommands(i)
+        }
+    }
+
+    private logConnectionStatus(isConnected: boolean) {
+        logger.info(`CasparCG connection state changed to: ${isConnected}`)
+    }
+
+    private onCasparCgDisconnected(isConnected: boolean): void {
+        this.logConnectionStatus(isConnected)
+    }
+
+    private async resendPlayOrLoadCommands(index: number): Promise<void> {
+        if (!(await this.casparCgInfoService.isChannelBlank(index))) {
+            return
+        }
+        const outputSettings: OutputSettings =
+            this.reduxSettingsService.getOutputSettings(state.settings, index)
+        if (
+            outputSettings.selectedFileName === '' &&
+            outputSettings.cuedFileName === ''
+        ) {
+            return
+        }
+        if (outputSettings.selectedFileName !== '') {
+            this.casparCgPlayoutService
+                .playOrMixMedia(index, outputSettings.selectedFileName)
+                .then(() =>
+                    logger.info(
+                        `Resent play command for channel ${
+                            index + 1
+                        }. Playing '${outputSettings.selectedFileName}'`
+                    )
+                )
+        } else {
+            this.casparCgPlayoutService
+                .loadMedia(index, outputSettings.cuedFileName)
+                .then(() =>
+                    logger.info(
+                        `Resent load command for channel ${
+                            index + 1
+                        }. Loaded '${outputSettings.cuedFileName}'`
+                    )
+                )
+        }
     }
 
     public getCasparCgConnection(): CasparCG {
@@ -180,6 +234,7 @@ export class CasparCgHandlerService {
         reduxStore.dispatch(setGenerics(genericSettings))
         await this.settingsPersistenceService.save(genericSettings)
         logger.info(`Number of Channels: ${config.channels.length}`)
+        this.channelCount = config.channels.length
         this.expressService
             .getSocketServer()
             .emit(ServerToClientCommand.SETTINGS_UPDATE, state.settings)
@@ -266,7 +321,7 @@ export class CasparCgHandlerService {
         const cuedFileName = outputSettings.cuedFileName
         if (cuedFileName) {
             logger.info(`Re-loaded ${cuedFileName} on channel index ${index}.`)
-            await this.casparCgPlayoutService.loadMedia(index, 9, cuedFileName)
+            await this.casparCgPlayoutService.loadMedia(index, cuedFileName)
         }
 
         outputSettings.loopState = outputSettings.loopState ?? false

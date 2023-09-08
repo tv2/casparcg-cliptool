@@ -1,6 +1,5 @@
 import { CasparCG } from 'casparcg-connection'
 import * as Path from 'path'
-import { logger } from '../utils/logger'
 
 export interface ChannelInfo {
     stage?: Stage
@@ -53,16 +52,20 @@ export class CasparCgInfoService {
 
     public async getChannelInfo(index: number): Promise<ChannelInfo> {
         const infoResponse = await this.casparCgConnection.info(index + 1)
-        const convertedInfo: ChannelInfo = infoResponse.response.data
-        logger.data(convertedInfo).trace(index)
-        if (convertedInfo.stage) {
-            convertedInfo.stage.layer.layer_10.foreground.file.path =
+        const info: ChannelInfo = infoResponse.response.data
+        if (info.stage) {
+            info.stage.layer.layer_10.foreground.file.path =
                 this.getMediaFolderAdjustedName(
-                    convertedInfo.stage.layer.layer_10.foreground.file.path
+                    info.stage.layer.layer_10.foreground.file.path
                 )
         }
 
-        return convertedInfo
+        return info
+    }
+
+    public async isChannelBlank(index: number): Promise<boolean> {
+        const info: ChannelInfo = await this.getChannelInfo(index)
+        return !info.stage
     }
 
     private getMediaFolderAdjustedName(rawPath: string): string {
