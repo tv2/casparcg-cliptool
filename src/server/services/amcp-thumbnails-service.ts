@@ -155,8 +155,8 @@ export class AmcpThumbnailsService {
         retrievedThumbnails: ThumbnailFile[]
     ): Promise<ThumbnailFile[]> {
         return Promise.all(
-            retrievedThumbnails.map((retrieved) =>
-                this.loadThumbnailImage(retrieved)
+            retrievedThumbnails.map((thumbnailFile) =>
+                this.loadThumbnailImage(thumbnailFile)
             )
         )
     }

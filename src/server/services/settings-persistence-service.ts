@@ -67,16 +67,17 @@ export class SettingsPersistenceService {
             success: boolean
             parsed: PreviousGenericSettings | undefined
         } = this.isPreviousStructure(rawSettings)
-        const parsedOld: GenericSettings | undefined =
-            await this.partiallyParseOldSettings(isOldStructure)
-        if (parsedOld) {
-            return parsedOld
+        if (!isOldStructure.success || !isOldStructure.parsed) {
+            logger
+                .data(rawSettings)
+                .error('Failed to parse settings from file, using default!')
+            return this.reduxSettingsService.getDefaultGenericSettings()
         }
 
-        logger
-            .data(rawSettings)
-            .error('Failed to parse settings from file, using default!')
-        return this.reduxSettingsService.getDefaultGenericSettings()
+        const parsedOld: GenericSettings = await this.partiallyParseOldSettings(
+            isOldStructure.parsed
+        )
+        return parsedOld
     }
 
     // Checks if the loaded file has the structure of Cliptool version 2.14 and below.
@@ -110,28 +111,20 @@ export class SettingsPersistenceService {
         return { success: false, parsed: undefined }
     }
 
-    private async partiallyParseOldSettings(parsedPreviousGenericSettings: {
-        success: boolean
-        parsed: PreviousGenericSettings | undefined
-    }): Promise<undefined | GenericSettings> {
-        if (
-            !parsedPreviousGenericSettings.success ||
-            !parsedPreviousGenericSettings.parsed
-        ) {
-            return undefined
-        }
+    private async partiallyParseOldSettings(
+        previousGenericSettings: PreviousGenericSettings
+    ): Promise<GenericSettings> {
         logger.warn(
-            'Old settings structure detected. ' +
-                'Migrating CasparCG related settings, then saving the old settings to resume ones CasparCG connection has been established.'
+            'Temporarily saving old settings, and migrating CasparCG related ones'
         )
         const partiallyMigratedSettings: GenericSettings = {
             ...this.reduxSettingsService.getDefaultGenericSettings(),
         }
         partiallyMigratedSettings.ccgSettings = this.getCasparCgSettingsFromOld(
-            parsedPreviousGenericSettings.parsed
+            previousGenericSettings
         )
         logger.debug('Saving partially migrated settings...')
-        this.savedOldSettings = parsedPreviousGenericSettings.parsed
+        this.savedOldSettings = previousGenericSettings
         await this.save(partiallyMigratedSettings)
         return partiallyMigratedSettings
     }
@@ -156,7 +149,9 @@ export class SettingsPersistenceService {
         if (!this.savedOldSettings) {
             return
         }
-        logger.debug('Resuming migration of old settings to new structure.')
+        logger.warn(
+            'Resuming migration of saved old settings to new structure.'
+        )
         const migratedSettings: GenericSettings =
             this.getFullCorrectedStructureFromStoredOldIfPresent(
                 this.savedOldSettings

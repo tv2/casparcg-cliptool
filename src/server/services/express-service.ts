@@ -1,7 +1,7 @@
 import { logger } from '../utils/logger'
 import { SocketIOServerHandlerService } from './socket-io-server-handler-service'
 import { CasparCG } from 'casparcg-connection'
-import * as Path from 'path'
+import * as path from 'path'
 import {
     ClientToServerEvents,
     InterServerEvents,
@@ -35,7 +35,7 @@ export class ExpressService {
             InterServerEvents
         >(this.server)
 
-        this.app.use('/', express.static(Path.join(__dirname, '../../client')))
+        this.app.use('/', express.static(path.join(__dirname, '../../client')))
 
         this.configureOnEvents()
     }
