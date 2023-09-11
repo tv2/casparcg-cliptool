@@ -5,11 +5,16 @@ import {
     isFolderNameEqual,
 } from '../utils/ccg-handler-utils'
 import { updateThumbnailFileList } from '../../shared/actions/media-actions'
-import { ServerToClientCommand } from '../../shared/socket-io-constants'
+import {
+    ClientToServerEvents,
+    InterServerEvents,
+    ServerToClientEvents,
+} from '../../shared/socket-io-constants'
 import { ReduxMediaService } from '../../shared/services/redux-media-service'
 import { ReduxSettingsService } from '../../shared/services/redux-settings-service'
 import { logger } from '../utils/logger'
 import { CasparCG } from 'casparcg-connection'
+import { Server as SocketServer } from 'socket.io'
 
 export class AmcpThumbnailsService {
     public static readonly instance = new AmcpThumbnailsService()
@@ -18,7 +23,12 @@ export class AmcpThumbnailsService {
     private thumbnails: ThumbnailFile[]
     private previousThumbnails: ThumbnailFile[]
     private casparCgConnection!: CasparCG
-    private socketServer: any
+    private socketServer!: SocketServer<
+        ClientToServerEvents,
+        ServerToClientEvents,
+        InterServerEvents,
+        any
+    >
 
     private constructor() {
         this.reduxMediaService = new ReduxMediaService()
@@ -27,7 +37,15 @@ export class AmcpThumbnailsService {
         this.previousThumbnails = []
     }
 
-    public setupAmcpThumbnailService(casparCg: CasparCG, socketServer: any) {
+    public setupAmcpThumbnailService(
+        casparCg: CasparCG,
+        socketServer: SocketServer<
+            ClientToServerEvents,
+            ServerToClientEvents,
+            InterServerEvents,
+            any
+        >
+    ) {
         this.casparCgConnection = casparCg
         this.socketServer = socketServer
     }
@@ -68,11 +86,7 @@ export class AmcpThumbnailsService {
         reduxStore.dispatch(
             updateThumbnailFileList(index, folderThumbnailFiles)
         )
-        this.socketServer.emit(
-            ServerToClientCommand.THUMBNAIL_UPDATE,
-            index,
-            folderThumbnailFiles
-        )
+        this.socketServer.emit('thumbnailUpdate', index, folderThumbnailFiles)
     }
 
     private getFolderFilteredThumbnails(folder: string): ThumbnailFile[] {

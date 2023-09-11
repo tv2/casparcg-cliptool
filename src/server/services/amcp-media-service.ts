@@ -9,7 +9,11 @@ import {
     isDeepCompareEqual,
     isFolderNameEqual,
 } from '../utils/ccg-handler-utils'
-import { ServerToClientCommand } from '../../shared/socket-io-constants'
+import {
+    ClientToServerEvents,
+    InterServerEvents,
+    ServerToClientEvents,
+} from '../../shared/socket-io-constants'
 import {
     HiddenFileInfo,
     HiddenFiles,
@@ -24,10 +28,16 @@ import { HiddenFilesPersistenceService } from './hidden-files-persistence-servic
 import { ReduxMediaService } from '../../shared/services/redux-media-service'
 import { ReduxSettingsService } from '../../shared/services/redux-settings-service'
 import { AmcpThumbnailsService } from './amcp-thumbnails-service'
+import { Server as SocketServer } from 'socket.io'
 
 export class AmcpMediaService {
     private readonly casparCgConnection: CasparCG
-    private readonly socketServer: any
+    private readonly socketServer: SocketServer<
+        ClientToServerEvents,
+        ServerToClientEvents,
+        InterServerEvents,
+        any
+    >
     private readonly hiddenFilesPersistenceService: HiddenFilesPersistenceService
     private readonly reduxMediaService: ReduxMediaService
     private readonly reduxSettingsService: ReduxSettingsService
@@ -35,7 +45,12 @@ export class AmcpMediaService {
 
     constructor(
         casparCgConnection: CasparCG,
-        socketServer: any,
+        socketServer: SocketServer<
+            ClientToServerEvents,
+            ServerToClientEvents,
+            InterServerEvents,
+            any
+        >,
         amcpThumbnailsService: AmcpThumbnailsService
     ) {
         this.casparCgConnection = casparCgConnection
@@ -67,10 +82,7 @@ export class AmcpMediaService {
             reduxStore.dispatch(
                 updateFolders(this.extractFoldersList(mediaFiles))
             )
-            this.socketServer.emit(
-                ServerToClientCommand.FOLDERS_UPDATE,
-                state.media.folders
-            )
+            this.socketServer.emit('folderUpdate', state.media.folders)
 
             this.extractFilesToOutputs(mediaFiles)
             this.fixInvalidUsedPathsInSettings(mediaFiles)
@@ -123,11 +135,7 @@ export class AmcpMediaService {
 
         logger.info(`Media files changed for output: ${outputIndex}`)
         reduxStore.dispatch(updateMediaFiles(outputIndex, outputMediaFiles))
-        this.socketServer.emit(
-            ServerToClientCommand.MEDIA_UPDATE,
-            outputIndex,
-            outputMediaFiles
-        )
+        this.socketServer.emit('mediaUpdate', outputIndex, outputMediaFiles)
     }
 
     private getOutputMediaFiles(
@@ -202,10 +210,7 @@ export class AmcpMediaService {
             .data(hiddenFiles)
             .debug('Hidden files were updated from external changes:')
         reduxStore.dispatch(updateHiddenFiles(hiddenFiles))
-        this.socketServer.emit(
-            ServerToClientCommand.HIDDEN_FILES_UPDATE,
-            hiddenFiles
-        )
+        this.socketServer.emit('hiddenFilesUpdate', hiddenFiles)
         this.hiddenFilesPersistenceService.save(hiddenFiles)
     }
 }
