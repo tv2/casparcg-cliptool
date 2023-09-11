@@ -56,46 +56,55 @@ export class ReduxSettingsService {
         originalOutputSettings: OutputSettings,
         mediaState: MediaState
     ): OutputSettings {
-        const outputSettings: OutputSettings = { ...originalOutputSettings }
+        let outputSettings: OutputSettings = { ...originalOutputSettings }
         if (this.isPathsEmpty(outputSettings)) {
             return outputSettings
         }
-        this.clearClickedFileFromSettings(allFiles, outputSettings)
-        this.clearSelectedFolderFromSettings(mediaState, outputSettings)
+        outputSettings = this.clearClickedFileFromSettings(
+            allFiles,
+            outputSettings
+        )
+        outputSettings = this.clearSelectedFolderFromSettings(
+            mediaState,
+            outputSettings
+        )
         return outputSettings
     }
 
     private clearSelectedFolderFromSettings(
         mediaState: MediaState,
         outputSettings: OutputSettings
-    ): void {
+    ): OutputSettings {
         if (
             !(outputSettings.folder === '') &&
             !mediaState.folders.includes(outputSettings.folder)
         ) {
             outputSettings.folder = ''
         }
+        return outputSettings
     }
 
     private clearClickedFileFromSettings(
         allFiles: MediaFile[],
         outputSettings: OutputSettings
-    ): void {
+    ): OutputSettings {
         if (
             outputSettings.selectedFileName === '' &&
             outputSettings.cuedFileName === ''
         ) {
-            return
+            return outputSettings
         }
         const mediaFile: MediaFile | undefined = allFiles.find(
             (file) =>
                 file.name === outputSettings.cuedFileName ||
                 file.name === outputSettings.selectedFileName
         )
+
         if (!mediaFile) {
             outputSettings.cuedFileName = ''
             outputSettings.selectedFileName = ''
         }
+        return outputSettings
     }
 
     private isPathsEmpty(outputSettings: OutputSettings): boolean {

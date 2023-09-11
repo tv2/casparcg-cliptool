@@ -293,7 +293,7 @@ export class SocketIOServerHandlerService {
                     `Playing ${fileName} on channel index ${channelIndex}.`
                 )
                 this.updateCuedFile(channelIndex, '')
-                this.updateSelectedFile(channelIndex, fileName)
+                this.updateSelectedFile(channelIndex, fileName.toUpperCase())
                 this.settingsPersistenceService.save()
             })
     }
@@ -305,7 +305,7 @@ export class SocketIOServerHandlerService {
                 logger.info(
                     `Loading ${fileName} on channel index ${channelIndex}.`
                 )
-                this.updateCuedFile(channelIndex, fileName)
+                this.updateCuedFile(channelIndex, fileName.toUpperCase())
                 this.updateSelectedFile(channelIndex, '')
                 this.settingsPersistenceService.save()
             })

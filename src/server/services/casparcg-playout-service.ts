@@ -4,7 +4,6 @@ import { Enum as CcgEnum } from 'casparcg-connection/dist/lib/ServerStateEnum'
 import { CasparCG } from 'casparcg-connection'
 import { logger } from '../utils/logger'
 import { ErrorEvent } from '../../shared/models/error-models'
-import { Simulate } from 'react-dom/test-utils'
 
 /* Todo: Fix playing a file while connection to CasparCG isn't there waiting indefinitely, and then fires on reconnect.
          Should probably just time out after e.g 10 seconds.
@@ -33,7 +32,7 @@ export class CasparCgPlayoutService {
             : this.mixMedia.bind(this)
         await action(channelIndex, 9, fileName).catch((reason) => {
             const message: string = `Failed to play file: ${fileName}`
-            logger.data(error).error(message)
+            logger.data(reason).error(message)
             this.notifyAboutError(message, reason as Error)
         })
     }
@@ -99,7 +98,7 @@ export class CasparCgPlayoutService {
         return this.executeLoadMedia(channelIndex, 9, fileName).catch(
             (reason) => {
                 const message: string = `Failed to load file: ${fileName}`
-                logger.data(error).error(message)
+                logger.data(reason).error(message)
                 this.notifyAboutError(message, reason as Error)
             }
         )

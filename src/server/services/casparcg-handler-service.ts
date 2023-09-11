@@ -263,14 +263,15 @@ export class CasparCgHandlerService {
             index
         )
         if (!info.stage) {
+            outputSettings.selectedFileName = ''
+            outputSettings.cuedFileName = ''
             return outputSettings
         }
         const rawFilePath: string =
             info.stage.layer.layer_10.foreground.file.path
-        const fileName: string = rawFilePath.substring(
-            0,
-            rawFilePath.lastIndexOf('.')
-        )
+        const fileName: string = rawFilePath
+            .substring(0, rawFilePath.lastIndexOf('.'))
+            .toUpperCase()
         const isPaused: boolean = info.stage.layer.layer_10.foreground.paused
         if (
             fileName === outputSettings.selectedFileName ||
