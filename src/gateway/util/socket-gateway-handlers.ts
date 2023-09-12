@@ -39,7 +39,7 @@ export const socket = require('socket.io-client')(
     }
 )
 
-socket.on('connect', () => logger.info('Connected to ClipTool'))
+socket.on('connect', () => logger.info('Connected to Cliptool'))
 
 socket.on('connect_error', (error: unknown) =>
     logger.data(error).error(`Socket Client Error:`)
@@ -89,7 +89,8 @@ socket.on(
     ServerToClientCommand.TIME_TALLY_UPDATE,
     (data: TimeSelectedFilePayload[]) => {
         data.forEach((channel, index) => {
-            const reduxSettingsService = new ReduxSettingsService()
+            const reduxSettingsService: ReduxSettingsService =
+                new ReduxSettingsService()
             reduxStore.dispatch(setTime(index, channel.time))
             if (
                 reduxSettingsService.getOutputSettings(state.settings, index)
