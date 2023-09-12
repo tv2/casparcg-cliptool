@@ -1,24 +1,41 @@
 import { logger } from '../utils/logger'
 import { SocketIOServerHandlerService } from './socket-io-server-handler-service'
 import { CasparCG } from 'casparcg-connection'
-import * as Path from 'path'
+import * as path from 'path'
+import {
+    ClientToServerEvents,
+    InterServerEvents,
+    ServerToClientEvents,
+} from '../../shared/socket-io-constants'
+import { Server as SocketServer, Socket } from 'socket.io'
+import * as express from 'express'
+import { Express } from 'express'
+import { Server as HttpServer } from 'http'
 
-const SERVER_PORT = 5555
+const SERVER_PORT: number = 5555
 
 export class ExpressService {
     public static readonly instance = new ExpressService()
     private socketIoServerHandlerService!: SocketIOServerHandlerService
-    private readonly server: any
-    private readonly socketServer: any
-    private readonly app: any
+    private readonly server: HttpServer
+    private readonly socketServer: SocketServer<
+        ClientToServerEvents,
+        ServerToClientEvents,
+        InterServerEvents,
+        any
+    >
+    private readonly app: Express
 
     private constructor() {
-        const express = require('express')
-        this.app = express()
-        this.server = require('http').Server(this.app)
-        this.socketServer = require('socket.io')(this.server)
+        this.app = express.default()
+        this.server = new HttpServer(this.app)
+        this.socketServer = new SocketServer<
+            ClientToServerEvents,
+            ServerToClientEvents,
+            InterServerEvents
+        >(this.server)
 
-        this.app.use('/', express.static(Path.join(__dirname, '../../client')))
+        this.app.use('/', express.static(path.join(__dirname, '../../client')))
 
         this.configureOnEvents()
     }
@@ -38,13 +55,28 @@ export class ExpressService {
             })
         })
 
-        this.socketServer.on('connection', (socket: any) => {
-            logger.info(`Client connected: ${socket.client.id}`)
-            this.socketIoServerHandlerService.setupSocketEvents(socket)
-        })
+        this.socketServer.on(
+            'connection',
+            (
+                socket: Socket<
+                    ClientToServerEvents,
+                    ServerToClientEvents,
+                    InterServerEvents,
+                    any
+                >
+            ) => {
+                logger.info(`Client connected: ${socket.id}`)
+                this.socketIoServerHandlerService.setupSocketEvents(socket)
+            }
+        )
     }
 
-    public getSocketServer(): any {
+    public getSocketServer(): SocketServer<
+        ClientToServerEvents,
+        ServerToClientEvents,
+        InterServerEvents,
+        any
+    > {
         return this.socketServer
     }
 

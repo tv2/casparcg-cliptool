@@ -5,16 +5,31 @@ import { logger } from '../utils/logger'
 import { PersistenceService } from './persistence-service'
 import { ReduxSettingsService } from '../../shared/services/redux-settings-service'
 import { OutputSettings } from '../../shared/models/settings-models'
-import { ServerToClientCommand } from '../../shared/socket-io-constants'
+import {
+    ClientToServerEvents,
+    InterServerEvents,
+    ServerToClientEvents,
+} from '../../shared/socket-io-constants'
 import _ from 'lodash'
+import { Server as SocketServer } from 'socket.io'
 
 export class HiddenFilesPersistenceService {
     private readonly reduxSettingsService: ReduxSettingsService
     private readonly persistenceService: PersistenceService
-    private readonly socketServer: any
+    private readonly socketServer: SocketServer<
+        ClientToServerEvents,
+        ServerToClientEvents,
+        InterServerEvents,
+        any
+    >
 
     constructor(
-        socketServer: any,
+        socketServer: SocketServer<
+            ClientToServerEvents,
+            ServerToClientEvents,
+            InterServerEvents,
+            any
+        >,
         reduxSettingsService?: ReduxSettingsService
     ) {
         this.socketServer = socketServer
@@ -58,10 +73,7 @@ export class HiddenFilesPersistenceService {
     private updateReduxState(hiddenFiles: HiddenFiles) {
         logger.data(hiddenFiles).trace('Hidden files File loaded with:')
         reduxStore.dispatch(updateHiddenFiles(hiddenFiles))
-        this.socketServer.emit(
-            ServerToClientCommand.HIDDEN_FILES_UPDATE,
-            hiddenFiles
-        )
+        this.socketServer.emit('hiddenFilesUpdate', hiddenFiles)
     }
 
     public save(hiddenFiles: HiddenFiles): void {

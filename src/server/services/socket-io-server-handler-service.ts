@@ -27,9 +27,9 @@ import {
 import { ReduxMediaService } from '../../shared/services/redux-media-service'
 import { ReduxSettingsService } from '../../shared/services/redux-settings-service'
 import {
-    ClientToServerCommand,
-    GET_SETTINGS,
-    ServerToClientCommand,
+    ClientToServerEvents,
+    InterServerEvents,
+    ServerToClientEvents,
     TimeSelectedFilePayload,
 } from '../../shared/socket-io-constants'
 import { reduxStore, state } from '../../shared/store'
@@ -39,6 +39,7 @@ import { SettingsPersistenceService } from './settings-persistence-service'
 import { AmcpThumbnailsService } from './amcp-thumbnails-service'
 import { CasparCgPlayoutService } from './casparcg-playout-service'
 import { CasparCG } from 'casparcg-connection'
+import { Server as SocketServer, Socket } from 'socket.io'
 
 /*
     A new instance of this should not be created at new usage sites.
@@ -54,9 +55,22 @@ export class SocketIOServerHandlerService {
     private readonly hiddenFilesPersistenceService: HiddenFilesPersistenceService
     private readonly settingsPersistenceService: SettingsPersistenceService
     private readonly casparCgPlayoutService: CasparCgPlayoutService
-    private readonly socketServer
+    private readonly socketServer: SocketServer<
+        ClientToServerEvents,
+        ServerToClientEvents,
+        InterServerEvents,
+        any
+    >
 
-    constructor(socketServer: any, casparCgConnection: CasparCG) {
+    constructor(
+        socketServer: SocketServer<
+            ClientToServerEvents,
+            ServerToClientEvents,
+            InterServerEvents,
+            any
+        >,
+        casparCgConnection: CasparCG
+    ) {
         this.socketServer = socketServer
         this.amcpThumbnailService = AmcpThumbnailsService.instance
         this.settingsPersistenceService = SettingsPersistenceService.instance
@@ -71,79 +85,68 @@ export class SocketIOServerHandlerService {
         )
     }
 
-    public setupSocketEvents(socket: any): void {
+    public setupSocketEvents(
+        socket: Socket<
+            ClientToServerEvents,
+            ServerToClientEvents,
+            InterServerEvents,
+            any
+        >
+    ): void {
         logger.info('SETTING UP SOCKET IO MAIN HANDLERS')
 
-        this.socketServer.emit(
-            ServerToClientCommand.SETTINGS_UPDATE,
-            state.settings
-        )
+        this.socketServer.emit('settingsUpdate', state.settings)
         this.initializeClient()
 
         socket
-            .on(GET_SETTINGS, () => {
-                this.socketServer.emit(
-                    ServerToClientCommand.SETTINGS_UPDATE,
-                    state.settings
-                )
+            .on('getSettings', () => {
+                this.socketServer.emit('settingsUpdate', state.settings)
             })
             .on(
-                ClientToServerCommand.TOGGLE_THUMBNAIL_VISIBILITY,
+                'toggleThumbnailVisibility',
                 (channelIndex: number, fileName: string) =>
                     this.processToggleThumbnailVisibilityEvent(
                         channelIndex,
                         fileName
                     )
             )
-            .on(
-                ClientToServerCommand.PGM_PLAY,
-                (channelIndex: number, fileName: string) =>
-                    this.processPlayEvent(channelIndex, fileName)
+            .on('programPlay', (channelIndex: number, fileName: string) =>
+                this.processPlayEvent(channelIndex, fileName)
+            )
+            .on('programLoad', (channelIndex: number, fileName: string) =>
+                this.processLoadEvent(channelIndex, fileName)
+            )
+            .on('setLoopState', (channelIndex: number, loopState: boolean) =>
+                this.processSetLoopStateEvent(channelIndex, loopState)
             )
             .on(
-                ClientToServerCommand.PGM_LOAD,
-                (channelIndex: number, fileName: string) =>
-                    this.processLoadEvent(channelIndex, fileName)
-            )
-            .on(
-                ClientToServerCommand.SET_LOOP_STATE,
-                (channelIndex: number, loopState: boolean) =>
-                    this.processSetLoopStateEvent(channelIndex, loopState)
-            )
-            .on(
-                ClientToServerCommand.SET_OPERATION_MODE,
+                'setOperationMode',
                 (channelIndex: number, mode: OperationMode) =>
                     this.processSetOperationModeEvent(channelIndex, mode)
             )
             .on(
-                ClientToServerCommand.SET_MANUAL_START_STATE,
+                'setManualStartState',
                 (channelIndex: number, manualStartState: boolean) =>
                     this.processSetManualStartStateEvent(
                         channelIndex,
                         manualStartState
                     )
             )
-            .on(
-                ClientToServerCommand.SET_MIX_STATE,
-                (channelIndex: number, mixState: boolean) =>
-                    this.processSetMixStateEvent(channelIndex, mixState)
+            .on('setMixState', (channelIndex: number, mixState: boolean) =>
+                this.processSetMixStateEvent(channelIndex, mixState)
             )
-            .on(
-                ClientToServerCommand.SET_WEB_STATE,
-                (channelIndex: number, webState: boolean) =>
-                    this.processSetWebStateEvent(channelIndex, webState)
+            .on('setWebState', (channelIndex: number, webState: boolean) =>
+                this.processSetWebStateEvent(channelIndex, webState)
             )
-            .on(
-                ClientToServerCommand.SET_GENERICS,
-                (generics: GenericSettings) =>
-                    this.processSetGenericsEvent(generics)
+            .on('setGenerics', (generics: GenericSettings) =>
+                this.processSetGenericsEvent(generics)
             )
-            .on(ClientToServerCommand.RESTART_SERVER, () => {
+            .on('restartServer', () => {
                 process.exit(0)
             })
     }
 
-    private processSetGenericsEvent(generics: GenericSettings) {
+    private processSetGenericsEvent(generics: GenericSettings): void {
         logger.data(generics).trace('Save Settings')
         logger.info('Updating and storing generic settings server side.')
         const oldAllOutputSettings: OutputSettings[] =
@@ -162,18 +165,18 @@ export class SocketIOServerHandlerService {
             }
         )
         this.settingsPersistenceService.save()
-        this.socketServer.emit(
-            ServerToClientCommand.SETTINGS_UPDATE,
-            state.settings
-        )
+        this.socketServer.emit('settingsUpdate', state.settings)
         this.cleanUpMediaFiles()
     }
 
-    private processSetMixStateEvent(channelIndex: number, mixState: boolean) {
+    private processSetMixStateEvent(
+        channelIndex: number,
+        mixState: boolean
+    ): void {
         reduxStore.dispatch(setMix(channelIndex, mixState))
         this.settingsPersistenceService.save()
         this.socketServer.emit(
-            ServerToClientCommand.MIX_STATE_UPDATE,
+            'mixStateUpdate',
             channelIndex,
             this.reduxSettingsService.getOutputSettings(
                 state.settings,
@@ -185,11 +188,11 @@ export class SocketIOServerHandlerService {
     private processSetManualStartStateEvent(
         channelIndex: number,
         manualStartState: boolean
-    ) {
+    ): void {
         reduxStore.dispatch(setManualStart(channelIndex, manualStartState))
         this.settingsPersistenceService.save()
         this.socketServer.emit(
-            ServerToClientCommand.MANUAL_START_STATE_UPDATE,
+            'manualStartStateUpdate',
             channelIndex,
             this.reduxSettingsService.getOutputSettings(
                 state.settings,
@@ -201,11 +204,11 @@ export class SocketIOServerHandlerService {
     private processSetOperationModeEvent(
         channelIndex: number,
         mode: OperationMode
-    ) {
+    ): void {
         reduxStore.dispatch(setOperationMode(channelIndex, mode))
         this.settingsPersistenceService.save()
         this.socketServer.emit(
-            ServerToClientCommand.OPERATION_MODE_UPDATE,
+            'operationModeUpdate',
             channelIndex,
             this.reduxSettingsService.getOutputSettings(
                 state.settings,
@@ -217,7 +220,7 @@ export class SocketIOServerHandlerService {
     private processToggleThumbnailVisibilityEvent(
         channelIndex: number,
         fileName: string
-    ) {
+    ): void {
         const isFilePlaying: boolean = this.reduxSettingsService
             .getGenericSettings(state.settings)
             .outputSettings.some(
@@ -236,10 +239,7 @@ export class SocketIOServerHandlerService {
             )
             reduxStore.dispatch(updateHiddenFiles(updatedHiddenFiles))
             this.hiddenFilesPersistenceService.save(updatedHiddenFiles)
-            this.socketServer.emit(
-                ServerToClientCommand.HIDDEN_FILES_UPDATE,
-                updatedHiddenFiles
-            )
+            this.socketServer.emit('hiddenFilesUpdate', updatedHiddenFiles)
         } catch (error) {
             logger
                 .data(error)
@@ -254,7 +254,7 @@ export class SocketIOServerHandlerService {
         reduxStore.dispatch(setWeb(channelIndex, webState))
         this.settingsPersistenceService.save()
         this.socketServer.emit(
-            ServerToClientCommand.WEB_STATE_UPDATE,
+            'webStateUpdate',
             channelIndex,
             this.reduxSettingsService.getOutputSettings(
                 state.settings,
@@ -276,7 +276,7 @@ export class SocketIOServerHandlerService {
         reduxStore.dispatch(setLoop(channelIndex, loopState))
         this.settingsPersistenceService.save()
         this.socketServer.emit(
-            ServerToClientCommand.LOOP_STATE_UPDATE,
+            'loopStateUpdate',
             channelIndex,
             this.reduxSettingsService.getOutputSettings(
                 state.settings,
@@ -313,20 +313,12 @@ export class SocketIOServerHandlerService {
 
     private updateCuedFile(channelIndex: number, fileName: string): void {
         reduxStore.dispatch(setCuedFileName(channelIndex, fileName))
-        this.socketServer.emit(
-            ServerToClientCommand.FILE_CUED_UPDATE,
-            channelIndex,
-            fileName
-        )
+        this.socketServer.emit('fileCuedUpdate', channelIndex, fileName)
     }
 
     private updateSelectedFile(channelIndex: number, fileName: string): void {
         reduxStore.dispatch(setSelectedFileName(channelIndex, fileName))
-        this.socketServer.emit(
-            ServerToClientCommand.FILE_SELECTED_UPDATE,
-            channelIndex,
-            fileName
-        )
+        this.socketServer.emit('fileSelectedUpdate', channelIndex, fileName)
     }
 
     private shouldUpdatePlayingOverlay(
@@ -467,29 +459,22 @@ export class SocketIOServerHandlerService {
         channelIndex: number
     ): string {
         this.socketServer.emit(
-            ServerToClientCommand.LOOP_STATE_UPDATE,
+            'loopStateUpdate',
             channelIndex,
             output.loopState
         )
         this.socketServer.emit(
-            ServerToClientCommand.OPERATION_MODE_UPDATE,
+            'operationModeUpdate',
             channelIndex,
             output.operationMode
         )
+        this.socketServer.emit('mixStateUpdate', channelIndex, output.mixState)
         this.socketServer.emit(
-            ServerToClientCommand.MIX_STATE_UPDATE,
-            channelIndex,
-            output.mixState
-        )
-        this.socketServer.emit(
-            ServerToClientCommand.MANUAL_START_STATE_UPDATE,
+            'manualStartStateUpdate',
             channelIndex,
             output.manualStartState
         )
-        this.socketServer.emit(
-            ServerToClientCommand.HIDDEN_FILES_UPDATE,
-            state.media.hiddenFiles
-        )
+        this.socketServer.emit('hiddenFilesUpdate', state.media.hiddenFiles)
         return output.selectedFileName
     }
 
@@ -503,24 +488,18 @@ export class SocketIOServerHandlerService {
                 time: output.time,
                 selectedFileName: selectedFiles[channelIndex],
             }
+            this.socketServer.emit('timeTallyUpdate', timeTallyData)
             this.socketServer.emit(
-                ServerToClientCommand.TIME_TALLY_UPDATE,
-                timeTallyData
-            )
-            this.socketServer.emit(
-                ServerToClientCommand.THUMBNAIL_UPDATE,
+                'thumbnailUpdate',
                 channelIndex,
                 output.thumbnailList
             )
             this.socketServer.emit(
-                ServerToClientCommand.MEDIA_UPDATE,
+                'mediaUpdate',
                 channelIndex,
                 output.mediaFiles
             )
         })
-        this.socketServer.emit(
-            ServerToClientCommand.TIME_TALLY_UPDATE,
-            timeTallyData
-        )
+        this.socketServer.emit('timeTallyUpdate', timeTallyData)
     }
 }
