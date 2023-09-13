@@ -2,17 +2,58 @@ import { ReduxSettingsService } from '../../shared/services/redux-settings-servi
 import { state } from '../../shared/store'
 import { Enum as CcgEnum } from 'casparcg-connection/dist/lib/ServerStateEnum'
 import { CasparCG } from 'casparcg-connection'
+import { logger } from '../utils/logger'
+import { ErrorEvent } from '../../shared/models/error-models'
+import { Server as SocketServer } from 'socket.io'
+import {
+    ClientToServerEvents,
+    InterServerEvents,
+    ServerToClientEvents,
+} from '../../shared/socket-io-constants'
 
 export class CasparCgPlayoutService {
     private readonly reduxSettingsService: ReduxSettingsService
     private readonly casparCgConnection: CasparCG
+    private readonly socketServer: SocketServer<
+        ClientToServerEvents,
+        ServerToClientEvents,
+        InterServerEvents,
+        any
+    >
 
-    public constructor(casparCgConnection: CasparCG) {
+    public constructor(
+        casparCgConnection: CasparCG,
+        socketServer: SocketServer<
+            ClientToServerEvents,
+            ServerToClientEvents,
+            InterServerEvents,
+            any
+        >
+    ) {
+        this.socketServer = socketServer
         this.reduxSettingsService = new ReduxSettingsService()
         this.casparCgConnection = casparCgConnection
     }
 
-    public async playMedia(
+    public async playOrMixMedia(
+        channelIndex: number,
+        fileName: string
+    ): Promise<void> {
+        const mixState: boolean = this.reduxSettingsService.getOutputSettings(
+            state.settings,
+            channelIndex
+        ).mixState
+        const action = !mixState
+            ? this.playMedia.bind(this)
+            : this.mixMedia.bind(this)
+        await action(channelIndex, 9, fileName).catch((reason) => {
+            const message: string = `Failed to play file: ${fileName}`
+            logger.data(reason).error(message)
+            this.notifyAboutError(message, reason as Error)
+        })
+    }
+
+    private async playMedia(
         channelIndex: number,
         layerIndex: number,
         fileName: string
@@ -21,7 +62,7 @@ export class CasparCgPlayoutService {
         await this.executePlayMedia(channelIndex, layerIndex, fileName)
     }
 
-    public async mixMedia(
+    private async mixMedia(
         channelIndex: number,
         layerIndex: number,
         fileName: string
@@ -67,6 +108,29 @@ export class CasparCgPlayoutService {
     }
 
     public async loadMedia(
+        channelIndex: number,
+        fileName: string
+    ): Promise<void> {
+        return this.executeLoadMedia(channelIndex, 9, fileName).catch(
+            (reason) => {
+                const message: string = `Failed to load file: ${fileName}`
+                logger.data(reason).error(message)
+                this.notifyAboutError(message, reason as Error)
+            }
+        )
+    }
+
+    private notifyAboutError(message: string, error: Error): void {
+        logger.data(error).error(message)
+        const errorEvent: ErrorEvent = {
+            message: message,
+            errorMessage: error.message,
+            shouldNotify: true,
+        }
+        this.socketServer.emit('error', errorEvent)
+    }
+
+    private async executeLoadMedia(
         channelIndex: number,
         layerIndex: number,
         fileName: string

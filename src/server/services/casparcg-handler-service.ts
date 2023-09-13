@@ -10,6 +10,7 @@ import {
 import { reduxStore, state } from '../../shared/store'
 import { logger } from '../utils/logger'
 import {
+    CasparcgSettings,
     GenericSettings,
     OperationMode,
     OutputSettings,
@@ -25,6 +26,7 @@ import { UtilityService } from '../../shared/services/utility-service'
 import { AmcpThumbnailsService } from './amcp-thumbnails-service'
 import { AmcpMediaService } from './amcp-media-service'
 import { CasparCgPlayoutService } from './casparcg-playout-service'
+import { CasparCgInfoService, ChannelInfo } from './casparcg-info-service'
 
 export class CasparCgHandlerService {
     public static readonly instance = new CasparCgHandlerService()
@@ -37,8 +39,10 @@ export class CasparCgHandlerService {
     private readonly amcpThumbnailService: AmcpThumbnailsService
     private readonly amcpMediaService: AmcpMediaService
     private readonly casparCgConnection: CasparCG
+    private readonly casparCgInfoService: CasparCgInfoService
     private fileChangesInterval: NodeJS.Timeout | undefined
     private waitingForCasparCgResponse: boolean
+    private channelCount: number
 
     private constructor() {
         this.reduxMediaService = new ReduxMediaService()
@@ -49,10 +53,10 @@ export class CasparCgHandlerService {
 
         this.utilityService = new UtilityService()
         this.waitingForCasparCgResponse = false
+        this.channelCount = 0
 
         //Setup AMCP Connection:
         this.casparCgConnection = this.createCasparCgConnection()
-
         this.amcpThumbnailService.setupAmcpThumbnailService(
             this.casparCgConnection,
             this.expressService.getSocketServer()
@@ -64,19 +68,94 @@ export class CasparCgHandlerService {
             this.amcpThumbnailService
         )
         this.casparCgPlayoutService = new CasparCgPlayoutService(
+            this.casparCgConnection,
+            this.expressService.getSocketServer()
+        )
+        this.casparCgInfoService = new CasparCgInfoService(
             this.casparCgConnection
         )
     }
 
     private createCasparCgConnection(): CasparCG {
-        const casparCgSettings = this.reduxSettingsService.getGenericSettings(
-            state.settings
-        ).ccgSettings
+        const casparCgSettings: CasparcgSettings =
+            this.reduxSettingsService.getGenericSettings(
+                state.settings
+            ).ccgSettings
         return new CasparCG({
             host: casparCgSettings.ip,
             port: casparCgSettings.amcpPort,
             autoConnect: true,
+            onConnected: this.onCasparCgConnect.bind(this),
+            onDisconnected: this.onCasparCgDisconnected.bind(this),
         })
+    }
+
+    private async onCasparCgConnect(isConnected: boolean): Promise<void> {
+        this.logConnectionStatus(isConnected)
+        for (let i = 0; i < this.channelCount; i++) {
+            if (!(await this.casparCgInfoService.isChannelBlank(i))) {
+                continue
+            }
+            this.resendPlayOrLoadCommands(i)
+            this.resendLoadOverlay(i)
+        }
+    }
+
+    private logConnectionStatus(isConnected: boolean) {
+        logger.info(`CasparCG connection state changed to: ${isConnected}`)
+    }
+
+    private onCasparCgDisconnected(isConnected: boolean): void {
+        this.logConnectionStatus(isConnected)
+    }
+
+    private async resendLoadOverlay(index: number): Promise<void> {
+        const outputSettings: OutputSettings =
+            this.reduxSettingsService.getOutputSettings(state.settings, index)
+        if (!outputSettings.webState || !outputSettings.webUrl) {
+            return
+        }
+        this.casparCgPlayoutService
+            .playOverlay(index, 10, outputSettings.webUrl)
+            .then(() =>
+                logger.info(
+                    `Resent load overlay command for channel ${
+                        index + 1
+                    }. Loaded '${outputSettings.webUrl}'`
+                )
+            )
+    }
+
+    private async resendPlayOrLoadCommands(index: number): Promise<void> {
+        const outputSettings: OutputSettings =
+            this.reduxSettingsService.getOutputSettings(state.settings, index)
+        if (
+            outputSettings.selectedFileName === '' &&
+            outputSettings.cuedFileName === ''
+        ) {
+            return
+        }
+        if (outputSettings.selectedFileName !== '') {
+            this.casparCgPlayoutService
+                .playOrMixMedia(index, outputSettings.selectedFileName)
+                .then(() =>
+                    logger.info(
+                        `Resent play command for channel ${
+                            index + 1
+                        }. Playing '${outputSettings.selectedFileName}'`
+                    )
+                )
+        } else {
+            this.casparCgPlayoutService
+                .loadMedia(index, outputSettings.cuedFileName)
+                .then(() =>
+                    logger.info(
+                        `Resent load command for channel ${
+                            index + 1
+                        }. Loaded '${outputSettings.cuedFileName}'`
+                    )
+                )
+        }
     }
 
     public getCasparCgConnection(): CasparCG {
@@ -158,7 +237,7 @@ export class CasparCgHandlerService {
         const allOutputSettings: OutputSettings[] = [
             ...genericSettings.outputSettings,
         ]
-        genericSettings.outputSettings = await Promise.all(
+        const reinvigoratedChannels: OutputSettings[] = await Promise.all(
             config.channels.map(async ({}, index: number) => {
                 const outputSettings: OutputSettings = {
                     ...allOutputSettings[index],
@@ -166,12 +245,68 @@ export class CasparCgHandlerService {
                 return await this.reinvigorateChannel(outputSettings, index)
             })
         )
+        genericSettings.outputSettings =
+            await this.synchronizeOutputSettingsWithPlayingChannels(
+                reinvigoratedChannels
+            )
         reduxStore.dispatch(setGenerics(genericSettings))
+        await this.settingsPersistenceService.save(genericSettings)
         logger.info(`Number of Channels: ${config.channels.length}`)
+        this.channelCount = config.channels.length
         this.expressService
             .getSocketServer()
             .emit(ServerToClientCommand.SETTINGS_UPDATE, state.settings)
         this.expressService.getSocketIoServerHandlerService().initializeClient()
+    }
+
+    private async synchronizeOutputSettingsWithPlayingChannels(
+        outputSettings: OutputSettings[]
+    ): Promise<OutputSettings[]> {
+        return await Promise.all(
+            outputSettings.map(
+                async (outputSettings, index) =>
+                    await this.synchronizeOutputSettingsWithPlayingChannel(
+                        outputSettings,
+                        index
+                    )
+            )
+        )
+    }
+
+    private async synchronizeOutputSettingsWithPlayingChannel(
+        outputSettings: OutputSettings,
+        index: number
+    ): Promise<OutputSettings> {
+        const info: ChannelInfo = await this.casparCgInfoService.getChannelInfo(
+            index
+        )
+        if (!info.stage) {
+            outputSettings.selectedFileName = ''
+            outputSettings.cuedFileName = ''
+            return outputSettings
+        }
+        const rawFilePath: string =
+            info.stage.layer.layer_10.foreground.file.path
+        const fileName: string = rawFilePath
+            .substring(0, rawFilePath.lastIndexOf('.'))
+            .toUpperCase()
+        const isPaused: boolean = info.stage.layer.layer_10.foreground.paused
+        if (
+            fileName === outputSettings.selectedFileName ||
+            fileName === outputSettings.cuedFileName
+        ) {
+            return outputSettings
+        }
+        logger.debug(
+            `File playing or loaded on CasparCG channel ${index} is different than saved file. Updating saved value: ${fileName}`
+        )
+        if (!isPaused) {
+            outputSettings.selectedFileName = fileName
+        } else {
+            outputSettings.cuedFileName = fileName
+        }
+
+        return outputSettings
     }
 
     private async fillInDefaultOutputSettingsIfNeeded(
@@ -205,7 +340,7 @@ export class CasparCgHandlerService {
         const cuedFileName = outputSettings.cuedFileName
         if (cuedFileName) {
             logger.info(`Re-loaded ${cuedFileName} on channel index ${index}.`)
-            await this.casparCgPlayoutService.loadMedia(index, 9, cuedFileName)
+            await this.casparCgPlayoutService.loadMedia(index, cuedFileName)
         }
 
         outputSettings.loopState = outputSettings.loopState ?? false

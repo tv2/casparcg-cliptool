@@ -39,7 +39,6 @@ import { SettingsPersistenceService } from './settings-persistence-service'
 import { AmcpThumbnailsService } from './amcp-thumbnails-service'
 import { CasparCgPlayoutService } from './casparcg-playout-service'
 import { CasparCG } from 'casparcg-connection'
-import { ErrorEvent } from '../../shared/models/error-models'
 import { Server as SocketServer, Socket } from 'socket.io'
 
 /*
@@ -81,7 +80,8 @@ export class SocketIOServerHandlerService {
             socketServer
         )
         this.casparCgPlayoutService = new CasparCgPlayoutService(
-            casparCgConnection
+            casparCgConnection,
+            socketServer
         )
     }
 
@@ -286,60 +286,28 @@ export class SocketIOServerHandlerService {
     }
 
     private processPlayEvent(channelIndex: number, fileName: string): void {
-        const mixState = this.reduxSettingsService.getOutputSettings(
-            state.settings,
-            channelIndex
-        ).mixState
-        const action = !mixState
-            ? this.casparCgPlayoutService.playMedia.bind(
-                  this.casparCgPlayoutService
-              )
-            : this.casparCgPlayoutService.mixMedia.bind(
-                  this.casparCgPlayoutService
-              )
-        action(channelIndex, 9, fileName)
+        this.casparCgPlayoutService
+            .playOrMixMedia(channelIndex, fileName)
             .then(() => {
                 logger.info(
                     `Playing ${fileName} on channel index ${channelIndex}.`
                 )
                 this.updateCuedFile(channelIndex, '')
-                this.updateSelectedFile(channelIndex, fileName)
+                this.updateSelectedFile(channelIndex, fileName.toUpperCase())
                 this.settingsPersistenceService.save()
             })
-            .catch((reason) => {
-                this.notifyAboutError(
-                    `Failed to play file: ${fileName}`,
-                    reason as Error
-                )
-            })
-    }
-
-    public notifyAboutError(message: string, error: Error): void {
-        logger.data(error).error(message)
-        const errorEvent: ErrorEvent = {
-            message: message,
-            errorMessage: error.message,
-            shouldNotify: true,
-        }
-        this.socketServer.emit('error', errorEvent)
     }
 
     private processLoadEvent(channelIndex: number, fileName: string): void {
         this.casparCgPlayoutService
-            .loadMedia(channelIndex, 9, fileName)
+            .loadMedia(channelIndex, fileName)
             .then(() => {
                 logger.info(
                     `Loading ${fileName} on channel index ${channelIndex}.`
                 )
-                this.updateCuedFile(channelIndex, fileName)
+                this.updateCuedFile(channelIndex, fileName.toUpperCase())
                 this.updateSelectedFile(channelIndex, '')
                 this.settingsPersistenceService.save()
-            })
-            .catch((reason) => {
-                this.notifyAboutError(
-                    `Failed to play file: ${fileName}`,
-                    reason as Error
-                )
             })
     }
 

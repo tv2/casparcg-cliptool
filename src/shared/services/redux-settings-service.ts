@@ -26,7 +26,10 @@ export class ReduxSettingsService {
         settingsState: SettingsState,
         index: number
     ): TabInfo {
-        const output = this.getOutputSettings(settingsState, index)
+        const output: OutputSettings = this.getOutputSettings(
+            settingsState,
+            index
+        )
         return {
             index,
             title:
@@ -53,47 +56,55 @@ export class ReduxSettingsService {
         originalOutputSettings: OutputSettings,
         mediaState: MediaState
     ): OutputSettings {
-        const outputSettings = { ...originalOutputSettings }
+        let outputSettings: OutputSettings = { ...originalOutputSettings }
         if (this.isPathsEmpty(outputSettings)) {
             return outputSettings
         }
-        this.clearClickedFileFromSettings(allFiles, outputSettings)
-        this.clearSelectedFolderFromSettings(mediaState, outputSettings)
+        outputSettings = this.clearClickedFileFromSettings(
+            allFiles,
+            outputSettings
+        )
+        outputSettings = this.clearSelectedFolderFromSettings(
+            mediaState,
+            outputSettings
+        )
         return outputSettings
     }
 
     private clearSelectedFolderFromSettings(
         mediaState: MediaState,
         outputSettings: OutputSettings
-    ) {
+    ): OutputSettings {
         if (
             !(outputSettings.folder === '') &&
             !mediaState.folders.includes(outputSettings.folder)
         ) {
             outputSettings.folder = ''
         }
+        return outputSettings
     }
 
     private clearClickedFileFromSettings(
         allFiles: MediaFile[],
         outputSettings: OutputSettings
-    ) {
+    ): OutputSettings {
         if (
             outputSettings.selectedFileName === '' &&
             outputSettings.cuedFileName === ''
         ) {
-            return
+            return outputSettings
         }
-
-        const mediaFile = allFiles.find(
+        const mediaFile: MediaFile | undefined = allFiles.find(
             (file) =>
                 file.name === outputSettings.cuedFileName ||
                 file.name === outputSettings.selectedFileName
         )
+
         if (!mediaFile) {
             outputSettings.cuedFileName = ''
             outputSettings.selectedFileName = ''
         }
+        return outputSettings
     }
 
     private isPathsEmpty(outputSettings: OutputSettings): boolean {
