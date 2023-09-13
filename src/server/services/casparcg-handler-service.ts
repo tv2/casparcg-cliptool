@@ -93,7 +93,11 @@ export class CasparCgHandlerService {
     private async onCasparCgConnect(isConnected: boolean): Promise<void> {
         this.logConnectionStatus(isConnected)
         for (let i = 0; i < this.channelCount; i++) {
+            if (!(await this.casparCgInfoService.isChannelBlank(i))) {
+                continue
+            }
             this.resendPlayOrLoadCommands(i)
+            this.resendLoadOverlay(i)
         }
     }
 
@@ -105,10 +109,24 @@ export class CasparCgHandlerService {
         this.logConnectionStatus(isConnected)
     }
 
-    private async resendPlayOrLoadCommands(index: number): Promise<void> {
-        if (!(await this.casparCgInfoService.isChannelBlank(index))) {
+    private async resendLoadOverlay(index: number): Promise<void> {
+        const outputSettings: OutputSettings =
+            this.reduxSettingsService.getOutputSettings(state.settings, index)
+        if (!outputSettings.webState || !outputSettings.webUrl) {
             return
         }
+        this.casparCgPlayoutService
+            .playOverlay(index, 10, outputSettings.webUrl)
+            .then(() =>
+                logger.info(
+                    `Resent load overlay command for channel ${
+                        index + 1
+                    }. Loaded '${outputSettings.webUrl}'`
+                )
+            )
+    }
+
+    private async resendPlayOrLoadCommands(index: number): Promise<void> {
         const outputSettings: OutputSettings =
             this.reduxSettingsService.getOutputSettings(state.settings, index)
         if (
