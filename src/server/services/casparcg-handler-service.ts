@@ -284,7 +284,7 @@ export class CasparCgHandlerService {
         )
         if (!isPaused) {
             outputSettings.selectedFileName = fileName
-        } else if (isPaused) {
+        } else {
             outputSettings.cuedFileName = fileName
         }
 

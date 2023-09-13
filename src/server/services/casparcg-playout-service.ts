@@ -4,16 +4,32 @@ import { Enum as CcgEnum } from 'casparcg-connection/dist/lib/ServerStateEnum'
 import { CasparCG } from 'casparcg-connection'
 import { logger } from '../utils/logger'
 import { ErrorEvent } from '../../shared/models/error-models'
+import { Server as SocketServer } from 'socket.io'
+import {
+    ClientToServerEvents,
+    InterServerEvents,
+    ServerToClientEvents,
+} from '../../shared/socket-io-constants'
 
-/* Todo: Fix playing a file while connection to CasparCG isn't there waiting indefinitely, and then fires on reconnect.
-         Should probably just time out after e.g 10 seconds.
-*/
 export class CasparCgPlayoutService {
     private readonly reduxSettingsService: ReduxSettingsService
     private readonly casparCgConnection: CasparCG
-    private readonly socketServer: any
+    private readonly socketServer: SocketServer<
+        ClientToServerEvents,
+        ServerToClientEvents,
+        InterServerEvents,
+        any
+    >
 
-    public constructor(casparCgConnection: CasparCG, socketServer: any) {
+    public constructor(
+        casparCgConnection: CasparCG,
+        socketServer: SocketServer<
+            ClientToServerEvents,
+            ServerToClientEvents,
+            InterServerEvents,
+            any
+        >
+    ) {
         this.socketServer = socketServer
         this.reduxSettingsService = new ReduxSettingsService()
         this.casparCgConnection = casparCgConnection
