@@ -1,4 +1,4 @@
-import { MediaState, MediaFile } from '../models/media-models'
+import { MediaFile, MediaState } from '../models/media-models'
 import {
     GenericSettings,
     OutputSettings,
@@ -11,14 +11,7 @@ import {
 } from '../schemas/new-settings-schema'
 
 export class ReduxSettingsService {
-    private defaultGenericSettings: GenericSettings
-
-    constructor() {
-        this.defaultGenericSettings = {
-            ccgSettings: defaultCcgSettingsState,
-            outputSettings: Array(1).fill({ ...defaultOutputSettingsState }),
-        }
-    }
+    constructor() {}
 
     public getTabInfo(
         settingsState: SettingsState,
@@ -46,6 +39,13 @@ export class ReduxSettingsService {
         channelIndex: number
     ): OutputSettings {
         return settingsState.generics.outputSettings[channelIndex]
+    }
+
+    public getOutputSettingsFolder(
+        settingsState: SettingsState,
+        index: number
+    ): string {
+        return this.getOutputSettings(settingsState, index).folder
     }
 
     public clearInvalidTargetedPaths(
@@ -115,7 +115,12 @@ export class ReduxSettingsService {
     }
 
     public getDefaultGenericSettings(): GenericSettings {
-        return this.defaultGenericSettings
+        return {
+            ccgSettings: defaultCcgSettingsState,
+            outputSettings: Array(1).fill({
+                ...defaultOutputSettingsState,
+            }),
+        }
     }
 
     public isThumbnailSelected(
