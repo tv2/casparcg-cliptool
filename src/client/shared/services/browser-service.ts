@@ -22,7 +22,7 @@ export class BrowserService {
         this.reduxSettingsService = new ReduxSettingsService()
         const search = new URLSearchParams(window.location.search)
         this.view = this.getCurrentSelectedView(search)
-        this.temporarilyEnsureSufficientOutputSettingsExist()
+        this.setMinimumOutputSettingsIfMissing()
     }
 
     private getCurrentSelectedView(
@@ -58,11 +58,11 @@ export class BrowserService {
     /**
      * @remarks
      * The Redux state is only initialized with 1 output settings, which causes issues for channel view above 1.
-     * Ones finished connecting to the backend, the actual settings will have been received.
+     * Once finished connecting to the backend, the actual settings will have been received.
      * Until then simply set the redux state to contain default settings, with entries matching the channel number.
      * @private
      */
-    private temporarilyEnsureSufficientOutputSettingsExist() {
+    private setMinimumOutputSettingsIfMissing() {
         if (
             !this.isChannelView() ||
             this.reduxSettingsService.getAllOutputSettings(state.settings)
