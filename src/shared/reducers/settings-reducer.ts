@@ -1,14 +1,17 @@
 import {
+    CasparcgConfig,
     CasparcgConfigChannel,
+    GenericSettings,
     OutputSettings,
     SettingsState,
-} from './../models/settings-models'
+} from '../models/settings-models'
 import { ReduxSettingsService } from '../services/redux-settings-service'
 import { getVideoFormat } from '../video-format'
 import * as IO from './../actions/settings-action'
 
 function defaultSettingsReducerState(): SettingsState {
-    const generics = new ReduxSettingsService().getDefaultGenericSettings()
+    const generics: GenericSettings =
+        new ReduxSettingsService().getDefaultGenericSettings()
     return {
         ccgConfig: {
             channels: [],
@@ -35,7 +38,7 @@ export function settings(
 
     switch (action.type) {
         case IO.UPDATE_SETTINGS: {
-            const config = { ...nextState.ccgConfig }
+            const config: CasparcgConfig = { ...nextState.ccgConfig }
             config.channels = [
                 ...action.channels.map(updateChannelConfigWithVideoFormat),
             ]
