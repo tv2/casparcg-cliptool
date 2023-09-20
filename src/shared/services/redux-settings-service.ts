@@ -125,10 +125,10 @@ export class ReduxSettingsService {
         return settingsState.generics
     }
 
-    public getDefaultGenericSettings(): GenericSettings {
+    public getDefaultGenericSettings(arrayLength: number = 1): GenericSettings {
         return {
             ccgSettings: defaultCcgSettingsState,
-            outputSettings: Array(1).fill({
+            outputSettings: Array(arrayLength).fill({
                 ...defaultOutputSettingsState,
             }),
         }
