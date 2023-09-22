@@ -93,6 +93,7 @@ export function statusSenseResponse(status: IChannelStatus) {
     // [1] Stop
     // [2] Still CueDone
     // [3] Auto OutPreset InPreset [9] PresetErr PrevOut PrevIn [svr] CuePla
+    // LOOP status?
 }
 
 export function filterMediaFilesToAMP(

@@ -25,7 +25,13 @@ export enum AmpReceiveCommandTypes {
     STOP_2000 = '2000',
     PLAY_2001 = '2001',
     CUE_2032 = '2032',
-    QUE_TO_BEGIN_2031 = '2031', // This command is used as STOP command, as GV does not send STOP command
+    //*** QUE_TO_BEGIN 2031 is used as STOP
+    STOP_FORCE_2031 = '2031', // This command is used as STOP command, as GV does not send STOP command
+    //*** QUE_TO_END 2431 is used as LOOP OFF
+    LOOP_OFF_2431 = '2431', // This is used as LOOP OFF as GV sends LOOP OFF when playing a LOOP
+    //**** LOOP is only used as LOOP ON */
+    LOOP_4142 = '4142',
+
     GET_DEFAULT_FOLDER_A02A = 'A02A', // Return 822a0009000764656661756c74  (Default)
     GET_FOLDER_LIST_A02B = 'A02B', // Return 822b + message length hex(FFFF) + each folder as array in length hex(FFFF)+foldername & Return 802b as "List finish"
     GET_MACHINE_ID_A02C = 'A02C', // Return 822c000b0a454a3132343830303038 (probably the machine to find thumbnails)
@@ -60,7 +66,6 @@ export enum AmpReceiveCommandTypes {
     //- (A2.25) ID Start Time Request
     AUTOMODE_ON_4041 = '4041',
     TIMECODE_MODE_4136 = '4136',
-    LOOP_4142 = '4142',
     IN_PRESET_4A14 = '4A14', // 4a1400xx00yy  xx+yy length?      at 0 fields - 4a1400220020{filename in hex}
     UNKNOWN_A115 = 'A115', // A11503 response: 8014
     SET_GANG_MASK_A132 = 'A132', // Set Gang Mask 0x8f

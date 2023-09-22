@@ -180,7 +180,7 @@ function ampClientConnection(socketClient: Socket) {
                 socket.emit(IO.PGM_STOP, ccgCh - 1)
                 writeCache.push('1001')
                 break
-            case AmpReceiveCommandTypes.QUE_TO_BEGIN_2031:
+            case AmpReceiveCommandTypes.STOP_FORCE_2031:
                 // This doubles as STOP command as GV does not send STOP command
                 console.log(ccgCh, ': STOP')
                 socket.emit(IO.PGM_STOP, ccgCh - 1)
@@ -384,6 +384,23 @@ function ampClientConnection(socketClient: Socket) {
                 chStatus[ccgCh - 1].loop = message.ampCmdData.slice(4) === '01'
                 console.log(ccgCh, ': Set Loop :', message.ampCmdData.slice(4))
                 // As a workaround loop only set ON state, not OFF:
+                if (chStatus[ccgCh - 1].loop) {
+                    socket.emit(
+                        IO.SET_LOOP_STATE,
+                        ccgCh - 1,
+                        chStatus[ccgCh - 1].loop
+                    )
+                }
+                writeCache.push('1001')
+                break
+            case AmpReceiveCommandTypes.LOOP_OFF_2431:
+                chStatus[ccgCh - 1].loop = false
+                console.log(
+                    ccgCh,
+                    ': Set Loop to false :',
+                    message.ampCmdData.slice(4)
+                )
+                // As a workaround use QUE_TO_END as loop state to OFF:
                 if (chStatus[ccgCh - 1].loop) {
                     socket.emit(
                         IO.SET_LOOP_STATE,
