@@ -394,20 +394,18 @@ function ampClientConnection(socketClient: Socket) {
                 writeCache.push('1001')
                 break
             case AmpReceiveCommandTypes.LOOP_OFF_2431:
+                // As a workaround use QUE_TO_END as loop state to OFF:
                 chStatus[ccgCh - 1].loop = false
                 console.log(
                     ccgCh,
                     ': Set Loop to false :',
                     message.ampCmdData.slice(4)
                 )
-                // As a workaround use QUE_TO_END as loop state to OFF:
-                if (chStatus[ccgCh - 1].loop) {
-                    socket.emit(
-                        IO.SET_LOOP_STATE,
-                        ccgCh - 1,
-                        chStatus[ccgCh - 1].loop
-                    )
-                }
+                socket.emit(
+                    IO.SET_LOOP_STATE,
+                    ccgCh - 1,
+                    chStatus[ccgCh - 1].loop
+                )
                 writeCache.push('1001')
                 break
             case AmpReceiveCommandTypes.ID_CHANGED_LIST_A012:
