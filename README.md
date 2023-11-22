@@ -47,12 +47,14 @@ then the header will be horizontally scrollable.
 
 ### Tabs
 
--   Each channel defined in CasparCG's configuration is mapped to its own Tabs.
--   Tabs are only available while the view does not have a specified channel in the query.
--   Buttons in the header will affect the saved settings for the active tab.
--   The text displayed on the tabs can be altered through the settings page.
-    -   If no text is supplied the text will simply be 'Output #', with # matching the tab number.
--   If space is limited, e.g due to long tab names, then tabs will be horizontally scrollable.
+Each channel defined in CasparCG's configuration file coresponse to its own tab in Cliptool.
+
+Tabs are only visible while while the view does not have a specified channel in the query.
+
+Buttons located in the [header](#header) will directly impact settings related to the currently active tab.
+
+The [label](#label) show on each tab can be set from the [settings page](#settings).
+Should the space for the tabs become limited, due to e.g long tab names, then the header will be horizontally scrollable.
 
 ### Playout
 
@@ -99,6 +101,11 @@ If a channel is already playing something, Cliptool will skip that channel, as t
 
 Should Cliptool crash or otherwise restart, and a change to what's playing on CasparCG be done in the meantime, then Cliptool will update accordingly on startup.
 This means that the selected or loaded file indicator will update in Cliptool, if CasparCG is send a command from outside, during Cliptools downtime.
+
+### Touch Support
+
+Cliptool has support for Touch, allowing the user to change the active tab by swiping left and right in the main area, where files are being displayed.
+If space is limited such that the [header](#header) or [tabs](#tabs) have become scrollabe, these will also be scrollable via touch.
 
 ## Settings
 
