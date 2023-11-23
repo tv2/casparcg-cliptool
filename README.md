@@ -101,9 +101,9 @@ To hide files, first the operation mode of a channel, on which you wish to hide 
 The operation mode of a channel can be selected from a dropdown on the settings page.
 This is described in more detail during the [operation mode](#operation-mode) section under Settings.
 
-Ones in the 'Edit Visibility' operation mode, then clicking on files will toggle their visibility, ones out of the 'Edit Visibility' operation mode.
+Ones in the 'Edit Visibility' operation mode, then clicking on files will toggle their visibility, hiding them ones out of the 'Edit Visibility' operation mode.
 Files that are currently marked to be hidden will be shrunken, greyed out with a brown background.
-Image showing this can be seen below.
+Image showing a hidden file amoung non-hidden ones can be seen below.
 
 <img src="docs/images/hidden-file.png" height="200">
 
@@ -125,20 +125,20 @@ If space is limited such that the [header](#header) or [tabs](#tabs) have become
 
 Take care not to swipe to far, as the browsers in-built swipe actions are not disabled by Cliptool.
 For instance on Google Chrome, swiping left or right will act as going backward (left) or forward (right) in the tabs history.
-Other browser likely have similar action on swipe
+Other browser likely have similar actions on swipe.
 
 ## View Modes
 
 Cliptool has a couple of view modes, accessed by adding different query parameters when accessing Cliptool.
 
--   No Extra parameters to the query, makes you enter the main view mode.
--   Adding `/?textview=1` to the query will enable the text view mode, where thumbnails for the cards are not rendered.
--   Adding `/?channel=1` to the query will enable the channel view mode, where the chosen tab is locked to the channel defined in the query.
+-   No Extra parameters to the query, makes you enter the **main view** mode.
+-   Adding `/?textview=1` to the query will enable the **text view** mode, where thumbnails for the files are not rendered.
+-   Adding `/?channel=1` to the query will enable the **channel view** mode, where the chosen tab is locked to the channel defined in the query.
     -   The channel number is 1-indexed. Given a 0, will give the first channel.
--   Adding `/?textview=1` and `/?channel=1` will enable the channel text view mode, which is a mix of both of the previously described modes.
+-   Adding `/?textview=1` and `/?channel=1` will enable the **channel text view** mode, which is a mix of both of the previously described modes.
 
-Take note on the names used for the view modes, e.g 'main view', as they are likely to be used during the rest of this ReadMe.
-Below example images of the main, text and channel view modes can be seen.
+Take note on the names used for the view modes, e.g 'main view', as they are likely to be used during this ReadMe.
+Below are example images of the main, text and channel view modes.
 
 ### Main View
 
@@ -162,7 +162,6 @@ An image showing the Settings page can be seen below, as seen from the [main vie
 Settings are split into 3 parts.
 
 -   Buttons
-    -   'Restart Cliptool' button is not shown if Settings is entered from the [channel view](#view-modes)
 -   CasparCG settings
     -   Is not shown if Settings is entered from the [channel view](#view-modes).
 -   Channel settings, which are named outputs in Cliptool.
@@ -183,18 +182,18 @@ If accepted, then the changes are saved, and the settings page is closed.
 When no changes has been made this button will be displayed with the text 'Close Settings',
 and on clicking it will simply do as the button states.
 
-If changes have been made the text displayed will update to display 'Discard Changes & Close Settings'.
+If changes have been made, the text displayed will update to display 'Discard Changes & Close Settings'.
 Upon clicking it while changes have been made, the user will be prompted if they truly wish to discard changes.
 If cancelled, the prompt simply closes.
 If accepted, then the changes are discarded, and the settings page is closed.
 
 #### Restart Cliptool
 
-As noted earlier in the Settings section, this button is not accessible from the [channel view](#view-modes).
+This button is not shown when settings are accessed from the [channel view](#view-modes).
 
 When clicked it simply makes Cliptool stop.
 Cliptool, along with CasparCG and Media Scanner, tends to be run through **CasparCG Launcher**.
-When a process handled by **CasparCG Launcher** exits, then **CasparCG Launcher** will restart it immediately.
+When a process handled by **CasparCG Launcher** exits, then **CasparCG Launcher** will restart it.
 This is what Cliptool leverages, for its restart functionality.
 As such it should be noted that this button will not Restart Cliptool, if not running from **CasparCG Launcher**.
 
@@ -202,7 +201,7 @@ How to get **CasparCG Launcher** is described further down, in the [CasparCG Lau
 
 ### CasparCG Settings
 
-In Cliptool there are a few settings related to CasparCG, which can be updated from the Settings Page.
+In Cliptool there are a few settings related to CasparCG, which can be updated from the settings page.
 These mainly revolves around where to send requests to CasparCG, and some playout options.
 
 <img src="docs/images/casparcg-settings.png">
@@ -257,7 +256,7 @@ In this mode files marked to be hidden, will not be shown.
 
 While in _Edit Visibility_ mode you will be able to toggle the visibility of files by clicking on them.
 In this mode files marked to be hidden, will be shown.
-The [Hiding](#hiding) section earlier describes hiding of files in more detail.
+The [hiding](#hiding) section earlier describes hiding of files in more detail.
 
 #### Loop
 
@@ -298,7 +297,7 @@ Ones you have downloaded the desired version of `casparcg-clip-tool.exe`, drop i
 For Cliptools timer and preview of selected file in the header to work,
 CasparCG's `casparcg.config` file needs to have an `osc` section.
 
-The default config file contains a out-commented version of the `osc` section.
+CasparCG's default config file contains a out-commented version of the `osc` section.
 That section should be moved to be part of the configuration, and of course un-commented.
 
 In case the config file has removed it for some reason, the `osc` section can also be found below.
@@ -329,7 +328,11 @@ With the CasparCG Launcher placed inside the CasparCG folder, the 'Base Path' sh
 ## Running Cliptool
 
 To run Cliptool either start Cliptools, CasparCG and Media Scanner executables yourself or start CasparCG Launcher, and start the 3 programs from there.
-The order of starting the programs doesn't matter.
+The order of starting the programs doesn't entirely matter, however starting Cliptool before CasparCG can be of some benefit.
+
+Should Cliptool be started after CasparCG, then Cliptool will update its playing/loaded files, as descriped during the [Recovery](#recovery) section.
+As CasparCG is not playing anything in this instance, Cliptool will simply clear its playing/loaded files.
+If the
 
 After Cliptool has started, then the GUI can be accessed from a browser at [localhost:5555](http://localhost:5555).
 From that address the query parameters specified in [View Modes](#view-modes) can be suffixed to alter what or how things are shown.
