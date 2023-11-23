@@ -2,6 +2,131 @@
 
 CasparCG ClipTool is a playout tool with a thumbnail based GUI.
 
+## Table of Content
+
+-   [Table of Content](#table-of-content)
+-   [Features](#features)
+    -   [Header](#header)
+    -   [Tabs](#tabs)
+    -   [Playout](#playout)
+    -   [Hiding](#hiding)
+    -   [Recovery](#recovery)
+    -   [Touch Support](#touch-support)
+-   [View Modes](#view-modes)
+    -   [Main View](#main-view)
+    -   [Text View](#text-view)
+    -   [Channel View](#channel-view)
+-   [Settings](#settings)
+    -   [Buttons](#buttons)
+    -   [CasparCG Settings](#casparcg-settings)
+    -   [Channel / Output Options](#channel--output-options)
+-   [Installing Cliptool](#installing-cliptool)
+    -   [Important](#important)
+    -   [CasparCG Launcher](#casparcg-launcher)
+-   [Running Cliptool](#running-cliptool)
+-   [Installing Cliptool Gateway](#installing-cliptool-gateway)
+-   [Running Cliptool Gateway](#running-cliptool-gateway)
+    -   [AMP Protocol](#amp-protocol)
+    -   [OSC Protocol](#osc-protocol)
+-   [Development](#development)
+    -   [Building](#building)
+    -   [Running](#running)
+    -   [Packaging](#packaging)
+-   [Noteworthy Packages](#noteworthy-packages)
+
+## Features
+
+Cliptool features many common webpage features, but also a handful of less common ones.
+Subsections below will descibe these feature, with other sections in this Readme suplimenting them.
+
+### Header
+
+In the header there is a button that can be used to open the [Settings Page](#settings).
+This button is not visible the [text view](#view-modes)
+
+The header also contains a countdown of currently playing video file, or indicator that a image file is loaded.
+In either instance, the thumbnail of the playing file will also be shown.
+
+The header also contains 4 togglebuttons, Loop, Mix, Overlay and Manual.
+The first 3 of them are not visible from the [text view](#view-modes), but still in effect, if enable from another [view mode](#view-modes).
+More details about what these button do are described during their individual section under the [Settings Page](#settings).
+
+Should the space for the header become limited, due to e.g a narrow window size,
+then the header will be horizontally scrollable.
+
+### Tabs
+
+Each channel defined in CasparCG's configuration file coresponse to its own tab in Cliptool.
+
+Tabs are only visible while while the view does not have a specified channel in the query, as specified in the [view mode](#view-modes) section down below.
+
+Buttons located in the [header](#header) will directly impact settings related to the currently active tab.
+
+The [label](#label) show on each tab can be set from the [settings page](#settings).
+
+Should the space for the tabs become limited, due to e.g long tab names,
+then the header will be horizontally scrollable.
+
+### Playout
+
+Playing videos or images from Cliptool is as simple as placing them in the media folder that CasparCG is looking,
+and then clicking the associated thumbnail in Cliptool, on the tab of the channel one wish the file to be played on.
+Depending on the different toggle switches in the header, slightly different outcomes might happen.
+
+When a image file is played it will get a red border and the text 'SELECTED'.
+This will also be shown in the header.
+
+<img src="docs/images/playing-image.png" height="100">
+
+When a video file is played it will get a red border and text showing the remaining duration.
+This will also be shown in the header.
+
+<img src="docs/images/playing-video.png" height="100">
+
+When a video file is clicked while [manual](#manual) mode has been enabled from the header or settings page,
+it will instead of playing the file only load it, allowing the user to manualy start it.
+The currently loaded file will be shown with a green border and the text 'CUED'.
+
+As there are no difference between loading and playing an image file,
+clicking an image file while [manual](#manual) mode has been enabled, will simply play it instead.
+
+<img src="docs/images/loaded-video.png" height="100">
+
+### Hiding
+
+It is possible to hide files from being shown in Cliptool.
+This is ideal if multiple small variation of the same file is generated and placed in CasparCG's media folder, but only one is desired to be used.
+
+To hide files, first the operation mode of a channel, on which you wish to hide files, must be changed.
+The operation mode of a channel can be selected from a dropdown on the settings page.
+This is described in more detail during the [operation mode](#operation-mode) section under Settings.
+
+Ones in the 'Edit Visibility' operation mode, then clicking on files will toggle their visibility, ones out of the 'Edit Visibility' operation mode.
+Files that are currently marked to be hidden will be shrunken, greyed out with a brown background.
+Image showing this can be seen below.
+
+<img src="docs/images/hidden-file.png" height="200">
+
+To return to the normal operation mode, either change the dropdown for the channel in settings back to 'Control',
+or hit the 'Exit Edit Visibility' button in the page footer shown while in the 'Edit Visibility' operation mode.
+
+### Recovery
+
+Should Cliptool loss connection to CasparCG at some point, and then regain connection, it will resend the play commands.
+If a channel is already playing something, Cliptool will skip that channel, as to not disturb what's playing.
+
+Should Cliptool crash or otherwise restart, and a change to what's playing on CasparCG be done in the meantime, then Cliptool will update accordingly on startup.
+This means that the selected or loaded file indicator will update in Cliptool, if CasparCG is send a command from outside, during Cliptools downtime.
+
+### Touch Support
+
+Cliptool has support for Touch, allowing the user to change the active tab by swiping left and right in the main area, where files are being displayed.
+If space is limited such that the [header](#header) or [tabs](#tabs) have become scrollabe, these will also be scrollable via touch.
+
+Take care not to swipe to far, as the browsers in-built swipe actions are not disabled by Cliptool.
+For instance on Google Chrome, swiping left or right will act as going backward (left) or forward (right) in the tabs history.
+Other browser likely have similar action on swipe
+
 ## View Modes
 
 Cliptool has a couple of view modes, accessed by adding different query parameters when accessing Cliptool.
@@ -27,101 +152,21 @@ Below example images of the main, text and channel view modes can be seen.
 
 <img src="docs/images/channel-view.png" height="200">
 
-## Features
-
-### Header
-
-In the header there is a button that can be used to open the [Settings Page](#settings).
-This button is not visible while in the Text View
-
-The header also contains a countdown of currently playing video file, or indicator that a image file is loaded.
-In either instance, the thumbnail of the playing file will also be shown.
-
-The header also contains 4 togglebuttons, Loop, Mix, Overlay and Manual.
-The first 3 of them are not visible from the text view, but still in effect, if enable from another view mode.
-
-More details about what these button do are described during their individual section under the [Settings Page](#settings).
-
-Should the space for the header become limited, due to e.g a narrow window size,
-then the header will be horizontally scrollable.
-
-### Tabs
-
-Each channel defined in CasparCG's configuration file coresponse to its own tab in Cliptool.
-
-Tabs are only visible while while the view does not have a specified channel in the query.
-
-Buttons located in the [header](#header) will directly impact settings related to the currently active tab.
-
-The [label](#label) show on each tab can be set from the [settings page](#settings).
-Should the space for the tabs become limited, due to e.g long tab names, then the header will be horizontally scrollable.
-
-### Playout
-
-Playing videos or images from Cliptool is as simple as placing them in the media folder that CasparCG is looking, and then clicking the associated thumbnail in Cliptool.
-Depending on the different toggle switches in the header, slightly different outcomes might happen.
-
-When a image file is played it will get a red border and the text 'SELECTED'.
-This will also be shown in the header.
-
-<img src="docs/images/playing-image.png" height="100">
-
-When a video file is played it will get a red border and text showing the remaining duration.
-This will also be shown in the header.
-
-<img src="docs/images/playing-video.png" height="100">
-
-When a video file has been loaded, while [Manual](#manual) mode has been enabled from the header or settings page,
-it will be shown with a green border and the text 'CUED'.
-
-<img src="docs/images/loaded-video.png" height="100">
-
-### Hiding
-
-It is possible to hide files from being shown in Cliptool.
-This is ideal if multiple small variation of the same file is generated and placed in CasparCG's media folder, but only one is desired to be used.
-
-To hide files, first the operation mode of a channel, on which you wish to hide files, must be changed.
-The operation mode of a channel can be selected from a dropdown on the settings page.
-This is described in more detail during the [Operation Mode](#operation-mode) section under Settings.
-
-Ones in the 'Edit Visibility' operation mode, then clicking on files will toggle their visibility, ones out of the 'Edit Visibility' operation mode.
-Files that are currently marked to be hidden will be shrunken, greyed out with a brown background.
-Image showing this can be seen below.
-
-<img src="docs/images/hidden-file.png" height="200">
-
-To return to the normal operation mode, either change the dropdown for the channel in settings back to 'Control',
-or hit the 'Exit Edit Visibility' button in the page footer shown while in the 'Edit Visibility' operation mode.
-
-### Recovery
-
-Should Cliptool loss connection to CasparCG at some point, and then regain connection, it will resend the play commands.
-If a channel is already playing something, Cliptool will skip that channel, as to not disturb what's playing.
-
-Should Cliptool crash or otherwise restart, and a change to what's playing on CasparCG be done in the meantime, then Cliptool will update accordingly on startup.
-This means that the selected or loaded file indicator will update in Cliptool, if CasparCG is send a command from outside, during Cliptools downtime.
-
-### Touch Support
-
-Cliptool has support for Touch, allowing the user to change the active tab by swiping left and right in the main area, where files are being displayed.
-If space is limited such that the [header](#header) or [tabs](#tabs) have become scrollabe, these will also be scrollable via touch.
-
 ## Settings
 
 Clicking the 'Settings' button in the header will open the Settings page.
-An image showing the Settings page can be seen below, as seen from the Main View.
+An image showing the Settings page can be seen below, as seen from the [main view](#view-modes).
 
 <img src="docs/images/settings.png" height="400">
 
 Settings are split into 3 parts.
 
 -   Buttons
-    -   'Restart Cliptool' button is not shown if Settings is entered from the Channel View
+    -   'Restart Cliptool' button is not shown if Settings is entered from the [channel view](#view-modes)
 -   CasparCG settings
-    -   Is not shown if Settings is entered from the Channel View.
+    -   Is not shown if Settings is entered from the [channel view](#view-modes).
 -   Channel settings, which are named outputs in Cliptool.
-    -   Only the one defined in the query is seen if Settings is entered from the Channel View.
+    -   Only the one defined in the query is seen if Settings is entered from the [channel view](#view-modes).
 
 ### Buttons
 
@@ -145,17 +190,17 @@ If accepted, then the changes are discarded, and the settings page is closed.
 
 #### Restart Cliptool
 
-As noted earlier in the Settings section, this button is not accessible from the Channel View.
+As noted earlier in the Settings section, this button is not accessible from the [channel view](#view-modes).
 
 When clicked it simply makes Cliptool stop.
-Cliptool, along with CasparCG and Media Scanner, tends to be run through **CasparCG Launcher**
+Cliptool, along with CasparCG and Media Scanner, tends to be run through **CasparCG Launcher**.
 When a process handled by **CasparCG Launcher** exits, then **CasparCG Launcher** will restart it immediately.
 This is what Cliptool leverages, for its restart functionality.
 As such it should be noted that this button will not Restart Cliptool, if not running from **CasparCG Launcher**.
 
-How to get **CasparCG Launcher** is described further down, in the [CasparCG Launcher Section](#casparcg-launcher).
+How to get **CasparCG Launcher** is described further down, in the [CasparCG Launcher](#casparcg-launcher) section.
 
-### CasparCG Options
+### CasparCG Settings
 
 In Cliptool there are a few settings related to CasparCG, which can be updated from the Settings Page.
 These mainly revolves around where to send requests to CasparCG, and some playout options.
@@ -182,7 +227,7 @@ The layer which playout will place played or loaded files on.
 
 #### Transition Time
 
-The time in frames that a change some file A to file B takes, while using [Mix](#mix).
+The time in frames that a change from file A to file B takes, while using [Mix](#mix).
 25 frames equals 1 second.
 
 ### Channel / Output Options
@@ -257,6 +302,8 @@ The default config file contains a out-commented version of the `osc` section.
 That section should be moved to be part of the configuration, and of course un-commented.
 
 In case the config file has removed it for some reason, the `osc` section can also be found below.
+
+The port defined under the `predefined-client` should match the port inputtet to the [CasparCG Settings](#casparcg-settings)
 
 ```
 <osc>
@@ -436,7 +483,7 @@ yarn build
 yarn package
 ```
 
-## Noteworthy Packages:
+## Noteworthy Packages
 
 Cliptool makes use of SuperflyTV's CasparCG-Connection ACMP protocol:
 
