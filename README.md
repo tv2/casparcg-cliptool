@@ -37,7 +37,7 @@ CasparCG ClipTool is a playout tool with a thumbnail based GUI.
 ## Features
 
 Cliptool features many common webpage features, but also a handful of less common ones.
-Subsections below will descibe these feature, with other sections in this Readme suplimenting them.
+Subsections below will descibe these feature, with other sections in this Readme supplementing them.
 
 ### Header
 
@@ -49,7 +49,7 @@ In either instance, the thumbnail of the playing file will also be shown.
 
 The header also contains 4 togglebuttons, Loop, Mix, Overlay and Manual.
 The first 3 of them are not visible from the [text view](#view-modes), but still in effect, if enable from another [view mode](#view-modes).
-More details about what these button do are described during their individual section under the [Settings Page](#settings).
+More details about what these button do are described during their individual section under the [settings Page](#settings).
 
 Should the space for the header become limited, due to e.g a narrow window size, then the header will be horizontally scrollable.
 
@@ -63,7 +63,7 @@ Buttons located in the [header](#header) will directly impact settings related t
 
 The [label](#label) show on each tab can be set from the [settings page](#settings).
 
-Should the space for the tabs become limited, due to e.g long tab names, then the header will be horizontally scrollable.
+Should the space for the tabs become limited, due to e.g long tab names, then the tabs will become horizontally scrollable, just like the header.
 
 ### Playout
 
@@ -83,7 +83,7 @@ This will also be shown in the header.
 
 When a video file is clicked while [manual](#manual) mode has been enabled from the header or settings page,
 it will instead of playing the file only load it, allowing the user to manualy start it.
-The currently loaded file will be shown with a green border and the text 'CUED'.
+The currently loaded video file will be shown with a green border and the text 'CUED'.
 
 As there are no difference between loading and playing an image file,
 clicking an image file while [manual](#manual) mode has been enabled, will simply play it instead.
@@ -100,7 +100,7 @@ The operation mode of a channel can be selected from a dropdown on the settings 
 This is described in more detail during the [operation mode](#operation-mode) section under Settings.
 
 Ones in the 'Edit Visibility' operation mode, then clicking on files will toggle their visibility, hiding them ones out of the 'Edit Visibility' operation mode.
-Files that are currently being placed or loaded on one or more tabs can not be hidden.
+Files that are currently being played or loaded on one or more tabs can not be hidden, and attempting to do so will show a popup stating so.
 Files that are currently marked to be hidden will be shrunken, greyed out with a brown background.
 Image showing a hidden file amoung non-hidden ones can be seen below.
 
@@ -209,18 +209,18 @@ These mainly revolves around where to send/receive requests to/from CasparCG, an
 #### Ip Address
 
 This fields defines where Cliptool will attempt to communicate with CasparCG.
-If the [Installation Guide](#installing-cliptool) further down has been followed,
+If the [installation guide](#installing-cliptool) further down has been followed,
 then this should remain as shown on the image above.
 
 #### Amcp Port
 
 The port on which Cliptool will send Amcp request to CasparCG.
-Should match the port number defined in the CasparCG configuration file, under the `controllers` section.
+This should match the port number defined in the CasparCG configuration file, under the `controllers` section.
 
 #### Osc Port
 
 The port on which Cliptool will receive Osc message from CasparCG.
-Should match the port number defined in the CasparCG configuration file, under the `osc` section.
+This should match the port number defined in the CasparCG configuration file, under the `osc` section.
 
 #### Default Layer
 
@@ -233,13 +233,13 @@ The time in frames that a change from file A to file B takes, while using [Mix](
 
 ### Channel / Output Options
 
-Each output has a number of option that can be updated from the Settings Page.
+Each output has a number of option that can be updated from the settings page.
 
 <img src="docs/images/output-settings.png">
 
 #### Label
 
-Setting a text in the label field, will update the text shown on the associated tab, while on the Main or Text view.
+Setting a text in the label field, will update the text shown on the associated tab, while on the main or text view.
 If nothing is specified, then the tab will simply display `Output`, followed by the number of the output.
 
 #### Media Folder
@@ -272,7 +272,7 @@ How long time the transition takes is defined by [Transition Time](#transition-t
 
 #### Manual
 
-Defines if video files should be manually started on the associated tab.
+Defines if video files should only be loaded, and then be manually started on the associated tab.
 While enabled a new button will be visible in the header, which allows the user to start a loaded video file.
 
 #### Overlay
@@ -285,7 +285,7 @@ Defines the Url that should be shown while the [Overlay](#overlay) is active on 
 
 #### Scaling
 
-Defines if a played file should be scaled to some fixed dimensions.
+Defines if a played file on the associated tab should be scaled to some fixed dimensions.
 While enabled two new fields will be shown, allowing the user to set a desired X and Y size in pixels.
 
 <img src="docs/images/scaling.png">
@@ -303,7 +303,7 @@ CasparCG's `casparcg.config` file needs to have an `osc` section.
 CasparCG's default config file contains a out-commented version of the `osc` section.
 That section should be moved to be part of the configuration, and of course un-commented.
 
-In case the config file has removed it for some reason, the `osc` section can also be found below.
+In case the config file has removed the `osc` section for some reason, then it can also be found below.
 
 The port defined under the `predefined-client` part of the `osc` section should match the port inputed to the [CasparCG Settings](#casparcg-settings)
 
@@ -325,8 +325,8 @@ The port defined under the `predefined-client` part of the `osc` section should 
 Cliptool works great with CasparCG Launcher, and it is also highly recommended that Cliptool is run by use of CasparCG Launcher, for the restart capability.
 CasparCG Launcher can be downloaded from its [release page](https://github.com/nrkno/tv-automation-casparcg-launcher/releases).
 
-Once CasparCG Launcher is downloaded and placed inside the CasparCG folder, simply add "casparcg-clip-tool.exe" as a process under settings.
-With the CasparCG Launcher placed inside the CasparCG folder, the 'Base Path' should simply be set to '`./`'
+Once CasparCG Launcher is downloaded and placed inside the CasparCG folder, simply add `casparcg-clip-tool.exe` as a process under settings.
+With the CasparCG Launcher placed inside the CasparCG folder, the `Base Path` should simply be set to '`./`'
 
 ## Running Cliptool
 
@@ -422,7 +422,7 @@ The OSC protocol has the following commands.
 
 ## Development
 
-To get started with development, clone this repository to a local location
+To get started with development, clone this repository to a local location of your choosing.
 
 ```
 git clone https://github.com/tv2/casparcg-cliptool.git nameofyourproject
@@ -437,6 +437,23 @@ To build Cliptool run the following commands.
 ```
 yarn
 yarn build
+```
+
+Failure to run `yarn build` atleast ones, and instead rely on [watching for changes](#watching-for-changes),
+will result in the following error, when trying to open Cliptool in the browser.
+
+```
+TypeError: path must be absolute or specify root to res.sendFile
+    at ServerResponse.sendFile (C:\Code\Tv2\Sofie-Related\casparcg-cliptool\node_modules\express\lib\response.js:441:11)
+    at C:\Code\Tv2\Sofie-Related\casparcg-cliptool\build\server\services\express-service.js:49:21
+    at Layer.handle [as handle_request] (C:\Code\Tv2\Sofie-Related\casparcg-cliptool\node_modules\express\lib\router\layer.js:95:5)
+    at next (C:\Code\Tv2\Sofie-Related\casparcg-cliptool\node_modules\express\lib\router\route.js:144:13)
+    at Route.dispatch (C:\Code\Tv2\Sofie-Related\casparcg-cliptool\node_modules\express\lib\router\route.js:114:3)
+    at Layer.handle [as handle_request] (C:\Code\Tv2\Sofie-Related\casparcg-cliptool\node_modules\express\lib\router\layer.js:95:5)
+    at C:\Code\Tv2\Sofie-Related\casparcg-cliptool\node_modules\express\lib\router\index.js:284:15
+    at Function.process_params (C:\Code\Tv2\Sofie-Related\casparcg-cliptool\node_modules\express\lib\router\index.js:346:12)
+    at next (C:\Code\Tv2\Sofie-Related\casparcg-cliptool\node_modules\express\lib\router\index.js:280:10)
+    at SendStream.error (C:\Code\Tv2\Sofie-Related\casparcg-cliptool\node_modules\serve-static\index.js:121:7)
 ```
 
 #### Watching for Changes
