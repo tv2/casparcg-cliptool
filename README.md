@@ -1,6 +1,6 @@
 # CasparCG Cliptool
 
-CasparCG ClipTool is a playout tool with a thumbnail-based GUI.
+CasparCG Cliptool is a playout tool with a thumbnail-based GUI.
 There are two applications for Cliptool. One is of course Cliptool itself and the other is a Gateway that allows Cliptool to be controlled from external tools, eg. a videomixer.
 
 To read about the Cliptool Gateway, take a look at its separate [README](Gateway%20README.md) file
@@ -99,7 +99,7 @@ yarn
 yarn build
 ```
 
-Failure to run `yarn build` atleast once, and instead relying on [watching for changes](#watching-for-changes),
+Failure to run `yarn build` at least once, and instead relying on [watching for changes](#watching-for-changes),
 will result in the following error when trying to open Cliptool in the browser.
 
 ```
@@ -192,15 +192,15 @@ Below are example images of the main, text and channel view modes.
 
 ### Header
 
-In the header, there is a button that can be used to open the [Settings Page](#settings).
+In the header, there is a button that can be used to open the [settings page](#settings).
 This button is not visible on the [text view](#view-modes).
 
-The header contains a countdown of currently playing video file, or indicator that an image file is loaded.
+The header contains a countdown of the currently playing video file or an indicator that an image file is loaded.
 In either instance, the thumbnail of the playing file will also be shown.
 
 The header also contains 4 togglebuttons, Loop, Mix, Overlay and Manual.
 The first 3 of them are not visible from the [text view](#view-modes) but are still in effect if enabled from another [view mode](#view-modes).
-More details about what these buttons do are described in their sections under the [settings Page](#settings).
+More details about what these buttons do are described in their sections under the [settings page](#settings).
 
 Should the space for the header become limited, due to eg. a narrow window size, then the header will be horizontally scrollable.
 
@@ -250,7 +250,7 @@ To hide files, first, the operation mode of a channel, on which you wish to hide
 The operation mode of a channel can be selected from a dropdown on the settings page.
 This is described in more detail during the [operation mode](#operation-mode) section under Settings.
 
-Once in the 'Edit Visibility' operation mode, then clicking on files will toggle their visibility, hiding them once out of the 'Edit Visibility' operation mode.
+Once in the 'Edit Visibility' operation mode, clicking on files will toggle their visibility, hiding them once out of the 'Edit Visibility' operation mode.
 Files that are currently being played or loaded on one or more tabs can not be hidden, and attempting to do so will show a popup stating so.
 Files that are currently marked to be hidden will be shrunken and greyed out with a brown background.
 An image showing a hidden file among non-hidden ones can be seen below.
@@ -280,8 +280,8 @@ Other browsers likely have similar actions on swipe.
 
 ## Settings
 
-Clicking the 'Settings' button in the header will open the Settings page.
-An image showing the Settings page can be seen below, as seen from the [main view](#view-modes).
+Clicking the 'Settings' button in the header will open the settings page.
+An image showing the settings page can be seen below, as seen from the [main view](#view-modes).
 
 <img src="docs/images/settings.png" height="400">
 
@@ -403,11 +403,11 @@ While enabled a new button will be visible in the header, which allows the user 
 
 #### Overlay
 
-Defines if the Url in [Overlay Orl](#overlay-url) should be loaded and shown over files played on the associated tab.
+Defines if the URL in [Overlay URL](#overlay-url) should be loaded and shown over files played on the associated tab.
 
 #### Overlay Url
 
-Defines the Url that should be shown while the [Overlay](#overlay) is active on the associated tab.
+Defines the URL that should be shown while the [Overlay](#overlay) is active on the associated tab.
 
 #### Scaling
 
