@@ -118,7 +118,7 @@ TypeError: path must be absolute or specify root to res.sendFile
 
 #### Watching for Changes
 
-To watch for changes to client, server and gateway, run the following command.
+To watch for changes to the client, server and gateway, run the following command.
 
 ```
 yarn watch-changes
@@ -418,7 +418,7 @@ While enabled two new fields will be shown, allowing the user to set a desired X
 
 ## Noteworthy Packages
 
-Cliptool makes use of SuperflyTV's CasparCG-Connection AMCP protocol:
+Cliptool makes use of SuperflyTV's [casparCG-connection mode module](https://www.npmjs.com/package/casparcg-connection) to communicate with CasparCG.
 
 ```
 https://github.com/SuperFlyTV/casparcg-connection
