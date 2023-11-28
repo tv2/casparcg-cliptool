@@ -116,7 +116,7 @@ export class CasparCgHandlerService {
             return
         }
         this.casparCgPlayoutService
-            .playOverlay(index, 10, outputSettings.webUrl)
+            .playOverlay(index, outputSettings.webUrl)
             .then(() =>
                 logger.info(
                     `Resent load overlay command for channel ${
@@ -393,7 +393,7 @@ export class CasparCgHandlerService {
             )
             if (outputSettings.webState) {
                 await this.casparCgPlayoutService
-                    .playOverlay(index, 10, outputSettings.webUrl)
+                    .playOverlay(index, outputSettings.webUrl)
                     .catch((error) =>
                         logger
                             .data(error)
