@@ -33,9 +33,7 @@ To read about the Cliptool Gateway, take a look at its separate [README](Gateway
 Cliptool is prebuilt for Windows. Simply download the desired version from the [release page](https://github.com/tv2/casparcg-cliptool/releases).
 Once you have downloaded the desired version of `casparcg-clip-tool.exe`, drop it into the folder for CasparCG.
 
-<div style="background-color: rgba(120, 120, 120, 0.2); padding: 20px; border-radius: 8px;">
-
-**Important!**
+:warning: **Important**
 
 For Cliptools timer and a preview of the selected file in the header to work,
 CasparCG's `casparcg.config` file needs to have an `osc` section.
@@ -59,8 +57,6 @@ The port defined under the `predefined-client` part of the `osc` section should 
   </predefined-clients>
 </osc>
 ```
-
-</div>
 
 ### CasparCG Launcher
 
@@ -101,6 +97,8 @@ To build Cliptool run the following commands.
 yarn
 yarn build
 ```
+
+:warning: **Warning**
 
 Failure to run `yarn build` at least once, and instead relying on [watching for changes](#watching-for-changes),
 will result in the following error when trying to open Cliptool in the browser.
