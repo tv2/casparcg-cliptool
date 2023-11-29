@@ -34,20 +34,20 @@ Regardless of how it is supplied, the Cliptool Gateway will create an AMP gatewa
 
 -   Shortcut
 
-```
+```txt
 Target: "<your-casparcg-server-installation-folder>\cliptool-gateway.exe" -type=amp
 ```
 
 -   Commandline
 
-```
+```bash
 cd <your-casparcg-server-installation-folder>
 cliptool-gateway.exe -type=amp
 ```
 
 -   CasparCG Launcher Argument
 
-```
+```txt
 Executable: cliptool-gateway.exe
 Arguments: -type=amp
 ```
@@ -60,20 +60,20 @@ Regardless of how it is supplied, the Cliptool Gateway will create an OSC gatewa
 
 -   Shortcut
 
-```
+```txt
 Target: "<your-casparcg-server-installation-folder>\cliptool-gateway.exe" -type=osc
 ```
 
 -   Commandline
 
-```
+```bash
 cd <your-casparcg-server-installation-folder>
 cliptool-gateway.exe -type=osc
 ```
 
 -   CasparCG Launcher Argument
 
-```
+```txt
 Executable: cliptool-gateway.exe
 Arguments: -type=osc
 ```

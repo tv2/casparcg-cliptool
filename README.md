@@ -8,25 +8,24 @@ To read about the Cliptool Gateway, take a look at its separate [README](Gateway
 ## Table of Content<!-- omit from toc -->
 
 -   [Installing Cliptool](#installing-cliptool)
-    -   [Important](#important)
     -   [CasparCG Launcher](#casparcg-launcher)
 -   [Running Cliptool](#running-cliptool)
 -   [Development](#development)
     -   [Building](#building)
     -   [Running](#running)
     -   [Packaging](#packaging)
--   [Features](#features)
+-   [Main Page](#main-page)
     -   [View Modes](#view-modes)
     -   [Header](#header)
     -   [Channels / Outputs](#channels--outputs)
-    -   [Playout](#playout)
-    -   [Hiding](#hiding)
-    -   [Recovery](#recovery)
-    -   [Touch Support](#touch-support)
--   [Settings](#settings)
+    -   [Operation Modes](#operation-modes)
+-   [Settings Page](#settings-page)
     -   [Buttons](#buttons)
     -   [CasparCG Settings](#casparcg-settings)
     -   [Channel / Output Options](#channel--output-options)
+-   [General](#general)
+    -   [Recovery](#recovery)
+    -   [Touch Support](#touch-support)
 -   [Noteworthy Packages](#noteworthy-packages)
 
 ## Installing Cliptool
@@ -34,7 +33,9 @@ To read about the Cliptool Gateway, take a look at its separate [README](Gateway
 Cliptool is prebuilt for Windows. Simply download the desired version from the [release page](https://github.com/tv2/casparcg-cliptool/releases).
 Once you have downloaded the desired version of `casparcg-clip-tool.exe`, drop it into the folder for CasparCG.
 
-### Important
+<div style="background-color: rgba(0,0,0, 0.2); padding: 20px; border-radius: 8px;">
+
+**Important!**
 
 For Cliptools timer and a preview of the selected file in the header to work,
 CasparCG's `casparcg.config` file needs to have an `osc` section.
@@ -58,6 +59,8 @@ The port defined under the `predefined-client` part of the `osc` section should 
   </predefined-clients>
 </osc>
 ```
+
+</div>
 
 ### CasparCG Launcher
 
@@ -161,9 +164,9 @@ yarn build
 yarn package
 ```
 
-## Features
+## Main Page
 
-Cliptool promotes many common webpage features, but also a handful of less common ones.
+The entry point for Cliptool is the main page, where most actions are performed. Some of these actions include choosing the file to play on CasparCG for the available channels, navigating to the [settings page](#settings-page) and hiding unwanted files.
 
 ### View Modes
 
@@ -192,7 +195,7 @@ Below are example images of the main, text and channel view modes.
 
 ### Header
 
-In the header, there is a button that can be used to open the [settings page](#settings).
+In the header, there is a button that can be used to open the [settings page](#settings-page).
 This button is not visible on the [text view](#view-modes).
 
 The header contains a countdown of the currently playing video file or an indicator that an image file is loaded.
@@ -200,7 +203,7 @@ In either instance, the thumbnail of the playing file will also be shown.
 
 The header also contains 4 togglebuttons, Loop, Mix, Overlay and Manual.
 The first 3 of them are not visible from the [text view](#view-modes) but are still in effect if enabled from another [view mode](#view-modes).
-More details about what these buttons do are described in their sections under the [settings page](#settings).
+More details about what these buttons do are described in their sections under the [settings page](#settings-page).
 
 Should the space for the header become limited, due to eg. a narrow window size, then the header will be horizontally scrollable.
 
@@ -212,11 +215,13 @@ Tabs are only visible while the view does not have a specified channel in the qu
 
 Buttons located in the [header](#header) will directly impact settings related to the currently active tab.
 
-The [label](#label) shown on each tab can be set from the [settings page](#settings).
+The [label](#label) shown on each tab can be set from the [settings page](#settings-page).
 
 Should the space for the tabs become limited, due to eg. long tab names, then the tabs will become horizontally scrollable, just like the header.
 
-### Playout
+### Operation Modes
+
+#### Playout
 
 Playing videos or images from Cliptool is as simple as placing them in the media folder that CasparCG is looking at
 and then clicking the associated file in Cliptool, on the tab of the channel one wishes the file to be played on.
@@ -241,7 +246,7 @@ clicking an image file while [manual](#manual) mode has been enabled, will simpl
 
 <img src="docs/images/loaded-video.png" height="100">
 
-### Hiding
+#### Hiding
 
 It is possible to hide files from being shown in Cliptool.
 This is ideal if multiple small variations of the same file are generated and placed in CasparCG's media folder, but only one is desired to be used.
@@ -260,25 +265,7 @@ An image showing a hidden file among non-hidden ones can be seen below.
 To return to the normal operation mode, either change the dropdown for the channel in settings back to 'Control',
 or hit the 'Exit Edit Visibility' button in the page footer shown while in the 'Edit Visibility' operation mode.
 
-### Recovery
-
-Should Cliptool lose connection to CasparCG at some point, and then regain connection, it will resend the play commands.
-If a channel is already playing something, Cliptool will skip that channel, to not disturb what is playing.
-
-On startup of Cliptool, Cliptool will update its indicated playing and loaded files, according to what CasparCG is currently playing/has loaded.
-Because of this, should Cliptool crash or otherwise restart, and a change to what is playing on CasparCG be done in the meantime, then Cliptool will update accordingly on startup.
-This means that the selected or loaded file indicator will update in Cliptool, if CasparCG is sent a command from outside, during Cliptools downtime.
-
-### Touch Support
-
-Cliptool has support for Touch, allowing the user to change the active tab by swiping left and right in the main area, where files are being displayed.
-If space is limited such that the [header](#header) or [tabs](#channels--outputs) have become scrollable, these will also be scrollable via touch.
-
-Take care not to swipe too far, as the browsers' in-built swipe actions are not disabled by Cliptool.
-For instance, on Google Chrome, swiping left or right will act as going backward (left) or forward (right) in the tabs history.
-Other browsers likely have similar actions on swipe.
-
-## Settings
+## Settings Page
 
 Clicking the 'Settings' button in the header will open the settings page.
 An image showing the settings page can be seen below, as seen from the [main view](#view-modes).
@@ -415,6 +402,26 @@ Defines if a played file on the associated tab should be scaled to some fixed di
 While enabled two new fields will be shown, allowing the user to set a desired X and Y size in pixels.
 
 <img src="docs/images/scaling.png">
+
+## General
+
+### Recovery
+
+Should Cliptool lose connection to CasparCG at some point, and then regain connection, it will resend the play commands.
+If a channel is already playing something, Cliptool will skip that channel, to not disturb what is playing.
+
+On startup of Cliptool, Cliptool will update its indicated playing and loaded files, according to what CasparCG is currently playing/has loaded.
+Because of this, should Cliptool crash or otherwise restart, and a change to what is playing on CasparCG be done in the meantime, then Cliptool will update accordingly on startup.
+This means that the selected or loaded file indicator will update in Cliptool, if CasparCG is sent a command from outside, during Cliptools downtime.
+
+### Touch Support
+
+Cliptool has support for Touch, allowing the user to change the active tab by swiping left and right in the main area, where files are being displayed.
+If space is limited such that the [header](#header) or [tabs](#channels--outputs) have become scrollable, these will also be scrollable via touch.
+
+Take care not to swipe too far, as the browsers' in-built swipe actions are not disabled by Cliptool.
+For instance, on Google Chrome, swiping left or right will act as going backward (left) or forward (right) in the tabs history.
+Other browsers likely have similar actions on swipe.
 
 ## Noteworthy Packages
 
