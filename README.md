@@ -47,7 +47,7 @@ In case the config file has removed the `osc` section for some reason, then it c
 
 The port defined under the `predefined-client` part of the `osc` section should match the port inputted to the [CasparCG Settings](#casparcg-settings)
 
-```
+```xml
 <osc>
   <default-port>6250</default-port>
   <disable-send-to-amcp-clients>false [true|false]</disable-send-to-amcp-clients>
@@ -87,7 +87,7 @@ For easy access and example, the suffixed view modes links are listed below.
 
 To get started with development, clone this repository to a local location of your choosing.
 
-```
+```bash
 git clone https://github.com/tv2/casparcg-cliptool.git nameofyourproject
 ```
 
@@ -97,7 +97,7 @@ After doing that, follow the following subsections.
 
 To build Cliptool run the following commands.
 
-```
+```bash
 yarn
 yarn build
 ```
@@ -137,19 +137,19 @@ For running Cliptool, there are 3 commands to choose from, depending on the desi
 
 For production level logs use the following command.
 
-```
+```bash
 yarn start
 ```
 
 For development level logs use the following command.
 
-```
+```bash
 yarn start-dev
 ```
 
 For trace level logs use the following command.
 
-```
+```bash
 yarn start-local
 ```
 
