@@ -33,7 +33,7 @@ To read about the Cliptool Gateway, take a look at its separate [README](Gateway
 Cliptool is prebuilt for Windows. Simply download the desired version from the [release page](https://github.com/tv2/casparcg-cliptool/releases).
 Once you have downloaded the desired version of `casparcg-clip-tool.exe`, drop it into the folder for CasparCG.
 
-<div style="background-color: rgba(170, 170, 170, 0.2); padding: 20px; border-radius: 8px;">
+<div style="background-color: rgba(120, 120, 120, 0.2); padding: 20px; border-radius: 8px;">
 
 **Important!**
 
