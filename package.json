@@ -20,7 +20,8 @@
     },
     "main": "dist/server/index.js",
     "scripts": {
-        "watch-server": "tsc -p src/server -watch",
+        "watch-changes": "conc -c \"auto\" --names \"CLIENT,SERVER,GATEWAY\" \"yarn watch-client\" \"yarn watch-server\" \"yarn watch-gateway\"",
+        "watch-server": "tsc -p src/server -watch --preserveWatchOutput",
         "watch-gateway": "ncc build ./src/gateway/index.ts -o ./build/gateway/ --watch",
         "watch-client": "cross-env NODE_ENV=development TS_NODE_PROJECT=\"src/client/tsconfig.json\" webpack --watch",
         "build": "yarn build-client && yarn build-server && yarn build-gateway",
@@ -87,6 +88,7 @@
         "@types/react-redux": "^7.1.16",
         "@types/socket.io-client": "^1.4.36",
         "@vercel/ncc": "^0.38.0",
+        "concurrently": "^8.2.2",
         "copyfiles": "^2.4.1",
         "cross-env": "^7.0.3",
         "css-loader": "^5.2.0",
