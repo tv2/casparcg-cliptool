@@ -46,34 +46,32 @@ export class CasparCgPlayoutService {
         const action = !mixState
             ? this.playMedia.bind(this)
             : this.mixMedia.bind(this)
-        await action(channelIndex, 9, fileName).catch((reason) => {
+        await action(channelIndex, fileName).catch((reason) => {
             const message: string = `Failed to play file: ${fileName}`
-            logger.data(reason).error(message)
+            const logMessage: string = `${message}; CasparCG Connection: ${this.casparCgConnection.connectionStatus.connected}`
+            logger.data(reason).error(logMessage)
             this.notifyAboutError(message, reason as Error)
         })
     }
 
     private async playMedia(
         channelIndex: number,
-        layerIndex: number,
         fileName: string
     ): Promise<void> {
-        await this.scale(channelIndex, layerIndex)
-        await this.executePlayMedia(channelIndex, layerIndex, fileName)
+        await this.scale(channelIndex)
+        await this.executePlayMedia(channelIndex, fileName)
     }
 
     private async mixMedia(
         channelIndex: number,
-        layerIndex: number,
         fileName: string
     ): Promise<void> {
-        await this.scale(channelIndex, layerIndex)
+        await this.scale(channelIndex)
         const transitionTime = this.reduxSettingsService.getGenericSettings(
             state.settings
         ).ccgSettings.transitionTime
         await this.executePlayMedia(
             channelIndex,
-            layerIndex,
             fileName,
             CcgEnum.Transition.MIX,
             transitionTime
@@ -82,7 +80,6 @@ export class CasparCgPlayoutService {
 
     private async executePlayMedia(
         channelIndex: number,
-        layerIndex: number,
         fileName: string,
         transitionType: CcgEnum.Transition = CcgEnum.Transition.CUT,
         transitionTime: number = 0
@@ -90,7 +87,7 @@ export class CasparCgPlayoutService {
         const loopState = this.getLoopState(channelIndex)
         await this.casparCgConnection.play(
             channelIndex + 1,
-            layerIndex + 1,
+            this.getLayerFromSettings(),
             fileName,
             loopState,
             transitionType,
@@ -111,13 +108,11 @@ export class CasparCgPlayoutService {
         channelIndex: number,
         fileName: string
     ): Promise<void> {
-        return this.executeLoadMedia(channelIndex, 9, fileName).catch(
-            (reason) => {
-                const message: string = `Failed to load file: ${fileName}`
-                logger.data(reason).error(message)
-                this.notifyAboutError(message, reason as Error)
-            }
-        )
+        return this.executeLoadMedia(channelIndex, fileName).catch((reason) => {
+            const message: string = `Failed to load file: ${fileName}`
+            logger.data(reason).error(message)
+            this.notifyAboutError(message, reason as Error)
+        })
     }
 
     private notifyAboutError(message: string, error: Error): void {
@@ -132,14 +127,13 @@ export class CasparCgPlayoutService {
 
     private async executeLoadMedia(
         channelIndex: number,
-        layerIndex: number,
         fileName: string
     ): Promise<void> {
-        await this.scale(channelIndex, layerIndex)
+        await this.scale(channelIndex)
         const loopState = this.getLoopState(channelIndex)
         await this.casparCgConnection.load(
             channelIndex + 1,
-            layerIndex + 1,
+            this.getLayerFromSettings(),
             fileName,
             loopState
         )
@@ -147,7 +141,6 @@ export class CasparCgPlayoutService {
 
     public async playOverlay(
         channelIndex: number,
-        layerIndex: number,
         fileName: string
     ): Promise<void> {
         if (!fileName) {
@@ -155,30 +148,27 @@ export class CasparCgPlayoutService {
                 `Expected a a value in fileName, but it was '${fileName}'`
             )
         }
-        await this.scale(channelIndex, layerIndex)
+        await this.scale(channelIndex)
         await this.casparCgConnection.loadHtmlPage(
             channelIndex + 1,
-            layerIndex + 1,
+            this.getLayerFromSettings(),
             fileName
         )
 
         await this.casparCgConnection.playHtmlPage(
             channelIndex + 1,
-            layerIndex + 1
+            this.getLayerFromSettings()
         )
     }
 
-    public async stopOverlay(
-        channelIndex: number,
-        layerIndex: number
-    ): Promise<void> {
-        await this.casparCgConnection.stop(channelIndex + 1, layerIndex + 1)
+    public async stopOverlay(channelIndex: number): Promise<void> {
+        await this.casparCgConnection.stop(
+            channelIndex + 1,
+            this.getLayerFromSettings()
+        )
     }
 
-    private async scale(
-        channelIndex: number,
-        layerIndex: number
-    ): Promise<void> {
+    private async scale(channelIndex: number): Promise<void> {
         const videoMode =
             state.settings.ccgConfig.channels[channelIndex].videoMode
         if (!videoMode) {
@@ -200,12 +190,16 @@ export class CasparCgPlayoutService {
 
         await this.casparCgConnection.mixerFill(
             channelIndex + 1,
-            layerIndex + 1,
+            this.getLayerFromSettings(),
             0,
             0,
             scaleOutX,
             scaleOutY,
             1
         )
+    }
+
+    private getLayerFromSettings(): number {
+        return state.settings.generics.ccgSettings.defaultLayer
     }
 }

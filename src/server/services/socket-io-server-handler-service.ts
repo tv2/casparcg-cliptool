@@ -341,7 +341,7 @@ export class SocketIOServerHandlerService {
             }
             const webUrl: string = outputSettings.webUrl
             this.casparCgPlayoutService
-                .playOverlay(channelIndex, 10, webUrl)
+                .playOverlay(channelIndex, webUrl)
                 .then(() =>
                     logger.info(
                         `Overlay playing ${webUrl} on channel index ${channelIndex}.`
@@ -354,7 +354,7 @@ export class SocketIOServerHandlerService {
                 )
         } else {
             this.casparCgPlayoutService
-                .stopOverlay(channelIndex, 10)
+                .stopOverlay(channelIndex)
                 .then(() =>
                     logger.info(
                         `Stopped playing overlay for channel: ${channelIndex}`

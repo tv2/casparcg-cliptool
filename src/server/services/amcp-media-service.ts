@@ -194,7 +194,7 @@ export class AmcpMediaService {
 
     private checkHiddenFilesChanged(files: MediaFile[]): void {
         let needsUpdating: boolean = false
-        const hiddenFiles: HiddenFiles = state.media.hiddenFiles
+        const hiddenFiles: HiddenFiles = { ...state.media.hiddenFiles }
         for (const key in hiddenFiles) {
             const hiddenFileInfo: HiddenFileInfo = hiddenFiles[key]
             const file: MediaFile | undefined = files.find(
