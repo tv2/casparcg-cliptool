@@ -13,6 +13,7 @@ export interface HiddenFileInfo {
 export interface FileInfo extends HiddenFileInfo {
     name: string
     type: string
+    extension: string
 }
 
 export interface MediaFile extends FileInfo {

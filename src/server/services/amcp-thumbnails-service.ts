@@ -173,6 +173,7 @@ export class AmcpThumbnailsService {
             size: element.size,
             type: element.type,
             thumbnail: thumbnail.response.data,
+            extension: 'UNKNOWN',
         }
     }
 }

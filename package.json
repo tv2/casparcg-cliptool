@@ -65,6 +65,7 @@
     "dependencies": {
         "@reduxjs/toolkit": "^1.9.3",
         "@tv2media/logger": "^2.0.0",
+        "axios": "^1.5.0",
         "casparcg-connection": "^5.1.0",
         "express": "^4.18.2",
         "filehound": "^1.17.4",
