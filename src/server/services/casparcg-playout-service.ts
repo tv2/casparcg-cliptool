@@ -139,32 +139,27 @@ export class CasparCgPlayoutService {
         )
     }
 
-    public async playOverlay(
-        channelIndex: number,
-        fileName: string
-    ): Promise<void> {
-        if (!fileName) {
-            throw new Error(
-                `Expected a a value in fileName, but it was '${fileName}'`
-            )
+    public async playOverlay(channelIndex: number, url: string): Promise<void> {
+        if (!url) {
+            throw new Error(`Expected a non-empty url, but it was '${url}'`)
         }
         await this.scale(channelIndex)
         await this.casparCgConnection.loadHtmlPage(
             channelIndex + 1,
-            this.getLayerFromSettings(),
-            fileName
+            this.getLayerFromSettings() + 1,
+            url
         )
 
         await this.casparCgConnection.playHtmlPage(
             channelIndex + 1,
-            this.getLayerFromSettings()
+            this.getLayerFromSettings() + 1
         )
     }
 
     public async stopOverlay(channelIndex: number): Promise<void> {
         await this.casparCgConnection.stop(
             channelIndex + 1,
-            this.getLayerFromSettings()
+            this.getLayerFromSettings() + 1
         )
     }
 
