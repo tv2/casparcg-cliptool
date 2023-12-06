@@ -45,7 +45,7 @@ That section should be moved to be part of the configuration, and of course, un-
 
 In case the config file has removed the `osc` section for some reason, then it can also be found below.
 
-The port defined under the `predefined-client` part of the `osc` section should match the port inputted to the [casparCG settings](#casparcg-settings).
+The port defined under the `predefined-client` part of the `osc` section should match the port inputted to the [CasparCG settings](#casparcg-settings).
 
 ```xml
 <osc>
