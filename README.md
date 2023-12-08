@@ -1,9 +1,11 @@
-# CasparCG Cliptool
+# Cliptool
 
-CasparCG Cliptool is a playout tool with a thumbnail-based GUI.
+Cliptool is a CasparCG playout tool with a thumbnail-based GUI.
 There are two applications for Cliptool. One is of course Cliptool itself and the other is a Gateway that allows Cliptool to be controlled from external tools, eg. a videomixer.
 
-To read about the Cliptool Gateway, take a look at its separate [README](Gateway%20README.md) file
+To read about the Cliptool Gateway, take a look at its separate [README](Gateway%20README.md) file.
+
+<img src="docs/images/main-view.png">
 
 ## Table of Content<!-- omit from toc -->
 
@@ -43,7 +45,7 @@ That section should be moved to be part of the configuration, and of course, un-
 
 In case the config file has removed the `osc` section for some reason, then it can also be found below.
 
-The port defined under the `predefined-client` part of the `osc` section should match the port inputted to the [CasparCG Settings](#casparcg-settings)
+The port defined under the `predefined-client` part of the `osc` section should match the port inputted to the [CasparCG settings](#casparcg-settings).
 
 ```xml
 <osc>
@@ -64,7 +66,7 @@ Cliptool works great with CasparCG Launcher, and it is also highly recommended t
 CasparCG Launcher can be downloaded from its [release page](https://github.com/nrkno/tv-automation-casparcg-launcher/releases).
 
 Once CasparCG Launcher is downloaded and placed inside the CasparCG folder, simply add `casparcg-clip-tool.exe` as a process under settings.
-With the CasparCG Launcher placed inside the CasparCG folder, the `Base Path` should simply be set to '`./`'
+With the CasparCG Launcher placed inside the CasparCG folder, the `Base Path` should simply be set to '`./`'.
 
 ## Running Cliptool
 
@@ -151,7 +153,7 @@ For trace level logs use the following command.
 yarn start-local
 ```
 
-Once running, navigate to the address as if it has been run from an executable, just as specified during [Running Cliptool](#running-cliptool),
+Once running, navigate to the address as if it has been run from an executable, just as specified during [running Cliptool](#running-cliptool).
 
 ### Packaging
 
@@ -193,6 +195,8 @@ Below are example images of the main, text and channel view modes.
 
 ### Header
 
+<img src="docs/images/header.png">
+
 In the header, there is a button that can be used to open the [settings page](#settings-page).
 This button is not visible on the [text view](#view-modes).
 
@@ -202,6 +206,7 @@ In either instance, the thumbnail of the playing file will also be shown.
 The header also contains 4 togglebuttons, Loop, Mix, Overlay and Manual.
 The first 3 of them are not visible from the [text view](#view-modes) but are still in effect if enabled from another [view mode](#view-modes).
 More details about what these buttons do are described in their sections under the [settings page](#settings-page).
+With the manual button active, a fifth button is revealed, which can be used to start a loaded video file.
 
 Should the space for the header become limited, due to eg. a narrow window size, then the header will be horizontally scrollable.
 
@@ -254,7 +259,7 @@ The operation mode of a channel can be selected from a dropdown on the settings 
 This is described in more detail during the [operation mode](#operation-mode) section under Settings.
 
 Once in the 'Edit Visibility' operation mode, clicking on files will toggle their visibility, hiding them once out of the 'Edit Visibility' operation mode.
-Files that are currently being played or loaded on one or more tabs can not be hidden, and attempting to do so will show a popup stating so.
+Files that are currently being played or loaded on one or more channels can not be hidden, and attempting to do so will show a popup stating so.
 Files that are currently marked to be hidden will be shrunken and greyed out with a brown background.
 An image showing a hidden file among non-hidden ones can be seen below.
 
@@ -262,6 +267,8 @@ An image showing a hidden file among non-hidden ones can be seen below.
 
 To return to the normal operation mode, either change the dropdown for the channel in settings back to 'Control',
 or hit the 'Exit Edit Visibility' button in the page footer shown while in the 'Edit Visibility' operation mode.
+
+<img src="docs/images/edit-visibility-footer.png">
 
 ## Settings Page
 
@@ -279,6 +286,8 @@ Settings are split into 3 parts.
     -   Only the one defined in the query is seen, if settings are entered from the [channel view](#view-modes).
 
 ### Buttons
+
+<img src="docs/images/settings-buttons.png" height="100">
 
 #### Save Settings
 
@@ -411,11 +420,12 @@ If a channel is already playing something, Cliptool will skip that channel, to n
 On startup of Cliptool, Cliptool will update its indicated playing and loaded files, according to what CasparCG is currently playing/has loaded.
 Because of this, should Cliptool crash or otherwise restart, and a change to what is playing on CasparCG be done in the meantime, then Cliptool will update accordingly on startup.
 This means that the selected or loaded file indicator will update in Cliptool, if CasparCG is sent a command from outside, during Cliptools downtime.
+If CasparCG is not playing anything on a channel, then Cliptool will skip synchronizing the saved playing/loaded file for that channel.
 
 ### Touch Support
 
 Cliptool has support for Touch, allowing the user to change the active tab by swiping left and right in the main area, where files are being displayed.
-If space is limited such that the [header](#header) or [tabs](#channels--outputs) have become scrollable, these will also be scrollable via touch.
+If space is limited such that the [header](#header) or [tabs](#channels--outputs) have become scrollable, these will also be scrollable by touch.
 
 Take care not to swipe too far, as the browsers' in-built swipe actions are not disabled by Cliptool.
 For instance, on Google Chrome, swiping left or right will act as going backward (left) or forward (right) in the tabs history.
