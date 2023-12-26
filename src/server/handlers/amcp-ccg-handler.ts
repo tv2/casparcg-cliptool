@@ -10,7 +10,6 @@ import {
 import { reduxStore, state } from '../../shared/store'
 import { logger } from '../utils/logger'
 import {
-    CasparcgSettings,
     GenericSettings,
     OperationMode,
     OutputSettings,
@@ -79,21 +78,22 @@ export class AmcpHandler {
     }
 
     private createAmcpConnection(): CasparCG {
-        const casparCgSettings: CasparcgSettings =
-            this.reduxSettingsService.getGenericSettings(
-                state.settings
-            ).ccgSettings
+        const ccgSettings = state.settings.generics.ccgSettings
         return new CasparCG({
-            host: casparCgSettings.ip,
-            port: casparCgSettings.amcpPort,
+            host: ccgSettings.ip,
+            port: ccgSettings.amcpPort,
             autoConnect: true,
-            onConnected: this.onCasparCgConnect.bind(this),
-            onDisconnected: this.onCasparCgDisconnected.bind(this),
+            onConnected: this.onCasparCgConnect,
+            onDisconnected: this.onCasparCgDisconnected,
         })
     }
 
-    private async onCasparCgConnect(isConnected: boolean): Promise<void> {
-        this.logConnectionStatus(isConnected)
+    private async onCasparCgConnect(): Promise<void> {
+        const ccgSettings = state.settings.generics.ccgSettings
+        const address: string = ccgSettings.ip
+        const port: number = ccgSettings.amcpPort
+        logger.info(`AMCP connection established to: ${address}:${port}`)
+
         for (let i = 0; i < this.channelCount; i++) {
             if (!(await this.casparCgInfoService.isChannelBlank(i))) {
                 continue
@@ -103,12 +103,8 @@ export class AmcpHandler {
         }
     }
 
-    private logConnectionStatus(isConnected: boolean) {
-        logger.info(`CasparCG connection state changed to: ${isConnected}`)
-    }
-
-    private onCasparCgDisconnected(isConnected: boolean): void {
-        this.logConnectionStatus(isConnected)
+    private onCasparCgDisconnected(): void {
+        logger.info(`CasparCG AMCP connection is disconnected`)
     }
 
     private async resendLoadOverlay(index: number): Promise<void> {
@@ -160,45 +156,21 @@ export class AmcpHandler {
         }
     }
 
-    public async amcpHandler(retryAttempts: number = 0): Promise<void> {
+    public async amcpHandler(): Promise<void> {
         //Check CCG Version and initialise OSC server:
         logger.debug('Checking CasparCG connection')
-        if (await this.checkConnection()) {
-            await this.retrieveConfig()
-            this.startFileChangesPollingInterval().then(() => {
-                logger.info(
-                    'Started continued polling for File and Thumbnail changes.'
-                )
-            })
-        } else {
-            retryAttempts++
-            if (retryAttempts > 3) {
-                const errorMessage: string =
-                    'Failed to retrieve version from CasparCG - ' +
-                    'Abandoning further attempts to retrieve version and startup.'
-                logger.error(errorMessage)
-                throw new Error(errorMessage)
-            }
-            logger.warn(
-                `Failed to retrieve version from CasparCG - retrying ${retryAttempts}/3`
+        await this.checkCcgVersion()
+        await this.retrieveConfig()
+        this.startFileChangesPollingInterval().then(() => {
+            logger.info(
+                'Started continued polling for File and Thumbnail changes.'
             )
-            await this.delay(retryAttempts * 2000)
-            await this.amcpHandler(retryAttempts)
-        }
+        })
     }
 
-    private delay(ms: number): Promise<unknown> {
-        return new Promise((res) => setTimeout(res, ms))
-    }
-
-    private async checkConnection(): Promise<boolean> {
+    private async checkCcgVersion(): Promise<boolean> {
         try {
             const versionResponse = await this.casparCgConnection.version()
-            const genericSettings: GenericSettings =
-                this.reduxSettingsService.getGenericSettings(state.settings)
-            const address: string = genericSettings.ccgSettings.ip
-            const port: number = genericSettings.ccgSettings.amcpPort
-            logger.info(`AMCP connection established to: ${address}:${port}`)
             logger.info(
                 `CasparCG Server Version: ${versionResponse.response.data}`
             )
