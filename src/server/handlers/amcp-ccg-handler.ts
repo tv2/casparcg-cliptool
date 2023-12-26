@@ -15,20 +15,23 @@ import {
     OperationMode,
     OutputSettings,
 } from '../../shared/models/settings-models'
-import { ExpressService } from './express-service'
+import { ExpressService } from '../services/express-service'
 import {
     setGenerics,
     updateSettings,
 } from '../../shared/actions/settings-action'
-import { SettingsPersistenceService } from './settings-persistence-service'
+import { SettingsPersistenceService } from '../services/settings-persistence-service'
 import { defaultOutputSettingsState } from '../../shared/schemas/new-settings-schema'
 import { UtilityService } from '../../shared/services/utility-service'
-import { AmcpThumbnailsService } from './amcp-thumbnails-service'
-import { AmcpMediaService } from './amcp-media-service'
-import { CasparCgPlayoutService } from './casparcg-playout-service'
-import { CasparCgInfoService, ChannelInfo } from './casparcg-info-service'
+import { AmcpThumbnailsService } from '../services/amcp-thumbnails-service'
+import { AmcpMediaService } from '../services/amcp-media-service'
+import { CasparCgPlayoutService } from '../services/casparcg-playout-service'
+import {
+    CasparCgInfoService,
+    ChannelInfo,
+} from '../services/casparcg-info-service'
 
-export class AmcpHandlerService {
+export class AmcpHandler {
     private readonly reduxMediaService: ReduxMediaService
     private readonly reduxSettingsService: ReduxSettingsService
     private readonly expressService: ExpressService
@@ -155,10 +158,6 @@ export class AmcpHandlerService {
                     )
                 )
         }
-    }
-
-    public getCasparCgConnection(): CasparCG {
-        return this.casparCgConnection
     }
 
     public async amcpHandler(retryAttempts: number = 0): Promise<void> {

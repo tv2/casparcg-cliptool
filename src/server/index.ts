@@ -1,8 +1,8 @@
 import { loadBundledEnvironment } from './bundled-environment'
 import { SettingsPersistenceService } from './services/settings-persistence-service'
 import { HiddenFilesPersistenceService } from './services/hidden-files-persistence-service'
-import { ccgOSCServer } from './handlers/caspar-cg-handler'
-import { AmcpHandlerService } from './services/casparcg-handler-service'
+import { ccgOSCServer } from './handlers/osc-ccg-handler'
+import { AmcpHandler } from './handlers/amcp-ccg-handler'
 import { logger } from './utils/logger'
 import { ExpressService } from './services/express-service'
 import { ReduxSettingsService } from '../shared/services/redux-settings-service'
@@ -21,7 +21,7 @@ settingsPersistenceService.load().then(() => {
     loadBundledEnvironment()
 
     expressService.serverInit()
-    const amcpHandlerService = new AmcpHandlerService()
+    const amcpHandlerService = new AmcpHandler()
     amcpHandlerService.amcpHandler().then(() => {
         logger.info('Finished AMCP startup procedure.')
     })
