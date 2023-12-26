@@ -228,7 +228,6 @@ export class AmcpHandler {
             updateSettings(config.channels, config.paths.mediaPath)
         )
         await this.fillInDefaultOutputSettingsIfNeeded(config.channels.length)
-        await this.settingsPersistenceService.resumeMigratingOldSettings()
         const genericSettings: GenericSettings = {
             ...this.reduxSettingsService.getGenericSettings(state.settings),
         }
