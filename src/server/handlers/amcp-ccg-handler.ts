@@ -277,12 +277,7 @@ export class AmcpHandler {
         const info: ChannelInfo = await this.casparCgInfoService.getChannelInfo(
             index
         )
-        if (await this.casparCgInfoService.isChannelBlank(index)) {
-            return outputSettings
-        }
         if (!info.stage) {
-            outputSettings.selectedFileName = ''
-            outputSettings.cuedFileName = ''
             return outputSettings
         }
         const rawFilePath: string =
