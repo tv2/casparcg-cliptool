@@ -27,10 +27,13 @@ export class SettingsPersistenceService {
                 .data(rawSettings)
                 .trace('Loaded following settings from file:')
             reduxStore.dispatch(setGenerics(validation.parsed))
+        } else {
+            reduxStore.dispatch(
+                setGenerics(
+                    this.reduxSettingsService.getDefaultGenericSettings()
+                )
+            )
         }
-        reduxStore.dispatch(
-            setGenerics(this.reduxSettingsService.getDefaultGenericSettings())
-        )
         this.save()
     }
 
