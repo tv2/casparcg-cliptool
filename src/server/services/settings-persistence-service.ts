@@ -23,32 +23,35 @@ export class SettingsPersistenceService {
         this.persistenceService = new PersistenceService()
     }
 
-    public load(): void {
-        this.persistenceService
-            .loadFile('settings.json')
-            .then(async (loadedSettings) => {
-                const rawSettings: unknown = JSON.parse(loadedSettings)
-                const settings: GenericSettings = await this.parseSettings(
-                    rawSettings
-                )
-                logger
-                    .data(rawSettings)
-                    .trace('Loaded following settings from file:')
-                reduxStore.dispatch(setGenerics(settings))
-            })
-            .catch((error) => {
-                logger
-                    .data(error)
-                    .warn(
-                        'Settings not found, or not yet stored, dispatching defaults, and saving it.'
+    public async load(): Promise<void> {
+        return new Promise<void>((resolve) => {
+            this.persistenceService
+                .loadFile('settings.json')
+                .then(async (loadedSettings) => {
+                    const rawSettings: unknown = JSON.parse(loadedSettings)
+                    const settings: GenericSettings = await this.parseSettings(
+                        rawSettings
                     )
-                reduxStore.dispatch(
-                    setGenerics(
-                        this.reduxSettingsService.getDefaultGenericSettings()
+                    logger
+                        .data(rawSettings)
+                        .trace('Loaded following settings from file:')
+                    reduxStore.dispatch(setGenerics(settings))
+                    resolve()
+                })
+                .catch((error) => {
+                    logger
+                        .data(error)
+                        .warn(
+                            'Settings not found, or not yet stored, dispatching defaults, and saving it.'
+                        )
+                    reduxStore.dispatch(
+                        setGenerics(
+                            this.reduxSettingsService.getDefaultGenericSettings()
+                        )
                     )
-                )
-                this.save()
-            })
+                    this.save()
+                })
+        })
     }
 
     private async parseSettings(

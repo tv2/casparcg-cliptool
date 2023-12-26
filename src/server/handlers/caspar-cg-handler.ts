@@ -7,18 +7,16 @@ import { logger } from '../utils/logger'
 import { ReduxSettingsService } from '../../shared/services/redux-settings-service'
 import { OsService } from '../../shared/services/os-service'
 import { ReduxMediaService } from '../../shared/services/redux-media-service'
-import { CasparCgHandlerService } from '../services/casparcg-handler-service'
 
 const reduxMediaService = new ReduxMediaService()
 const reduxSettingsService = new ReduxSettingsService()
-const casparCgHandlerService = CasparCgHandlerService.instance
 
 //Communication with CasparCG consists of 2 parts:
 //1. An AMCP connection for receiving media info and sending commands, which is created in the 'casparcg-handler-service'
 //2. An OSC connection for receiving realtime info about the media playing on the outputs
 
 //Setup OSC Connection:
-function ccgOSCServer(): void {
+export function ccgOSCServer(): void {
     const oscConnection = new osc.UDPPort({
         localAddress: '0.0.0.0',
         localPort: reduxSettingsService.getGenericSettings(state.settings)
@@ -96,11 +94,4 @@ function setNewTime(channelIndex: number, newTime: [number, number]): void {
     if (newTime[0] !== oldTime[0] || newTime[1] !== oldTime[1]) {
         reduxStore.dispatch(setTime(channelIndex, newTime))
     }
-}
-
-export function casparCgClient(): void {
-    casparCgHandlerService.amcpHandler().then(() => {
-        logger.info('Finished AMCP startup procedure.')
-    })
-    ccgOSCServer()
 }

@@ -1,26 +1,32 @@
 import { loadBundledEnvironment } from './bundled-environment'
 import { SettingsPersistenceService } from './services/settings-persistence-service'
 import { HiddenFilesPersistenceService } from './services/hidden-files-persistence-service'
-import { casparCgClient } from './handlers/caspar-cg-handler'
+import { ccgOSCServer } from './handlers/caspar-cg-handler'
+import { AmcpHandlerService } from './services/casparcg-handler-service'
 import { logger } from './utils/logger'
 import { ExpressService } from './services/express-service'
 import { ReduxSettingsService } from '../shared/services/redux-settings-service'
 
-const reduxSettingsService: ReduxSettingsService = new ReduxSettingsService()
-const expressService: ExpressService = ExpressService.instance
-const hiddenFilesPersistenceService: HiddenFilesPersistenceService =
-    new HiddenFilesPersistenceService(
+const settingsPersistenceService = SettingsPersistenceService.instance
+settingsPersistenceService.load().then(() => {
+    const reduxSettingsService = new ReduxSettingsService()
+
+    const expressService = ExpressService.instance
+    const hiddenFilesPersistenceService = new HiddenFilesPersistenceService(
         expressService.getSocketServer(),
         reduxSettingsService
     )
-const settingsPersistenceService: SettingsPersistenceService =
-    SettingsPersistenceService.instance
+    hiddenFilesPersistenceService.load()
 
-loadBundledEnvironment()
-expressService.serverInit()
-settingsPersistenceService.load()
-hiddenFilesPersistenceService.load()
-casparCgClient()
+    loadBundledEnvironment()
+
+    expressService.serverInit()
+    const amcpHandlerService = new AmcpHandlerService()
+    amcpHandlerService.amcpHandler().then(() => {
+        logger.info('Finished AMCP startup procedure.')
+    })
+    ccgOSCServer()
+})
 
 process.on('unhandledRejection', (error) => processUnhandledRejection(error))
 function processUnhandledRejection(error: unknown) {

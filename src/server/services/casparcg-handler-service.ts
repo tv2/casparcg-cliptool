@@ -28,8 +28,7 @@ import { AmcpMediaService } from './amcp-media-service'
 import { CasparCgPlayoutService } from './casparcg-playout-service'
 import { CasparCgInfoService, ChannelInfo } from './casparcg-info-service'
 
-export class CasparCgHandlerService {
-    public static readonly instance = new CasparCgHandlerService()
+export class AmcpHandlerService {
     private readonly reduxMediaService: ReduxMediaService
     private readonly reduxSettingsService: ReduxSettingsService
     private readonly expressService: ExpressService
@@ -44,7 +43,7 @@ export class CasparCgHandlerService {
     private waitingForCasparCgResponse: boolean
     private channelCount: number
 
-    private constructor() {
+    constructor() {
         this.reduxMediaService = new ReduxMediaService()
         this.reduxSettingsService = new ReduxSettingsService()
         this.expressService = ExpressService.instance
@@ -56,7 +55,7 @@ export class CasparCgHandlerService {
         this.channelCount = 0
 
         //Setup AMCP Connection:
-        this.casparCgConnection = this.createCasparCgConnection()
+        this.casparCgConnection = this.createAmcpConnection()
         this.amcpThumbnailService.setupAmcpThumbnailService(
             this.casparCgConnection,
             this.expressService.getSocketServer()
@@ -76,7 +75,7 @@ export class CasparCgHandlerService {
         )
     }
 
-    private createCasparCgConnection(): CasparCG {
+    private createAmcpConnection(): CasparCG {
         const casparCgSettings: CasparcgSettings =
             this.reduxSettingsService.getGenericSettings(
                 state.settings
