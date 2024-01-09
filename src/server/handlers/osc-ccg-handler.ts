@@ -2,7 +2,10 @@
 import osc from 'osc' //Using OSC fork from PieceMeta/osc.js as it has excluded hardware serialport support and thereby is crossplatform
 import { reduxStore, state } from '../../shared/store'
 import { setTime } from '../../shared/actions/media-actions'
-import { getChannelNumber } from '../utils/ccg-handler-utils'
+import {
+    extractChannelNumber,
+    extractLayerNumber,
+} from '../utils/ccg-handler-utils'
 import { logger } from '../utils/logger'
 import { ReduxSettingsService } from '../../shared/services/redux-settings-service'
 import { OsService } from '../../shared/services/os-service'
@@ -52,8 +55,9 @@ export function ccgOSCServer(): void {
 }
 
 function processOscMessage(message: any): void {
-    let channelIndex = getChannelNumber(message.address) - 1
-    if (message.address.includes('/stage/layer')) {
+    const defaultLayer = state.settings.generics.ccgSettings.defaultLayer
+    const channelIndex = extractChannelNumber(message.address) - 1
+    if (extractLayerNumber(message.address) === defaultLayer) {
         processOscProducerSegment(message, channelIndex)
         processTimeOscSegment(message, channelIndex)
     }

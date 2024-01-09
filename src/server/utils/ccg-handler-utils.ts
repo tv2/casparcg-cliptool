@@ -1,9 +1,16 @@
 import _ from 'lodash'
 
-export function getChannelNumber(string: string): number {
+export function extractChannelNumber(string: string): number {
     let channel = string.replace('/channel/', '')
     channel = channel.slice(0, channel.indexOf('/'))
     return parseInt(channel)
+}
+
+export function extractLayerNumber(address: string): number | false {
+    if (!address.includes('/stage/layer')) {
+        return false
+    }
+    return parseInt(address.split('layer/')[1].split('/')[0])
 }
 
 export function isDeepCompareEqual(a: any, b: any): boolean {
