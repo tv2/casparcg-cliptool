@@ -4,20 +4,20 @@ import { reduxStore, state } from '../../shared/store'
 import { newGenericSettingsSchema } from '../../shared/schemas/new-settings-schema'
 import { ReduxSettingsService } from '../../shared/services/redux-settings-service'
 import { logger } from '../utils/logger'
-import { FileHandlingServices } from './filehandling-service'
+import { FileHandlingService } from './filehandling-service'
 
 export class SettingsPersistenceService {
     public static readonly instance = new SettingsPersistenceService()
     private readonly reduxSettingsService: ReduxSettingsService
-    private readonly fileHandlingServices: FileHandlingServices
+    private readonly fileHandlingService: FileHandlingService
 
     private constructor() {
         this.reduxSettingsService = new ReduxSettingsService()
-        this.fileHandlingServices = new FileHandlingServices()
+        this.fileHandlingService = new FileHandlingService()
     }
 
     public async load(): Promise<void> {
-        const loadedSettings = await this.fileHandlingServices.loadFile(
+        const loadedSettings = await this.fileHandlingService.loadFile(
             'settings.json'
         )
         const rawSettings: unknown = JSON.parse(loadedSettings)
@@ -59,7 +59,7 @@ export class SettingsPersistenceService {
             : this.reduxSettingsService.getGenericSettings(state.settings)
         const stringifiedSettings = JSON.stringify(generics)
         try {
-            await this.fileHandlingServices.saveFile(
+            await this.fileHandlingService.saveFile(
                 'settings.json',
                 stringifiedSettings
             )

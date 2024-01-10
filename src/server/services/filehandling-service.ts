@@ -2,7 +2,7 @@ import * as fs from 'fs'
 import * as fsp from 'fs/promises'
 import * as path from 'path'
 
-export class FileHandlingServices {
+export class FileHandlingService {
     public async loadFile(fileName: string): Promise<string> {
         return fsp
             .readFile(path.resolve('storage', fileName))

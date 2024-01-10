@@ -2,7 +2,7 @@ import { updateHiddenFiles } from '../../shared/actions/media-actions'
 import { HiddenFiles } from '../../shared/models/media-models'
 import { state, reduxStore } from '../../shared/store'
 import { logger } from '../utils/logger'
-import { FileHandlingServices } from './filehandling-service'
+import { FileHandlingService } from './filehandling-service'
 import { ReduxSettingsService } from '../../shared/services/redux-settings-service'
 import { OutputSettings } from '../../shared/models/settings-models'
 import {
@@ -15,7 +15,7 @@ import { Server as SocketServer } from 'socket.io'
 
 export class HiddenFilesPersistenceService {
     private readonly reduxSettingsService: ReduxSettingsService
-    private readonly fileHandlingServices: FileHandlingServices
+    private readonly fileHandlingService: FileHandlingService
     private readonly socketServer: SocketServer<
         ClientToServerEvents,
         ServerToClientEvents,
@@ -35,11 +35,11 @@ export class HiddenFilesPersistenceService {
         this.socketServer = socketServer
         this.reduxSettingsService =
             reduxSettingsService ?? new ReduxSettingsService()
-        this.fileHandlingServices = new FileHandlingServices()
+        this.fileHandlingService = new FileHandlingService()
     }
 
     public load(): void {
-        this.fileHandlingServices
+        this.fileHandlingService
             .loadFile('hiddenFiles.json')
             .then((rawHiddenFiles) => {
                 const hiddenFiles: HiddenFiles = JSON.parse(rawHiddenFiles)
@@ -81,7 +81,7 @@ export class HiddenFilesPersistenceService {
             this.getCleanHiddenFiles(hiddenFiles)
         const stringifiedHiddenFiles = JSON.stringify(cleanHiddenFiles)
 
-        this.fileHandlingServices
+        this.fileHandlingService
             .saveFile('hiddenFiles.json', stringifiedHiddenFiles)
             .then(() => {
                 logger.data(stringifiedHiddenFiles).trace('Hidden files saved')
