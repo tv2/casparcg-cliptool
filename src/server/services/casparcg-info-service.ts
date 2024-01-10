@@ -70,8 +70,8 @@ export class CasparCgInfoService {
 
     private getMediaFolderAdjustedName(rawPath: string): string {
         const mediaPath = this.casparCgMediaPath.replace(/\\/g, '/')
-        const rawPathConveted = rawPath.replace('//', '/')
+        const rawPathConverted = rawPath.replace('//', '/')
 
-        return Path.relative(mediaPath, rawPathConveted)
+        return Path.relative(mediaPath, rawPathConverted)
     }
 }
