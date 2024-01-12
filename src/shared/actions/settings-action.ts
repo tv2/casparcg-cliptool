@@ -7,6 +7,10 @@ export const SET_LOOP = 'setLoop'
 export const SET_MIX = 'setMix'
 export const SET_WEB = 'setWeb'
 export const SET_MANUAL_START = 'setManualStart'
+export const SET_INITIAL_LOOP = 'setLoop'
+export const SET_INITIAL_MIX = 'setMix'
+export const SET_INITIAL_WEB = 'setWeb'
+export const SET_INITIAL_MANUAL_START = 'setManualStart'
 export const SET_OPERATION_MODE = 'setOperationMode'
 export const SET_SELECTED_FILE_NAME = 'setSelectedFileName'
 export const SET_CUED_FILE_NAME = 'setCuedFileName'
@@ -82,6 +86,50 @@ export function setWeb(
 ): { type: string; channelIndex: number; webState: boolean } {
     return {
         type: SET_WEB,
+        channelIndex: channelIndex,
+        webState: webState,
+    }
+}
+
+export function setInitialLoop(
+    channelIndex: number,
+    loopState: boolean
+): { type: string; channelIndex: number; loopState: boolean } {
+    return {
+        type: SET_INITIAL_LOOP,
+        channelIndex: channelIndex,
+        loopState: loopState,
+    }
+}
+
+export function setInitialMix(
+    channelIndex: number,
+    mixState: boolean
+): { type: string; channelIndex: number; mixState: boolean } {
+    return {
+        type: SET_INITIAL_MIX,
+        channelIndex: channelIndex,
+        mixState: mixState,
+    }
+}
+
+export function setInitialManualStart(
+    channelIndex: number,
+    manualStartState: boolean
+): { type: string; channelIndex: number; manualStartState: boolean } {
+    return {
+        type: SET_INITIAL_MANUAL_START,
+        channelIndex: channelIndex,
+        manualStartState: manualStartState,
+    }
+}
+
+export function setInitialWeb(
+    channelIndex: number,
+    webState: boolean
+): { type: string; channelIndex: number; webState: boolean } {
+    return {
+        type: SET_INITIAL_WEB,
         channelIndex: channelIndex,
         webState: webState,
     }

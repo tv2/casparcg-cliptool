@@ -40,6 +40,10 @@ export interface OutputSettings {
     mixState: boolean
     manualStartState: boolean
     webState: boolean
+    initialLoopState: boolean
+    initialMixState: boolean
+    initialManualStartState: boolean
+    initialWebState: boolean
     operationMode: OperationMode
     selectedFileName: string
     cuedFileName: string

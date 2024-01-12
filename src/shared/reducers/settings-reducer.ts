@@ -100,6 +100,38 @@ export function settings(
             }
             return nextState
         }
+        case IO.SET_INITIAL_LOOP: {
+            if (doesChannelExist(nextState, action)) {
+                return updateAttributeByPartial(state, nextState, action, {
+                    loopState: action.loopState,
+                })
+            }
+            return nextState
+        }
+        case IO.SET_INITIAL_MIX: {
+            if (doesChannelExist(nextState, action)) {
+                return updateAttributeByPartial(state, nextState, action, {
+                    mixState: action.mixState,
+                })
+            }
+            return nextState
+        }
+        case IO.SET_INITIAL_WEB: {
+            if (doesChannelExist(nextState, action)) {
+                return updateAttributeByPartial(state, nextState, action, {
+                    webState: action.webState,
+                })
+            }
+            return nextState
+        }
+        case IO.SET_INITIAL_MANUAL_START: {
+            if (doesChannelExist(nextState, action)) {
+                return updateAttributeByPartial(state, nextState, action, {
+                    manualStartState: action.manualStartState,
+                })
+            }
+            return nextState
+        }
         case IO.SET_OPERATION_MODE: {
             if (doesChannelExist(nextState, action)) {
                 return updateAttributeByPartial(state, nextState, action, {

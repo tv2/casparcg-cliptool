@@ -19,6 +19,10 @@ export const defaultOutputSettingsState: OutputSettings = {
     operationMode: OperationMode.CONTROL,
     selectedFileName: '',
     cuedFileName: '',
+    initialLoopState: false,
+    initialMixState: false,
+    initialManualStartState: false,
+    initialWebState: false,
 }
 
 export const defaultCcgSettingsState: CasparcgSettings = {
@@ -45,6 +49,10 @@ const outputSettingsSchema = z.object({
     operationMode: operationModeSchema,
     selectedFileName: z.string(),
     cuedFileName: z.string(),
+    initialLoopState: z.boolean(),
+    initialMixState: z.boolean(),
+    initialManualStartState: z.boolean(),
+    initialWebState: z.boolean(),
 })
 
 const ccgSettingsSchema = z.object({
