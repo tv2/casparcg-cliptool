@@ -26,14 +26,14 @@ export default function Output(props: OutputProps): JSX.Element {
     const {
         label,
         folder,
-        loopState,
-        mixState,
-        manualStartState,
-        webState,
         webUrl,
         shouldScale,
         scaleX,
         scaleY,
+        initialLoopState,
+        initialMixState,
+        initialManualStartState,
+        initialWebState,
     } = props.outputSettings
     const operationMode = utilityService.convertScreamingSnakeCaseToPascalCase(
         props.outputSettings.operationMode
@@ -56,6 +56,7 @@ export default function Output(props: OutputProps): JSX.Element {
                 >
                     <select
                         className="settings-select"
+                        title="The folder where the media files are located."
                         name={String(props.index)}
                         onChange={saveTempTabMediaFolderChange}
                         value={folder}
@@ -73,6 +74,7 @@ export default function Output(props: OutputProps): JSX.Element {
                 >
                     <select
                         className="settings-select"
+                        title='Operation mode for the output. "PLAY" will play the media file once. "LOOP" will loop the media file. "MIX" will mix the media file with the previous media file. "MANUAL" will wait for the user to press the "PLAY" button. "OVERLAY" will show the media file as an overlay.'
                         name={String(props.index)}
                         onChange={saveTempOperationModeChange}
                         value={operationMode}
@@ -99,22 +101,22 @@ export default function Output(props: OutputProps): JSX.Element {
                 </Label>
                 <Checkbox
                     description="LOOP :"
-                    checked={loopState}
+                    checked={initialLoopState}
                     onChange={saveTempLoopChange}
                 />
                 <Checkbox
                     description="MIX :"
-                    checked={mixState}
+                    checked={initialMixState}
                     onChange={saveTempMixChange}
                 />
                 <Checkbox
                     description="MANUAL :"
-                    checked={manualStartState}
+                    checked={initialManualStartState}
                     onChange={saveTempManualChange}
                 />
                 <Checkbox
                     description="OVERLAY :"
-                    checked={webState}
+                    checked={initialWebState}
                     onChange={saveTempWebStateChange}
                 />
                 <TextInput
@@ -160,6 +162,7 @@ export default function Output(props: OutputProps): JSX.Element {
     ): void {
         const newLoop = event.target.checked
         props.outputSettings.loopState = newLoop
+        props.outputSettings.initialLoopState = newLoop
         props.onChange(props.outputSettings)
     }
 
@@ -168,6 +171,7 @@ export default function Output(props: OutputProps): JSX.Element {
     ): void {
         const newMix = event.target.checked
         props.outputSettings.mixState = newMix
+        props.outputSettings.initialMixState = newMix
         props.onChange(props.outputSettings)
     }
 
@@ -176,6 +180,7 @@ export default function Output(props: OutputProps): JSX.Element {
     ): void {
         const newManual = event.target.checked
         props.outputSettings.manualStartState = newManual
+        props.outputSettings.initialManualStartState = newManual
         props.onChange(props.outputSettings)
     }
 
@@ -208,6 +213,7 @@ export default function Output(props: OutputProps): JSX.Element {
     ): void {
         const newWebState = event.target.checked
         props.outputSettings.webState = newWebState
+        props.outputSettings.initialWebState = newWebState
         props.onChange(props.outputSettings)
     }
 
@@ -244,3 +250,4 @@ export default function Output(props: OutputProps): JSX.Element {
         props.onChange(props.outputSettings)
     }
 }
+
