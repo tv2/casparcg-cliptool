@@ -50,6 +50,16 @@ export function settings(
             nextState.generics = { ...action.generics }
             nextState.generics.outputSettings =
                 nextState.generics.outputSettings ?? []
+            nextState.generics.outputSettings.forEach((outputSettings) => {
+                outputSettings.loopState =
+                    outputSettings.initialLoopState ?? false
+                outputSettings.mixState =
+                    outputSettings.initialMixState ?? false
+                outputSettings.webState =
+                    outputSettings.initialWebState ?? false
+                outputSettings.manualStartState =
+                    outputSettings.initialManualStartState ?? false
+            })
             return nextState
         }
         case IO.SET_LOOP: {
