@@ -49,10 +49,10 @@ const outputSettingsSchema = z.object({
     operationMode: operationModeSchema,
     selectedFileName: z.string(),
     cuedFileName: z.string(),
-    initialLoopState: z.boolean(),
-    initialMixState: z.boolean(),
-    initialManualStartState: z.boolean(),
-    initialWebState: z.boolean(),
+    initialLoopState: z.boolean().optional(),
+    initialMixState: z.boolean().optional(),
+    initialManualStartState: z.boolean().optional(),
+    initialWebState: z.boolean().optional(),
 })
 
 const ccgSettingsSchema = z.object({
