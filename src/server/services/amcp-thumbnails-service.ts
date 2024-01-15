@@ -71,7 +71,7 @@ export class AmcpThumbnailsService {
     private assignThumbnailsToOutput(index: number): void {
         const folderThumbnailFiles: ThumbnailFile[] =
             this.getFolderFilteredThumbnails(
-                this.reduxSettingsService.getOutputSettingsFolder(
+                this.reduxSettingsService.getOutputStateFolder(
                     state.settings,
                     index
                 )

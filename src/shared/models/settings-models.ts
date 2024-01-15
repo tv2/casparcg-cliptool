@@ -29,7 +29,7 @@ export interface CasparcgConfigChannel {
     channelLayout?: string
 }
 
-export interface OutputSettings {
+export interface OutputState {
     label: string
     folder: string
     shouldScale: boolean
@@ -59,5 +59,5 @@ export interface CasparcgSettings {
 
 export interface GenericSettings {
     ccgSettings: CasparcgSettings
-    outputSettings: OutputSettings[]
+    outputsState: OutputState[]
 }

@@ -5,7 +5,7 @@ import Group from "../../../shared/components/group/group";
 import { State } from "../../../../shared/reducers/index-reducer";
 import { AppNavigationService } from "../../../../shared/services/app-navigation-service";
 import { FileType, Output } from "../../../../shared/models/media-models";
-import { OutputSettings } from "../../../../shared/models/settings-models";
+import { OutputState } from "../../../../shared/models/settings-models";
 import { ReduxSettingsService } from "../../../../shared/services/redux-settings-service";
 import { state } from "../../../../shared/store";
 import { ReduxMediaService } from "../../../../shared/services/redux-media-service";
@@ -23,8 +23,8 @@ export default function TimerThumbnail(): JSX.Element {
     const mediaOutput: Output = useSelector(
         (state: State) => reduxMediaService.getOutput(state.media, activeTabIndex)
     )
-    const settingsOutput: OutputSettings = useSelector(
-        (state: State) => reduxSettingsService.getOutputSettings(state.settings, activeTabIndex)
+    const settingsOutput: OutputState = useSelector(
+        (state: State) => reduxSettingsService.getOutputState(state.settings, activeTabIndex)
     )
 
     const cleanFileName: string = reduxSettingsService.getCleanSelectedFileName(settingsOutput, state.settings) 
@@ -45,6 +45,7 @@ export default function TimerThumbnail(): JSX.Element {
             </label>
             <img
                 src={thumbnailUrl}
+                title="Thumbnail"
                 className="c-timer-thumbnail__thumbnail"
             />
         </Group>

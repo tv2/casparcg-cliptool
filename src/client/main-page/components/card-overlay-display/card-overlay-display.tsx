@@ -21,11 +21,11 @@ export default function CardOverlayDisplay(props: CardOverlayDisplayProps): JSX.
 
   useSelector(
     (state: State) => reduxSettingsService
-      .getOutputSettings(state.settings, props.activeTabIndex).selectedFileName
+      .getOutputState(state.settings, props.activeTabIndex).selectedFileName
   )
   useSelector(
     (state: State) => reduxSettingsService
-      .getOutputSettings(state.settings, props.activeTabIndex).cuedFileName
+      .getOutputState(state.settings, props.activeTabIndex).cuedFileName
   )
 
   const time: [number, number] = useSelector(

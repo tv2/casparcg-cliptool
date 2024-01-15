@@ -22,7 +22,7 @@ export class BrowserService {
         this.reduxSettingsService = new ReduxSettingsService()
         const search = new URLSearchParams(window.location.search)
         this.view = this.getCurrentSelectedView(search)
-        this.setMinimumOutputSettingsIfMissing()
+        this.setMinimumNumberOfOutputsIfMissing()
     }
 
     private getCurrentSelectedView(
@@ -62,10 +62,10 @@ export class BrowserService {
      * Until then simply set the redux state to contain default settings, with entries matching the channel number.
      * @private
      */
-    private setMinimumOutputSettingsIfMissing() {
+    private setMinimumNumberOfOutputsIfMissing() {
         if (
             !this.isChannelView() ||
-            this.reduxSettingsService.getAllOutputSettings(state.settings)
+            this.reduxSettingsService.getAllOutputsState(state.settings)
                 .length >= this.view.channel
         ) {
             return

@@ -1,13 +1,13 @@
 import { MediaFile, MediaState } from '../models/media-models'
 import {
     GenericSettings,
-    OutputSettings,
+    OutputState,
     SettingsState,
     TabInfo,
 } from '../models/settings-models'
 import {
     defaultCcgSettingsState,
-    defaultOutputSettingsState,
+    defaultOutputState,
 } from '../schemas/new-settings-schema'
 
 export class ReduxSettingsService {
@@ -26,10 +26,7 @@ export class ReduxSettingsService {
         settingsState: SettingsState,
         index: number
     ): TabInfo {
-        const output: OutputSettings = this.getOutputSettings(
-            settingsState,
-            index
-        )
+        const output: OutputState = this.getOutputState(settingsState, index)
         return {
             index,
             title:
@@ -37,88 +34,83 @@ export class ReduxSettingsService {
         }
     }
 
-    public getOutputSettings(
+    public getOutputState(
         settingsState: SettingsState,
         channelIndex: number
-    ): OutputSettings {
-        return settingsState.generics.outputSettings[channelIndex]
+    ): OutputState {
+        return settingsState.generics.outputsState[channelIndex]
     }
 
-    public getOutputSettingsFolder(
+    public getOutputStateFolder(
         settingsState: SettingsState,
         index: number
     ): string {
-        return this.getOutputSettings(settingsState, index).folder
+        return this.getOutputState(settingsState, index).folder
     }
 
     public clearInvalidTargetedPaths(
         allFiles: MediaFile[],
-        originalOutputSettings: OutputSettings,
+        originalOutputState: OutputState,
         mediaState: MediaState
-    ): OutputSettings {
-        let outputSettings: OutputSettings = { ...originalOutputSettings }
-        if (this.isPathsEmpty(outputSettings)) {
-            return outputSettings
+    ): OutputState {
+        let outputState: OutputState = { ...originalOutputState }
+        if (this.isPathsEmpty(outputState)) {
+            return outputState
         }
-        outputSettings = this.clearClickedFileFromSettings(
-            allFiles,
-            outputSettings
-        )
-        outputSettings = this.clearSelectedFolderFromSettings(
+        outputState = this.clearClickedFileFromSettings(allFiles, outputState)
+        outputState = this.clearSelectedFolderFromSettings(
             mediaState,
-            outputSettings
+            outputState
         )
-        return outputSettings
+        return outputState
     }
 
     private clearSelectedFolderFromSettings(
         mediaState: MediaState,
-        outputSettings: OutputSettings
-    ): OutputSettings {
+        outputState: OutputState
+    ): OutputState {
         if (
-            !(outputSettings.folder === '') &&
-            !mediaState.folders.includes(outputSettings.folder)
+            !(outputState.folder === '') &&
+            !mediaState.folders.includes(outputState.folder)
         ) {
-            outputSettings.folder = ''
+            outputState.folder = ''
         }
-        return outputSettings
+        return outputState
     }
 
     private clearClickedFileFromSettings(
         allFiles: MediaFile[],
-        outputSettings: OutputSettings
-    ): OutputSettings {
+        outputState: OutputState
+    ): OutputState {
         if (
-            outputSettings.selectedFileName === '' &&
-            outputSettings.cuedFileName === ''
+            outputState.selectedFileName === '' &&
+            outputState.cuedFileName === ''
         ) {
-            return outputSettings
+            return outputState
         }
         const mediaFile: MediaFile | undefined = allFiles.find(
             (file) =>
-                file.name === outputSettings.cuedFileName ||
-                file.name === outputSettings.selectedFileName
+                file.name === outputState.cuedFileName ||
+                file.name === outputState.selectedFileName
         )
 
         if (!mediaFile) {
-            outputSettings.cuedFileName = ''
-            outputSettings.selectedFileName = ''
+            outputState.cuedFileName = ''
+            outputState.selectedFileName = ''
         }
-        return outputSettings
+        return outputState
     }
 
-    private isPathsEmpty(outputSettings: OutputSettings): boolean {
+    private isPathsEmpty(outputState: OutputState): boolean {
         return (
-            outputSettings.selectedFileName === '' &&
-            outputSettings.cuedFileName === '' &&
-            outputSettings.folder === ''
+            outputState.selectedFileName === '' &&
+            outputState.cuedFileName === '' &&
+            outputState.folder === ''
         )
     }
 
-    public getAllOutputSettings(
-        settingsState: SettingsState
-    ): OutputSettings[] {
-        return settingsState.generics.outputSettings
+    public getAllOutputsState(settingsState: SettingsState): OutputState[] {
+        return settingsState.generics.outputsState
     }
 
     public getGenericSettings(settingsState: SettingsState): GenericSettings {
@@ -128,8 +120,8 @@ export class ReduxSettingsService {
     public getDefaultGenericSettings(arrayLength: number = 1): GenericSettings {
         return {
             ccgSettings: defaultCcgSettingsState,
-            outputSettings: Array(arrayLength).fill({
-                ...defaultOutputSettingsState,
+            outputsState: Array(arrayLength).fill({
+                ...defaultOutputState,
             }),
         }
     }
@@ -140,7 +132,7 @@ export class ReduxSettingsService {
         channelIndex: number
     ): boolean {
         const selectedFileName = this.getCleanSelectedFileName(
-            this.getOutputSettings(settingsState, channelIndex),
+            this.getOutputState(settingsState, channelIndex),
             settingsState
         )
         return selectedFileName === thumbnailName
@@ -152,7 +144,7 @@ export class ReduxSettingsService {
         channelIndex: number
     ): boolean {
         const cuedFileName = this.getCleanCuedFileName(
-            this.getOutputSettings(settingsState, channelIndex),
+            this.getOutputState(settingsState, channelIndex),
             settingsState
         )
         return cuedFileName === fileName
@@ -162,7 +154,7 @@ export class ReduxSettingsService {
         fileName: string,
         settingsState: SettingsState
     ): boolean {
-        return this.getGenericSettings(settingsState).outputSettings.some(
+        return this.getGenericSettings(settingsState).outputsState.some(
             (output) =>
                 this.getCleanSelectedFileName(output, settingsState) ===
                 fileName
@@ -173,21 +165,21 @@ export class ReduxSettingsService {
         fileName: string,
         settingsState: SettingsState
     ): boolean {
-        return this.getGenericSettings(settingsState).outputSettings.some(
+        return this.getGenericSettings(settingsState).outputsState.some(
             (output) =>
                 this.getCleanCuedFileName(output, settingsState) === fileName
         )
     }
 
     public getCleanSelectedFileName(
-        output: OutputSettings,
+        output: OutputState,
         settingsState: SettingsState
     ): string {
         return this.getCleanString(output.selectedFileName, settingsState)
     }
 
     public getCleanCuedFileName(
-        output: OutputSettings,
+        output: OutputState,
         settingsState: SettingsState
     ): string {
         return this.getCleanString(output.cuedFileName, settingsState)

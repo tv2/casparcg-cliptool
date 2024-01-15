@@ -4,7 +4,7 @@ import { ReduxSettingsService } from "../../../../shared/services/redux-settings
 import { AppNavigationService } from "../../../../shared/services/app-navigation-service";
 import { State } from "../../../../shared/reducers/index-reducer";
 import './control-actions.scss'
-import { OutputSettings } from "../../../../shared/models/settings-models";
+import { OutputState } from "../../../../shared/models/settings-models";
 import Group from "../../../shared/components/group/group";
 import { BrowserService } from "../../../shared/services/browser-service";
 import Toggle from "../../../shared/components/toggle/toggle";
@@ -21,8 +21,8 @@ export default function ControlActions(): JSX.Element {
   const activeTabIndex: number = useSelector(
     (state: State) => appNavigationService.getActiveTabIndex(state.appNavigation)
   )
-  const outputSettings = useSelector(
-    (state: State) => reduxSettingsService.getOutputSettings(state.settings, activeTabIndex)
+  const outputState = useSelector(
+    (state: State) => reduxSettingsService.getOutputState(state.settings, activeTabIndex)
   )
 
   return (
@@ -31,21 +31,21 @@ export default function ControlActions(): JSX.Element {
         <>
           <Group>
             <Toggle
-              checked={outputSettings.loopState}
+              checked={outputState.loopState}
               onChange={(isChecked) => toggleLoopState(activeTabIndex, !isChecked)}>
                 LOOP
             </Toggle>
           </Group>
           <Group>
             <Toggle
-              checked={outputSettings.mixState}
+              checked={outputState.mixState}
               onChange={(isChecked) => toggleMixState(activeTabIndex, !isChecked)}>
                 MIX
             </Toggle>
           </Group>
           <Group>
             <Toggle
-              checked={outputSettings.webState}
+              checked={outputState.webState}
               onChange={(isChecked) => toggleWebState(activeTabIndex, !isChecked)}>
                 OVERLAY
              </Toggle>
@@ -55,13 +55,13 @@ export default function ControlActions(): JSX.Element {
 
       <Group className="control-action-last">
         <Toggle
-          checked={outputSettings.manualStartState}
+          checked={outputState.manualStartState}
           onChange={(isChecked) => toggleManualStartState(activeTabIndex, !isChecked)}>
             MANUAL
         </Toggle>
-        {outputSettings.manualStartState && <button
+        {outputState.manualStartState && <button
           className="control-action-start-button"
-          onClick={() => playCuedFile(activeTabIndex, outputSettings) }>
+          onClick={() => playCuedFile(activeTabIndex, outputState) }>
             START
         </button>}        
       </Group> 
@@ -69,11 +69,11 @@ export default function ControlActions(): JSX.Element {
   )
 }
 
-function playCuedFile(activeTabIndex: number, outputSettings: OutputSettings): void {
-  if (!outputSettings.cuedFileName) {
+function playCuedFile(activeTabIndex: number, outputState: OutputState): void {
+  if (!outputState.cuedFileName) {
     return
   }
-  new SocketPlayService(SocketService.instance.getSocket()).playFile(activeTabIndex, outputSettings.cuedFileName)
+  new SocketPlayService(SocketService.instance.getSocket()).playFile(activeTabIndex, outputState.cuedFileName)
 }
 
 function toggleLoopState(activeTabIndex: number, isChecked: boolean): void {

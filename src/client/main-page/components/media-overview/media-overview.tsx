@@ -28,7 +28,7 @@ export function MediaOverview(): JSX.Element {
         (state: State) => state.media.hiddenFiles
     ) ?? {}
     const isInEditVisibilityMode: boolean = useSelector(
-        (state: State) => reduxSettingsService.getOutputSettings(state.settings, activeTabIndex)
+        (state: State) => reduxSettingsService.getOutputState(state.settings, activeTabIndex)
             .operationMode === OperationMode.EDIT_VISIBILITY
     ) ?? false
     const shownFiles: MediaFile[] = getShownFiles(files, isInEditVisibilityMode, hiddenFiles, browserService)

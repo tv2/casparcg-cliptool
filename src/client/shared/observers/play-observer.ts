@@ -73,7 +73,7 @@ export class PlayObserver {
         }
 
         if (
-            reduxSettingsService.getOutputSettings(state.settings, index)
+            reduxSettingsService.getOutputState(state.settings, index)
                 .selectedFileName !== channel.selectedFileName
         ) {
             reduxStore.dispatch(

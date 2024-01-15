@@ -22,7 +22,7 @@ import {
 } from '../../shared/models/media-models'
 import {
     GenericSettings,
-    OutputSettings,
+    OutputState,
 } from '../../shared/models/settings-models'
 import { setGenerics } from '../../shared/actions/settings-action'
 import { SettingsPersistenceService } from './settings-persistence-service'
@@ -124,7 +124,7 @@ export class AmcpMediaService {
         output: Output
     ): void {
         const outputFolder: string =
-            this.reduxSettingsService.getOutputSettingsFolder(
+            this.reduxSettingsService.getOutputStateFolder(
                 state.settings,
                 outputIndex
             )
@@ -159,34 +159,34 @@ export class AmcpMediaService {
     private async fixInvalidUsedPathsInSettings(
         allFiles: MediaFile[]
     ): Promise<void> {
-        const outputSettingsWithFixedPaths: OutputSettings[] =
+        const outputsStateWithFixedPaths: OutputState[] =
             this.reduxSettingsService
-                .getAllOutputSettings(state.settings)
-                .map((outputSettings) =>
+                .getAllOutputsState(state.settings)
+                .map((outputState) =>
                     this.reduxSettingsService.clearInvalidTargetedPaths(
                         allFiles,
-                        outputSettings,
+                        outputState,
                         state.media
                     )
                 )
         if (
             !isDeepCompareEqual(
-                this.reduxSettingsService.getAllOutputSettings(state.settings),
-                outputSettingsWithFixedPaths
+                this.reduxSettingsService.getAllOutputsState(state.settings),
+                outputsStateWithFixedPaths
             )
         ) {
-            await this.saveFixedPathsSettings(outputSettingsWithFixedPaths)
+            await this.saveFixedPathsSettings(outputsStateWithFixedPaths)
         }
     }
 
     private async saveFixedPathsSettings(
-        outputSettingsWithFixedPaths: OutputSettings[]
+        outputsStateWithFixedPaths: OutputState[]
     ): Promise<void> {
         logger.warn(
             'Removing some invalid paths from settings, that likely exist due to folders/files being deleted while off.'
         )
         const genericSettings: GenericSettings = { ...state.settings.generics }
-        genericSettings.outputSettings = outputSettingsWithFixedPaths
+        genericSettings.outputsState = outputsStateWithFixedPaths
         reduxStore.dispatch(setGenerics(genericSettings))
         this.amcpThumbnailService.assignThumbnailsToOutputs()
         await SettingsPersistenceService.instance.save()
