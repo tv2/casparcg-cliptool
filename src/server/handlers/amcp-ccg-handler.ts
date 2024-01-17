@@ -184,7 +184,7 @@ export class AmcpHandler {
     private async retrieveConfig(): Promise<void> {
         try {
             const config = await this.casparCgConnection.getCasparCGConfig()
-            await this.dispatchConfig(config)
+            await this.updateConfigState(config)
             this.waitingForCasparCgResponse = false
             this.startTimeEmitInterval()
             this.loadInitialOverlay()
@@ -193,7 +193,7 @@ export class AmcpHandler {
         }
     }
 
-    private async dispatchConfig(config: any): Promise<void> {
+    private async updateConfigState(config: any): Promise<void> {
         logger.data(config.channels).info('CasparCG Config : ')
         reduxStore.dispatch(setNumberOfOutputs(config.channels.length))
         reduxStore.dispatch(
@@ -244,18 +244,16 @@ export class AmcpHandler {
         outputState: OutputState,
         index: number
     ): Promise<OutputState> {
-        const info: ChannelInfo = await this.casparCgInfoService.getChannelInfo(
-            index
-        )
-        if (!info.stage) {
+        const channelInfo: ChannelInfo =
+            await this.casparCgInfoService.getChannelInfo(index)
+        if (!channelInfo.foreground) {
             return outputState
         }
-        const rawFilePath: string =
-            info.stage.layer.layer_10.foreground.file.path
+        const rawFilePath: string = channelInfo.foreground.file.path
         const fileName: string = rawFilePath
             .substring(0, rawFilePath.lastIndexOf('.'))
             .toUpperCase()
-        const isPaused: boolean = info.stage.layer.layer_10.foreground.paused
+        const isPaused: boolean = channelInfo.foreground.paused
         if (
             fileName === outputState.selectedFileName ||
             fileName === outputState.cuedFileName
