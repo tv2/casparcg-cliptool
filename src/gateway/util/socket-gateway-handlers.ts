@@ -93,7 +93,7 @@ socket.on(
                 new ReduxSettingsService()
             reduxStore.dispatch(setTime(index, channel.time))
             if (
-                reduxSettingsService.getOutputSettings(state.settings, index)
+                reduxSettingsService.getOutputState(state.settings, index)
                     .selectedFileName !== channel.selectedFileName
             ) {
                 reduxStore.dispatch(

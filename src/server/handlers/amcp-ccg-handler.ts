@@ -12,7 +12,7 @@ import { logger } from '../utils/logger'
 import {
     GenericSettings,
     OperationMode,
-    OutputSettings,
+    OutputState,
 } from '../../shared/models/settings-models'
 import { ExpressService } from '../services/express-service'
 import {
@@ -20,7 +20,7 @@ import {
     updateSettings,
 } from '../../shared/actions/settings-action'
 import { SettingsPersistenceService } from '../services/settings-persistence-service'
-import { defaultOutputSettingsState } from '../../shared/schemas/new-settings-schema'
+import { defaultOutputState } from '../../shared/schemas/new-settings-schema'
 import { UtilityService } from '../../shared/services/utility-service'
 import { AmcpThumbnailsService } from '../services/amcp-thumbnails-service'
 import { AmcpMediaService } from '../services/amcp-media-service'
@@ -108,49 +108,49 @@ export class AmcpHandler {
     }
 
     private async resendLoadOverlay(index: number): Promise<void> {
-        const outputSettings: OutputSettings =
-            this.reduxSettingsService.getOutputSettings(state.settings, index)
-        if (!outputSettings.webState || !outputSettings.webUrl) {
+        const outputState: OutputState =
+            this.reduxSettingsService.getOutputState(state.settings, index)
+        if (!outputState.webState || !outputState.webUrl) {
             return
         }
         this.casparCgPlayoutService
-            .playOverlay(index, outputSettings.webUrl)
+            .playOverlay(index, outputState.webUrl)
             .then(() =>
                 logger.info(
                     `Resent load overlay command for channel ${
                         index + 1
-                    }. Loaded '${outputSettings.webUrl}'`
+                    }. Loaded '${outputState.webUrl}'`
                 )
             )
     }
 
     private async resendPlayOrLoadCommands(index: number): Promise<void> {
-        const outputSettings: OutputSettings =
-            this.reduxSettingsService.getOutputSettings(state.settings, index)
+        const outputState: OutputState =
+            this.reduxSettingsService.getOutputState(state.settings, index)
         if (
-            outputSettings.selectedFileName === '' &&
-            outputSettings.cuedFileName === ''
+            outputState.selectedFileName === '' &&
+            outputState.cuedFileName === ''
         ) {
             return
         }
-        if (outputSettings.selectedFileName !== '') {
+        if (outputState.selectedFileName !== '') {
             this.casparCgPlayoutService
-                .playOrMixMedia(index, outputSettings.selectedFileName)
+                .playOrMixMedia(index, outputState.selectedFileName)
                 .then(() =>
                     logger.info(
                         `Resent play command for channel ${
                             index + 1
-                        }. Playing '${outputSettings.selectedFileName}'`
+                        }. Playing '${outputState.selectedFileName}'`
                     )
                 )
         } else {
             this.casparCgPlayoutService
-                .loadMedia(index, outputSettings.cuedFileName)
+                .loadMedia(index, outputState.cuedFileName)
                 .then(() =>
                     logger.info(
                         `Resent load command for channel ${
                             index + 1
-                        }. Loaded '${outputSettings.cuedFileName}'`
+                        }. Loaded '${outputState.cuedFileName}'`
                     )
                 )
         }
@@ -199,23 +199,21 @@ export class AmcpHandler {
         reduxStore.dispatch(
             updateSettings(config.channels, config.paths.mediaPath)
         )
-        await this.fillInDefaultOutputSettingsIfNeeded(config.channels.length)
+        await this.fillInDefaultOutputsStateIfNeeded(config.channels.length)
         const genericSettings: GenericSettings = {
             ...this.reduxSettingsService.getGenericSettings(state.settings),
         }
-        const allOutputSettings: OutputSettings[] = [
-            ...genericSettings.outputSettings,
-        ]
-        const reinvigoratedChannels: OutputSettings[] = await Promise.all(
+        const allOutputsState: OutputState[] = [...genericSettings.outputsState]
+        const reinvigoratedChannels: OutputState[] = await Promise.all(
             config.channels.map(async ({}, index: number) => {
-                const outputSettings: OutputSettings = {
-                    ...allOutputSettings[index],
+                const outputState: OutputState = {
+                    ...allOutputsState[index],
                 }
-                return await this.reinvigorateChannel(outputSettings, index)
+                return await this.reinvigorateChannel(outputState, index)
             })
         )
-        genericSettings.outputSettings =
-            await this.synchronizeOutputSettingsWithPlayingChannels(
+        genericSettings.outputsState =
+            await this.synchronizeOutputsStateWithCcgActiveState(
                 reinvigoratedChannels
             )
         reduxStore.dispatch(setGenerics(genericSettings))
@@ -228,29 +226,29 @@ export class AmcpHandler {
         this.expressService.getSocketIoServerHandlerService().initializeClient()
     }
 
-    private async synchronizeOutputSettingsWithPlayingChannels(
-        outputSettings: OutputSettings[]
-    ): Promise<OutputSettings[]> {
+    private async synchronizeOutputsStateWithCcgActiveState(
+        outputsState: OutputState[]
+    ): Promise<OutputState[]> {
         return await Promise.all(
-            outputSettings.map(
-                async (outputSettings, index) =>
-                    await this.synchronizeOutputSettingsWithPlayingChannel(
-                        outputSettings,
+            outputsState.map(
+                async (outputState, index) =>
+                    await this.synchronizeOutputStateWithCcgPlayingState(
+                        outputState,
                         index
                     )
             )
         )
     }
 
-    private async synchronizeOutputSettingsWithPlayingChannel(
-        outputSettings: OutputSettings,
+    private async synchronizeOutputStateWithCcgPlayingState(
+        outputState: OutputState,
         index: number
-    ): Promise<OutputSettings> {
+    ): Promise<OutputState> {
         const info: ChannelInfo = await this.casparCgInfoService.getChannelInfo(
             index
         )
         if (!info.stage) {
-            return outputSettings
+            return outputState
         }
         const rawFilePath: string =
             info.stage.layer.layer_10.foreground.file.path
@@ -259,41 +257,41 @@ export class AmcpHandler {
             .toUpperCase()
         const isPaused: boolean = info.stage.layer.layer_10.foreground.paused
         if (
-            fileName === outputSettings.selectedFileName ||
-            fileName === outputSettings.cuedFileName
+            fileName === outputState.selectedFileName ||
+            fileName === outputState.cuedFileName
         ) {
-            return outputSettings
+            return outputState
         }
         logger.debug(
             `File playing or loaded on CasparCG channel ${index} is different than saved file. Updating saved value: ${fileName}`
         )
         if (!isPaused) {
-            outputSettings.selectedFileName = fileName
+            outputState.selectedFileName = fileName
         } else {
-            outputSettings.cuedFileName = fileName
+            outputState.cuedFileName = fileName
         }
 
-        return outputSettings
+        return outputState
     }
 
-    private async fillInDefaultOutputSettingsIfNeeded(
+    private async fillInDefaultOutputsStateIfNeeded(
         minimumOutputs: number
     ): Promise<void> {
         const genericSettings: GenericSettings = {
             ...this.reduxSettingsService.getGenericSettings(state.settings),
         }
 
-        if (genericSettings.outputSettings.length >= minimumOutputs) {
+        if (genericSettings.outputsState.length >= minimumOutputs) {
             return
         }
 
         logger.debug(
-            `Expanding amount of Output Settings in settings from ${genericSettings.outputSettings.length} to ${minimumOutputs}.`
+            `Expanding amount of Output Settings in settings from ${genericSettings.outputsState.length} to ${minimumOutputs}.`
         )
-        genericSettings.outputSettings =
+        genericSettings.outputsState =
             this.utilityService.expandArrayWithDefaultsIfNeeded(
-                [...genericSettings.outputSettings],
-                defaultOutputSettingsState,
+                [...genericSettings.outputsState],
+                defaultOutputState,
                 minimumOutputs
             )
         reduxStore.dispatch(setGenerics(genericSettings))
@@ -301,24 +299,23 @@ export class AmcpHandler {
     }
 
     private async reinvigorateChannel(
-        outputSettings: OutputSettings,
+        outputState: OutputState,
         index: number
-    ): Promise<OutputSettings> {
-        const cuedFileName = outputSettings.cuedFileName
+    ): Promise<OutputState> {
+        const cuedFileName = outputState.cuedFileName
         if (cuedFileName) {
             logger.info(`Re-loaded ${cuedFileName} on channel index ${index}.`)
             await this.casparCgPlayoutService.loadMedia(index, cuedFileName)
         }
 
-        outputSettings.loopState = outputSettings.loopState ?? false
-        outputSettings.manualStartState =
-            outputSettings.manualStartState ?? false
-        outputSettings.mixState = outputSettings.mixState ?? false
-        outputSettings.webState = outputSettings.webState ?? false
-        outputSettings.operationMode =
-            outputSettings.operationMode ?? OperationMode.CONTROL
+        outputState.loopState = outputState.loopState ?? false
+        outputState.manualStartState = outputState.manualStartState ?? false
+        outputState.mixState = outputState.mixState ?? false
+        outputState.webState = outputState.webState ?? false
+        outputState.operationMode =
+            outputState.operationMode ?? OperationMode.CONTROL
 
-        return outputSettings
+        return outputState
     }
 
     private startTimeEmitInterval(): void {
@@ -328,14 +325,14 @@ export class AmcpHandler {
             this.reduxMediaService
                 .getOutputs(state.media)
                 .forEach((output: Output, index: number) => {
-                    const outputSettings =
-                        this.reduxSettingsService.getOutputSettings(
+                    const outputState =
+                        this.reduxSettingsService.getOutputState(
                             state.settings,
                             index
                         )
                     data[index] = {
                         time: output.time,
-                        selectedFileName: outputSettings.selectedFileName,
+                        selectedFileName: outputState.selectedFileName,
                     }
                 })
         })
@@ -349,18 +346,18 @@ export class AmcpHandler {
     private loadInitialOverlay(): void {
         if (
             !this.reduxSettingsService.getGenericSettings(state.settings)
-                .outputSettings
+                .outputsState
         ) {
             return
         }
         state.settings.ccgConfig.channels.forEach(async ({}, index) => {
-            const outputSettings = this.reduxSettingsService.getOutputSettings(
+            const outputState = this.reduxSettingsService.getOutputState(
                 state.settings,
                 index
             )
-            if (outputSettings.webState) {
+            if (outputState.webState) {
                 await this.casparCgPlayoutService
-                    .playOverlay(index, outputSettings.webUrl)
+                    .playOverlay(index, outputState.webUrl)
                     .catch((error) =>
                         logger
                             .data(error)

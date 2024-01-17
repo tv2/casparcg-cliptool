@@ -4,7 +4,7 @@ import './../shared.scss'
 import {
     CasparcgConfigChannel,
     OperationMode,
-    OutputSettings,
+    OutputState,
 } from '../../../../shared/models/settings-models'
 import TextInput from '../text-input/text-input'
 import Label from '../label/label'
@@ -15,9 +15,9 @@ import { UtilityService } from '../../../../shared/services/utility-service'
 interface OutputProps {
     configChannel: CasparcgConfigChannel
     index: number
-    outputSettings: OutputSettings
+    outputState: OutputState
     folders: string[]
-    onChange: (changedOutput: OutputSettings) => void
+    onChange: (changedOutput: OutputState) => void
 }
 
 export default function Output(props: OutputProps): JSX.Element {
@@ -26,21 +26,21 @@ export default function Output(props: OutputProps): JSX.Element {
     const {
         label,
         folder,
-        loopState,
-        mixState,
-        manualStartState,
-        webState,
         webUrl,
         shouldScale,
         scaleX,
         scaleY,
-    } = props.outputSettings
+        initialLoopState,
+        initialMixState,
+        initialManualStartState,
+        initialWebState,
+    } = props.outputState
     const operationMode = utilityService.convertScreamingSnakeCaseToPascalCase(
-        props.outputSettings.operationMode
+        props.outputState.operationMode
     )
 
     return (
-        props.outputSettings && (
+        props.outputState && (
             <form className="settings-channel-form">
                 <label className="settings-channel-header">
                     OUTPUT {props.index + 1} :
@@ -56,6 +56,7 @@ export default function Output(props: OutputProps): JSX.Element {
                 >
                     <select
                         className="settings-select"
+                        title="The folder where the media files are located."
                         name={String(props.index)}
                         onChange={saveTempTabMediaFolderChange}
                         value={folder}
@@ -73,6 +74,7 @@ export default function Output(props: OutputProps): JSX.Element {
                 >
                     <select
                         className="settings-select"
+                        title='Operation mode for the output. "PLAY" will play the media file once. "LOOP" will loop the media file. "MIX" will mix the media file with the previous media file. "MANUAL" will wait for the user to press the "PLAY" button. "OVERLAY" will show the media file as an overlay.'
                         name={String(props.index)}
                         onChange={saveTempOperationModeChange}
                         value={operationMode}
@@ -99,22 +101,22 @@ export default function Output(props: OutputProps): JSX.Element {
                 </Label>
                 <Checkbox
                     description="LOOP :"
-                    checked={loopState}
+                    checked={initialLoopState}
                     onChange={saveTempLoopChange}
                 />
                 <Checkbox
                     description="MIX :"
-                    checked={mixState}
+                    checked={initialMixState}
                     onChange={saveTempMixChange}
                 />
                 <Checkbox
                     description="MANUAL :"
-                    checked={manualStartState}
+                    checked={initialManualStartState}
                     onChange={saveTempManualChange}
                 />
                 <Checkbox
                     description="OVERLAY :"
-                    checked={webState}
+                    checked={initialWebState}
                     onChange={saveTempWebStateChange}
                 />
                 <TextInput
@@ -151,80 +153,84 @@ export default function Output(props: OutputProps): JSX.Element {
         event: React.ChangeEvent<HTMLInputElement>
     ): void {
         const newLabel = event.target.value
-        props.outputSettings.label = newLabel
-        props.onChange(props.outputSettings)
+        props.outputState.label = newLabel
+        props.onChange(props.outputState)
     }
 
     function saveTempLoopChange(
         event: React.ChangeEvent<HTMLInputElement>
     ): void {
         const newLoop = event.target.checked
-        props.outputSettings.loopState = newLoop
-        props.onChange(props.outputSettings)
+        props.outputState.loopState = newLoop
+        props.outputState.initialLoopState = newLoop
+        props.onChange(props.outputState)
     }
 
     function saveTempMixChange(
         event: React.ChangeEvent<HTMLInputElement>
     ): void {
         const newMix = event.target.checked
-        props.outputSettings.mixState = newMix
-        props.onChange(props.outputSettings)
+        props.outputState.mixState = newMix
+        props.outputState.initialMixState = newMix
+        props.onChange(props.outputState)
     }
 
     function saveTempManualChange(
         event: React.ChangeEvent<HTMLInputElement>
     ): void {
         const newManual = event.target.checked
-        props.outputSettings.manualStartState = newManual
-        props.onChange(props.outputSettings)
+        props.outputState.manualStartState = newManual
+        props.outputState.initialManualStartState = newManual
+        props.onChange(props.outputState)
     }
 
     function saveTempShouldScaleChange(
         event: React.ChangeEvent<HTMLInputElement>
     ): void {
         const newShouldScale = event.target.checked
-        props.outputSettings.shouldScale = newShouldScale
-        props.onChange(props.outputSettings)
+        props.outputState.shouldScale = newShouldScale
+        props.onChange(props.outputState)
     }
 
     function saveTempScaleXChange(
         event: React.ChangeEvent<HTMLInputElement>
     ): void {
         const newScaleX = Number(event.target.value)
-        props.outputSettings.scaleX = newScaleX
-        props.onChange(props.outputSettings)
+        props.outputState.scaleX = newScaleX
+        props.onChange(props.outputState)
     }
 
     function saveTempScaleYChange(
         event: React.ChangeEvent<HTMLInputElement>
     ): void {
         const newScaleY = Number(event.target.value)
-        props.outputSettings.scaleY = newScaleY
-        props.onChange(props.outputSettings)
+        props.outputState.scaleY = newScaleY
+        props.onChange(props.outputState)
     }
 
     function saveTempWebStateChange(
         event: React.ChangeEvent<HTMLInputElement>
     ): void {
         const newWebState = event.target.checked
-        props.outputSettings.webState = newWebState
-        props.onChange(props.outputSettings)
+        props.outputState.webState = newWebState
+        props.outputState.initialWebState = newWebState
+        props.onChange(props.outputState)
     }
 
     function saveTempWebUrlChange(
         event: React.ChangeEvent<HTMLInputElement>
     ): void {
         const newWebUrl = event.target.value
-        props.outputSettings.webUrl = newWebUrl
-        props.onChange(props.outputSettings)
+        props.outputState.webUrl = newWebUrl
+        props.onChange(props.outputState)
     }
 
     function saveTempTabMediaFolderChange(
         event: React.ChangeEvent<HTMLSelectElement>
     ): void {
         const newFolder = event.target.value
-        props.outputSettings.folder = newFolder
-        props.onChange(props.outputSettings)
+        props.outputState.folder = newFolder
+        props.onChange(props.outputState)
     }
 
     function saveTempOperationModeChange(
@@ -240,7 +246,8 @@ export default function Output(props: OutputProps): JSX.Element {
             OperationMode[
                 convertedRawNewOperationMode as keyof typeof OperationMode
             ]
-        props.outputSettings.operationMode = newOperationMode
-        props.onChange(props.outputSettings)
+        props.outputState.operationMode = newOperationMode
+        props.onChange(props.outputState)
     }
 }
+

@@ -4,7 +4,7 @@ import { state, reduxStore } from '../../shared/store'
 import { logger } from '../utils/logger'
 import { FileHandlingService } from './filehandling-service'
 import { ReduxSettingsService } from '../../shared/services/redux-settings-service'
-import { OutputSettings } from '../../shared/models/settings-models'
+import { OutputState } from '../../shared/models/settings-models'
 import {
     ClientToServerEvents,
     InterServerEvents,
@@ -101,10 +101,10 @@ export class HiddenFilesPersistenceService {
     }
 
     private hasSelectedOrCuedHiddenFiles(hiddenFiles: HiddenFiles): boolean {
-        const outputs: OutputSettings[] =
+        const outputs: OutputState[] =
             this.reduxSettingsService.getGenericSettings(
                 state.settings
-            ).outputSettings
+            ).outputsState
         return outputs.some(
             (output) =>
                 output.selectedFileName in hiddenFiles ||
@@ -116,10 +116,10 @@ export class HiddenFilesPersistenceService {
         const hiddenFiles: HiddenFiles = {
             ...originalHiddenFiles,
         }
-        const outputs: OutputSettings[] =
+        const outputs: OutputState[] =
             this.reduxSettingsService.getGenericSettings(
                 state.settings
-            ).outputSettings
+            ).outputsState
         outputs.forEach((output) => {
             if (output.selectedFileName in hiddenFiles) {
                 delete hiddenFiles[output.selectedFileName]

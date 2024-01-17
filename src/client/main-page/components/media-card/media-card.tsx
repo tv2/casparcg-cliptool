@@ -29,11 +29,11 @@ export default function MediaCard(props: MediaCardProps): JSX.Element {
     (state: State) => appNavigationService.getActiveTabIndex(state.appNavigation)
   )
   useSelector(
-    (state: State) => reduxSettingsService.getOutputSettings(state.settings, props.activeTabIndex)
+    (state: State) => reduxSettingsService.getOutputState(state.settings, props.activeTabIndex)
       .selectedFileName
   )
   useSelector(
-    (state: State) => reduxSettingsService.getOutputSettings(state.settings, props.activeTabIndex)
+    (state: State) => reduxSettingsService.getOutputState(state.settings, props.activeTabIndex)
       .cuedFileName
   )
   
@@ -64,7 +64,7 @@ function triggerOperationModeAction(fileName: string, activeTabIndex: number, fi
   if (browserService.isTextView()) {
     return playFile(fileName, activeTabIndex, fileType)
   } 
-  const operationMode = reduxSettingsService.getOutputSettings(state.settings, activeTabIndex)?.operationMode
+  const operationMode = reduxSettingsService.getOutputState(state.settings, activeTabIndex)?.operationMode
   switch (operationMode) {
       case OperationMode.EDIT_VISIBILITY: 
           toggleVisibility(fileName, activeTabIndex)
@@ -94,7 +94,7 @@ function playFile(fileName: string, activeTabIndex: number, fileType: string ): 
   if (fileType === FileType.IMAGE) {
     socketPlayService.playFile(activeTabIndex, fileName)
   } else {
-    const eventToFire = !reduxSettingsService.getOutputSettings(state.settings, activeTabIndex)?.manualStartState 
+    const eventToFire = !reduxSettingsService.getOutputState(state.settings, activeTabIndex)?.manualStartState 
       ? () => socketPlayService.playFile(activeTabIndex, fileName)
       : () => socketPlayService.loadFile(activeTabIndex, fileName)
     eventToFire()

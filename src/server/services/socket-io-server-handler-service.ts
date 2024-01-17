@@ -22,7 +22,7 @@ import {
 import {
     GenericSettings,
     OperationMode,
-    OutputSettings,
+    OutputState,
 } from '../../shared/models/settings-models'
 import { ReduxMediaService } from '../../shared/services/redux-media-service'
 import { ReduxSettingsService } from '../../shared/services/redux-settings-service'
@@ -149,18 +149,18 @@ export class SocketIOServerHandlerService {
     private processSetGenericsEvent(generics: GenericSettings): void {
         logger.data(generics).trace('Save Settings')
         logger.info('Updating and storing generic settings server side.')
-        const oldAllOutputSettings: OutputSettings[] =
-            state.settings.generics.outputSettings
+        const oldAllOutputsState: OutputState[] =
+            state.settings.generics.outputsState
         reduxStore.dispatch(setGenerics(generics))
-        state.settings.generics.outputSettings.forEach(
-            (outputSettings, channelIndex) => {
+        state.settings.generics.outputsState.forEach(
+            (outputState, channelIndex) => {
                 if (
                     this.shouldUpdatePlayingOverlay(
-                        oldAllOutputSettings[channelIndex],
-                        outputSettings
+                        oldAllOutputsState[channelIndex],
+                        outputState
                     )
                 ) {
-                    this.updateOverlayPlayingState(channelIndex, outputSettings)
+                    this.updateOverlayPlayingState(channelIndex, outputState)
                 }
             }
         )
@@ -178,7 +178,7 @@ export class SocketIOServerHandlerService {
         this.socketServer.emit(
             'mixStateUpdate',
             channelIndex,
-            this.reduxSettingsService.getOutputSettings(
+            this.reduxSettingsService.getOutputState(
                 state.settings,
                 channelIndex
             ).mixState
@@ -194,7 +194,7 @@ export class SocketIOServerHandlerService {
         this.socketServer.emit(
             'manualStartStateUpdate',
             channelIndex,
-            this.reduxSettingsService.getOutputSettings(
+            this.reduxSettingsService.getOutputState(
                 state.settings,
                 channelIndex
             ).manualStartState
@@ -210,7 +210,7 @@ export class SocketIOServerHandlerService {
         this.socketServer.emit(
             'operationModeUpdate',
             channelIndex,
-            this.reduxSettingsService.getOutputSettings(
+            this.reduxSettingsService.getOutputState(
                 state.settings,
                 channelIndex
             ).operationMode
@@ -223,9 +223,7 @@ export class SocketIOServerHandlerService {
     ): void {
         const isFilePlaying: boolean = this.reduxSettingsService
             .getGenericSettings(state.settings)
-            .outputSettings.some(
-                (output) => output.selectedFileName === fileName
-            )
+            .outputsState.some((output) => output.selectedFileName === fileName)
         if (isFilePlaying) {
             return
         }
@@ -256,17 +254,17 @@ export class SocketIOServerHandlerService {
         this.socketServer.emit(
             'webStateUpdate',
             channelIndex,
-            this.reduxSettingsService.getOutputSettings(
+            this.reduxSettingsService.getOutputState(
                 state.settings,
                 channelIndex
             ).webState
         )
-        const outputSettings: OutputSettings =
-            this.reduxSettingsService.getOutputSettings(
+        const outputState: OutputState =
+            this.reduxSettingsService.getOutputState(
                 state.settings,
                 channelIndex
             )
-        this.updateOverlayPlayingState(channelIndex, outputSettings)
+        this.updateOverlayPlayingState(channelIndex, outputState)
     }
 
     private processSetLoopStateEvent(
@@ -278,7 +276,7 @@ export class SocketIOServerHandlerService {
         this.socketServer.emit(
             'loopStateUpdate',
             channelIndex,
-            this.reduxSettingsService.getOutputSettings(
+            this.reduxSettingsService.getOutputState(
                 state.settings,
                 channelIndex
             ).loopState
@@ -322,24 +320,24 @@ export class SocketIOServerHandlerService {
     }
 
     private shouldUpdatePlayingOverlay(
-        oldOutputSettings: OutputSettings,
-        newOutputSettings: OutputSettings
+        oldOutputState: OutputState,
+        newOutputState: OutputState
     ): boolean {
         return (
-            oldOutputSettings.webState !== newOutputSettings.webState ||
-            oldOutputSettings.webUrl !== newOutputSettings.webUrl
+            oldOutputState.webState !== newOutputState.webState ||
+            oldOutputState.webUrl !== newOutputState.webUrl
         )
     }
 
     private updateOverlayPlayingState(
         channelIndex: number,
-        outputSettings: OutputSettings
+        outputState: OutputState
     ): void {
-        if (outputSettings.webState) {
-            if (outputSettings.webUrl === '') {
+        if (outputState.webState) {
+            if (outputState.webUrl === '') {
                 return
             }
-            const webUrl: string = outputSettings.webUrl
+            const webUrl: string = outputState.webUrl
             this.casparCgPlayoutService
                 .playOverlay(channelIndex, webUrl)
                 .then(() =>
@@ -440,22 +438,20 @@ export class SocketIOServerHandlerService {
 
     initializeClient(): void {
         const selectedFiles: string[] = []
-        const outputSettings: OutputSettings[] =
+        const outputsState: OutputState[] =
             new ReduxSettingsService().getGenericSettings(
                 state.settings
-            ).outputSettings
-        outputSettings.forEach(
-            (output: OutputSettings, channelIndex: number) => {
-                selectedFiles.push(
-                    this.initializeChannelOutputSettings(output, channelIndex)
-                )
-            }
-        )
+            ).outputsState
+        outputsState.forEach((output: OutputState, channelIndex: number) => {
+            selectedFiles.push(
+                this.initializeChannelOutputState(output, channelIndex)
+            )
+        })
         this.initializeOutputMedia(selectedFiles)
     }
 
-    private initializeChannelOutputSettings(
-        output: OutputSettings,
+    private initializeChannelOutputState(
+        output: OutputState,
         channelIndex: number
     ): string {
         this.socketServer.emit(

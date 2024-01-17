@@ -29,7 +29,7 @@ export interface CasparcgConfigChannel {
     channelLayout?: string
 }
 
-export interface OutputSettings {
+export interface OutputState {
     label: string
     folder: string
     shouldScale: boolean
@@ -40,6 +40,10 @@ export interface OutputSettings {
     mixState: boolean
     manualStartState: boolean
     webState: boolean
+    initialLoopState: boolean
+    initialMixState: boolean
+    initialManualStartState: boolean
+    initialWebState: boolean
     operationMode: OperationMode
     selectedFileName: string
     cuedFileName: string
@@ -55,5 +59,5 @@ export interface CasparcgSettings {
 
 export interface GenericSettings {
     ccgSettings: CasparcgSettings
-    outputSettings: OutputSettings[]
+    outputsState: OutputState[]
 }

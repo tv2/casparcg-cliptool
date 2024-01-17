@@ -39,7 +39,7 @@ export class CasparCgPlayoutService {
         channelIndex: number,
         fileName: string
     ): Promise<void> {
-        const mixState: boolean = this.reduxSettingsService.getOutputSettings(
+        const mixState: boolean = this.reduxSettingsService.getOutputState(
             state.settings,
             channelIndex
         ).mixState
@@ -97,7 +97,7 @@ export class CasparCgPlayoutService {
 
     private getLoopState(channelIndex: number): boolean {
         return (
-            this.reduxSettingsService.getOutputSettings(
+            this.reduxSettingsService.getOutputState(
                 state.settings,
                 channelIndex
             ).loopState || false
@@ -174,7 +174,7 @@ export class CasparCgPlayoutService {
 
         let scaleOutX = 1
         let scaleOutY = 1
-        const outputSetting = this.reduxSettingsService.getOutputSettings(
+        const outputSetting = this.reduxSettingsService.getOutputState(
             state.settings,
             channelIndex
         )

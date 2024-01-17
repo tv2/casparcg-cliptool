@@ -2,7 +2,7 @@ import {
     CasparcgConfig,
     CasparcgConfigChannel,
     GenericSettings,
-    OutputSettings,
+    OutputState,
     SettingsState,
 } from '../models/settings-models'
 import { ReduxSettingsService } from '../services/redux-settings-service'
@@ -48,8 +48,15 @@ export function settings(
         }
         case IO.SET_GENERICS: {
             nextState.generics = { ...action.generics }
-            nextState.generics.outputSettings =
-                nextState.generics.outputSettings ?? []
+            nextState.generics.outputsState =
+                nextState.generics.outputsState ?? []
+            nextState.generics.outputsState.forEach((outputState) => {
+                outputState.loopState = outputState.initialLoopState ?? false
+                outputState.mixState = outputState.initialMixState ?? false
+                outputState.webState = outputState.initialWebState ?? false
+                outputState.manualStartState =
+                    outputState.initialManualStartState ?? false
+            })
             return nextState
         }
         case IO.SET_LOOP: {
@@ -100,6 +107,38 @@ export function settings(
             }
             return nextState
         }
+        case IO.SET_INITIAL_LOOP: {
+            if (doesChannelExist(nextState, action)) {
+                return updateAttributeByPartial(state, nextState, action, {
+                    loopState: action.loopState,
+                })
+            }
+            return nextState
+        }
+        case IO.SET_INITIAL_MIX: {
+            if (doesChannelExist(nextState, action)) {
+                return updateAttributeByPartial(state, nextState, action, {
+                    mixState: action.mixState,
+                })
+            }
+            return nextState
+        }
+        case IO.SET_INITIAL_WEB: {
+            if (doesChannelExist(nextState, action)) {
+                return updateAttributeByPartial(state, nextState, action, {
+                    webState: action.webState,
+                })
+            }
+            return nextState
+        }
+        case IO.SET_INITIAL_MANUAL_START: {
+            if (doesChannelExist(nextState, action)) {
+                return updateAttributeByPartial(state, nextState, action, {
+                    manualStartState: action.manualStartState,
+                })
+            }
+            return nextState
+        }
         case IO.SET_OPERATION_MODE: {
             if (doesChannelExist(nextState, action)) {
                 return updateAttributeByPartial(state, nextState, action, {
@@ -117,18 +156,18 @@ function updateAttributeByPartial(
     originalState: SettingsState,
     nextState: SettingsState,
     action: any,
-    updates: Partial<OutputSettings>
+    updates: Partial<OutputState>
 ): SettingsState {
-    const outputSettings = [...originalState.generics.outputSettings]
-    outputSettings[action.channelIndex] = {
-        ...outputSettings[action.channelIndex],
+    const outputsState = [...originalState.generics.outputsState]
+    outputsState[action.channelIndex] = {
+        ...outputsState[action.channelIndex],
         ...updates,
     }
     nextState = {
         ...originalState,
         generics: {
             ...originalState.generics,
-            outputSettings,
+            outputsState: outputsState,
         },
     }
     return nextState
@@ -138,5 +177,5 @@ function doesChannelExist(
     nextState: SettingsState,
     action: { channelIndex: number }
 ): boolean {
-    return nextState.generics.outputSettings.length > action.channelIndex
+    return nextState.generics.outputsState.length > action.channelIndex
 }

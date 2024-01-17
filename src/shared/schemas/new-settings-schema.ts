@@ -2,10 +2,10 @@ import { z } from 'zod'
 import {
     CasparcgSettings,
     OperationMode,
-    OutputSettings,
+    OutputState,
 } from '../models/settings-models'
 
-export const defaultOutputSettingsState: OutputSettings = {
+export const defaultOutputState: OutputState = {
     label: '',
     folder: '',
     shouldScale: false,
@@ -19,6 +19,10 @@ export const defaultOutputSettingsState: OutputSettings = {
     operationMode: OperationMode.CONTROL,
     selectedFileName: '',
     cuedFileName: '',
+    initialLoopState: false,
+    initialMixState: false,
+    initialManualStartState: false,
+    initialWebState: false,
 }
 
 export const defaultCcgSettingsState: CasparcgSettings = {
@@ -31,7 +35,7 @@ export const defaultCcgSettingsState: CasparcgSettings = {
 
 const operationModeSchema = z.nativeEnum(OperationMode)
 
-const outputSettingsSchema = z.object({
+const outputStateSchema = z.object({
     label: z.string(),
     folder: z.string(),
     shouldScale: z.boolean(),
@@ -45,6 +49,10 @@ const outputSettingsSchema = z.object({
     operationMode: operationModeSchema,
     selectedFileName: z.string(),
     cuedFileName: z.string(),
+    initialLoopState: z.boolean().optional(),
+    initialMixState: z.boolean().optional(),
+    initialManualStartState: z.boolean().optional(),
+    initialWebState: z.boolean().optional(),
 })
 
 const ccgSettingsSchema = z.object({
@@ -58,5 +66,5 @@ const ccgSettingsSchema = z.object({
 // Schema for Cliptool version 2.15 and above.
 export const newGenericSettingsSchema = z.object({
     ccgSettings: ccgSettingsSchema,
-    outputSettings: z.array(outputSettingsSchema),
+    outputsState: z.array(outputStateSchema),
 })

@@ -12,15 +12,13 @@ interface CheckboxProps {
 export default function Checkbox(props: CheckboxProps): JSX.Element { 
   return (
     <div className={`c-checkbox ${props.className ?? ''}`}>
-      {props.description ? (
-        <label className="label">
-          {props.description}
-        </label>
-      ) : ''}
-      <input type="checkbox" 
-        checked={props.checked} 
-        onChange={props.onChange}
-        className='c-checkbox__input' />
+      <label>
+        {props.description ?? ''}
+        <input type="checkbox" 
+          checked={props.checked} 
+          onChange={props.onChange}
+          className='c-checkbox__input' />
+      </label>
     </div>
   )
 }

@@ -3,7 +3,7 @@ import OutputsForm from '../../../settings-page/components/outputs/outputs'
 import SettingsActions from '../settings-actions/settings-actions'
 import CasparcgForm from '../casparcg-settings/casparcg-settings'
 import './settings-page.scss'
-import { CasparcgSettings, GenericSettings, OutputSettings } from '../../../../shared/models/settings-models'
+import { CasparcgSettings, GenericSettings, OutputState } from '../../../../shared/models/settings-models'
 import { state } from '../../../../shared/store'
 import _ from 'lodash'
 import { BrowserService } from '../../../shared/services/browser-service'
@@ -13,8 +13,8 @@ export function SettingsPage(): JSX.Element {
     const isChannelView = browserService.isChannelView()
     const [settings, setSettings] = useState<GenericSettings>(deepClone(state.settings.generics))  
 
-    function onOutputSettingsChanged(changedOutputs: OutputSettings[]): void {
-        settings.outputSettings = changedOutputs
+    function onOutputStateChanged(changedOutputs: OutputState[]): void {
+        settings.outputsState = changedOutputs
         setSettings({ ...settings })
     }
 
@@ -29,7 +29,7 @@ export function SettingsPage(): JSX.Element {
             <SettingsActions settings={settings}/>
             <hr/>
             {!isChannelView && settings && <CasparcgForm casparcgSettings={settings.ccgSettings} onChange={(changedCasparcg) => onCasparcgSettingsChanged(changedCasparcg)}/> }
-            {settings && <OutputsForm outputSettings={settings.outputSettings} onChange={(changedOutputs) => onOutputSettingsChanged(changedOutputs)}/>}
+            {settings && <OutputsForm outputsState={settings.outputsState} onChange={(changedOutputs) => onOutputStateChanged(changedOutputs)}/>}
         </div>
     )
 }

@@ -19,7 +19,7 @@ export function OperationModeFooter(): JSX.Element {
     appNavigationService.getActiveTabIndex(state.appNavigation)
   ) 
   const operationMode: OperationMode | undefined = useSelector((state: State) =>
-    reduxSettingsService.getOutputSettings(state.settings, activeTabIndex)?.operationMode
+    reduxSettingsService.getOutputState(state.settings, activeTabIndex)?.operationMode
   ) 
   switch (operationMode) {
     case OperationMode.EDIT_VISIBILITY: {
