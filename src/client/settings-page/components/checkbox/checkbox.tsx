@@ -13,7 +13,7 @@ export default function Checkbox(props: CheckboxProps): JSX.Element {
   return (
     <div className={`c-checkbox ${props.className ?? ''}`}>
       <label>
-        {props.description ? props.description : ''}
+        {props.description ?? ''}
         <input type="checkbox" 
           checked={props.checked} 
           onChange={props.onChange}
