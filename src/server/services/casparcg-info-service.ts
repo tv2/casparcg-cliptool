@@ -1,20 +1,9 @@
 import { CasparCG } from 'casparcg-connection'
+import { state } from '../../shared/store'
 import * as Path from 'path'
 
 export interface ChannelInfo {
-    stage?: Stage
-}
-
-export interface Stage {
-    layer: Layer
-}
-
-export interface Layer {
-    layer_10: Layer10
-}
-
-export interface Layer10 {
-    foreground: Foreground
+    foreground?: Foreground
 }
 
 export interface Foreground {
@@ -52,20 +41,22 @@ export class CasparCgInfoService {
 
     public async getChannelInfo(index: number): Promise<ChannelInfo> {
         const infoResponse = await this.casparCgConnection.info(index + 1)
-        const info: ChannelInfo = infoResponse.response.data
-        if (info.stage) {
-            info.stage.layer.layer_10.foreground.file.path =
-                this.getMediaFolderAdjustedName(
-                    info.stage.layer.layer_10.foreground.file.path
-                )
+        const defaultLayer = state.settings.generics.ccgSettings.defaultLayer
+        const channelInfo: ChannelInfo =
+            infoResponse.response.data?.stage?.layer[
+                String('layer_' + defaultLayer)
+            ]
+        if (channelInfo.foreground) {
+            channelInfo.foreground.file.path = this.getMediaFolderAdjustedName(
+                channelInfo.foreground.file.path
+            )
         }
-
-        return info
+        return channelInfo
     }
 
     public async isChannelBlank(index: number): Promise<boolean> {
         const info: ChannelInfo = await this.getChannelInfo(index)
-        return !info.stage
+        return !info.foreground
     }
 
     private getMediaFolderAdjustedName(rawPath: string): string {
