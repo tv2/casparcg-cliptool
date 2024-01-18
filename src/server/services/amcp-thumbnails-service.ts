@@ -151,14 +151,17 @@ export class AmcpThumbnailsService {
         }
     }
 
-    private loadThumbnails(
+    private async loadThumbnails(
         retrievedThumbnails: ThumbnailFile[]
     ): Promise<ThumbnailFile[]> {
-        return Promise.all(
-            retrievedThumbnails.map((thumbnailFile) =>
-                this.loadThumbnailImage(thumbnailFile)
-            )
-        )
+        const results: ThumbnailFile[] = []
+
+        for (const thumbnailFile of retrievedThumbnails) {
+            const result = await this.loadThumbnailImage(thumbnailFile)
+            results.push(result)
+        }
+
+        return results
     }
 
     private async loadThumbnailImage(
