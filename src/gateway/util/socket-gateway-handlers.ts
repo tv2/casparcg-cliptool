@@ -58,18 +58,16 @@ socket.on(
     (channelIndex: number, mediaFiles: MediaFile[]) => {
         reduxStore.dispatch(updateMediaFiles(channelIndex, mediaFiles))
 
-        logger
-            .data(mediaFiles)
-            .debug(
-                `Media list updated channel index ${channelIndex} with ${mediaFiles}.`
-            )
+        logger.debug(
+            `Media list updated channel index ${channelIndex} with mediafiles :`
+        )
     }
 )
 
 socket.on(ServerToClientCommand.FOLDERS_UPDATE, (payload: string[]) => {
     reduxStore.dispatch(updateFolders(payload))
 
-    logger.data(payload).debug(`Folders updated Payload:`)
+    logger.debug(`Folders list updated`)
 })
 
 socket.on(
@@ -78,10 +76,7 @@ socket.on(
         reduxStore.dispatch(
             updateThumbnailFileList(channelIndex, thumbnailFiles)
         )
-
-        logger
-            .data(thumbnailFiles)
-            .debug(`Thumbs updated channel index ${channelIndex} with:`)
+        logger.debug(`Thumbslist updated on channel index ${channelIndex}`)
     }
 )
 
