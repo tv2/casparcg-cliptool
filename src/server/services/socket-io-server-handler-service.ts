@@ -116,6 +116,9 @@ export class SocketIOServerHandlerService {
             .on('programLoad', (channelIndex: number, fileName: string) =>
                 this.processLoadEvent(channelIndex, fileName)
             )
+            .on('programStop', (channelIndex: number) => {
+                this.casparCgPlayoutService.stopChannel(channelIndex)
+            })
             .on('setLoopState', (channelIndex: number, loopState: boolean) =>
                 this.processSetLoopStateEvent(channelIndex, loopState)
             )
