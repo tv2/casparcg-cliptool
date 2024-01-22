@@ -115,6 +115,10 @@ export class CasparCgPlayoutService {
         })
     }
 
+    public async stopChannel(channelIndex: number): Promise<void> {
+        await this.casparCgConnection.stop(channelIndex + 1)
+    }
+
     private notifyAboutError(message: string, error: Error): void {
         logger.data(error).error(message)
         const errorEvent: ErrorEvent = {

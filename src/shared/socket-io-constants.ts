@@ -32,6 +32,7 @@ export interface ServerToClientEvents {
 export interface ClientToServerEvents {
     programPlay: (channelIndex: number, fileName: string) => void
     programLoad: (channelIndex: number, fileName: string) => void
+    programStop: (channelIndex: number) => void
     getSettings: () => void
     setLoopState: (channelIndex: number, loopState: boolean) => void
     setOperationMode: (channelIndex: number, mode: OperationMode) => void
@@ -68,6 +69,7 @@ export enum ServerToClientCommand {
 export enum ClientToServerCommand {
     PGM_PLAY = 'programPlay',
     PGM_LOAD = 'programLoad',
+    PGM_STOP = 'programStop',
     SET_LOOP_STATE = 'setLoopState',
     SET_OPERATION_MODE = 'setOperationMode',
     SET_MANUAL_START_STATE = 'setManualStartState',
