@@ -1,9 +1,10 @@
 import { ClientToServerCommand } from '../../../shared/socket-io-constants'
+import { Socket } from 'socket.io-client'
 
 export class SocketPlayService {
-    private socket: SocketIOClient.Socket
+    private socket: Socket
 
-    constructor(socket: SocketIOClient.Socket) {
+    constructor(socket: Socket) {
         this.socket = socket
     }
 

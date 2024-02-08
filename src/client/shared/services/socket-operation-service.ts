@@ -1,10 +1,11 @@
 import { OperationMode } from '../../../shared/models/settings-models'
 import { ClientToServerCommand } from '../../../shared/socket-io-constants'
+import { Socket } from 'socket.io-client'
 
 export class SocketOperationService {
-    private socket: SocketIOClient.Socket
+    private socket: Socket
 
-    constructor(socket: SocketIOClient.Socket) {
+    constructor(socket: Socket) {
         this.socket = socket
     }
 
@@ -12,7 +13,7 @@ export class SocketOperationService {
         this.socket.emit(
             ClientToServerCommand.SET_OPERATION_MODE,
             outputIndex,
-            OperationMode.CONTROL
+            OperationMode.CONTROL,
         )
     }
 
@@ -20,18 +21,18 @@ export class SocketOperationService {
         this.socket.emit(
             ClientToServerCommand.SET_OPERATION_MODE,
             outputIndex,
-            OperationMode.EDIT_VISIBILITY
+            OperationMode.EDIT_VISIBILITY,
         )
     }
 
     public toggleThumbnailVisibility(
         fileOriginOutputIndex: number,
-        fileName: string
+        fileName: string,
     ) {
         this.socket.emit(
             ClientToServerCommand.TOGGLE_THUMBNAIL_VISIBILITY,
             fileOriginOutputIndex,
-            fileName
+            fileName,
         )
     }
 
