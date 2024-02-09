@@ -16,11 +16,12 @@ import {
     TimeSelectedFilePayload,
 } from '../../../shared/socket-io-constants'
 import { reduxStore, state } from '../../../shared/store'
+import { Socket } from 'socket.io-client'
 
 export class PlayObserver {
-    private socket: SocketIOClient.Socket
+    private socket: Socket
 
-    constructor(socket: SocketIOClient.Socket) {
+    constructor(socket: Socket) {
         this.socket = socket
         this.initPlayEventListeners()
     }
@@ -28,41 +29,41 @@ export class PlayObserver {
     private initPlayEventListeners(): void {
         this.socket.on(
             ServerToClientCommand.TIME_TALLY_UPDATE,
-            this.processTimeTallyUpdateEvent.bind(this)
+            this.processTimeTallyUpdateEvent.bind(this),
         )
         this.socket.on(
             ServerToClientCommand.FILE_CUED_UPDATE,
-            this.processFileCuedUpdateEvent.bind(this)
+            this.processFileCuedUpdateEvent.bind(this),
         )
         this.socket.on(
             ServerToClientCommand.FILE_SELECTED_UPDATE,
-            this.processFileSelectedUpdateEvent.bind(this)
+            this.processFileSelectedUpdateEvent.bind(this),
         )
         this.socket.on(
             ServerToClientCommand.MEDIA_UPDATE,
-            this.processMediaUpdateEvent.bind(this)
+            this.processMediaUpdateEvent.bind(this),
         )
         this.socket.on(
             ServerToClientCommand.FOLDERS_UPDATE,
-            this.processFoldersUpdateEvent.bind(this)
+            this.processFoldersUpdateEvent.bind(this),
         )
         this.socket.on(
             ServerToClientCommand.THUMBNAIL_UPDATE,
-            this.processThumbnailUpdateEvent.bind(this)
+            this.processThumbnailUpdateEvent.bind(this),
         )
     }
 
     private processTimeTallyUpdateEvent(
-        payloads: TimeSelectedFilePayload[]
+        payloads: TimeSelectedFilePayload[],
     ): void {
         payloads.forEach((channel, index) =>
-            this.processSingleTimeTallyPayload(channel, index)
+            this.processSingleTimeTallyPayload(channel, index),
         )
     }
 
     private processSingleTimeTallyPayload(
         channel: TimeSelectedFilePayload,
-        index: number
+        index: number,
     ): void {
         const reduxMediaService = new ReduxMediaService()
         const reduxSettingsService = new ReduxSettingsService()
@@ -77,7 +78,7 @@ export class PlayObserver {
                 .selectedFileName !== channel.selectedFileName
         ) {
             reduxStore.dispatch(
-                setSelectedFileName(index, channel.selectedFileName)
+                setSelectedFileName(index, channel.selectedFileName),
             )
         }
         reduxStore.dispatch(setTime(index, channel.time))
@@ -85,7 +86,7 @@ export class PlayObserver {
 
     private hasTimeChanged(
         oldtimeRange: [number, number],
-        newTimeRange: [number, number]
+        newTimeRange: [number, number],
     ): boolean {
         return (
             newTimeRange[0] !== oldtimeRange[0] ||
@@ -95,21 +96,21 @@ export class PlayObserver {
 
     private processFileCuedUpdateEvent(
         channelIndex: number,
-        fileName: string
+        fileName: string,
     ): void {
         reduxStore.dispatch(setCuedFileName(channelIndex, fileName))
     }
 
     private processFileSelectedUpdateEvent(
         channelIndex: number,
-        fileName: string
+        fileName: string,
     ): void {
         reduxStore.dispatch(setSelectedFileName(channelIndex, fileName))
     }
 
     private processMediaUpdateEvent(
         channelIndex: number,
-        payload: MediaFile[]
+        payload: MediaFile[],
     ): void {
         reduxStore.dispatch(updateMediaFiles(channelIndex, payload))
     }
@@ -120,7 +121,7 @@ export class PlayObserver {
 
     private processThumbnailUpdateEvent(
         channelIndex: number,
-        payload: ThumbnailFile[]
+        payload: ThumbnailFile[],
     ): void {
         reduxStore.dispatch(updateThumbnailFileList(channelIndex, payload))
     }

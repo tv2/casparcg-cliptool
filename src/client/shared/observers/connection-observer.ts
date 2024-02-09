@@ -1,11 +1,12 @@
 import { setConnectionStatus } from '../../../shared/actions/app-navigation-action'
 import { reduxStore } from '../../../shared/store'
 import { ErrorEvent } from '../../../shared/models/error-models'
+import { Socket } from 'socket.io-client'
 
 export class ConnectionObserver {
-    private socket: SocketIOClient.Socket
+    private socket: Socket
 
-    constructor(socket: SocketIOClient.Socket) {
+    constructor(socket: Socket) {
         this.socket = socket
         this.initConnectionEventsListeners()
     }

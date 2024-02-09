@@ -4,11 +4,12 @@ import { HiddenFiles } from '../../../shared/models/media-models'
 import { OperationMode } from '../../../shared/models/settings-models'
 import { ServerToClientCommand } from '../../../shared/socket-io-constants'
 import { reduxStore } from '../../../shared/store'
+import { Socket } from 'socket.io-client'
 
 export class OperationObserver {
-    private socket: SocketIOClient.Socket
+    private socket: Socket
 
-    constructor(socket: SocketIOClient.Socket) {
+    constructor(socket: Socket) {
         this.socket = socket
         this.initOperationsEventListeners()
     }
@@ -16,11 +17,11 @@ export class OperationObserver {
     private initOperationsEventListeners() {
         this.socket.on(
             ServerToClientCommand.HIDDEN_FILES_UPDATE,
-            this.processHiddenFilesUpdateEvent.bind(this)
+            this.processHiddenFilesUpdateEvent.bind(this),
         )
         this.socket.on(
             ServerToClientCommand.OPERATION_MODE_UPDATE,
-            this.processOperationStateUpdateEvent.bind(this)
+            this.processOperationStateUpdateEvent.bind(this),
         )
     }
 
@@ -30,7 +31,7 @@ export class OperationObserver {
 
     private processOperationStateUpdateEvent(
         channelIndex: number,
-        mode: OperationMode
+        mode: OperationMode,
     ): void {
         reduxStore.dispatch(setOperationMode(channelIndex, mode))
     }

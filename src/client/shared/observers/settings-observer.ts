@@ -10,11 +10,12 @@ import {
     setWeb,
     updateSettings,
 } from '../../../shared/actions/settings-action'
+import { Socket } from 'socket.io-client'
 
 export class SettingsObserver {
-    private socket: SocketIOClient.Socket
+    private socket: Socket
 
-    constructor(socket: SocketIOClient.Socket) {
+    constructor(socket: Socket) {
         this.socket = socket
         this.initSettingsEventsListeners()
     }
@@ -22,61 +23,61 @@ export class SettingsObserver {
     private initSettingsEventsListeners(): void {
         this.socket.on(
             ServerToClientCommand.LOOP_STATE_UPDATE,
-            this.processLoopStateUpdateEvent.bind(this)
+            this.processLoopStateUpdateEvent.bind(this),
         )
         this.socket.on(
             ServerToClientCommand.MIX_STATE_UPDATE,
-            this.processMixStateUpdateEvent.bind(this)
+            this.processMixStateUpdateEvent.bind(this),
         )
         this.socket.on(
             ServerToClientCommand.WEB_STATE_UPDATE,
-            this.processWebStateUpdateEvent.bind(this)
+            this.processWebStateUpdateEvent.bind(this),
         )
         this.socket.on(
             ServerToClientCommand.MANUAL_START_STATE_UPDATE,
-            this.processManualStartStateUpdateEvent.bind(this)
+            this.processManualStartStateUpdateEvent.bind(this),
         )
         this.socket.on(
             ServerToClientCommand.SETTINGS_UPDATE,
-            this.processSettingsUpdateEvent.bind(this)
+            this.processSettingsUpdateEvent.bind(this),
         )
     }
 
     private processLoopStateUpdateEvent(
         channelIndex: number,
-        loop: boolean
+        loop: boolean,
     ): void {
         reduxStore.dispatch(setLoop(channelIndex, loop))
     }
 
     private processMixStateUpdateEvent(
         channelIndex: number,
-        mix: boolean
+        mix: boolean,
     ): void {
         reduxStore.dispatch(setMix(channelIndex, mix))
     }
 
     private processWebStateUpdateEvent(
         channelIndex: number,
-        web: boolean
+        web: boolean,
     ): void {
         reduxStore.dispatch(setWeb(channelIndex, web))
     }
 
     private processManualStartStateUpdateEvent(
         channelIndex: number,
-        manualStart: boolean
+        manualStart: boolean,
     ): void {
         reduxStore.dispatch(setManualStart(channelIndex, manualStart))
     }
 
     private processSettingsUpdateEvent(payload: SettingsState): void {
         reduxStore.dispatch(
-            setNumberOfOutputs(payload.ccgConfig.channels.length)
+            setNumberOfOutputs(payload.ccgConfig.channels.length),
         )
         reduxStore.dispatch(setGenerics(payload.generics))
         reduxStore.dispatch(
-            updateSettings(payload.ccgConfig.channels, payload.ccgConfig.path)
+            updateSettings(payload.ccgConfig.channels, payload.ccgConfig.path),
         )
     }
 }

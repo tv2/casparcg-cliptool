@@ -1,10 +1,11 @@
 import { GenericSettings } from '../../../shared/models/settings-models'
 import { ClientToServerCommand } from '../../../shared/socket-io-constants'
+import { Socket } from 'socket.io-client'
 
 export class SocketSettingsService {
-    private socket: SocketIOClient.Socket
+    private socket: Socket
 
-    constructor(socket: SocketIOClient.Socket) {
+    constructor(socket: Socket) {
         this.socket = socket
     }
 
@@ -12,7 +13,7 @@ export class SocketSettingsService {
         this.socket.emit(
             ClientToServerCommand.SET_LOOP_STATE,
             outputIndex,
-            state
+            state,
         )
     }
 
@@ -20,7 +21,7 @@ export class SocketSettingsService {
         this.socket.emit(
             ClientToServerCommand.SET_MIX_STATE,
             outputIndex,
-            state
+            state,
         )
     }
 
@@ -28,7 +29,7 @@ export class SocketSettingsService {
         this.socket.emit(
             ClientToServerCommand.SET_WEB_STATE,
             outputIndex,
-            state
+            state,
         )
     }
 
@@ -36,7 +37,7 @@ export class SocketSettingsService {
         this.socket.emit(
             ClientToServerCommand.SET_MANUAL_START_STATE,
             outputIndex,
-            state
+            state,
         )
     }
 
