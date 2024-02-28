@@ -17,21 +17,29 @@ export class SettingsPersistenceService {
     }
 
     public async load(): Promise<void> {
-        const loadedSettings = await this.fileHandlingService.loadFile(
-            'settings.json'
-        )
-        const rawSettings: unknown = JSON.parse(loadedSettings)
-        const validation = await this.validateSettingsFile(rawSettings)
-        if (validation.success && validation.parsed) {
-            logger
-                .data(rawSettings)
-                .trace('Loaded following settings from file:')
-            reduxStore.dispatch(setGenerics(validation.parsed))
-        } else {
+        try {
+            const loadedSettings =
+                await this.fileHandlingService.loadFile('settings.json')
+            const rawSettings: unknown = JSON.parse(loadedSettings)
+            const validation = await this.validateSettingsFile(rawSettings)
+            if (validation.success && validation.parsed) {
+                logger
+                    .data(rawSettings)
+                    .trace('Loaded following settings from file:')
+                reduxStore.dispatch(setGenerics(validation.parsed))
+            } else {
+                reduxStore.dispatch(
+                    setGenerics(
+                        this.reduxSettingsService.getDefaultGenericSettings(),
+                    ),
+                )
+            }
+        } catch (error) {
+            logger.data(error).error('Error loading file:')
             reduxStore.dispatch(
                 setGenerics(
-                    this.reduxSettingsService.getDefaultGenericSettings()
-                )
+                    this.reduxSettingsService.getDefaultGenericSettings(),
+                ),
             )
         }
         this.save()
@@ -61,7 +69,7 @@ export class SettingsPersistenceService {
         try {
             await this.fileHandlingService.saveFile(
                 'settings.json',
-                stringifiedSettings
+                stringifiedSettings,
             )
             logger.data(generics).debug('Settings saved')
         } catch (error) {
